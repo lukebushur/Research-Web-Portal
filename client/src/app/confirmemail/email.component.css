@@ -1,0 +1,37 @@
+.centerDivStyles {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    max-width: 80%;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.confirmEmailContainer {
+    position: relative;
+    text-align: center;
+}
+
+.confirmEmailContainer img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.submitButton {
+    margin-top: 10px;
+    background-color: #CFB991;
+    border-radius: 5px;
+}
+
+.confirmEmailText {
+    margin-top: 10px;
+    color: grey;
+}
