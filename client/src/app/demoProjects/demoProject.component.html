@@ -1,0 +1,38 @@
+<div class="container">
+    <table class="book-table">
+        <thead>
+            <tr>
+                <th>Name: {{Name}}</th>
+                <th>Fake GPA: {{GPA}}</th>
+                <th>Fake Major: {{Major}} </th>
+            </tr>
+        </thead>
+    </table>
+    <h2>Available Projects</h2>
+    <table class="book-table">
+        <thead>
+            <tr>
+                <th>Professor Name</th>
+                <th>Professor Email</th>
+                <th>Project Title</th>
+                <th>GPA Requirement</th>
+                <th>Applicable Majors</th>
+                <th>Apply to Project</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let project of ActiveProjects">
+                <td>{{ project.professorName }}</td>
+                <td>{{ project.professorEmail }}</td>
+                <td>{{ project.title }}</td>
+                <td>{{ project.gpa }}</td>
+                <td>{{ parseMajors(project.majors) }}</td>
+                <td><button *ngIf="alreadyApplied(project.projectID, true) && canApplyToPosition(project.majors, project.gpa)" (click)="applyToPosition(project.professorEmail, project.projectID)">Apply</button>
+                    <p *ngIf="alreadyApplied(project.projectID, false) && canApplyToPosition(project.majors, project.gpa)">{{getApplicationStatus(project.projectID, true)}}</p>
+                    <p *ngIf="!canApplyToPosition(project.majors, project.gpa)">Cannot Apply</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <app-spinner></app-spinner>
+</div>

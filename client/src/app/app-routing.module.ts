@@ -7,6 +7,7 @@ import { ConfirmEmailComponent } from './confirmemail/email.component';
 import { FacultyDashboardComponent } from './faculty-dashboard/faculty-dashboard.component';
 import { AuthGuard } from './auth/auth-guard/auth.guard';
 import { LoginComponent } from './login/login.component';
+import { DemoProjectsComponent} from './demoProjects/demoProject.component'
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'faculty-dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard]},
   { path: "confirm-email/:emailtoken", component: ConfirmEmailComponent, canActivate: [AuthGuard]},
   { path: "login", component: LoginComponent},
+  { path: "demoProjects", component: DemoProjectsComponent}
 ];
 
 @NgModule({

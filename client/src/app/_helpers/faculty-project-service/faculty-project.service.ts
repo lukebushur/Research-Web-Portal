@@ -11,7 +11,7 @@ export class FacultyProjectService {
   apiUrl = environment.apiUrl;
   private authToken: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setAuthToken(token: string): void {
     this.authToken = token;
@@ -35,7 +35,7 @@ export class FacultyProjectService {
     return this.http.get(`${this.apiUrl}/projects/getProjects`, { headers });
   }
 
-  deleteProject(projectId: string, projectType: string): Observable<any>{
+  deleteProject(projectId: string, projectType: string): Observable<any> {
     const authToken = localStorage.getItem("jwt-auth-token");
 
     const options = {
@@ -44,23 +44,55 @@ export class FacultyProjectService {
         Authorization: `Bearer ${authToken}`,
       }),
       body: {
-        "projectID" : projectId,
-        "projectType" : projectType
+        "projectID": projectId,
+        "projectType": projectType
       }
     }
 
     return this.http.delete(`${this.apiUrl}/projects/deleteProject`, options);
   }
 
-  archiveProject(projectId: string): Observable<any>{
+  archiveProject(projectId: string): Observable<any> {
     const authToken = localStorage.getItem("jwt-auth-token");
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${authToken}`,
     });
-    const data = {"projectID": projectId}
+    const data = { "projectID": projectId }
 
     return this.http.put(`${this.apiUrl}/projects/archiveProject`, data, { headers });
+  }
+
+  demoGetActiveProjects(): Observable<any> {
+    const authToken = localStorage.getItem("jwt-auth-token");
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    });
+
+    return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers });
+  }
+
+  demoGetStudentData(): Observable<any> {
+    const authToken = localStorage.getItem("jwt-auth-token");
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    });
+
+    return this.http.get(`${this.apiUrl}/applications/demoGetStudentInfo`, { headers });
+  }
+
+  demoApplyToPosition(email: String, projectId: String, GPA: Number): Observable<any> {
+    const authToken = localStorage.getItem("jwt-auth-token");
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    });
+    const data = { "projectID": projectId, "professorEmail": email, "gpa": GPA };
+
+    return this.http.post(`${this.apiUrl}/applications/createApplication`, data, { headers });
   }
 }
