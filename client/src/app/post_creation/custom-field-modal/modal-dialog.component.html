@@ -1,0 +1,17 @@
+<mat-form-field hintLabel="Input Field Name">
+    <mat-label>Enter some input</mat-label>
+    <input matInput #input maxlength="10" placeholder="Ex. Nougat" [(ngModel)]="data.fieldName">
+    <mat-hint align="end">{{input.value.length}}/10</mat-hint>
+</mat-form-field>
+
+<mat-form-field>
+    <mat-label>Select me</mat-label>
+    <mat-select [(value)]="data.type">
+        <mat-option value="text">Text</mat-option>
+        <mat-option value="checkbox">yes/No</mat-option>
+    </mat-select>
+</mat-form-field>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button cdkFocusInitial [mat-dialog-close]="data">Create</button>
+</div>

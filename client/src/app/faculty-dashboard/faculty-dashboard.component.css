@@ -1,0 +1,41 @@
+.example-full-width {
+  width: 300px;
+  text-align: center;
+}
+
+.faculty-search-form {
+  display: flex;
+  justify-content: center;
+}
+
+.faculty-project-selection-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  float: left;
+  border: 1px solid #000;
+  height: 100%;
+}
+
+/* .faculty-dashboard-info {
+    border: 1px solid #000;
+}
+
+.faculty-active-projects {
+    border: 1px solid #000;
+}
+
+.faculty-project-applied-student-list {
+    border: 1px solid #000;
+} */
+
+.project-selection-button {
+  width: 150px;
+}
+
+.project-creation-button {
+  width: 150px;
+  border-radius: 25px;
+  margin-top: 50px;
+}
