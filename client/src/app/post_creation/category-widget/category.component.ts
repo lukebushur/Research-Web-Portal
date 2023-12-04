@@ -15,17 +15,13 @@ import {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <input type="checkbox" id="categoryInput" name={{name}} value="cs">
+    <input type="checkbox" name={{name}} value="cs">
     <input type="text" value="{{ name }}" name="cs"><input type="button" (click)="onClick()" value="Delete"><br>
   `,
-  styleUrls: ['./category.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class CategoryComponent implements OnChanges {
-  ngOnChanges(changes: SimpleChanges): void {
-    
-  }
+export class CategoryComponent {
 
   @Output() deleted = new EventEmitter<any>();
 

@@ -24,6 +24,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
+import { PostProjectComponent } from './post_creation/posts.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { MatSortModule } from '@angular/material/sort';
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
+    PostProjectComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatToolbarModule,
     MatCardModule,
     MatSortModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
