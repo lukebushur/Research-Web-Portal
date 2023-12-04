@@ -1,0 +1,47 @@
+
+<style>
+  textarea {
+  width: 400px;
+  height: 150px;
+  }
+
+  label {
+  position: absolute;
+  top: 0.2ex;
+  z-index: 1;
+  left: 2em;
+  background-color: white;
+  padding: 0 5px;
+
+  border: 1px solid gray;
+  border-radius: 6px;
+  position: relative;
+  width: 200px;
+  margin: 10px;
+  line-height: 6ex;
+
+}
+</style>
+
+<main>
+  <div>
+    <h2>Opportunity Name</h2>
+    <img src="assets\Bok1.jpeg" /><br>
+    <opportunity text="Opportunity 1">Opportunity 1<br></opportunity>
+    <label>GPA: <gpa>3.0</gpa> &nbsp;&nbsp;&nbsp;&nbsp;</label>
+    <label>Major:<major major="Comp Sci">Computer Science</major> &nbsp;&nbsp;&nbsp;&nbsp;</label>
+    <label>Standing: <standing standing="Senior">Senior</standing> &nbsp;&nbsp;&nbsp;&nbsp;</label>
+  </div>
+  <br><br>
+
+
+<app-text-field name="Why do you wish to apply?"></app-text-field>
+<app-text-field name="What is your greatest weakness?"></app-text-field>
+<app-text-field name="What experience do you have?"></app-text-field>
+
+<br><br>
+  <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button>
+</main>
+
+
+<router-outlet></router-outlet>

@@ -24,6 +24,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
+import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { MatSortModule } from '@angular/material/sort';
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
+    ApplyToOpp
   ],
   imports: [
     BrowserModule,
