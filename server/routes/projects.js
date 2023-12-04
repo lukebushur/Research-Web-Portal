@@ -29,5 +29,7 @@ router.put('/archiveProject', verifyToken, facultyProjects.archiveProject);
 //PUT Accpet or Reject an application for a project
 router.put('/application', verifyToken, facultyProjects.applicationDecision);
 
+router.get('/getAllProjects', verifyToken, facultyProjects.getAllActiveProjects);
+
 
 module.exports = router;

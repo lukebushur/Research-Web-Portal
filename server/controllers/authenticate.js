@@ -75,6 +75,9 @@ const register = async (req, res) => {
             //hash the user's password
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.password, salt);
+            const GPA = Math.floor(Math.random() * (400 - 250) + 250) / 100;
+            const commonMajors = ["Computer Science", "Business Administration", "Psychology", "Biology",  "Graphic Design"];
+            const randomIndex = Math.floor(Math.random() * commonMajors.length);
 
             //create new user instance
             const user = new User({
@@ -94,6 +97,8 @@ const register = async (req, res) => {
                 userType: { //Temporarialy hardcoded, will make every account a faculty account, will be updated in the future
                     Type: req.body.accountType,
                     Confirmed: true,
+                    GPA: GPA,
+                    Major: commonMajors[randomIndex]
                 },
             });
 

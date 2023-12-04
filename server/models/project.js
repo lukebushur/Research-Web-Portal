@@ -9,17 +9,30 @@ const researchOpp = new mongoose.Schema({
         type: String,
         required: true,
     },
+    professorName: {
+        type: String,
+        required: true,
+    },
     projects: [{
         projectName: {
             type: String,
             required: true
         },
+        GPA: {
+            type: Number,
+            required: false,
+        },
+        majors:
+            [{
+                type: String,
+                required: false
+            }],
         professorId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
         },
         applications: [
-            {   
+            {
                 applicationRecordID: {
                     type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationRecord'
                 },
@@ -28,6 +41,12 @@ const researchOpp = new mongoose.Schema({
                 },
                 status: {
                     type: String
+                },
+                name: {
+                    type: String
+                },
+                gpa: {
+                    type: Number
                 }
             }
         ],

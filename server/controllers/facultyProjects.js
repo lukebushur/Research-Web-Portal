@@ -47,6 +47,7 @@ const createProject = async (req, res) => {
                 let newProjectList = new Project({
                     type: req.body.projectType,
                     professorEmail: user.email,
+                    professorName: user.name,
                     projects: [{
                         projectName: req.body.projectDetails.project.projectName,
                         professorId: userId,
@@ -54,6 +55,8 @@ const createProject = async (req, res) => {
                         description: req.body.projectDetails.project.description,
                         questions: req.body.projectDetails.project.questions,
                         requirements: req.body.projectDetails.project.requirements,
+                        GPA: 10.01,
+                        majors: ["Computer Science"]
                     }]
                 });
                 await newProjectList.save();
@@ -69,6 +72,8 @@ const createProject = async (req, res) => {
                     description: req.body.projectDetails.project.description,
                     questions: req.body.projectDetails.project.questions,
                     requirements: req.body.projectDetails.project.requirements,
+                    GPA: 10.01,
+                    majors: ["Computer Science"]
                 };
                 await Project.updateOne({ _id: existingProject }, {
                     $push: { //push new project to the array 
@@ -389,9 +394,9 @@ const applicationDecision = async (req, res) => {
             //if the status are not pending, then the request shouldn't modify anything because the decision is already made - MIGHT CHANGE IN FUTURE!
             if (projectStatus != "Pending" || applicationStatus != "Pending") { res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); return; }
             //Set status
-            project.projects[projIndex].applications[projAppIndex].status = decision;
-            application.applications[appIndex].status = decision;
-            
+            project.projects[projIndex].applications[projAppIndex].status = decision + "ed";
+            application.applications[appIndex].status = decision + "ed";
+
             const savePromises = [
                 project.save(),
                 application.save()
@@ -408,10 +413,51 @@ const applicationDecision = async (req, res) => {
     }
 }
 
+const getAllActiveProjects = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+
+        const projectsList = user.userType.FacultyProjects;
+        //get the project lists for active, archived, and draft projects
+        let activeProjects = await Project.find({ type: "Active" });
+
+        let data = [];
+
+        activeProjects.forEach(x => {
+            x.projects.forEach(y => {
+                let project = {
+                    professorName: x.professorName,
+                    professorEmail: x.professorEmail,
+                    title: y.projectName,
+                    projectID: y.id,
+                    gpa: y.GPA,
+                    majors: y.majors,
+                    applications: y.applications
+                }
+                data.push(project);
+            });
+        });
+
+        //This specific response doesn't work with the generateRes method, will look into solutions
+        res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", data } });
+
+
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
 
 
 module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
-    archiveProject, applicationDecision
+    archiveProject, applicationDecision,
+    getAllActiveProjects
 };

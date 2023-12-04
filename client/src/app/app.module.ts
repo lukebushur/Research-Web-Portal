@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { ConfirmEmailComponent } from './confirmemail/email.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './faculty-dashboard/faculty-dashboard.component';
@@ -24,6 +24,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
+import { DemoProjectsComponent} from './demoProjects/demoProject.component';
+import { SpinnerComponent } from './spinner/spinner.component'
+import { LoadingInterceptor } from './loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,8 @@ import { MatSortModule } from '@angular/material/sort';
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
+    DemoProjectsComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +59,11 @@ import { MatSortModule } from '@angular/material/sort';
     MatCardModule,
     MatSortModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
