@@ -1,6 +1,4 @@
-
-<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
-       class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="student-table">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
@@ -20,7 +18,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by degree">
       Degree
     </th>
-    <td mat-cell *matCellDef="let student"> {{student.degree}} </td> 
+    <td mat-cell *matCellDef="let student"> {{student.degree}} </td>
   </ng-container>
 
   <ng-container matColumnDef="email">
@@ -31,10 +29,11 @@
   </ng-container>
 
   <ng-container matColumnDef="experience">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by experience" (click)="doSomething()">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by experience"
+      (click)="doSomething()">
       Experience
     </th>
-    <td mat-cell *matCellDef="let student" > {{student.experience}} </td>
+    <td mat-cell *matCellDef="let student"> {{student.experience}} </td>
   </ng-container>
 
   <ng-container matColumnDef="buttons">
