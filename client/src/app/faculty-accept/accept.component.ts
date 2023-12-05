@@ -11,12 +11,7 @@ import { FacultyProjectService } from '../_helpers/faculty-project-service/facul
 export class FacultyDashboardApplyComponent implements OnInit {
   projects: Array<{
     student: string;
-  }> = [{
-    student: "Nick Scoble"
-  },
-  {
-    student: "Luke Bushar"
-  }];
+  }> = [];
 
   projectId: string = "";
   href: string = "";
