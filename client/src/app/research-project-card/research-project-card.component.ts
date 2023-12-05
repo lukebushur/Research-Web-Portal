@@ -40,7 +40,6 @@ export class ResearchProjectCardComponent implements OnInit {
     });
 
     this.tableData.updateData(applications);
-   
     this.unselectAll();
     this.selected[id] = true;
   }
@@ -49,8 +48,8 @@ export class ResearchProjectCardComponent implements OnInit {
     //this.router.navigate(['/create-post']);
   }
 
-  unselectAll(){
-    for(let x:number = 0; x < this.selected.length; x++){
+  unselectAll() {
+    for (let x: number = 0; x < this.selected.length; x++) {
       this.selected[x] = false;
     }
   }
@@ -60,7 +59,7 @@ export class ResearchProjectCardComponent implements OnInit {
       next: (data) => {
         this.projects = data.success.projects;
         console.log(this.projects);
-        for(let x:number = 0; x < this.projects.length; x++){
+        for (let x: number = 0; x < this.projects.length; x++) {
           this.selected[x] = false;
         }
       },
