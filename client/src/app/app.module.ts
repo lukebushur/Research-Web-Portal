@@ -27,6 +27,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { DemoProjectsComponent} from './demoProjects/demoProject.component';
 import { SpinnerComponent } from './spinner/spinner.component'
 import { LoadingInterceptor } from './loading.interceptor';
+import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,7 @@ import { LoadingInterceptor } from './loading.interceptor';
   providers: [
     {
       provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true
-    }
+    }, TableDataSharingService
   ],
   bootstrap: [AppComponent]
 })
