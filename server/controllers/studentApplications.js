@@ -33,7 +33,7 @@ const createApplication = async (req, res) => {
             student = results[0];
             faculty = results[1];
         });
-
+        console.log(student.GPA + student.Major);
         //check if user type is student
         if (student && student.userType.Type == process.env.STUDENT) {
 
@@ -74,7 +74,9 @@ const createApplication = async (req, res) => {
                                 'application': applicationList.applications[0]._id,
                                 'status': "Pending",
                                 'name': student.name,
-                                'gpa': req.body.gpa
+                                'gpa': student.userType.GPA,
+                                'major': student.userType.Major,
+                                'email': student.email,
                             }
                         }
                     }),
@@ -105,6 +107,7 @@ const createApplication = async (req, res) => {
                 const doc = await Application.findOne({ _id: applicationRecord });
                 const newApp = doc._doc.applications.find(y => y.opportunityId.toString() == existingProject.id);
                 //update the project with a new application
+                console.log(student.GPA + student.Major);
                 await Project.updateOne({ _id: activeProjectID, "projects": { "$elemMatch": { "_id": existingProject._id } } }, {
                     $push: {
                         'projects.$.applications': {
@@ -112,7 +115,9 @@ const createApplication = async (req, res) => {
                             'application': newApp._id,
                             'status': "Pending",
                             'name': student.name,
-                            'gpa': req.body.gpa
+                            'gpa': student.userType.GPA,
+                            'major': student.userType.Major,
+                            'email': student.email,
                         }
                     }
                 });

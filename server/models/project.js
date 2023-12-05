@@ -47,6 +47,12 @@ const researchOpp = new mongoose.Schema({
                 },
                 gpa: {
                     type: Number
+                },
+                major: {
+                    type: String
+                },
+                email: {
+                    type: String
                 }
             }
         ],
