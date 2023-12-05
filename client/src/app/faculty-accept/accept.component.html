@@ -1,0 +1,14 @@
+<table>
+    <thead>
+        <tr>
+            <th>Student Application</th>
+            <th>Decision</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let project of projects">
+            <td>{{project.student}}</td>
+            <td><button (click)="accept(project)">Accept</button><button (click)="deny(project)">Deny</button></td>
+        </tr>
+    </tbody>
+</table>

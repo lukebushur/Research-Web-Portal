@@ -26,6 +26,7 @@ import { AppliedStudentTableComponent } from './applied-student-table/applied-st
 import { MatSortModule } from '@angular/material/sort';
 import { PostProjectComponent } from './post_creation/posts.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
     PostProjectComponent,
+    FacultyDashboardApplyComponent
   ],
   imports: [
     BrowserModule,

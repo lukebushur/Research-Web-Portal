@@ -8,6 +8,7 @@ import { FacultyDashboardComponent } from './faculty-dashboard/faculty-dashboard
 import { AuthGuard } from './auth/auth-guard/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { PostProjectComponent } from './post_creation/posts.component';
+import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'faculty-dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard]},
   { path: "confirm-email/:emailtoken", component: ConfirmEmailComponent, canActivate: [AuthGuard]},
   { path: "login", component: LoginComponent},
-  { path: "create-post", component: PostProjectComponent, canActivate: [AuthGuard]}
+  { path: "create-post", component: PostProjectComponent, canActivate: [AuthGuard]},
+  { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
