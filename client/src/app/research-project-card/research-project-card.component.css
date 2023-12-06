@@ -11,6 +11,11 @@
   flex-grow: 1;
 }
 
+.project-card:hover {
+  cursor: pointer;
+  filter: brightness(95%);
+}
+
 .project-card-title {
   margin-left: 0.5em;
 }

@@ -119,7 +119,7 @@ export class DemoProjectsComponent implements OnInit {
 
     canApplyToPosition(majors: string[], gpa: number): Boolean {
         if (gpa > this.GPA) { return false; }
-        if (majors.length > 0 && majors.indexOf(this.Major) === -1) { return false; }
+        // if (majors.length > 0 && majors.indexOf(this.Major) === -1) { return false; }
         return true;
     }
 

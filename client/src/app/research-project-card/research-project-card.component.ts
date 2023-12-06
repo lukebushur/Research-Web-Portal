@@ -48,7 +48,6 @@ export class ResearchProjectCardComponent implements OnInit {
 
     this.tableData.projectID = project.id;
     this.tableData.updateData(applications);
-
     this.unselectAll();
     this.selected[id] = true;
   }
