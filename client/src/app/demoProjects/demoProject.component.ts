@@ -1,24 +1,72 @@
 import { Component, OnInit } from '@angular/core';
 import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
+import { MatTableDataSource } from '@angular/material/table';
+
+export interface ProjectsTableRow {
+    projectID: string;
+    majors: string[];
+    name: string;
+    email: string;
+    title: string;
+    gpa: number;
+    majorsString: string;
+}
+
+export interface StudentTableRow {
+    name: string;
+    major: string;
+    gpa: number;
+}
 
 @Component({
     selector: 'demo-projects-page',
     templateUrl: './demoProject.component.html',
     styleUrls: ['./demoProject.component.css']
 })
+
 export class DemoProjectsComponent implements OnInit {
 
     constructor(private facultyService: FacultyProjectService) { }
+
+    // for holding data
+    tableProjectsData: ProjectsTableRow[] = [];
+    // for updating the table after creation
+    projectsDataSource: MatTableDataSource<ProjectsTableRow>;
+    // for specifying the columns to display
+    displayedProjectsColumns: string[] = ['name', 'email', 'title', 'gpa', 'majors', 'status'];
+
+    // for holding data
+    tableStudentData: StudentTableRow[] = [];
+    // for updating the table after creation
+    studentDataSource: MatTableDataSource<StudentTableRow>;
+    // for specifying the columns to display
+    displayedStudentColumns: string[] = ['name', 'major', 'gpa'];
+
     ActiveProjects: any[] = [];
-    GPA: Number;
-    Major: String;
-    Name: String;
+    GPA: number;
+    Major: string;
+    Name: string;
     repeat: any;
 
     ngOnInit(): void {
         this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
             this.ActiveProjects = res.success.data;
-            console.log(res);
+
+            // for each project, parse it into the ProjectsTableRow and push
+            // it onto the array
+            res.success.data.forEach((project: any) => {
+                this.tableProjectsData.push({
+                    projectID: project.projectID,
+                    majors: project.majors,
+                    name: project.professorName,
+                    email: project.professorEmail,
+                    title: project.title,
+                    gpa: project.gpa,
+                    majorsString: this.parseMajors(project.majors),
+                })
+            });
+            // update the table's data
+            this.projectsDataSource = new MatTableDataSource(this.tableProjectsData);
         });
         this.facultyService.demoGetStudentData().subscribe((res: any) => {
             this.Name = res.success.data.name;
@@ -28,6 +76,15 @@ export class DemoProjectsComponent implements OnInit {
                 this.GPA = res.success.data.GPA;
             }
             this.Major = res.success.data.major;
+
+            // parse the StudentTableRow and push it onto the array
+            this.tableStudentData.push({
+                name: res.success.data.name,
+                major: res.success.data.major,
+                gpa: res.success.data.GPA,
+            });
+            // update the table's data
+            this.studentDataSource = new MatTableDataSource(this.tableStudentData);
         });
         this.repeat = setInterval(() => {
             this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
@@ -37,7 +94,7 @@ export class DemoProjectsComponent implements OnInit {
         }, 5000);
     }
 
-    parseMajors(majors: String[]): String {
+    parseMajors(majors: string[]): string {
         let result: string = '';
         majors.forEach(x => {
             result += x + ", ";
@@ -46,13 +103,12 @@ export class DemoProjectsComponent implements OnInit {
         return result;
     }
 
-    applyToPosition(email: String, id: String): void {
+    applyToPosition(email: string, id: string): void {
         this.facultyService.demoApplyToPosition(email, id, this.GPA).subscribe({
             next: (data) => {
                 console.log('Successfully Applied', data);
                 this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
                     this.ActiveProjects = res.success.data;
-                    console.log(res);
                 });
             },
             error: (error) => {
@@ -61,13 +117,13 @@ export class DemoProjectsComponent implements OnInit {
         });
     }
 
-    canApplyToPosition(majors: String[], gpa: Number): Boolean {
+    canApplyToPosition(majors: string[], gpa: number): Boolean {
         if (gpa > this.GPA) { return false; }
-        if (majors.indexOf(this.Major) === -1) { return false; }
+        if (majors.length > 0 && majors.indexOf(this.Major) === -1) { return false; }
         return true;
     }
 
-    alreadyApplied(id: String, button: Boolean): boolean {
+    alreadyApplied(id: string, button: boolean): boolean {
         let index = this.ActiveProjects.findIndex(x => x.projectID === id);
         let nameIndex = this.ActiveProjects[index].applications.findIndex((y: any) => y.name === this.Name && y.gpa === this.GPA);
         if (nameIndex === -1) {
@@ -79,14 +135,13 @@ export class DemoProjectsComponent implements OnInit {
         }
     }
 
-    getApplicationStatus(id: String, button: Boolean): String {
+    getApplicationStatus(id: string, button: boolean): string {
         let index = this.ActiveProjects.findIndex(x => x.projectID === id);
         let nameIndex = this.ActiveProjects[index].applications.findIndex((y: any) => y.name === this.Name && y.gpa === this.GPA);
-        console.log(nameIndex + " " + index);
         if (nameIndex !== -1) {
             return this.ActiveProjects[index].applications[nameIndex].status;
         }
-        return "Error"
+        return "Error";
     }
 
 }

@@ -1,16 +1,27 @@
-
-.book-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+h2 {
+    margin: 0.5em;
+    font-weight: 500;
 }
 
-.book-table th, .book-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+.status-text {
+    padding: 0.2em 0.4em;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    max-width: fit-content;
+    border-radius: 5px;
 }
 
-.book-table th {
-    background-color: #f2f2f2;
+.pending-status-text {
+    color: darkorange;
+    border: 1px solid darkorange;
+}
+
+.accept-status-text {
+    color: green;
+    border: 1px solid green;
+}
+
+.reject-status-text {
+    color: red;
+    border: 1px solid red;
 }

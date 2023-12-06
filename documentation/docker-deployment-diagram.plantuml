@@ -31,7 +31,7 @@ node mongoDatabase [
 reverseProxy -r-> frontend : / routes
 frontend -l-> reverseProxy : webpages
 reverseProxy -d-> backend : /api routes
-backend -u-> reverseProxy : data
+backend -u-> reverseProxy : response
 backend -r-> mongoDatabase : CRUD operations
 mongoDatabase -l-> backend : results
 @enduml
