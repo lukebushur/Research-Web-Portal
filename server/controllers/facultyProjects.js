@@ -56,7 +56,7 @@ const createProject = async (req, res) => {
                         questions: req.body.projectDetails.project.questions,
                         requirements: req.body.projectDetails.project.requirements,
                         GPA: 10.01,
-                        majors: ["Computer Science"]
+                        majors: ["All"]
                     }]
                 });
                 await newProjectList.save();
@@ -73,7 +73,7 @@ const createProject = async (req, res) => {
                     questions: req.body.projectDetails.project.questions,
                     requirements: req.body.projectDetails.project.requirements,
                     GPA: 10.01,
-                    majors: ["Computer Science"]
+                    majors: ["All"]
                 };
                 await Project.updateOne({ _id: existingProject }, {
                     $push: { //push new project to the array 
@@ -201,7 +201,7 @@ const getProjects = async (req, res) => {
                         majors: x.majors,
                         projectName: x.projectName,
                         professorId: x.professorId,
-                        _id: x._id,
+                        id: x._id.toString(),
                         questions: x.questions,
                         requirement: x.requirements,
                         posted: x.posted,
@@ -222,7 +222,7 @@ const getProjects = async (req, res) => {
                         majors: x.majors,
                         projectName: x.projectName,
                         professorId: x.professorId,
-                        _id: x._id,
+                        id: x._id.toString(),
                         questions: x.questions,
                         requirement: x.requirements,
                         posted: x.posted,
@@ -243,7 +243,7 @@ const getProjects = async (req, res) => {
                         majors: x.majors,
                         projectName: x.projectName,
                         professorId: x.professorId,
-                        _id: x._id,
+                        id: x._id.toString(),
                         questions: x.questions,
                         requirement: x.requirements,
                         posted: x.posted,
@@ -535,11 +535,47 @@ const getAllActiveProjects = async (req, res) => {
     }
 }
 
+const demoFetchApplicants = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+        if (user.userType.Type === parseInt(process.env.FACULTY)) {
+            const projectsList = user.userType.FacultyProjects;
+            //get the project lists for active, archived, and draft projects
+
+            let activeProjects;
+
+            activeProjects = await Project.findById(projectsList.Active);
+
+            let theApplicants = {};
+            if (activeProjects) {
+                activeProjects.projects.forEach(x => {
+                    if (x._id.toString() === req.body.projectID) {
+                        theApplicants = x.applications
+                    }
+                });
+            }
+           
+            //This specific response doesn't work with the generateRes method, will look into solutions
+            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", applicants : theApplicants } });
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
 
 
 module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
     archiveProject, applicationDecision,
-    getAllActiveProjects
+    getAllActiveProjects, demoFetchApplicants
 };

@@ -13,6 +13,7 @@ export class DemoProjectsComponent implements OnInit {
     GPA: Number;
     Major: String;
     Name: String;
+    repeat: any;
 
     ngOnInit(): void {
         this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
@@ -28,6 +29,12 @@ export class DemoProjectsComponent implements OnInit {
             }
             this.Major = res.success.data.major;
         });
+        this.repeat = setInterval(() => {
+            this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
+                this.ActiveProjects = res.success.data;
+                console.log(res);
+            });
+        }, 5000);
     }
 
     parseMajors(majors: String[]): String {
