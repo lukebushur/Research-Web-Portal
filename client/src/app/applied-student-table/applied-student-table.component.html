@@ -18,7 +18,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by degree">
       Degree
     </th>
-    <td mat-cell *matCellDef="let student"> {{student.degree}} </td>
+    <td mat-cell *matCellDef="let student"> {{student.major}} </td>
   </ng-container>
 
   <ng-container matColumnDef="email">
@@ -40,7 +40,13 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       Accept/Reject
     </th>
-    <td mat-cell *matCellDef="let student">{{student.status}}</td>
+    <td mat-cell *matCellDef="let student">
+      <p *ngIf="student.status === 'Accepted' || student.status === 'Rejected'">{{student.status}}</p>
+      <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
+        (click)="applicationDecide(project, project.number)">Accept</button>
+      <button *ngIf="student.status === 'Pending'" mat-raised-button color="warn"
+        (click)="applicationDecide(project, project.number)">Reject</button>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

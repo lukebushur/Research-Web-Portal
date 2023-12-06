@@ -43,9 +43,10 @@ export class DemoProjectsComponent implements OnInit {
     displayedStudentColumns: string[] = ['name', 'major', 'gpa'];
 
     ActiveProjects: any[] = [];
-    Name: string;
     GPA: number;
     Major: string;
+    Name: string;
+    repeat: any;
 
     ngOnInit(): void {
         this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
@@ -85,6 +86,12 @@ export class DemoProjectsComponent implements OnInit {
             // update the table's data
             this.studentDataSource = new MatTableDataSource(this.tableStudentData);
         });
+        this.repeat = setInterval(() => {
+            this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
+                this.ActiveProjects = res.success.data;
+                console.log(res);
+            });
+        }, 5000);
     }
 
     parseMajors(majors: string[]): string {

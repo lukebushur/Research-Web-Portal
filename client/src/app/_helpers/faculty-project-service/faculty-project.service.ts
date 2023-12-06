@@ -95,4 +95,15 @@ export class FacultyProjectService {
 
     return this.http.post(`${this.apiUrl}/applications/createApplication`, data, { headers });
   }
+
+  demoFetchApplicants(projectId: String): Observable<any> {
+    const authToken = localStorage.getItem("jwt-auth-token");
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    });
+    const data = { "projectID": projectId };
+
+    return this.http.post(`${this.apiUrl}/projects/getApplicants`, data, { headers: headers });
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  } from '@angular/core';
 import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -13,7 +13,9 @@ export class ResearchProjectCardComponent implements OnInit {
   projects: any[] = [];
   selected: boolean[] = [];
   currentProjectType: string = 'active'; // Default to the list of active projects
-
+  repeat: any;
+  currentId: number;
+  currentProject: any;
 
   constructor(
     private facultyProjectService: FacultyProjectService,
@@ -22,23 +24,29 @@ export class ResearchProjectCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchProjects();
+    this.fetchProjects(false);
+    this.repeat = setInterval(() => {
+      this.fetchProjects(true);
+    }, 5000); 
   }
 
   doSomething(project: any, id: number): void {
-    console.log("test");
+    this.currentId = id;
+    this.currentProject = project;
     let applications: any[] = [];
 
     project.applications.forEach((x: any) => {
       let y: any = {};
       y.name = x.name;
       y.gpa = x.gpa;
-      y.degree = x.major;
+      y.major = x.major;
       y.email = x.email;
       y.status = x.status;
       applications.push(y);
     });
+    console.log(applications);
 
+    this.tableData.projectID = project.id;
     this.tableData.updateData(applications);
     this.unselectAll();
     this.selected[id] = true;
@@ -54,13 +62,18 @@ export class ResearchProjectCardComponent implements OnInit {
     }
   }
 
-  fetchProjects(): void {
+  fetchProjects(automatic: boolean): void {
     this.facultyProjectService.getProjects().subscribe({
       next: (data) => {
         this.projects = data.success.projects;
         console.log(this.projects);
-        for (let x: number = 0; x < this.projects.length; x++) {
-          this.selected[x] = false;
+        if (!automatic) {
+          for (let x: number = 0; x < this.projects.length; x++) {
+            this.selected[x] = false;
+          }
+          if(this.currentId && this.currentProject) {
+            this.doSomething(this.currentProject, this.currentId);
+          }
         }
       },
       error: (error) => {
@@ -115,6 +128,7 @@ export class ResearchProjectCardComponent implements OnInit {
     //   this.showDraftProjectButtons = true;
     // }
     //this.fetchProjects();
+    this.tableData.updateData([]);
   }
 
 
@@ -124,7 +138,7 @@ export class ResearchProjectCardComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Delete response:', response);
-          this.fetchProjects();
+          this.fetchProjects(false);
           // Handle the response if needed
         },
         error: (error) => {
@@ -139,7 +153,7 @@ export class ResearchProjectCardComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Archive response:', response);
-          this.fetchProjects();
+          this.fetchProjects(false);
           // Handle the response if needed
         },
         error: (error) => {
