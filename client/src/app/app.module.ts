@@ -25,6 +25,10 @@ import { MatCardModule } from '@angular/material/card';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
+import { OpportunityComponent } from './apply-to-post/opportunity/opportunity.component';
+import { ImageComponent } from './apply-to-post/image/image.component';
+import { TextFieldComponent } from './apply-to-post/text-field/text-field.component';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +42,6 @@ import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
-    ApplyToOpp
   ],
   imports: [
     BrowserModule,
@@ -55,6 +58,9 @@ import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
     MatToolbarModule,
     MatCardModule,
     MatSortModule,
+    OpportunityComponent,
+    ImageComponent,
+    TextFieldComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

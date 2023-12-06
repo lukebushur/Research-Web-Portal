@@ -7,14 +7,16 @@ import { OpportunityComponent } from './opportunity/opportunity.component';
 
 @Component({
   selector: 'app-to-post',
-  imports: [CommonModule, RouterOutlet, TextFieldComponent, ImageComponent, OpportunityComponent],
   templateUrl: './apply-to-post.component.html',
+  imports: [TextFieldComponent, ImageComponent, OpportunityComponent],
   styleUrls: ['./apply-to-post.component.css'],
+  standalone: true,
   schemas: [NO_ERRORS_SCHEMA]
 })
 export class ApplyToOpp {
   title = 'applyToOpp';
 
+  constructor() {}
   
   submitApp(id: any) {
     console.log("submitted");
