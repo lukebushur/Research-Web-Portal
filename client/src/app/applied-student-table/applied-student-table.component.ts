@@ -60,6 +60,24 @@ export class AppliedStudentTableComponent implements AfterViewInit {
     }
   }
 
+  applicationDecide(app: any, decision: string) {
+    let decision2 = (decision === 'Accept') ? 'Accept' : 'Reject';
+    let data = { 
+      "projectID": this.tableData.projectID,
+      "applicationID": app,
+      "decision": decision2
+    }
+    console.log(app + " " + this.tableData.projectID);
+    this.facultyProjectService.applicationDecision(data).subscribe({
+      next: (data) => {
+        this.fetchApplicants();
+      },
+      error: (error) => {
+        console.error('Error fetching projects', error);
+      },
+    });
+  }
+
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);

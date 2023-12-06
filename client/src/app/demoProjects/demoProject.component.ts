@@ -89,6 +89,19 @@ export class DemoProjectsComponent implements OnInit {
         this.repeat = setInterval(() => {
             this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
                 this.ActiveProjects = res.success.data;
+                this.tableProjectsData = [];
+                this.ActiveProjects.forEach((project: any) => {
+                    this.tableProjectsData.push({
+                        projectID: project.projectID,
+                        majors: project.majors,
+                        name: project.professorName,
+                        email: project.professorEmail,
+                        title: project.title,
+                        gpa: project.gpa,
+                        majorsString: this.parseMajors(project.majors),
+                    })
+                });
+                this.projectsDataSource = new MatTableDataSource(this.tableProjectsData);
                 console.log(res);
             });
         }, 5000);
