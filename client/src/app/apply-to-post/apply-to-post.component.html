@@ -34,10 +34,9 @@
   </div>
   <br><br>
 
-
-<app-text-field name="Why do you wish to apply?"></app-text-field>
-<app-text-field name="What is your greatest weakness?"></app-text-field>
-<app-text-field name="What experience do you have?"></app-text-field>
+<div *ngFor="let question of questions">
+  <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
+</div>
 
 <br><br>
   <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button>
