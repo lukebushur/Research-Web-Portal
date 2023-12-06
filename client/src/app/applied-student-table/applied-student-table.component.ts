@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableDataSharingService } from '../_helpers/table-data-sharing/table-data-sharing.service'
+import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
 
 export interface AppliedStudentList {
   name: string;
@@ -19,18 +20,23 @@ export interface AppliedStudentList {
   styleUrls: ['./applied-student-table.component.css'],
 })
 export class AppliedStudentTableComponent implements AfterViewInit {
-  constructor(private _liveAnnouncer: LiveAnnouncer, private tableData: TableDataSharingService) { 
+  constructor(private _liveAnnouncer: LiveAnnouncer, private tableData: TableDataSharingService,
+    private facultyProjectService: FacultyProjectService,) {
   }
 
   ngOnInit() {
-    this.tableData.getData().subscribe((value) => {
+    this.tableData.AppliedStudentList.subscribe((value) => {
       this.testStudentData = value;
       this.dataSource = new MatTableDataSource(this.testStudentData);
+      console.log("subscribed");
     });
+    this.repeat = setInterval(() => {
+      this.fetchApplicants();
+    }, 5000);
   }
-  
-  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'experience', 'buttons'];
 
+  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'experience', 'buttons'];
+  repeat: any;
   testStudentData: any[] = [];
   dataSource = new MatTableDataSource(this.testStudentData);
 
@@ -38,6 +44,20 @@ export class AppliedStudentTableComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  fetchApplicants() {
+    console.log(this.tableData.projectID);
+    if (this.tableData.projectID) {
+      this.facultyProjectService.demoFetchApplicants(this.tableData.projectID).subscribe({
+        next: (data) => {
+          this.dataSource = data.success.applicants;
+        },
+        error: (error) => {
+          console.error('Error fetching projects', error);
+        },
+      });
+    }
   }
 
   announceSortChange(sortState: Sort) {

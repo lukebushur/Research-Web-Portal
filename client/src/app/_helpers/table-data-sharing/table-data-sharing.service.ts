@@ -10,14 +10,18 @@ export class TableDataSharingService {
     this.AppliedStudentList = new BehaviorSubject<any[]>([]);
   }
 
-  AppliedStudentList: BehaviorSubject<any[]>;
+  projectID: String;
+  AppliedStudentList: BehaviorSubject<any[]>; 
+  count = 0;
   
   updateData(newData: any[]): void {
+    console.log("data Updated" + this.projectID);
+
     this.AppliedStudentList.next(newData);
   }
 
-  getData(): Observable<any[]> {
-    return this.AppliedStudentList.asObservable();
+  getData(){
+    return this.projectID;
   }
 
 }
