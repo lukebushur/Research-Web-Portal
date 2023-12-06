@@ -28,6 +28,7 @@ import { DemoProjectsComponent} from './demoProjects/demoProject.component';
 import { SpinnerComponent } from './spinner/spinner.component'
 import { LoadingInterceptor } from './loading.interceptor';
 import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
+import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { TableDataSharingService } from './_helpers/table-data-sharing/table-dat
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
     DemoProjectsComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    AutoSignUpComponent
   ],
   imports: [
     BrowserModule,
