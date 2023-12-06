@@ -11,7 +11,7 @@
 
 <div *ngFor="let project of projects" class="project-card-container">
   <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" [id]="'p'+project.number"
-    [style.background-color]="selected[project.number] ? 'lightblue' : 'white'"
+    [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
     (click)="doSomething(project, project.number)">
     <mat-card-title class="project-card-title">
       {{ project.projectName }}
