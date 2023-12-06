@@ -76,7 +76,23 @@ const register = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.password, salt);
             const GPA = Math.floor(Math.random() * (400 - 250) + 250) / 100;
-            const commonMajors = ["Computer Science", "Business Administration", "Psychology", "Biology",  "Graphic Design"];
+            const commonMajors = [
+                "Computer Science",
+                "Psychology",
+                "Biology",
+                "Business Administration",
+                "Chemistry",
+                "English Literature",
+                "Electrical Engineering",
+                "Sociology",
+                "Mathematics",
+                "Graphic Design",
+                "Political Science",
+                "History",
+                "Economics",
+                "Mechanical Engineering",
+                "Environmental Science"
+              ];
             const randomIndex = Math.floor(Math.random() * commonMajors.length);
 
             //create new user instance
