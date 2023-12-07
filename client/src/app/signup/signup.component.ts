@@ -20,7 +20,7 @@ export class SignupComponent {
     Validators.required,
     Validators.email,
     Validators.minLength(6),
-    Validators.maxLength(25)
+    Validators.maxLength(254)
   ]);
   password = new FormControl('', [
     Validators.required,
@@ -40,7 +40,7 @@ export class SignupComponent {
       return 'Minimum email length: 6';
     }
     if (this.email.hasError('maxlength')) {
-      return 'Maximum email length: 25';
+      return 'Maximum email length: 254';
     }
     return this.email.hasError('email') ? 'Not a valid email' : '';
   }
