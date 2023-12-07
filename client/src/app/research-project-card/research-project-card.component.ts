@@ -30,6 +30,10 @@ export class ResearchProjectCardComponent implements OnInit {
     }, 5000); 
   }
 
+  ngOnDestroy() {
+    clearInterval(this.repeat);
+  }
+
   doSomething(project: any, id: number): void {
     this.currentId = id;
     this.currentProject = project;

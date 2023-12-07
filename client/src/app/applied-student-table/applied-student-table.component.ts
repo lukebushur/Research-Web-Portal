@@ -35,7 +35,7 @@ export class AppliedStudentTableComponent implements AfterViewInit {
     }, 5000);
   }
 
-  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'experience', 'buttons'];
+  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', /*'experience',*/ 'buttons'];
   repeat: any;
   testStudentData: any[] = [];
   dataSource = new MatTableDataSource(this.testStudentData);
@@ -62,7 +62,7 @@ export class AppliedStudentTableComponent implements AfterViewInit {
 
   applicationDecide(app: any, decision: string) {
     let decision2 = (decision === 'Accept') ? 'Accept' : 'Reject';
-    let data = { 
+    let data = {
       "projectID": this.tableData.projectID,
       "applicationID": app,
       "decision": decision2

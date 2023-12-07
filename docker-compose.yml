@@ -1,9 +1,8 @@
 services:
-
   # Angular service
   frontend:
     build:
-      context: "./Capstone_Client/client"
+      context: "./client"
       dockerfile: "./Dockerfile"
     networks:
       - capstone_net
@@ -11,13 +10,15 @@ services:
   # Node API service
   backend:
     build:
-      context: "./Capstone_Server"
+      context: "./server"
       dockerfile: "./Dockerfile"
+    # for local MongoDB database
     # depends_on:
     #   - db
     networks:
       - capstone_net
   
+  # for local MongoDB database
   # MongoDB service
   # db:
   #   image: mongo:latest

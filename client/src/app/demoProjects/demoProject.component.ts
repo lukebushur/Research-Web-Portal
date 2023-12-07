@@ -33,7 +33,7 @@ export class DemoProjectsComponent implements OnInit {
     // for updating the table after creation
     projectsDataSource: MatTableDataSource<ProjectsTableRow>;
     // for specifying the columns to display
-    displayedProjectsColumns: string[] = ['name', 'email', 'title', 'gpa', 'majors', 'status'];
+    displayedProjectsColumns: string[] = ['name', /*'email',*/ 'title', 'gpa', 'majors', 'status'];
 
     // for holding data
     tableStudentData: StudentTableRow[] = [];
@@ -105,6 +105,10 @@ export class DemoProjectsComponent implements OnInit {
                 console.log(res);
             });
         }, 5000);
+    }
+
+    ngOnDestroy() {
+        clearInterval(this.repeat);
     }
 
     parseMajors(majors: string[]): string {

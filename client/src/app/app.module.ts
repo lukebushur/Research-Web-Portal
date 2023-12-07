@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmEmailComponent } from './confirmemail/email.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './faculty-dashboard/faculty-dashboard.component';
@@ -22,13 +22,15 @@ import { FacultyToolbarComponent } from './faculty-toolbar/faculty-toolbar.compo
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
-import { DemoProjectsComponent} from './demoProjects/demoProject.component';
+import { DemoProjectsComponent } from './demoProjects/demoProject.component';
 import { SpinnerComponent } from './spinner/spinner.component'
 import { LoadingInterceptor } from './loading.interceptor';
 import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
 import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
+import { SignoutComponent } from './signout/signout.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-compo
     AppliedStudentTableComponent,
     DemoProjectsComponent,
     SpinnerComponent,
-    AutoSignUpComponent
+    AutoSignUpComponent,
+    SignoutComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +64,7 @@ import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-compo
     MatToolbarModule,
     MatCardModule,
     MatSortModule,
+    MatMenuModule,
   ],
   providers: [
     {
