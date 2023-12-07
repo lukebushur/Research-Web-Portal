@@ -28,23 +28,25 @@
     <td mat-cell *matCellDef="let student"> {{student.email}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="experience">
+  <!-- <ng-container matColumnDef="experience">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by experience"
       (click)="doSomething()">
       Experience
     </th>
     <td mat-cell *matCellDef="let student"> {{student.experience}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <ng-container matColumnDef="buttons">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      Accept/Reject
+      Status
     </th>
     <td mat-cell *matCellDef="let student">
-      <p *ngIf="student.status === 'Accepted'" [style.background-color]="'green'">{{student.status}}</p>
-      <p *ngIf="student.status === 'Rejected'" [style.background-color]="'red'">{{student.status}}</p>
+      <p *ngIf="student.status === 'Accepted' || student.status === 'Rejected'"
+        [class.accept-status-text]="student.status === 'Accepted'"
+        [class.reject-status-text]="student.status === 'Rejected'" class="status-text">{{student.status}}</p>
+      <!-- <p *ngIf="student.status === 'Rejected'" [style.background-color]="'red'">{{student.status}}</p> -->
       <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
-        (click)="applicationDecide(student.application, 'Accept')">Accept</button>
+        (click)="applicationDecide(student.application, 'Accept')" class="accept-button">Accept</button>
       <button *ngIf="student.status === 'Pending'" mat-raised-button color="warn"
         (click)="applicationDecide(student.application, 'Reject')">Reject</button>
     </td>
