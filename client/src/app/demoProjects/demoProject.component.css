@@ -3,6 +3,12 @@ h2 {
     font-weight: 500;
 }
 
+.projects-table {
+    display: block;
+    width: 100%;
+    overflow-x: scroll;
+}
+
 .status-text {
     padding: 0.2em 0.4em;
     font-weight: 500;
@@ -24,4 +30,8 @@ h2 {
 .reject-status-text {
     color: red;
     border: 1px solid red;
+}
+
+.cannot-apply-button {
+    min-width: max-content;
 }
