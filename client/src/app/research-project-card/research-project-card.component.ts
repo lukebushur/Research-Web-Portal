@@ -46,6 +46,7 @@ export class ResearchProjectCardComponent implements OnInit {
       y.major = x.major;
       y.email = x.email;
       y.status = x.status;
+      y.application = x.application;
       applications.push(y);
     });
     console.log(applications);

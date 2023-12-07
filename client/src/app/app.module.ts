@@ -29,6 +29,7 @@ import { DemoProjectsComponent } from './demoProjects/demoProject.component';
 import { SpinnerComponent } from './spinner/spinner.component'
 import { LoadingInterceptor } from './loading.interceptor';
 import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
+import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
 import { SignoutComponent } from './signout/signout.component';
 
 @NgModule({
@@ -45,6 +46,7 @@ import { SignoutComponent } from './signout/signout.component';
     AppliedStudentTableComponent,
     DemoProjectsComponent,
     SpinnerComponent,
+    AutoSignUpComponent,
     SignoutComponent
   ],
   imports: [

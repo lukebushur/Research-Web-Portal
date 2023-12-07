@@ -106,4 +106,23 @@ export class FacultyProjectService {
 
     return this.http.post(`${this.apiUrl}/projects/getApplicants`, data, { headers: headers });
   }
+
+  demoAutoCreateAccount(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(`${this.apiUrl}/register`, data, { headers: headers });
+  }
+
+  applicationDecision(data: any): Observable<any> {
+    const authToken = localStorage.getItem("jwt-auth-token");
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    });
+
+    return this.http.put(`${this.apiUrl}/projects/application`, data, { headers });
+  }
 }
