@@ -107,6 +107,10 @@ export class DemoProjectsComponent implements OnInit {
         }, 5000);
     }
 
+    ngOnDestroy() {
+        clearInterval(this.repeat);
+    }
+
     parseMajors(majors: string[]): string {
         let result: string = '';
         majors.forEach(x => {
