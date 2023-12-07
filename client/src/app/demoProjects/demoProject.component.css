@@ -3,6 +3,16 @@ h2 {
     font-weight: 500;
 }
 
+.scroll-right-div {
+    display: flex;
+    margin: 0.5em 0.8em;
+    align-items: center;
+}
+
+.table-container {
+    max-width: max-content;
+}
+
 .projects-table {
     display: block;
     width: 100%;
@@ -30,8 +40,4 @@ h2 {
 .reject-status-text {
     color: red;
     border: 1px solid red;
-}
-
-.cannot-apply-button {
-    min-width: max-content;
 }
