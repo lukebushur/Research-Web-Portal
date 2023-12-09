@@ -16,7 +16,7 @@ const generateRes = require('../helpers/generateJSON');
 const createApplication = async (req, res) => {
     try {
         //ensure that the number of questions equals number of answers
-        if(req.body.answers.length != req.body.questions.length) {generateRes(false, 400, "INPUT_ERROR", { "details": "Numbers of questions and answers do not match" }); return;}
+        //if((req.body.answers.length != req.body.questions.length)) {generateRes(false, 400, "INPUT_ERROR", { "details": "Numbers of questions and answers do not match" }); return;}
 
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
@@ -33,10 +33,10 @@ const createApplication = async (req, res) => {
             student = results[0];
             faculty = results[1];
         });
-
+        console.log(student.GPA + student.Major);
         //check if user type is student
         if (student && student.userType.Type == process.env.STUDENT) {
-            
+
             const activeProjectID = faculty.userType.FacultyProjects.Active; //activeProjectID is the id of the activeProjects record for the faculty accounts
             const activeProjects = await Project.findOne(_id = activeProjectID); //grabs the array of active projects from the project record
             if (!activeProjects) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
@@ -72,7 +72,11 @@ const createApplication = async (req, res) => {
                             'projects.$.applications': {
                                 'applicationRecordID': applicationList._id,
                                 'application': applicationList.applications[0]._id,
-                                'status': "Pending"
+                                'status': "Pending",
+                                'name': student.name,
+                                'gpa': student.userType.GPA,
+                                'major': student.userType.Major,
+                                'email': student.email,
                             }
                         }
                     }),
@@ -103,12 +107,17 @@ const createApplication = async (req, res) => {
                 const doc = await Application.findOne({ _id: applicationRecord });
                 const newApp = doc._doc.applications.find(y => y.opportunityId.toString() == existingProject.id);
                 //update the project with a new application
+                console.log(student.GPA + student.Major);
                 await Project.updateOne({ _id: activeProjectID, "projects": { "$elemMatch": { "_id": existingProject._id } } }, {
                     $push: {
                         'projects.$.applications': {
                             'applicationRecordID': applicationRecord,
                             'application': newApp._id,
-                            'status': "Pending"
+                            'status': "Pending",
+                            'name': student.name,
+                            'gpa': student.userType.GPA,
+                            'major': student.userType.Major,
+                            'email': student.email,
                         }
                     }
                 });
@@ -149,7 +158,7 @@ const deleteApplication = async (req, res) => {
             }
 
             //recordID is the student's application record ID and will be used to get the application list 
-            const recordID = student.userType.studentApplications; 
+            const recordID = student.userType.studentApplications;
 
             //gets the application record, otherwise sends error response 
             let applications = await Application.findById(recordID);
@@ -213,7 +222,7 @@ const getApplications = async (req, res) => {
             let opportunityIDs = {}; //dictionary where each key is a projectRecordID and its value is an array with each element being an array of size 2, with the opporutnityID and the index of that application
 
 
-            applications.applications.forEach((item, index) => { 
+            applications.applications.forEach((item, index) => {
                 /*  it was difficult to compare the IDs of the objects in the application as they are not stored as strings but rather objects.
                     So what I did was I added both the ID object and the same ID but with .toString() to make it a string, I then checked if the 
                     ID.toString() was in the array of records and if so I didn't add the duplicated project record id. Below I only grabbed the 
@@ -271,8 +280,34 @@ const getApplications = async (req, res) => {
     }
 }
 
+const demoGetStudentInfo = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const student = await User.findOne({ email: decodeAccessToken.email });
+
+        if (student.userType.Type === parseInt(process.env.STUDENT)) {
+
+            let data = {
+                GPA: student.userType.GPA,
+                major: student.userType.Major,
+                name: student.name
+            }
+
+            res.status(200).json({ success: { status: 200, message: "DATA_FOUND", data } });
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
 
 
 module.exports = {
-    createApplication, deleteApplication, getApplications
+    createApplication, deleteApplication,
+    getApplications, demoGetStudentInfo
 };

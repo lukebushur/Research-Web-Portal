@@ -10,7 +10,9 @@
 </div>
 
 <div *ngFor="let project of projects" class="project-card-container">
-  <mat-card class="project-card">
+  <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" [id]="'p'+project.number"
+    [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
+    (click)="doSomething(project, project.number)">
     <mat-card-title class="project-card-title">
       {{ project.projectName }}
     </mat-card-title>
@@ -25,26 +27,29 @@
           projects variable in the .ts file is defined in an interface so that
           there is no type errors.
           <span *ngFor="let req of projects.requirements"> -->
-        Requirements: {{ project.requirements[0].requirementValue | json }}
+        Requirements: {{ project.requirement[0].requirementValue | json }}
         <!-- </span> -->
+      </p>
+      <p>
+        Number of Applicants: {{project.numApp}}
       </p>
       <!-- <p>{{project._id}}</p> -->
     </mat-card-content>
     <mat-card-actions>
       <div class="action-buttons">
-        <button mat-raised-button color="primary" *ngIf="showActiveProjectButtons">Update</button>
-        <button mat-raised-button color="accent" *ngIf="showActiveProjectButtons"
-          (click)="buttonArchiveProject(project._id)">Archive</button>
-        <button mat-raised-button color="warn" *ngIf="showActiveProjectButtons"
-          (click)="buttonDeleteProject(project._id,'Active')">Delete</button>
+        <button mat-raised-button color="primary" *ngIf="project.projectType === 'active'">Update</button>
+        <button mat-raised-button color="accent" *ngIf="project.projectType === 'active'"
+          (click)="buttonArchiveProject(project.id)">Archive</button>
+        <button mat-raised-button color="warn" *ngIf="project.projectType === 'active'"
+          (click)="buttonDeleteProject(project.id,'Active')">Delete</button>
 
-        <button mat-raised-button color="warn" *ngIf="showArchivedProjectButtons"
-          (click)="buttonDeleteProject(project._id,'Archived')">Delete</button>
+        <button mat-raised-button color="warn" *ngIf="project.projectType === 'archived'"
+          (click)="buttonDeleteProject(project.id,'Archived')">Delete</button>
 
-        <button mat-raised-button color="primary" *ngIf="showDraftProjectButtons">Update</button>
-        <button mat-raised-button color="accent" *ngIf="showDraftProjectButtons">Publish</button>
-        <button mat-raised-button color="warn" *ngIf="showDraftProjectButtons"
-          (click)="buttonDeleteProject(project._id,'Draft')">Delete</button>
+        <button mat-raised-button color="primary" *ngIf="project.projectType === 'draft'">Update</button>
+        <button mat-raised-button color="accent" *ngIf="project.projectType === 'draft'">Publish</button>
+        <button mat-raised-button color="warn" *ngIf="project.projectType === 'draft'"
+          (click)="buttonDeleteProject(project.id,'Draft')">Delete</button>
       </div>
     </mat-card-actions>
   </mat-card>

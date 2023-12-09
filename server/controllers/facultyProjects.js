@@ -47,6 +47,7 @@ const createProject = async (req, res) => {
                 let newProjectList = new Project({
                     type: req.body.projectType,
                     professorEmail: user.email,
+                    professorName: user.name,
                     projects: [{
                         projectName: req.body.projectDetails.project.projectName,
                         professorId: userId,
@@ -54,6 +55,8 @@ const createProject = async (req, res) => {
                         description: req.body.projectDetails.project.description,
                         questions: req.body.projectDetails.project.questions,
                         requirements: req.body.projectDetails.project.requirements,
+                        GPA: 10.01,
+                        majors: ["All"]
                     }]
                 });
                 await newProjectList.save();
@@ -69,6 +72,8 @@ const createProject = async (req, res) => {
                     description: req.body.projectDetails.project.description,
                     questions: req.body.projectDetails.project.questions,
                     requirements: req.body.projectDetails.project.requirements,
+                    GPA: 10.01,
+                    majors: ["All"]
                 };
                 await Project.updateOne({ _id: existingProject }, {
                     $push: { //push new project to the array 
@@ -168,14 +173,91 @@ const getProjects = async (req, res) => {
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
             const projectsList = user.userType.FacultyProjects;
             //get the project lists for active, archived, and draft projects
-            let archivedProjects = await Project.findById(projectsList.Archived);
-            let activeProjects = await Project.findById(projectsList.Active);
-            let draftProjects = await Project.findById(projectsList.Draft);
 
-            let data = { "archivedProjects": archivedProjects, "activeProjects": activeProjects, "draftProjects": draftProjects };
+            let archivedProjects;
+            let activeProjects;
+            let draftProjects;
+
+            const promises = [
+                Project.findById(projectsList.Archived),
+                Project.findById(projectsList.Active),
+                Project.findById(projectsList.Draft),
+            ];
+
+            await Promise.all(promises).then(results => {
+                archivedProjects = results[0];
+                activeProjects = results[1];
+                draftProjects = results[2];
+            });
+
+            let allProjects = []
+            let count = 1;
+            if (archivedProjects) {
+                archivedProjects.projects.forEach(x => {
+                    y = {
+                        projectType: "archived",
+                        applications: x.applications,
+                        description: x.description,
+                        majors: x.majors,
+                        projectName: x.projectName,
+                        professorId: x.professorId,
+                        id: x._id.toString(),
+                        questions: x.questions,
+                        requirement: x.requirements,
+                        posted: x.posted,
+                        GPA: x.GPA,
+                        number: count,
+                        numApp: x.applications.length
+                    }
+                    count++;
+                    allProjects.push(y);
+                });
+            }
+            if (activeProjects) {
+                activeProjects.projects.forEach(x => {
+                    y = {
+                        projectType: "active",
+                        applications: x.applications,
+                        description: x.description,
+                        majors: x.majors,
+                        projectName: x.projectName,
+                        professorId: x.professorId,
+                        id: x._id.toString(),
+                        questions: x.questions,
+                        requirement: x.requirements,
+                        posted: x.posted,
+                        GPA: x.GPA,
+                        number: count,
+                        numApp: x.applications.length
+                    }
+                    count++;
+                    allProjects.push(y);
+                });
+            }
+            if (draftProjects) {
+                draftProjects.projects.forEach(x => {
+                    y = {
+                        projectType: "draft",
+                        applications: x.applications,
+                        description: x.description,
+                        majors: x.majors,
+                        projectName: x.projectName,
+                        professorId: x.professorId,
+                        id: x._id.toString(),
+                        questions: x.questions,
+                        requirement: x.requirements,
+                        posted: x.posted,
+                        GPA: x.GPA,
+                        number: count,
+                        numApp: x.applications.length
+                    }
+                    count++;
+                    allProjects.push(y);
+                });
+            }
+
             //This specific response doesn't work with the generateRes method, will look into solutions
-            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", projects: data } });
-
+            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", projects: allProjects } });
         } else {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
@@ -294,6 +376,7 @@ const archiveProject = async (req, res) => {
                 let newArchiveList = new Project({
                     type: "Archived",
                     professorEmail: user.email,
+                    professorName: user.name,
                     projects: [{
                         projectName: archProject.projectName,
                         professorId: archProject.professorId,
@@ -302,6 +385,8 @@ const archiveProject = async (req, res) => {
                         description: archProject.description,
                         questions: archProject.questions,
                         requirements: archProject.requirements,
+                        GPA: archProject.GPA,
+                        majors: archProject.majors,
                     }]
                 });
                 await newArchiveList.save(); //Save the archlive list
@@ -317,6 +402,8 @@ const archiveProject = async (req, res) => {
                     description: archProject.description,
                     questions: archProject.questions,
                     requirements: archProject.requirements,
+                    GPA: archProject.GPA,
+                    majors: archProject.majors,
                 };
                 await Project.updateOne({ _id: user.userType.FacultyProjects.Archived }, {
                     $push: { //push new project to the array 
@@ -389,9 +476,9 @@ const applicationDecision = async (req, res) => {
             //if the status are not pending, then the request shouldn't modify anything because the decision is already made - MIGHT CHANGE IN FUTURE!
             if (projectStatus != "Pending" || applicationStatus != "Pending") { res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); return; }
             //Set status
-            project.projects[projIndex].applications[projAppIndex].status = decision;
-            application.applications[appIndex].status = decision;
-            
+            project.projects[projIndex].applications[projAppIndex].status = decision + "ed";
+            application.applications[appIndex].status = decision + "ed";
+
             const savePromises = [
                 project.save(),
                 application.save()
@@ -408,10 +495,87 @@ const applicationDecision = async (req, res) => {
     }
 }
 
+const getAllActiveProjects = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+
+        const projectsList = user.userType.FacultyProjects;
+        //get the project lists for active, archived, and draft projects
+        let activeProjects = await Project.find({ type: "Active" });
+
+        let data = [];
+
+        activeProjects.forEach(x => {
+            x.projects.forEach(y => {
+                let project = {
+                    professorName: x.professorName,
+                    professorEmail: x.professorEmail,
+                    title: y.projectName,
+                    projectID: y.id,
+                    gpa: y.GPA,
+                    majors: y.majors,
+                    applications: y.applications
+                }
+                data.push(project);
+            });
+        });
+
+        //This specific response doesn't work with the generateRes method, will look into solutions
+        res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", data } });
+
+
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
+const demoFetchApplicants = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+        if (user.userType.Type === parseInt(process.env.FACULTY)) {
+            const projectsList = user.userType.FacultyProjects;
+            //get the project lists for active, archived, and draft projects
+
+            let activeProjects;
+
+            activeProjects = await Project.findById(projectsList.Active);
+
+            let theApplicants = {};
+            if (activeProjects) {
+                activeProjects.projects.forEach(x => {
+                    if (x._id.toString() === req.body.projectID) {
+                        theApplicants = x.applications
+                    }
+                });
+            }
+           
+            //This specific response doesn't work with the generateRes method, will look into solutions
+            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", applicants : theApplicants } });
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
 
 
 module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
-    archiveProject, applicationDecision
+    archiveProject, applicationDecision,
+    getAllActiveProjects, demoFetchApplicants
 };
