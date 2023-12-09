@@ -1,4 +1,4 @@
-@startuml
+@startuml student-use-case
 left to right direction
 actor "Student" as stu
 rectangle {
