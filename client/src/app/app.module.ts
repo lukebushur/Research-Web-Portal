@@ -48,7 +48,7 @@ import { SignoutComponent } from './signout/signout.component';
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
     PostProjectComponent,
-    FacultyDashboardApplyComponent
+    FacultyDashboardApplyComponent,
     DemoProjectsComponent,
     SpinnerComponent,
     AutoSignUpComponent,
