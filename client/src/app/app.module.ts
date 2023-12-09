@@ -25,6 +25,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
+import { PostProjectComponent } from './post_creation/posts.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
 import { DemoProjectsComponent } from './demoProjects/demoProject.component';
 import { SpinnerComponent } from './spinner/spinner.component'
 import { LoadingInterceptor } from './loading.interceptor';
@@ -44,6 +47,8 @@ import { SignoutComponent } from './signout/signout.component';
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
+    PostProjectComponent,
+    FacultyDashboardApplyComponent
     DemoProjectsComponent,
     SpinnerComponent,
     AutoSignUpComponent,
@@ -64,6 +69,7 @@ import { SignoutComponent } from './signout/signout.component';
     MatToolbarModule,
     MatCardModule,
     MatSortModule,
+    MatDialogModule,
     MatMenuModule,
   ],
   providers: [

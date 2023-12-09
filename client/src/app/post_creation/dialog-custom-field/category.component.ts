@@ -11,31 +11,31 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'add-category-field',
+  selector: 'requirement-field',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <label>{{ fieldName }}</label><br>
+    <p>{{fieldName}}</p>
+
     <div *ngIf="isText">
-      <input type="text" *ngIf="fieldInstructions">
       <textarea id="disabledInputField" name="inputPlaceholder" disabled rows="4" cols="50">
         Students will type their responses in here.
       </textarea>
     </div>
+
     <div *ngIf="!isText">
-      
+      <input type="radio" id="yes" name="{{fieldName}}" value="yes">
+      <label for="html">Yes</label><br>
+      <input type="radio" id="no" name="{{fieldName}}" value="no">
+      <label for="css">No</label><br>
     </div>
-    <br>
+
     <input type="button" (click)="onClick()" value="Delete"><br>
   `,
-  styleUrls: ['./field.component.css'],
+  styleUrls: ['./category.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FieldComponent implements OnChanges {
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes are happen');
-  }
-
+export class CustomRequirementCreator {
 
   @Output() deleted = new EventEmitter<any>();
 
@@ -46,8 +46,7 @@ export class FieldComponent implements OnChanges {
     this.deleted.emit(null);
   }
 
-  @Input() isText: boolean = true;
-  @Input() fieldName: string = "";
-  @Input() fieldInstructions: string | boolean = false;
+  isText: boolean = true;
+  fieldName: string = "Placeholder String";
 
 }
