@@ -1,0 +1,22 @@
+@startuml
+left to right direction
+actor "Student" as stu
+rectangle {
+  usecase "Create an account" as UC1
+  usecase "Log in with their account information" as UC2
+  usecase "Set up account details such as gpa, major, etc." as UC3
+  usecase "View student dashboard" as UC4
+  usecase "Search available opportunites" as UC5
+  usecase "Browse available opportunites" as UC6
+  usecase "Filter available opportunites" as UC7
+  usecase "Apply to view posts/research opportunities" as UC8
+}
+stu --> UC1
+stu --> UC2
+stu --> UC3
+stu --> UC4
+stu --> UC5
+stu --> UC6
+stu --> UC7
+stu --> UC8
+@enduml
