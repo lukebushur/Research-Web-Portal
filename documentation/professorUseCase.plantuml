@@ -1,4 +1,4 @@
-@startuml
+@startuml professor-use-case
 left to right direction
 actor "Faculty" as prof
 rectangle {
