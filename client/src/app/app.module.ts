@@ -25,6 +25,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
+import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
+import { OpportunityComponent } from './apply-to-post/opportunity/opportunity.component';
+import { ImageComponent } from './apply-to-post/image/image.component';
+import { TextFieldComponent } from './apply-to-post/text-field/text-field.component';
 import { PostProjectComponent } from './post_creation/posts.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
@@ -69,6 +73,9 @@ import { SignoutComponent } from './signout/signout.component';
     MatToolbarModule,
     MatCardModule,
     MatSortModule,
+    OpportunityComponent,
+    ImageComponent,
+    TextFieldComponent,
     MatDialogModule,
     MatMenuModule,
   ],
