@@ -1,5 +1,4 @@
-<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
-       class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="student-table">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
@@ -10,7 +9,7 @@
 
   <ng-container matColumnDef="gpa">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by gpa">
-      Gpa
+      GPA
     </th>
     <td mat-cell *matCellDef="let student"> {{student.gpa}} </td>
   </ng-container>
@@ -19,7 +18,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by degree">
       Degree
     </th>
-    <td mat-cell *matCellDef="let student"> {{student.degree}} </td> 
+    <td mat-cell *matCellDef="let student"> {{student.major}} </td>
   </ng-container>
 
   <ng-container matColumnDef="email">
@@ -29,11 +28,28 @@
     <td mat-cell *matCellDef="let student"> {{student.email}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="experience">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by experience">
+  <!-- <ng-container matColumnDef="experience">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by experience"
+      (click)="doSomething()">
       Experience
     </th>
     <td mat-cell *matCellDef="let student"> {{student.experience}} </td>
+  </ng-container> -->
+
+  <ng-container matColumnDef="buttons">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      Status
+    </th>
+    <td mat-cell *matCellDef="let student">
+      <p *ngIf="student.status === 'Accepted' || student.status === 'Rejected'"
+        [class.accept-status-text]="student.status === 'Accepted'"
+        [class.reject-status-text]="student.status === 'Rejected'" class="status-text">{{student.status}}</p>
+      <!-- <p *ngIf="student.status === 'Rejected'" [style.background-color]="'red'">{{student.status}}</p> -->
+      <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
+        (click)="applicationDecide(student.application, 'Accept')" class="accept-button">Accept</button>
+      <button *ngIf="student.status === 'Pending'" mat-raised-button color="warn"
+        (click)="applicationDecide(student.application, 'Reject')">Reject</button>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

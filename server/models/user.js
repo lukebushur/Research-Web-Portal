@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         index: true,
         min: 6,
-        max: 25
+        max: 254
     },
     name: {
         type: String,
@@ -57,6 +57,14 @@ const userSchema = new mongoose.Schema({
         studentApplications: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Applications'
+        },
+        GPA: {
+            type: Number,
+            default: 3.1
+        },
+        Major: {
+            type: String,
+            default: "Computer Science"
         }
     },
     emailToken: {

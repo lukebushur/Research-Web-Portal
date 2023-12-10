@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmEmailComponent } from './confirmemail/email.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './faculty-dashboard/faculty-dashboard.component';
@@ -22,13 +22,22 @@ import { FacultyToolbarComponent } from './faculty-toolbar/faculty-toolbar.compo
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
 import { AppliedStudentTableComponent } from './applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
 import { OpportunityComponent } from './apply-to-post/opportunity/opportunity.component';
 import { ImageComponent } from './apply-to-post/image/image.component';
 import { TextFieldComponent } from './apply-to-post/text-field/text-field.component';
-
+import { PostProjectComponent } from './post_creation/posts.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
+import { DemoProjectsComponent } from './demoProjects/demoProject.component';
+import { SpinnerComponent } from './spinner/spinner.component'
+import { LoadingInterceptor } from './loading.interceptor';
+import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
+import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
+import { SignoutComponent } from './signout/signout.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +51,12 @@ import { TextFieldComponent } from './apply-to-post/text-field/text-field.compon
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
+    PostProjectComponent,
+    FacultyDashboardApplyComponent,
+    DemoProjectsComponent,
+    SpinnerComponent,
+    AutoSignUpComponent,
+    SignoutComponent
   ],
   imports: [
     BrowserModule,
@@ -61,8 +76,14 @@ import { TextFieldComponent } from './apply-to-post/text-field/text-field.compon
     OpportunityComponent,
     ImageComponent,
     TextFieldComponent,
+    MatDialogModule,
+    MatMenuModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true
+    }, TableDataSharingService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

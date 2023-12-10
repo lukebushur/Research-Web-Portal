@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
 })
 
 export class FacultyDashboardComponent {
-  constructor() {}
+  constructor() { }
+
+  doSomething(): void {
+    console.log("Works");
+  }
 }

@@ -1,0 +1,59 @@
+@startuml class
+class User {
+    + string email
+    + string password
+    + string name
+    + bool emailConfirmed
+    + string emailToken
+    + userType type
+    + Security security
+}
+
+abstract class userType {
+    + integer type
+    + bool confirmed
+    + Project [Archived, Active, Draft]
+    + Applications [Application]
+}
+
+abstract class Security {
+    + [string] Tokens
+    + Object passwordReset
+    + Object changeEmail
+}
+
+userType <- User : Populated in Mongo
+User -> Security : Linked
+
+class ProjectGroup {
+    + Project [project]
+    + integer groupType
+    + User owner
+}
+
+ProjectGroup ---> User
+
+class Project {
+    + User professor
+    + string name
+    + Application [application]
+    + Date posted
+    + string description
+    + string [questions]
+    + Requirement [requirement]
+}
+
+Project <-> ProjectGroup
+userType ---> Project
+
+class Application {
+    + User user,
+    + String [questions, answers]
+    + Project opportunity
+    + bool Status
+}
+
+userType ---> Application 
+Application -> Project
+
+@enduml

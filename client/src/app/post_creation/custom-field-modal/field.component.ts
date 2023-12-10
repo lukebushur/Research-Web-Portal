@@ -17,6 +17,7 @@ import {
   template: `
     <label>{{ fieldName }}</label><br>
     <div *ngIf="isText">
+      <input type="text" *ngIf="fieldInstructions">
       <textarea id="disabledInputField" name="inputPlaceholder" disabled rows="4" cols="50">
         Students will type their responses in here.
       </textarea>
@@ -46,6 +47,7 @@ export class FieldComponent implements OnChanges {
   }
 
   @Input() isText: boolean = true;
-  @Input() fieldName: string = "Placeholder String";
+  @Input() fieldName: string = "";
+  @Input() fieldInstructions: string | boolean = false;
 
 }

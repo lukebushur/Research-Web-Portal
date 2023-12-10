@@ -1,4 +1,4 @@
-@startuml docker-deployment-diagram
+@startuml docker-deployment
 node reverseProxy [
 <b>Reverse Proxy</b>
 
@@ -28,10 +28,10 @@ node mongoDatabase [
 <b>Port:</b> 27017
 ]
 
-reverseProxy -r-> frontend : / routes
-frontend -l-> reverseProxy : webpages
-reverseProxy -d-> backend : /api routes
-backend -u-> reverseProxy : data
-backend -r-> mongoDatabase : CRUD operations
-mongoDatabase -l-> backend : results
+reverseProxy -r-> frontend : Webpage Requests
+frontend -l-> reverseProxy : Responses
+reverseProxy -d-> backend : " API Requests"
+backend -u-> reverseProxy : " Responses"
+backend -r-> mongoDatabase : Database Operations
+mongoDatabase -l-> backend : Data
 @enduml

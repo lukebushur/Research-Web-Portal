@@ -24,8 +24,7 @@ app.use('/api/applications', applicationRoutes);
 const port = process.env.PORT || 5000;
 
 async function dbConnect() {
-    await mongoose.connect(`${process.env.DB_PROTOCOL}://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?${process.env.DB_PARAMS}`,
-    {
+    await mongoose.connect(process.env.DB_URI, {
         autoIndex: true,
     }).then(() => {
         app.listen(port, () => {
@@ -45,4 +44,3 @@ process.on('SIGINT', () => {
 });
 
 module.exports = app;
-
