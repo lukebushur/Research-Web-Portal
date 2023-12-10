@@ -1,0 +1,22 @@
+@startuml professor-use-case
+left to right direction
+actor "Faculty" as prof
+rectangle {
+  usecase "Create an account" as UC1
+  usecase "Log in with their account information" as UC2
+  usecase "View faculty dashboard" as UC3
+  usecase "Post reasearch opportunites" as UC4
+  usecase "Filter and browse students" as UC5
+  usecase "View the list of students interested in posted opportunity" as UC6
+  usecase "Sort through the list of interested students" as UC7
+  usecase "Reach out to interested students (Accept/Decline)" as UC8
+}
+prof --> UC1
+prof --> UC2
+prof --> UC3
+prof --> UC4
+prof --> UC5
+prof --> UC6
+prof --> UC7
+prof --> UC8
+@enduml
