@@ -28,6 +28,7 @@ export class AppliedStudentTableComponent implements AfterViewInit {
     this.tableData.AppliedStudentList.subscribe((value) => {
       this.testStudentData = value;
       this.dataSource = new MatTableDataSource(this.testStudentData);
+      this.dataSource.sort = this.sort;
       console.log("subscribed");
     });
     this.repeat = setInterval(() => {
@@ -43,7 +44,6 @@ export class AppliedStudentTableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
   }
 
   fetchApplicants() {

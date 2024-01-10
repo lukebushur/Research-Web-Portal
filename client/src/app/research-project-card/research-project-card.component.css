@@ -1,7 +1,6 @@
 .project-card-container {
   display: inline-flex;
-  /* flex-wrap: wrap; */
-  justify-content: flex-start;
+  flex-wrap: nowrap; /* Prevent cards from wrapping to the next line */
 }
 
 .project-card {

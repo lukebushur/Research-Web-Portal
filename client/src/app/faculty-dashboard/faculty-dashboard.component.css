@@ -18,17 +18,14 @@
   height: 100%;
 }
 
-/* .faculty-dashboard-info {
-    border: 1px solid #000;
-}
+.faculty-project-applied-student-list {
+    margin-top: 1%;
+} 
 
 .faculty-active-projects {
-    border: 1px solid #000;
+  overflow-x: auto;  /* Add this line to enable horizontal scrolling */
+  white-space: nowrap; /* Prevent cards from wrapping to the next line */
 }
-
-.faculty-project-applied-student-list {
-    border: 1px solid #000;
-} */
 
 .project-selection-button {
   width: 150px;

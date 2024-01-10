@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./signout.component.css']
 })
 export class SignoutComponent {
-
+  constructor() {
+    localStorage.setItem("jwt-auth-token", "garbage");
+  }
 }

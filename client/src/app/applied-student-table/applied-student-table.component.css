@@ -2,6 +2,12 @@
     margin-top: 20px;
 }
 
+.table-container {
+    overflow-y: auto;
+    max-height: 400px;
+    /* Adjust the max-height as needed */
+}
+
 .accept-button {
     margin-right: 1em;
 }
