@@ -7,6 +7,7 @@ import { FieldComponent } from './custom-field-modal/field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
 import { CustomRequirementCreator } from './dialog-custom-field/category.component';
+import { PostCreationService } from 'src/controllers/post-creation-controller/post-creation.service';
 
 @Component({
   selector: 'app-posts',
@@ -20,7 +21,6 @@ export class PostProjectComponent implements AfterViewInit {
   major: string | null  = "";
   standing: string | null  = "";
   miscExperience: string | null  = "";
-  url: string = `${environment.ipUrl}/api/projects/createProject`;
   fileName: string = "";
   dateTime: Date = new Date();
 
@@ -56,18 +56,11 @@ export class PostProjectComponent implements AfterViewInit {
     }
   ]
 
-  constructor(private http: HttpClient, private router: Router, public dialog: MatDialog) {
+  constructor(private http: HttpClient, private router: Router, public dialog: MatDialog, private postCreationService: PostCreationService) {
     
   }
 
-  ngAfterViewInit() : void {
-    // this.exampleData.forEach(val => {
-    //   this.createNewCategory(val.name);
-    // });
-    // this.exampleData2.forEach(val => {
-    //   this.addCustomField(val.name, val.instructions)
-    // })
-  }
+  ngAfterViewInit() : void {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(CustomFieldDialogue, {
@@ -138,7 +131,7 @@ export class PostProjectComponent implements AfterViewInit {
     // Handle Deadline
     // Handle Responsibilities
 
-    this.http.post(this.url, data)
+    this.postCreationService.createPost(data)
       .subscribe((response: any) => {
         console.log('Project creation successful!', response);
 

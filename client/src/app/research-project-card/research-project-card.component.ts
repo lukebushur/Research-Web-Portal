@@ -1,5 +1,5 @@
 import { Component, OnInit,  } from '@angular/core';
-import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { TableDataSharingService } from '../_helpers/table-data-sharing/table-data-sharing.service'

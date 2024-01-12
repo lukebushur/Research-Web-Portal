@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { MatTableDataSource } from '@angular/material/table';
 
 export interface ProjectsTableRow {

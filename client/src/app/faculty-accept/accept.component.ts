@@ -2,7 +2,7 @@ import { HttpClient, HttpRequest } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 
 @Component({
   selector: 'apply-faculty-dashboard',

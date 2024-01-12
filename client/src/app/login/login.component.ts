@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-
+import { LoginService } from 'src/controllers/login-controller/login.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,7 +13,7 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {}
 
   onSubmit() {
     const loginData = {
@@ -21,7 +21,7 @@ export class LoginComponent {
       password: this.password
     };
 
-    this.http.post(`${this.apiUrl}/login`, loginData).subscribe(
+    this.loginService.login(loginData).subscribe(
       (response: any) => {
         console.log('login success', response);
 
