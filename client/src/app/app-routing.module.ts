@@ -25,7 +25,6 @@ const routes: Routes = [
   { path: "create-post", component: PostProjectComponent, canActivate: [AuthGuard]},
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard]},
   { path: "demoProjects", component: DemoProjectsComponent },
-  { path: "autoSignUp", component: AutoSignUpComponent  },
   { path: "signout", component: SignoutComponent },
 ];
 

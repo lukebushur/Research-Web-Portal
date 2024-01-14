@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { MatRadioModule } from '@angular/material/radio';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -38,6 +38,7 @@ import { LoadingInterceptor } from './loading.interceptor';
 import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
 import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
 import { SignoutComponent } from './signout/signout.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,8 @@ import { SignoutComponent } from './signout/signout.component';
     TextFieldComponent,
     MatDialogModule,
     MatMenuModule,
+    MatRadioModule,
+    MatTooltipModule,
   ],
   providers: [
     {

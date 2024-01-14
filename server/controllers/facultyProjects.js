@@ -52,6 +52,7 @@ const createProject = async (req, res) => {
                         projectName: req.body.projectDetails.project.projectName,
                         professorId: userId,
                         posted: req.body.projectDetails.project.posted,
+                        deadline: req.body.projectDetails.project.deadline,
                         description: req.body.projectDetails.project.description,
                         questions: req.body.projectDetails.project.questions,
                         requirements: req.body.projectDetails.project.requirements,

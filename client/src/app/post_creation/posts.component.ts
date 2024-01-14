@@ -8,6 +8,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
 import { CustomRequirementCreator } from './dialog-custom-field/category.component';
 import { PostCreationService } from 'src/controllers/post-creation-controller/post-creation.service';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-posts',
@@ -15,28 +18,28 @@ import { PostCreationService } from 'src/controllers/post-creation-controller/po
 })
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = "";
-  description: string | null  = ""; 
-  responsibilities: string | null  = ""; 
-  gpa: Number | null  = 3;
-  major: string | null  = "";
-  standing: string | null  = "";
-  miscExperience: string | null  = "";
+  description: string | null = "";
+  responsibilities: string | null = "";
+  gpa: Number | null = 3;
+  major: string | null = "";
+  standing: string | null = "";
+  miscExperience: string | null = "";
   fileName: string = "";
   dateTime: Date = new Date();
+  requirementsType: number = -1; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
+  experienceRequired: boolean;
+  isPaid: boolean;
 
-  isPaid: boolean = true;
-  needsExperience: boolean = true;
-
-  @ViewChild('categories', {read: ViewContainerRef})
+  @ViewChild('categories', { read: ViewContainerRef })
   categories!: ViewContainerRef;
 
-  @ViewChild('customFieldsPage2', {read: ViewContainerRef})
+  @ViewChild('customFieldsPage2', { read: ViewContainerRef })
   customFields!: ViewContainerRef;
 
-  @ViewChild('customRequirements', {read: ViewContainerRef})
+  @ViewChild('customRequirements', { read: ViewContainerRef })
   customRequirements!: ViewContainerRef;
 
-  exampleData: Array<{name: string}> = [
+  exampleData: Array<{ name: string }> = [
     {
       name: 'Computer Science',
     },
@@ -45,7 +48,7 @@ export class PostProjectComponent implements AfterViewInit {
     }
   ]
 
-  exampleData2: Array<{name: string, instructions: string}> = [
+  exampleData2: Array<{ name: string, instructions: string }> = [
     {
       name: 'Question 1',
       instructions: "Please beg on your knees why you want this"
@@ -57,14 +60,14 @@ export class PostProjectComponent implements AfterViewInit {
   ]
 
   constructor(private http: HttpClient, private router: Router, public dialog: MatDialog, private postCreationService: PostCreationService) {
-    
+
   }
 
-  ngAfterViewInit() : void {}
+  ngAfterViewInit(): void { }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(CustomFieldDialogue, {
-      data: {type: 'option', fieldName: 'name'},
+      data: { type: 'option', fieldName: 'name' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -76,19 +79,19 @@ export class PostProjectComponent implements AfterViewInit {
 
   onFileSelected(event: any) {
 
-    const file:File = event.target.files[0];
+    const file: File = event.target.files[0];
 
     if (file) {
 
-        this.fileName = file.name;
+      this.fileName = file.name;
 
-        const formData = new FormData();
+      const formData = new FormData();
 
-        formData.append("thumbnail", file);
+      formData.append("thumbnail", file);
 
-        const upload$ = this.http.post("/api/thumbnail-upload", formData);
+      const upload$ = this.http.post("/api/thumbnail-upload", formData);
 
-        upload$.subscribe();
+      upload$.subscribe();
     }
   }
 
@@ -135,13 +138,13 @@ export class PostProjectComponent implements AfterViewInit {
       .subscribe((response: any) => {
         console.log('Project creation successful!', response);
 
-        this.router.navigate(['/home']);
+        this.router.navigate(['/faculty-dashboard']);
       }, (error: any) => {
         console.error('Registration failed.', error);
       });
   };
 
-  updateFieldNames() : void {
+  updateFieldNames(): void {
     let index: number = 1;
     this.customFieldObjects.forEach(comp => {
       comp.setInput("fieldName", `Question ${index++}`);

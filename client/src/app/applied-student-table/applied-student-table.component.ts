@@ -10,7 +10,8 @@ export interface AppliedStudentList {
   gpa: number;
   degree: string;
   email: string;
-  experience: boolean;
+  project: string;
+  application: string;
   status: string;
 }
 
@@ -31,12 +32,9 @@ export class AppliedStudentTableComponent implements AfterViewInit {
       this.dataSource.sort = this.sort;
       console.log("subscribed");
     });
-    this.repeat = setInterval(() => {
-      this.fetchApplicants();
-    }, 5000);
   }
 
-  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', /*'experience',*/ 'buttons'];
+  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'buttons'];
   repeat: any;
   testStudentData: any[] = [];
   dataSource = new MatTableDataSource(this.testStudentData);
@@ -45,7 +43,7 @@ export class AppliedStudentTableComponent implements AfterViewInit {
 
   ngAfterViewInit() {
   }
-
+  //This method fetches the applicants and then updates the shared applicants data
   fetchApplicants() {
     console.log(this.tableData.projectID);
     if (this.tableData.projectID) {
@@ -60,6 +58,7 @@ export class AppliedStudentTableComponent implements AfterViewInit {
     }
   }
 
+  //This method either rejects or accepts the applicant based on which button the professor selected
   applicationDecide(app: any, decision: string) {
     let decision2 = (decision === 'Accept') ? 'Accept' : 'Reject';
     let data = {
@@ -77,7 +76,7 @@ export class AppliedStudentTableComponent implements AfterViewInit {
       },
     });
   }
-
+  
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);

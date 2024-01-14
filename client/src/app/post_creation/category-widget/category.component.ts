@@ -15,7 +15,6 @@ import {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <input type="checkbox" name={{name}} value="cs">
     <input type="text" value="{{ name }}" name="cs"><input type="button" (click)="onClick()" value="Delete"><br>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

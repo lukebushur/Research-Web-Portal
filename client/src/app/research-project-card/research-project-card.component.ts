@@ -10,12 +10,16 @@ import { TableDataSharingService } from '../_helpers/table-data-sharing/table-da
   styleUrls: ['./research-project-card.component.css'],
 })
 export class ResearchProjectCardComponent implements OnInit {
-  projects: any[] = [];
-  selected: boolean[] = [];
+  projects: any[] = []; //Array of projects, this will be used to generate each project card
+  selected: boolean[] = []; //an array of booleans to determine which project is currently selected
   currentProjectType: string = 'active'; // Default to the list of active projects
-  repeat: any;
-  currentId: number;
-  currentProject: any;
+  currentId: number; //each project card has an id, starting from 0, and it is used to index the selected array for which card to highlight and generate applicants for
+  currentProject: any; //the project object of the currently selected project. Has information such as gpa requirement, applicants, post date, etc.
+  
+  //These bools are used to decide which project type is being selected
+  showActiveProjectButtons: boolean = true;
+  showArchivedProjectButtons: boolean = false;
+  showDraftProjectButtons: boolean = false;
 
   constructor(
     private facultyProjectService: FacultyProjectService,
@@ -25,19 +29,13 @@ export class ResearchProjectCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchProjects(false);
-    this.repeat = setInterval(() => {
-      this.fetchProjects(true);
-    }, 5000); 
   }
 
-  ngOnDestroy() {
-    clearInterval(this.repeat);
-  }
-
-  doSomething(project: any, id: number): void {
+  //This method regenerates the table data for each of the project cards
+  regenerateTableData(project: any, id: number): void { 
     this.currentId = id;
     this.currentProject = project;
-    let applications: any[] = [];
+    let applications: any[] = []; 
 
     project.applications.forEach((x: any) => {
       let y: any = {};
@@ -47,6 +45,7 @@ export class ResearchProjectCardComponent implements OnInit {
       y.email = x.email;
       y.status = x.status;
       y.application = x.application;
+      y.project = this.tableData.getData();
       applications.push(y);
     });
     console.log(applications);
@@ -57,17 +56,20 @@ export class ResearchProjectCardComponent implements OnInit {
     this.selected[id] = true;
   }
 
-  redirectToCreateProject() {
-    //this.router.navigate(['/create-post']);
+  redirectToCreateProject() { 
+    this.router.navigate(['/create-post']);
   }
 
-  unselectAll() {
+  unselectAll() { //This method unselects all of the project cards, is used when switching between active/draft/archived projects
     for (let x: number = 0; x < this.selected.length; x++) {
       this.selected[x] = false;
     }
   }
 
-  fetchProjects(automatic: boolean): void {
+  //This method fetches the projects from the database and then regenerates table data, the automatic parameter is used to 
+  //determine if the method is being ran automatically and can be ignored unless it will be used for a live demo. It basically
+  //is used to decide whether to unselect the currently selected projec card or not.
+  fetchProjects(automatic: boolean): void { 
     this.facultyProjectService.getProjects().subscribe({
       next: (data) => {
         this.projects = data.success.projects;
@@ -77,7 +79,7 @@ export class ResearchProjectCardComponent implements OnInit {
             this.selected[x] = false;
           }
           if(this.currentId && this.currentProject) {
-            this.doSomething(this.currentProject, this.currentId);
+            this.regenerateTableData(this.currentProject, this.currentId);
           }
         }
       },
@@ -113,29 +115,11 @@ export class ResearchProjectCardComponent implements OnInit {
     }
   }
 
-  showActiveProjectButtons: boolean = true;
-  showArchivedProjectButtons: boolean = false;
-  showDraftProjectButtons: boolean = false;
   // Update the current project type when a button is clicked
   updateProjectType(type: string): void {
     this.currentProjectType = type;
-    // if (type === 'active') {
-    //   this.showActiveProjectButtons = true;
-    //   this.showDraftProjectButtons = false;
-    //   this.showArchivedProjectButtons = false;
-    // } else if (type === 'archived') {
-    //   this.showArchivedProjectButtons = true;
-    //   this.showActiveProjectButtons = false;
-    //   this.showDraftProjectButtons = false;
-    // } else {
-    //   this.showActiveProjectButtons = false;
-    //   this.showArchivedProjectButtons = false;
-    //   this.showDraftProjectButtons = true;
-    // }
-    //this.fetchProjects();
     this.tableData.updateData([]);
   }
-
 
   buttonDeleteProject(projectID: string, projectType: string): void {
     console.log(`Deleting project with ID ${projectID} and type ${projectType}`);

@@ -1,73 +1,91 @@
 <form (ngSubmit)="onSubmit()">
   <label> Post Title: <input type="text" [(ngModel)]="title" name="title" required>
   </label>
-  <br/>
-  <label> Description: <input type="text" [(ngModel)]="description" name="description" required>
-  </label>
-  <br/>
-  <label> Responsibilities: <input type="text" [(ngModel)]="responsibilities" name="responsibilities" required>
-  </label>
-  <br/>
-  <p>Required Categories</p>
-
-    <input type="radio" id="unpaid" name="Paid" [value]="false" [(ngModel)]="isPaid">
-    <label for="unpaid">Un-Paid</label>
-    <input type="radio" id="paid" name="Paid" [value]="true" [(ngModel)]="isPaid">
-    <label for="paid">Paid</label><br>
-
-    <input type="radio" id="exp_not_req" name="Experience" [value]="false" [(ngModel)]="needsExperience">
-    <label for="exp_not_req">Experience Not Required</label>
-    <input type="radio" id="exp_req" name="Experience" [value]="true" [(ngModel)]="needsExperience">
-    <label for="exp_req">Experience Required</label><br>
-
-    
-
-  <br>
-
-  <p>Optional Categories</p>
-  <ng-container #categories></ng-container>
-  <br>
-  <input type="button" value="Add New Category" (click)="createNewCategory('')">
-  <br><br>
-
-  <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa">
-  </label><br>
-  <label> Major: <input type="text" [(ngModel)]="major" name="major">
-  </label><br>
-  <label> Standing: <input type="text" [(ngModel)]="standing" name="standing">
-  </label><br>
   <br>
   <label> Post Image:<input type="file" accept="image/*" id="imageCapturer" (change)="onFileSelected($event)">
-    </label>
-  
-<br>
-  <label> Deadline: <input type="date" [(ngModel)]="dateTime" id="choose-date" name="choose-date"></label>
-  <br><br>
-
-  <ng-container #customRequirements></ng-container>
-
-  <input type="button" value="Create Custom Requirement" (click)="openDialog()">
-  <br>
-
-  <br>
-  <label> Other Experience: <input type="text" [(ngModel)]="miscExperience" name="misc">
   </label>
-
-  <br><br>
-  <button type="button">Next Page</button>
-
-
-  <br> <br> 
-
-  <!-- delete later -->
-
-  <p> [next page] </p>
-
-  <h1>Create Research Listing</h1>
-  <ng-container #customFieldsPage2></ng-container>
-
-  <input type="button" value="Add Custom Field" (click)="addCustomField('', '')">
   <br>
+
+  <label id="requirement-selection-label">Select the requirement creation medium</label>
+  <br>
+  <mat-radio-group [(ngModel)]="requirementsType" name="requirementSelection">
+    <mat-radio-button [value]="0">Requirements through the website</mat-radio-button>
+    <mat-radio-button [value]="1">Requirements through a file</mat-radio-button>
+    <mat-radio-button [value]="2">Requirements through the website and a file</mat-radio-button>
+  </mat-radio-group>
+  <br><br>
+
+  <div id="websiteReqs" *ngIf="requirementsType == 0">
+
+    <label> Description: <input type="text" [(ngModel)]="description" name="description" required>
+    </label>
+    <br />
+    <label> Responsibilities: <input type="text" [(ngModel)]="responsibilities" name="responsibilities" required>
+    </label>
+    <br />
+
+    <label>Paid</label>
+    <mat-radio-group [(ngModel)]="isPaid" name="paidSelector">
+      <mat-radio-button [value]="true">Paid</mat-radio-button>
+      <mat-radio-button [value]="false">Unpaid</mat-radio-button>
+    </mat-radio-group>
+    <br>
+
+    <label>Experience</label>
+    <mat-radio-group [(ngModel)]="experienceRequired" name="experienceSelector">
+      <mat-radio-button [value]="true">Experience Required</mat-radio-button>
+      <mat-radio-button [value]="false">No Experience Required</mat-radio-button>
+    </mat-radio-group>
+    <br>
+
+    <p>Research Category<span
+        matTooltip="Research categories are used to recommend opportunites to relevant students and for searching"
+        matTooltipClass="example-tooltip-uppercase"><i class="material-icons">help_outline</i></span></p>
+    <ng-container #categories></ng-container>
+    <br>
+    <input type="button" value="Add New Research Category" (click)="createNewCategory('')">
+    <br><br>
+
+    <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa">
+    </label><br>
+    <label> Major(s): <input type="text" [(ngModel)]="major" name="major">
+    </label><br>
+    <br>
+
+    <br>
+    <label> Deadline: <input type="date" [(ngModel)]="dateTime" id="choose-date" name="choose-date"></label>
+    <br><br>
+
+    <ng-container #customRequirements></ng-container>
+
+    <input type="button" value="Create Custom Requirement" (click)="openDialog()">
+    <br>
+
+    <br>
+    <label> Other Experience: <input type="text" [(ngModel)]="miscExperience" name="misc">
+    </label>
+
+    <br><br>
+    <button type="button">Next Page</button>
+
+    <ng-container #customFieldsPage2></ng-container>
+
+    <input type="button" value="Add Custom Field" (click)="addCustomField('', '')">
+    <br>
+    <br> <br>
+
+  </div>
+
+  <div id="fileReqs" *ngIf="requirementsType == 1">
+    <label>Upload requirements file</label>
+    <input type="file" accept=".doc,.docx,application/msword,.pdf,.txt">
+    <p>Warning: Using a file with all requirements will prevent you from using advanced searching / filtering on
+      applicants. Consider using a combination of file requirements and website requirements if you require advanced
+      searching / filtering.</p>
+  </div>
+
+  <br>
+  <h1>Create Research Listing</h1>
 
   <button type="submit">Submit</button>
 

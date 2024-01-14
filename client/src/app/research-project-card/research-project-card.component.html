@@ -12,24 +12,14 @@
 <div *ngFor="let project of projects" class="project-card-container">
   <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" [id]="'p'+project.number"
     [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
-    (click)="doSomething(project, project.number)">
+    (click)="regenerateTableData(project, project.number)">
     <mat-card-title class="project-card-title">
       {{ project.projectName }}
     </mat-card-title>
     <mat-card-content>
       <!-- <p>Professor: {{ project.professor }}</p> -->
-      <p>Posted: {{ project.posted | date:'medium' }}</p>
-      <p>Description: {{ project.description }}</p>
-      <!-- <p>Questions: {{ project.questions }}</p> -->
-      <p>
-        <!-- The following ngFor span could be used to display the requirement
-          values for each required category. However, it would require that the
-          projects variable in the .ts file is defined in an interface so that
-          there is no type errors.
-          <span *ngFor="let req of projects.requirements"> -->
-        Requirements: {{ project.requirement[0].requirementValue | json }}
-        <!-- </span> -->
-      </p>
+      <p>Posted Date: {{ project.posted | date:'medium' }}</p>
+      <p>Application Deadline: {{ project.deadline }}</p>
       <p>
         Number of Applicants: {{project.numApp}}
       </p>
