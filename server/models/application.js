@@ -26,6 +26,10 @@ const Applications = new mongoose.Schema({
             status: {
                 type: String,
                 required: true
+            },
+            appliedDate: {
+                type: Date,
+                required: false,
             }
         }
     ]

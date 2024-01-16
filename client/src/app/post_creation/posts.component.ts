@@ -1,34 +1,37 @@
 import { Component, ComponentRef, ViewChild, ViewContainerRef, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import { CategoryComponent } from './category-widget/category.component';
+import { CatergoryFieldComponent } from './catergory-field/catergory-field.component';
 import { FieldComponent } from './custom-field-modal/field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
 import { CustomRequirementCreator } from './dialog-custom-field/category.component';
 import { PostCreationService } from 'src/controllers/post-creation-controller/post-creation.service';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
 })
+
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = "";
   description: string | null = "";
   responsibilities: string | null = "";
   gpa: Number | null = 3;
-  major: string | null = "";
+  majors: string[] | null = [];
   standing: string | null = "";
   miscExperience: string | null = "";
   fileName: string = "";
-  dateTime: Date = new Date();
+  deadline: Date = new Date();
   requirementsType: number = -1; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
   experienceRequired: boolean;
   isPaid: boolean;
+  categoriesArr : String[] = []; //The array of categories for the research posting
+
+  categoryObjects: Array<ComponentRef<CatergoryFieldComponent>> = [];
+  customFieldObjects: Array<ComponentRef<FieldComponent>> = [];
+  customRequirementObjects: Array<ComponentRef<CustomRequirementCreator>> = [];
 
   @ViewChild('categories', { read: ViewContainerRef })
   categories!: ViewContainerRef;
@@ -95,19 +98,21 @@ export class PostProjectComponent implements AfterViewInit {
     }
   }
 
-  categoryObjects: Array<ComponentRef<CategoryComponent>> = [];
-  customFieldObjects: Array<ComponentRef<FieldComponent>> = [];
-  customRequirementObjects: Array<ComponentRef<CustomRequirementCreator>> = [];
-
   onSubmit() {
+    //Grabs the values from the category componenets
+    const categoriesValues = this.categoryObjects.map(category => category.instance.getValue());
+
     const data = {
       projectType: "Active",
-      professorEmail: "N/A",
       projectDetails: {
         project: {
           projectName: this.title,
-          posted: Date.now(),
+          posted: new Date().toLocaleString(), //The toLocaleString() converts the date to the computer's local time settings
+          deadline: this.deadline.toLocaleString(),
           description: this.description,
+          gpa: this.gpa,
+          categories: categoriesValues,
+          majors: this.majors,
           questions: this.customFieldObjects.map(comp => {
             return [
               comp.instance.fieldName,
@@ -184,8 +189,8 @@ export class PostProjectComponent implements AfterViewInit {
   }
 
   createNewCategory(name: string | null) {
-    const category = this.categories.createComponent(CategoryComponent);
-    category.setInput('name', name != null ? name : "");
+    
+    const category = this.categories.createComponent(CatergoryFieldComponent);
     this.categoryObjects.push(category);
     category.instance.deleted.subscribe(() => {
       let index = this.categoryObjects.indexOf(category);
@@ -194,5 +199,6 @@ export class PostProjectComponent implements AfterViewInit {
         category.destroy();
       }
     })
+    console.log(this.categoryObjects);
   }
 }

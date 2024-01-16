@@ -53,12 +53,19 @@ const researchOpp = new mongoose.Schema({
                 },
                 email: {
                     type: String
+                },
+                appliedDate: {
+                    type: Date
                 }
             }
         ],
         posted: {
             type: Date,
             required: true
+        },
+        deadline: {
+            type: Date,
+            required: false
         },
         archived: {
             type: Date,
@@ -69,9 +76,14 @@ const researchOpp = new mongoose.Schema({
             required: true,
             default: "No description provided"
         },
+        responsibilities: {
+            type: String,
+            required: false,
+        },
+        //questions: [{ question: String, additionalInfo: String, requirementType: String, required: Boolean}],
         questions: [String],
         requirements: [
-            { requirementType: Number, requirementValue: String, required: Boolean }
+            { requirementType: String, question: String, required: Boolean }
         ]
     }]
 })

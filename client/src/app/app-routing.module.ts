@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { ConfirmEmailComponent } from './confirmemail/email.component';
@@ -11,8 +10,8 @@ import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
 import { PostProjectComponent } from './post_creation/posts.component';
 import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
 import { DemoProjectsComponent  } from './demoProjects/demoProject.component';
-import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
 import { SignoutComponent } from './signout/signout.component';
+import { ViewApplicationComponent } from './view-application/view-application.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -26,6 +25,8 @@ const routes: Routes = [
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard]},
   { path: "demoProjects", component: DemoProjectsComponent },
   { path: "signout", component: SignoutComponent },
+  //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
+  { path: "application/:projectID/:applicationID", component: ViewApplicationComponent} 
 ];
 
 @NgModule({

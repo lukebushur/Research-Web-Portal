@@ -33,5 +33,7 @@ router.get('/getAllProjects', verifyToken, facultyProjects.getAllActiveProjects)
 
 router.post('/getApplicants', verifyToken, facultyProjects.demoFetchApplicants)
 
+router.post('/getApplicant', verifyToken, facultyProjects.fetchApplicant)
+
 
 module.exports = router;

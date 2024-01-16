@@ -31,13 +31,14 @@ export class ResearchProjectCardComponent implements OnInit {
     this.fetchProjects(false);
   }
 
-  //This method regenerates the table data for each of the project cards
+  //This method regenerates the table data for each of the project cards, it takes the database projectID, and the integer number "id" of 
+  //the same project that will have its data displayed by a table.
   regenerateTableData(project: any, id: number): void { 
-    this.currentId = id;
-    this.currentProject = project;
-    let applications: any[] = []; 
+    this.currentId = id; //currentID is used for deciding which project is selected on the faculty dashboard
+    this.currentProject = project; //this is the database object of the project, and is updated from the parameter
+    let applications: any[] = []; //array of application that will be displayed by the table
 
-    project.applications.forEach((x: any) => {
+    project.applications.forEach((x: any) => { //for loop to set up the data for each table entry
       let y: any = {};
       y.name = x.name;
       y.gpa = x.gpa;
@@ -45,15 +46,15 @@ export class ResearchProjectCardComponent implements OnInit {
       y.email = x.email;
       y.status = x.status;
       y.application = x.application;
-      y.project = this.tableData.getData();
+      y.project = project.id;
+      console.log(y.project);
       applications.push(y);
     });
-    console.log(applications);
 
-    this.tableData.projectID = project.id;
-    this.tableData.updateData(applications);
-    this.unselectAll();
-    this.selected[id] = true;
+    this.tableData.setProjectID(project.id); //sets the table data
+    this.tableData.updateData(applications, project.id);
+    this.unselectAll(); //This "unselects" all other project cards
+    this.selected[id] = true; //This selects the specified project card
   }
 
   redirectToCreateProject() { 
@@ -118,7 +119,7 @@ export class ResearchProjectCardComponent implements OnInit {
   // Update the current project type when a button is clicked
   updateProjectType(type: string): void {
     this.currentProjectType = type;
-    this.tableData.updateData([]);
+    this.tableData.updateData([], -1);
   }
 
   buttonDeleteProject(projectID: string, projectType: string): void {

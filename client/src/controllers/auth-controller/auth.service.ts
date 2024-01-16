@@ -15,4 +15,9 @@ export class AuthService {
         Authorization: `Bearer ${authToken}`,
       });
   }
+
+  //Helper method to grab the auth token from local storage
+  getAuthToken():  String | null  {
+    return localStorage.getItem("jwt-auth-token");
+  }
 }

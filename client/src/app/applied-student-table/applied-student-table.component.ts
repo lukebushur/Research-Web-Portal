@@ -1,10 +1,11 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableDataSharingService } from '../_helpers/table-data-sharing/table-data-sharing.service'
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 
+//Interface for an entries to the applied student table
 export interface AppliedStudentList {
   name: string;
   gpa: number;
@@ -20,33 +21,33 @@ export interface AppliedStudentList {
   templateUrl: './applied-student-table.component.html',
   styleUrls: ['./applied-student-table.component.css'],
 })
-export class AppliedStudentTableComponent implements AfterViewInit {
+
+//This component is for the table of applied students for a faculty project, this constructor just sets up the necessary services
+export class AppliedStudentTableComponent {
+  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'buttons']; //This array determines the displayedd columns in the table
+  testStudentData: any[] = []; //This array contains the student data for the table
+  dataSource = new MatTableDataSource(this.testStudentData); //This object is used for the material table data source to allow for the table to work/sort etc
+  
+  
   constructor(private _liveAnnouncer: LiveAnnouncer, private tableData: TableDataSharingService,
     private facultyProjectService: FacultyProjectService,) {
   }
 
+  //This init method grabs the values for the appliedStudentList, then sets up the data for the material UI table
   ngOnInit() {
     this.tableData.AppliedStudentList.subscribe((value) => {
       this.testStudentData = value;
       this.dataSource = new MatTableDataSource(this.testStudentData);
       this.dataSource.sort = this.sort;
-      console.log("subscribed");
     });
   }
 
-  displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'buttons'];
-  repeat: any;
-  testStudentData: any[] = [];
-  dataSource = new MatTableDataSource(this.testStudentData);
-
   @ViewChild(MatSort) sort: MatSort;
 
-  ngAfterViewInit() {
-  }
-  //This method fetches the applicants and then updates the shared applicants data
+  //This method fetches the applicants and then updates the shared applicants data, if it is able to get the projectID from the 
+  //table data sharing service, then it grabs the applicants and sets the datasource to the object returned
   fetchApplicants() {
-    console.log(this.tableData.projectID);
-    if (this.tableData.projectID) {
+    if (this.tableData.getProjectID()) {
       this.facultyProjectService.demoFetchApplicants(this.tableData.projectID).subscribe({
         next: (data) => {
           this.dataSource = data.success.applicants;
@@ -58,25 +59,16 @@ export class AppliedStudentTableComponent implements AfterViewInit {
     }
   }
 
-  //This method either rejects or accepts the applicant based on which button the professor selected
-  applicationDecide(app: any, decision: string) {
-    let decision2 = (decision === 'Accept') ? 'Accept' : 'Reject';
-    let data = {
-      "projectID": this.tableData.projectID,
-      "applicationID": app,
-      "decision": decision2
-    }
-    console.log(app + " " + this.tableData.projectID);
-    this.facultyProjectService.applicationDecision(data).subscribe({
+  //This method makes a request to the server updating the decision then fetches the applicants
+  applicationDecision(app: any, decision: string) {
+    this.facultyProjectService.applicationDecide(app, this.tableData.projectID, decision).subscribe({
       next: (data) => {
         this.fetchApplicants();
       },
-      error: (error) => {
-        console.error('Error fetching projects', error);
-      },
     });
   }
-  
+
+  //Necessary method for sorting the table with the material UI tables
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);

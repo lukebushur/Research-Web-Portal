@@ -39,6 +39,8 @@ import { TableDataSharingService } from './_helpers/table-data-sharing/table-dat
 import { AutoSignUpComponent } from './auto-sign-up-component/auto-sign-up-component.component';
 import { SignoutComponent } from './signout/signout.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CatergoryFieldComponent } from './post_creation/catergory-field/catergory-field.component';
+import { ViewApplicationComponent } from './view-application/view-application.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DemoProjectsComponent,
     SpinnerComponent,
     AutoSignUpComponent,
-    SignoutComponent
+    SignoutComponent,
+    CatergoryFieldComponent,
+    ViewApplicationComponent,
   ],
   imports: [
     BrowserModule,

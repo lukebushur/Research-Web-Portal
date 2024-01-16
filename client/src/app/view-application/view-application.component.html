@@ -1,0 +1,39 @@
+<div *ngIf="responseData !== -1" id="applicantData">
+    <p>Title: </p>
+    <p>{{responseData.projectData.projectName}}</p>
+    <br>
+    <p>Description: </p>
+    <p>{{responseData.projectData.description}}</p>
+    <br>
+    <p>Responsibilities: </p>
+    <p>{{responseData.projectData.responsibilities}}</p>
+    <br>
+    <p>Posted: </p>
+    <p>{{posted}}</p>
+    <br>
+    <p>Deadline: </p>
+    <p>{{deadline}}</p>
+    <br>
+    <p>Applied: </p>
+    <p>{{appliedDate}}</p>
+    <br>
+    <p>GPA Requirement: </p>
+    <p>{{responseData.projectData.gpaRequirement}}</p>
+    <br>
+    <p>GPA: </p>
+    <p>{{responseData.applicantData.gpa}}</p>
+    <br>
+    <div id="questions" *ngFor="let question of responseData.projectData.questions; let i = index;">
+        <p>Question {{i + 1}}</p>
+        <p>{{question}}</p>
+        <p>{{responseData.applicantData.answers[i]}}</p>
+    </div>
+    <br>
+    <p>Status: </p>
+    <p>{{responseData.applicantData.status}}</p>
+    <button *ngIf="responseData.applicantData.status  === 'Pending'" mat-raised-button color="primary"
+        (click)="applicationDecision(responseData.applicantData.application, responseData.projectData.projectID, 'Accept')"
+        class="accept-button">Accept</button>
+    <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="warn"
+        (click)="applicationDecision(responseData.applicantData.application, responseData.projectData.projectID, 'Reject')">Reject</button>
+</div>

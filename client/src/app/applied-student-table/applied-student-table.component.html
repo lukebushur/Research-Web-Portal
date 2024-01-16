@@ -5,7 +5,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
         Name
       </th>
-      <td mat-cell *matCellDef="let student"><a href="{{student.project}}/{{student.application}}">{{student.name}} </a></td>
+      <td mat-cell *matCellDef="let student"><a href="application/{{student.project}}/{{student.application}}">{{student.name}} </a></td>
     </ng-container>
 
     <ng-container matColumnDef="gpa">
@@ -47,9 +47,9 @@
           [class.reject-status-text]="student.status === 'Rejected'" class="status-text">{{student.status}}</p>
         <!-- <p *ngIf="student.status === 'Rejected'" [style.background-color]="'red'">{{student.status}}</p> -->
         <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
-          (click)="applicationDecide(student.application, 'Accept')" class="accept-button">Accept</button>
+          (click)="applicationDecision(student.application, 'Accept')" class="accept-button">Accept</button>
         <button *ngIf="student.status === 'Pending'" mat-raised-button color="warn"
-          (click)="applicationDecide(student.application, 'Reject')">Reject</button>
+          (click)="applicationDecision(student.application, 'Reject')">Reject</button>
       </td>
     </ng-container>
 

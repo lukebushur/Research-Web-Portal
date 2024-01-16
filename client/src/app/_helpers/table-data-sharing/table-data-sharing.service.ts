@@ -16,13 +16,18 @@ export class TableDataSharingService {
   AppliedStudentList: BehaviorSubject<any[]>; //The applied student list of the currently selected Project
   count = 0;
   
-  updateData(newData: any[]): void { //Method is used to update the data
+  updateData(newData: any[], id: number): void { //Method is used to update the data
     console.log("data Updated" + this.projectID);
-
+    
     this.AppliedStudentList.next(newData);
   }
 
-  getData() { //returns current projectID
+  getProjectID() : String { //returns current projectID
+    console.log(this.projectID);
     return this.projectID;
+  }
+
+  setProjectID(projectID: String) : void {
+    this.projectID = projectID;
   }
 }
