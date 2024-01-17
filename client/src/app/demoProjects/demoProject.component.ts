@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { MatTableDataSource } from '@angular/material/table';
 
 export interface ProjectsTableRow {
@@ -86,29 +86,6 @@ export class DemoProjectsComponent implements OnInit {
             // update the table's data
             this.studentDataSource = new MatTableDataSource(this.tableStudentData);
         });
-        this.repeat = setInterval(() => {
-            this.facultyService.demoGetActiveProjects().subscribe((res: any) => {
-                this.ActiveProjects = res.success.data;
-                this.tableProjectsData = [];
-                this.ActiveProjects.forEach((project: any) => {
-                    this.tableProjectsData.push({
-                        projectID: project.projectID,
-                        majors: project.majors,
-                        name: project.professorName,
-                        email: project.professorEmail,
-                        title: project.title,
-                        gpa: project.gpa,
-                        majorsString: this.parseMajors(project.majors),
-                    })
-                });
-                this.projectsDataSource = new MatTableDataSource(this.tableProjectsData);
-                console.log(res);
-            });
-        }, 5000);
-    }
-
-    ngOnDestroy() {
-        clearInterval(this.repeat);
     }
 
     parseMajors(majors: string[]): string {

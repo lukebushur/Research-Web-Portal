@@ -52,11 +52,12 @@ const createProject = async (req, res) => {
                         projectName: req.body.projectDetails.project.projectName,
                         professorId: userId,
                         posted: req.body.projectDetails.project.posted,
+                        deadline: req.body.projectDetails.project.deadline,
                         description: req.body.projectDetails.project.description,
                         questions: req.body.projectDetails.project.questions,
                         requirements: req.body.projectDetails.project.requirements,
-                        GPA: 10.01,
-                        majors: ["All"]
+                        GPA: req.body.projectDetails.project.gpa,
+                        majors: req.body.projectDetails.project.majors,
                     }]
                 });
                 await newProjectList.save();
@@ -535,6 +536,84 @@ const getAllActiveProjects = async (req, res) => {
     }
 }
 
+/*  This function returns a single applicant's data for a professor. Should only be used with a POST request, and requires and access token,
+
+    This function takes fields in the request body: projectID (String, the id of the project that the faculty member will be )
+    and applicationID (String, the id of the application that the faculty wishes to view)
+*/
+const fetchApplicant = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+        if (user.userType.Type === parseInt(process.env.FACULTY)) {
+            const projectsList = user.userType.FacultyProjects;
+            //get the project lists for active, archived, and draft projects
+
+            let activeProjects;
+
+            activeProjects = await Project.findById(projectsList.Active);
+
+            //This block of code grabs the specified project from the projects record, then grabs the applicant index from the array of applicants and sets the applicant variable
+            let applicant, project, applicantIndex;
+            if (activeProjects) { 
+                project = activeProjects.projects.find((element) => element.id = req.body.projectID);
+                applicantIndex = project.applications.findIndex((element) => element.application.toString() === req.body.applicationID);
+                if (applicantIndex == -1) { res.status(404).json(generateRes(false, 404, "APPLICANT_NOT_FOUND")); return; }
+                else { applicant = project.applications[applicantIndex]; }
+            }
+
+            //This block of code then grabs teh specified applicantion record from the applicant's record in the project database
+            //It then sets up the applicantData object to be sent back in the request
+            let applicantRecord = await Application.findById(applicant.applicationRecordID);
+            let applicantData;
+            if (applicantRecord) {
+                const application = applicantRecord.applications.find((element) => element.id = applicant.application);
+                applicantData = {
+                    status: applicant.status,
+                    name: applicant.name,
+                    gpa: applicant.gpa,
+                    major: applicant.major,
+                    email: applicant.email,
+                    appliedDate: application.appliedDate,
+                    answers: application.questions,
+                    application: applicant.application,
+                }
+            }
+            //sets up the projectData to set back in the response
+            let projectData = {
+                projectName: project.projectName,
+                gpaRequirement: project.GPA,
+                majors: project.majors,
+                posted: project.posted,
+                deadline: project.deadline,
+                archived: project.archived,
+                description: project.description,
+                responsibilities: project.responsibilities,
+                questions: project.questions,
+                requirements: project.requirements,
+                projectID: project.id,
+            }
+            //prepares the final object that will be returned in the response.
+            let response = {
+                applicantData: applicantData,
+                projectData: projectData
+            }
+
+            res.status(200).json({ success: { status: 200, message: "APPLICANT_FOUND", responseData: response } });
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
+
 const demoFetchApplicants = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -560,9 +639,9 @@ const demoFetchApplicants = async (req, res) => {
                     }
                 });
             }
-           
+
             //This specific response doesn't work with the generateRes method, will look into solutions
-            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", applicants : theApplicants } });
+            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", applicants: theApplicants } });
         } else {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
@@ -571,11 +650,10 @@ const demoFetchApplicants = async (req, res) => {
     }
 }
 
-
-
 module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
     archiveProject, applicationDecision,
-    getAllActiveProjects, demoFetchApplicants
+    getAllActiveProjects, demoFetchApplicants,
+    fetchApplicant,
 };

@@ -24,7 +24,7 @@ app.use('/api/applications', applicationRoutes);
 const port = process.env.PORT || 5000;
 
 async function dbConnect() {
-    await mongoose.connect(process.env.DB_URI, {
+    await mongoose.connect(process.env.DB_URI || "mongodb+srv://stierney0505:39sQaVUC2ZyEnmR@researchgateway.vora14h.mongodb.net/users?retryWrites=true&w=majority", {
         autoIndex: true,
     }).then(() => {
         app.listen(port, () => {

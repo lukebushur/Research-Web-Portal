@@ -1,5 +1,5 @@
 import { Component, OnInit,  } from '@angular/core';
-import { FacultyProjectService } from '../_helpers/faculty-project-service/faculty-project.service';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { TableDataSharingService } from '../_helpers/table-data-sharing/table-data-sharing.service'
@@ -10,12 +10,16 @@ import { TableDataSharingService } from '../_helpers/table-data-sharing/table-da
   styleUrls: ['./research-project-card.component.css'],
 })
 export class ResearchProjectCardComponent implements OnInit {
-  projects: any[] = [];
-  selected: boolean[] = [];
+  projects: any[] = []; //Array of projects, this will be used to generate each project card
+  selected: boolean[] = []; //an array of booleans to determine which project is currently selected
   currentProjectType: string = 'active'; // Default to the list of active projects
-  repeat: any;
-  currentId: number;
-  currentProject: any;
+  currentId: number; //each project card has an id, starting from 0, and it is used to index the selected array for which card to highlight and generate applicants for
+  currentProject: any; //the project object of the currently selected project. Has information such as gpa requirement, applicants, post date, etc.
+  
+  //These bools are used to decide which project type is being selected
+  showActiveProjectButtons: boolean = true;
+  showArchivedProjectButtons: boolean = false;
+  showDraftProjectButtons: boolean = false;
 
   constructor(
     private facultyProjectService: FacultyProjectService,
@@ -25,21 +29,16 @@ export class ResearchProjectCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchProjects(false);
-    this.repeat = setInterval(() => {
-      this.fetchProjects(true);
-    }, 5000); 
   }
 
-  ngOnDestroy() {
-    clearInterval(this.repeat);
-  }
+  //This method regenerates the table data for each of the project cards, it takes the database projectID, and the integer number "id" of 
+  //the same project that will have its data displayed by a table.
+  regenerateTableData(project: any, id: number): void { 
+    this.currentId = id; //currentID is used for deciding which project is selected on the faculty dashboard
+    this.currentProject = project; //this is the database object of the project, and is updated from the parameter
+    let applications: any[] = []; //array of application that will be displayed by the table
 
-  doSomething(project: any, id: number): void {
-    this.currentId = id;
-    this.currentProject = project;
-    let applications: any[] = [];
-
-    project.applications.forEach((x: any) => {
+    project.applications.forEach((x: any) => { //for loop to set up the data for each table entry
       let y: any = {};
       y.name = x.name;
       y.gpa = x.gpa;
@@ -47,27 +46,31 @@ export class ResearchProjectCardComponent implements OnInit {
       y.email = x.email;
       y.status = x.status;
       y.application = x.application;
+      y.project = project.id;
+      console.log(y.project);
       applications.push(y);
     });
-    console.log(applications);
 
-    this.tableData.projectID = project.id;
-    this.tableData.updateData(applications);
-    this.unselectAll();
-    this.selected[id] = true;
+    this.tableData.setProjectID(project.id); //sets the table data
+    this.tableData.updateData(applications, project.id);
+    this.unselectAll(); //This "unselects" all other project cards
+    this.selected[id] = true; //This selects the specified project card
   }
 
-  redirectToCreateProject() {
-    //this.router.navigate(['/create-post']);
+  redirectToCreateProject() { 
+    this.router.navigate(['/create-post']);
   }
 
-  unselectAll() {
+  unselectAll() { //This method unselects all of the project cards, is used when switching between active/draft/archived projects
     for (let x: number = 0; x < this.selected.length; x++) {
       this.selected[x] = false;
     }
   }
 
-  fetchProjects(automatic: boolean): void {
+  //This method fetches the projects from the database and then regenerates table data, the automatic parameter is used to 
+  //determine if the method is being ran automatically and can be ignored unless it will be used for a live demo. It basically
+  //is used to decide whether to unselect the currently selected projec card or not.
+  fetchProjects(automatic: boolean): void { 
     this.facultyProjectService.getProjects().subscribe({
       next: (data) => {
         this.projects = data.success.projects;
@@ -77,7 +80,7 @@ export class ResearchProjectCardComponent implements OnInit {
             this.selected[x] = false;
           }
           if(this.currentId && this.currentProject) {
-            this.doSomething(this.currentProject, this.currentId);
+            this.regenerateTableData(this.currentProject, this.currentId);
           }
         }
       },
@@ -113,29 +116,11 @@ export class ResearchProjectCardComponent implements OnInit {
     }
   }
 
-  showActiveProjectButtons: boolean = true;
-  showArchivedProjectButtons: boolean = false;
-  showDraftProjectButtons: boolean = false;
   // Update the current project type when a button is clicked
   updateProjectType(type: string): void {
     this.currentProjectType = type;
-    // if (type === 'active') {
-    //   this.showActiveProjectButtons = true;
-    //   this.showDraftProjectButtons = false;
-    //   this.showArchivedProjectButtons = false;
-    // } else if (type === 'archived') {
-    //   this.showArchivedProjectButtons = true;
-    //   this.showActiveProjectButtons = false;
-    //   this.showDraftProjectButtons = false;
-    // } else {
-    //   this.showActiveProjectButtons = false;
-    //   this.showArchivedProjectButtons = false;
-    //   this.showDraftProjectButtons = true;
-    // }
-    //this.fetchProjects();
-    this.tableData.updateData([]);
+    this.tableData.updateData([], -1);
   }
-
 
   buttonDeleteProject(projectID: string, projectType: string): void {
     console.log(`Deleting project with ID ${projectID} and type ${projectType}`);

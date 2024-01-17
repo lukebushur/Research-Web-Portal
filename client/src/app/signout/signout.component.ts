@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SignoutService } from 'src/controllers/signout-controller/signout.service';
 
 @Component({
   selector: 'app-signout',
@@ -6,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./signout.component.css']
 })
 export class SignoutComponent {
-  constructor() {
-    localStorage.setItem("jwt-auth-token", "garbage");
+  constructor(private signoutService: SignoutService) {
+    signoutService.signout();
   }
 }

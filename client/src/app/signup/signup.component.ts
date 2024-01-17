@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { FormControl, Validators } from '@angular/forms';
+import { SignupService } from 'src/controllers/signup-controller/signup.service';
 
 @Component({
   selector: 'app-signup',
@@ -28,9 +29,7 @@ export class SignupComponent {
     Validators.maxLength(255)
   ]);
 
-  url: string = environment.registerApiUrl;
-
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private signupService: SignupService) { }
 
   getEmailErrorMessage() {
     if (this.email.hasError('required')) {
@@ -93,7 +92,7 @@ export class SignupComponent {
     //   }
     // }
 
-    this.http.post(this.url, data).subscribe({
+    this.signupService.signup(data).subscribe({
       next: (response: any) => {
         console.log('Registration successful!', response);
         const data = {

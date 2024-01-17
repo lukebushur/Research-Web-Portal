@@ -8,8 +8,4 @@ import { Component } from '@angular/core';
 
 export class FacultyDashboardComponent {
   constructor() { }
-
-  doSomething(): void {
-    console.log("Works");
-  }
 }

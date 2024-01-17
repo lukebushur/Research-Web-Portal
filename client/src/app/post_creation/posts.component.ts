@@ -1,42 +1,48 @@
 import { Component, ComponentRef, ViewChild, ViewContainerRef, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import { CategoryComponent } from './category-widget/category.component';
+import { CatergoryFieldComponent } from './catergory-field/catergory-field.component';
 import { FieldComponent } from './custom-field-modal/field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
 import { CustomRequirementCreator } from './dialog-custom-field/category.component';
+import { PostCreationService } from 'src/controllers/post-creation-controller/post-creation.service';
+
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
 })
+
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = "";
-  description: string | null  = ""; 
-  responsibilities: string | null  = ""; 
-  gpa: Number | null  = 3;
-  major: string | null  = "";
-  standing: string | null  = "";
-  miscExperience: string | null  = "";
-  url: string = `${environment.ipUrl}/api/projects/createProject`;
+  description: string | null = "";
+  responsibilities: string | null = "";
+  gpa: Number | null = 3;
+  majors: string[] | null = [];
+  standing: string | null = "";
+  miscExperience: string | null = "";
   fileName: string = "";
-  dateTime: Date = new Date();
+  deadline: Date = new Date();
+  requirementsType: number = -1; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
+  experienceRequired: boolean;
+  isPaid: boolean;
+  categoriesArr : String[] = []; //The array of categories for the research posting
 
-  isPaid: boolean = true;
-  needsExperience: boolean = true;
+  categoryObjects: Array<ComponentRef<CatergoryFieldComponent>> = [];
+  customFieldObjects: Array<ComponentRef<FieldComponent>> = [];
+  customRequirementObjects: Array<ComponentRef<CustomRequirementCreator>> = [];
 
-  @ViewChild('categories', {read: ViewContainerRef})
+  @ViewChild('categories', { read: ViewContainerRef })
   categories!: ViewContainerRef;
 
-  @ViewChild('customFieldsPage2', {read: ViewContainerRef})
+  @ViewChild('customFieldsPage2', { read: ViewContainerRef })
   customFields!: ViewContainerRef;
 
-  @ViewChild('customRequirements', {read: ViewContainerRef})
+  @ViewChild('customRequirements', { read: ViewContainerRef })
   customRequirements!: ViewContainerRef;
 
-  exampleData: Array<{name: string}> = [
+  exampleData: Array<{ name: string }> = [
     {
       name: 'Computer Science',
     },
@@ -45,7 +51,7 @@ export class PostProjectComponent implements AfterViewInit {
     }
   ]
 
-  exampleData2: Array<{name: string, instructions: string}> = [
+  exampleData2: Array<{ name: string, instructions: string }> = [
     {
       name: 'Question 1',
       instructions: "Please beg on your knees why you want this"
@@ -56,22 +62,15 @@ export class PostProjectComponent implements AfterViewInit {
     }
   ]
 
-  constructor(private http: HttpClient, private router: Router, public dialog: MatDialog) {
-    
+  constructor(private http: HttpClient, private router: Router, public dialog: MatDialog, private postCreationService: PostCreationService) {
+
   }
 
-  ngAfterViewInit() : void {
-    // this.exampleData.forEach(val => {
-    //   this.createNewCategory(val.name);
-    // });
-    // this.exampleData2.forEach(val => {
-    //   this.addCustomField(val.name, val.instructions)
-    // })
-  }
+  ngAfterViewInit(): void { }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(CustomFieldDialogue, {
-      data: {type: 'option', fieldName: 'name'},
+      data: { type: 'option', fieldName: 'name' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -83,35 +82,37 @@ export class PostProjectComponent implements AfterViewInit {
 
   onFileSelected(event: any) {
 
-    const file:File = event.target.files[0];
+    const file: File = event.target.files[0];
 
     if (file) {
 
-        this.fileName = file.name;
+      this.fileName = file.name;
 
-        const formData = new FormData();
+      const formData = new FormData();
 
-        formData.append("thumbnail", file);
+      formData.append("thumbnail", file);
 
-        const upload$ = this.http.post("/api/thumbnail-upload", formData);
+      const upload$ = this.http.post("/api/thumbnail-upload", formData);
 
-        upload$.subscribe();
+      upload$.subscribe();
     }
   }
 
-  categoryObjects: Array<ComponentRef<CategoryComponent>> = [];
-  customFieldObjects: Array<ComponentRef<FieldComponent>> = [];
-  customRequirementObjects: Array<ComponentRef<CustomRequirementCreator>> = [];
-
   onSubmit() {
+    //Grabs the values from the category componenets
+    const categoriesValues = this.categoryObjects.map(category => category.instance.getValue());
+
     const data = {
       projectType: "Active",
-      professorEmail: "N/A",
       projectDetails: {
         project: {
           projectName: this.title,
-          posted: Date.now(),
+          posted: new Date().toLocaleString(), //The toLocaleString() converts the date to the computer's local time settings
+          deadline: this.deadline.toLocaleString(),
           description: this.description,
+          gpa: this.gpa,
+          categories: categoriesValues,
+          majors: this.majors,
           questions: this.customFieldObjects.map(comp => {
             return [
               comp.instance.fieldName,
@@ -138,17 +139,17 @@ export class PostProjectComponent implements AfterViewInit {
     // Handle Deadline
     // Handle Responsibilities
 
-    this.http.post(this.url, data)
+    this.postCreationService.createPost(data)
       .subscribe((response: any) => {
         console.log('Project creation successful!', response);
 
-        this.router.navigate(['/home']);
+        this.router.navigate(['/faculty-dashboard']);
       }, (error: any) => {
         console.error('Registration failed.', error);
       });
   };
 
-  updateFieldNames() : void {
+  updateFieldNames(): void {
     let index: number = 1;
     this.customFieldObjects.forEach(comp => {
       comp.setInput("fieldName", `Question ${index++}`);
@@ -188,8 +189,8 @@ export class PostProjectComponent implements AfterViewInit {
   }
 
   createNewCategory(name: string | null) {
-    const category = this.categories.createComponent(CategoryComponent);
-    category.setInput('name', name != null ? name : "");
+    
+    const category = this.categories.createComponent(CatergoryFieldComponent);
     this.categoryObjects.push(category);
     category.instance.deleted.subscribe(() => {
       let index = this.categoryObjects.indexOf(category);
@@ -198,5 +199,6 @@ export class PostProjectComponent implements AfterViewInit {
         category.destroy();
       }
     })
+    console.log(this.categoryObjects);
   }
 }

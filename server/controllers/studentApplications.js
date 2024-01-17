@@ -60,7 +60,8 @@ const createApplication = async (req, res) => {
                             answers: req.body.answers,
                             opportunityRecordId: activeProjectID,
                             opportunityId: existingProject._id,
-                            status: "Pending"
+                            status: "Pending",
+                            appliedDate : new Date(),
                         }
                     ]
                 });
@@ -77,6 +78,7 @@ const createApplication = async (req, res) => {
                                 'gpa': student.userType.GPA,
                                 'major': student.userType.Major,
                                 'email': student.email,
+                                'appliedDate': new Date(),
                             }
                         }
                     }),
@@ -94,6 +96,7 @@ const createApplication = async (req, res) => {
                     answers: req.body.answers,
                     opportunityRecordId: activeProjectID,
                     opportunityId: existingProject._id,
+                    appliedDate : new Date(),
                     status: "Pending"
                 };
                 //these await statements cannot be used with a promise because they require the newApplication ID which needs to be 
@@ -118,6 +121,7 @@ const createApplication = async (req, res) => {
                             'gpa': student.userType.GPA,
                             'major': student.userType.Major,
                             'email': student.email,
+                            'appliedDate': new Date(),
                         }
                     }
                 });
