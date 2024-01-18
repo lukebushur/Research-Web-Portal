@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { SignupComponent } from './signup/signup.component';
-import { ConfirmEmailComponent } from './confirmemail/email.component';
-import { FacultyDashboardComponent } from './faculty-dashboard/faculty-dashboard.component';
-import { AuthGuard } from './auth/auth-guard/auth.guard';
-import { LoginComponent } from './login/login.component';
-import { ApplyToOpp } from './apply-to-post/apply-to-post.component';
-import { PostProjectComponent } from './post_creation/posts.component';
-import { FacultyDashboardApplyComponent } from './faculty-accept/accept.component';
-import { DemoProjectsComponent  } from './demoProjects/demoProject.component';
-import { SignoutComponent } from './signout/signout.component';
-import { ViewApplicationComponent } from './view-application/view-application.component';
+import { HomeComponent } from './components/home/home.component';
+import { SignupComponent } from './components/signup/signup.component';
+import { ConfirmEmailComponent } from './components/confirmemail/email.component';
+import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
+import { AuthGuard } from './_helpers/auth/auth-guard/auth.guard';
+import { LoginComponent } from './components/login/login.component';
+import { ApplyToOpp } from './components/apply-to-post/apply-to-post.component';
+import { PostProjectComponent } from './components/post_creation/posts.component';
+import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
+import { DemoProjectsComponent  } from './components/demoProjects/demoProject.component';
+import { SignoutComponent } from './components/signout/signout.component';
+import { ViewApplicationComponent } from './components/view-application/view-application.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },

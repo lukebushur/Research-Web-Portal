@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const customObjects = require('./dbObjects');
 
 const Applications = new mongoose.Schema({
     user: {
@@ -7,14 +8,7 @@ const Applications = new mongoose.Schema({
     },
     applications: [
         {
-            questions: [{
-                question: String,
-                answer: String
-            }],
-            answers: [{
-                question: String,
-                answer: String
-            }],
+            questions: [customObjects.question],
             opportunityRecordId: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true
