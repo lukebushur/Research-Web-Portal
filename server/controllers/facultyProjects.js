@@ -27,10 +27,10 @@ const createProject = async (req, res) => {
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
             const userId = user._id;
-
+            let projectType = req.body.projectType;
             //validate schema and ensure that the questions array has as many elements as the requirements array
-            const { error } = projectSchema.validate(req.body.projectDetails);
-            if (error || req.body.projectDetails.project.questions.length !== req.body.projectDetails.project.requirements.length) {
+            const { error } = projectSchema.validate(req.body.projectDetails.project);
+            if (error && projectType == 'Active') {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
@@ -38,9 +38,21 @@ const createProject = async (req, res) => {
                 return;
             }
 
-            let projectType = req.body.projectType; //Stores the projectType and then checks to ensure it is valid
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
+            
+            let projectObject = {
+                projectName: req.body.projectDetails.project.projectName,
+                professorId: userId,
+                posted: new Date(),
+                deadline: req.body.projectDetails.project.deadline,
+                description: req.body.projectDetails.project.description,
+                responsibilities: req.body.projectDetails.project.responsibilities,
+                questions: req.body.projectDetails.project.questions,
+                GPA: req.body.projectDetails.project.gpa,
+                majors: req.body.projectDetails.project.majors,
+                categories: req.body.projectDetails.project.categories, 
+            }
 
             //if there is no active mongodb record for this professor's active projects then create a new record
             if (!existingProject) {
@@ -48,17 +60,7 @@ const createProject = async (req, res) => {
                     type: req.body.projectType,
                     professorEmail: user.email,
                     professorName: user.name,
-                    projects: [{
-                        projectName: req.body.projectDetails.project.projectName,
-                        professorId: userId,
-                        posted: req.body.projectDetails.project.posted,
-                        deadline: req.body.projectDetails.project.deadline,
-                        description: req.body.projectDetails.project.description,
-                        questions: req.body.projectDetails.project.questions,
-                        requirements: req.body.projectDetails.project.requirements,
-                        GPA: req.body.projectDetails.project.gpa,
-                        majors: req.body.projectDetails.project.majors,
-                    }]
+                    projects: [projectObject]
                 });
                 await newProjectList.save();
                 var $set = { $set: {} }; //This sets up the $set dynamically so that it can either save to DraftProjects or ActiveProjects
@@ -66,19 +68,9 @@ const createProject = async (req, res) => {
 
                 await User.findOneAndUpdate({ _id: userId }, $set);
             } else { //otherwise there exists a faculty record for active projects so add a new element to the record's array
-                let newProject = {
-                    projectName: req.body.projectDetails.project.projectName,
-                    professorId: userId,
-                    posted: req.body.projectDetails.project.posted,
-                    description: req.body.projectDetails.project.description,
-                    questions: req.body.projectDetails.project.questions,
-                    requirements: req.body.projectDetails.project.requirements,
-                    GPA: 10.01,
-                    majors: ["All"]
-                };
                 await Project.updateOne({ _id: existingProject }, {
                     $push: { //push new project to the array 
-                        projects: newProject,
+                        projects: projectObject,
                     }
                 })
             }
@@ -87,7 +79,6 @@ const createProject = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        console.log(error);
         res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
     }
 }
@@ -560,7 +551,7 @@ const fetchApplicant = async (req, res) => {
 
             //This block of code grabs the specified project from the projects record, then grabs the applicant index from the array of applicants and sets the applicant variable
             let applicant, project, applicantIndex;
-            if (activeProjects) { 
+            if (activeProjects) {
                 project = activeProjects.projects.find((element) => element.id = req.body.projectID);
                 applicantIndex = project.applications.findIndex((element) => element.application.toString() === req.body.applicationID);
                 if (applicantIndex == -1) { res.status(404).json(generateRes(false, 404, "APPLICANT_NOT_FOUND")); return; }

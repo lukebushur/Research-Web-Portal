@@ -25,10 +25,19 @@ export class CustomFieldDialogue {
     @Inject(MAT_DIALOG_DATA) public data: CustomFieldDialogData
   ) {}
 
-  type: string = "None";
-  fieldName: string = "Empty";
+  formIsValid: boolean = false;
+  type: string = "test";
+  question: string = "";
 
-  onNoClick(): void {
+  onCreate(): void {
+    let obj = {
+      question: this.question,
+      type: this.type
+    }
+    this.dialogRef.close(obj);
+  }
+
+  onCancel(): void {
     this.dialogRef.close();
   }
 }

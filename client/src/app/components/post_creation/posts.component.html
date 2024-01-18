@@ -24,20 +24,6 @@
     </label>
     <br />
 
-    <label>Paid</label>
-    <mat-radio-group [(ngModel)]="isPaid" name="paidSelector">
-      <mat-radio-button [value]="true">Paid</mat-radio-button>
-      <mat-radio-button [value]="false">Unpaid</mat-radio-button>
-    </mat-radio-group>
-    <br>
-
-    <label>Experience</label>
-    <mat-radio-group [(ngModel)]="experienceRequired" name="experienceSelector">
-      <mat-radio-button [value]="true">Experience Required</mat-radio-button>
-      <mat-radio-button [value]="false">No Experience Required</mat-radio-button>
-    </mat-radio-group>
-    <br>
-
     <p>Research Category<span
         matTooltip="Research categories are used to recommend opportunites to relevant students and for searching"
         matTooltipClass="example-tooltip-uppercase"><i class="material-icons">help_outline</i></span></p>
@@ -46,7 +32,7 @@
     <input type="button" value="Add New Research Category" (click)="createNewCategory('')">
     <br><br>
 
-    <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa">
+    <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa" min="0" max="4">
     </label><br>
     <label> Major(s): <input type="text" [(ngModel)]="major" name="major">
     </label><br>
@@ -67,13 +53,6 @@
 
     <br><br>
     <button type="button">Next Page</button>
-
-    <ng-container #customFieldsPage2></ng-container>
-
-    <input type="button" value="Add Custom Field" (click)="addCustomField('', '')">
-    <br>
-    <br> <br>
-
   </div>
 
   <div id="fileReqs" *ngIf="requirementsType == 1">

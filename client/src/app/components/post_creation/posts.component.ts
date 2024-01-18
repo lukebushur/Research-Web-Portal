@@ -5,7 +5,6 @@ import { CatergoryFieldComponent } from './catergory-field/catergory-field.compo
 import { FieldComponent } from './custom-field-modal/field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
-import { CustomRequirementCreator } from './dialog-custom-field/category.component';
 import { PostCreationService } from 'src/controllers/post-creation-controller/post-creation.service';
 
 
@@ -25,13 +24,10 @@ export class PostProjectComponent implements AfterViewInit {
   fileName: string = "";
   deadline: Date = new Date();
   requirementsType: number = -1; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
-  experienceRequired: boolean;
-  isPaid: boolean;
   categoriesArr : String[] = []; //The array of categories for the research posting
 
   categoryObjects: Array<ComponentRef<CatergoryFieldComponent>> = [];
   customFieldObjects: Array<ComponentRef<FieldComponent>> = [];
-  customRequirementObjects: Array<ComponentRef<CustomRequirementCreator>> = [];
 
   @ViewChild('categories', { read: ViewContainerRef })
   categories!: ViewContainerRef;
@@ -70,12 +66,12 @@ export class PostProjectComponent implements AfterViewInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(CustomFieldDialogue, {
-      data: { type: 'option', fieldName: 'name' },
+      data: { type: 'option', fieldName: '' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.createNewRequirement(result.fieldName, result.type == 'text')
+        console.log("1 " + result.question + " 2" + result.type);
       }
     });
   }
@@ -119,13 +115,6 @@ export class PostProjectComponent implements AfterViewInit {
               comp.instance.fieldInstructions
             ]
           }),
-          requirements: this.customRequirementObjects.map(inst => {
-            return {
-              requirementType: inst.instance.isText ? 1 : 2,
-              requirementValue: inst.instance.fieldName,
-              required: true // TODO
-            }
-          })
         }
       }
     };
@@ -168,22 +157,6 @@ export class PostProjectComponent implements AfterViewInit {
         this.customFieldObjects.splice(index, 1);
         category.destroy();
         this.updateFieldNames();
-      }
-    })
-  }
-
-  createNewRequirement(name: string, isText: boolean) {
-    const category = this.customRequirements.createComponent(CustomRequirementCreator);
-    //category.setInput('fieldName', name != null ? name : "");
-    //category.setInput('isText', isText);
-    category.instance.fieldName = name != null ? name : "";
-    category.instance.isText = isText;
-    this.customRequirementObjects.push(category);
-    category.instance.deleted.subscribe(() => {
-      let index = this.customRequirementObjects.indexOf(category);
-      if (index > -1) {
-        this.customRequirementObjects.splice(index, 1);
-        category.destroy();
       }
     })
   }
