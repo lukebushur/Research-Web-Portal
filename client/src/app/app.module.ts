@@ -40,6 +40,7 @@ import { SignoutComponent } from './components/signout/signout.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CatergoryFieldComponent } from './components/post_creation/catergory-field/catergory-field.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
+import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ViewApplicationComponent } from './components/view-application/view-app
     SignoutComponent,
     CatergoryFieldComponent,
     ViewApplicationComponent,
+    IndustryDashboardComponent,
   ],
   imports: [
     BrowserModule,
