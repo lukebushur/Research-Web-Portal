@@ -27,12 +27,18 @@ export class LoginComponent {
 
         // Check if the authentication token is present in the response
         const authToken = response?.success?.accessToken;
+        const accountType = response?.success?.accountType;
         if (authToken) {
           // Store the authentication token in local storage
           localStorage.setItem("jwt-auth-token", authToken);
+          localStorage.setItem("account-type", accountType);
 
           // Redirect or perform any other action upon successful login
-          this.router.navigate(['/faculty-dashboard']);
+          if (localStorage.getItem("account-type") === "2") {
+            this.router.navigate(['/industry-dashboard']);
+          } else {
+            this.router.navigate(['/faculty-dashboard']);
+          }
         } else {
           console.error('Authentication token not found in the response.');
         }

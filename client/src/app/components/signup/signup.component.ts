@@ -78,32 +78,28 @@ export class SignupComponent {
     const data = {
       email: this.email.value,
       password: this.password.value,
-      name: this.name.value
+      name: this.name.value,
+      accountType: 2,
     };
-
-    // success: {
-    //   status: 200,
-    //   message: 'REGISTER_SUCCESS',
-    //   accessToken: access_token,
-    //   refreshToken: refreshToken,
-    //   user: {
-    //       id: user.id,
-    //       email: user.email,
-    //   }
-    // }
 
     this.signupService.signup(data).subscribe({
       next: (response: any) => {
         console.log('Registration successful!', response);
         const data = {
           token: response.success.accessToken,
-          refresh: response.success.refreshToken
+          refresh: response.success.refreshToken,
+          accountType: response.success.user.accountType,
         }
 
         localStorage.setItem("jwt-auth-token", data.token);
         localStorage.setItem("jwt-refr-token", data.refresh);
+        localStorage.setItem("account-type", data.accountType);
 
-        this.router.navigate(['/home']);
+        if (localStorage.getItem("account-type") === "2") {
+          this.router.navigate(['/industry-dashboard']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: (error: any) => {
         console.error('Registration failed.', error);
