@@ -15,11 +15,13 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const applicationRoutes = require('./routes/applicationRoutes');
+const industryRoutes = require('./routes/industry');
 
 //Endpoints
 app.use('/api', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/industry', industryRoutes);
 
 const port = process.env.PORT || 5000;
 
