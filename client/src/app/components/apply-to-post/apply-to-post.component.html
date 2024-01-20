@@ -35,7 +35,8 @@
   <br><br>
 
 <div *ngFor="let question of questions">
-  <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
+  <!-- Commented out for the Angular compiler's strict mode-->
+  <!-- <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field> -->
 </div>
 
 <br><br>
