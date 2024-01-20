@@ -18,7 +18,7 @@
       <mat-error *ngIf="password.invalid">{{ getPasswordErrorMessage() }}</mat-error>
     </mat-form-field>
     <br>
-    <button mat-raised-button color="primary" *ngIf="isValidInput" type="submit"
+    <button mat-raised-button color="primary" type="submit"
       [disabled]="name.invalid || email.invalid || password.invalid" class="submit-button">Submit</button>
   </form>
 </div>

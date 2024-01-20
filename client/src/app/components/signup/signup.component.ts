@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { FormControl, Validators } from '@angular/forms';
 import { SignupService } from 'src/controllers/signup-controller/signup.service';
 
@@ -15,21 +13,21 @@ export class SignupComponent {
   name = new FormControl('', [
     Validators.required,
     Validators.minLength(2),
-    Validators.maxLength(25)
+    Validators.maxLength(25),
   ]);
   email = new FormControl('', [
     Validators.required,
     Validators.email,
     Validators.minLength(6),
-    Validators.maxLength(254)
+    Validators.maxLength(254),
   ]);
   password = new FormControl('', [
     Validators.required,
     Validators.minLength(10),
-    Validators.maxLength(255)
+    Validators.maxLength(255),
   ]);
 
-  constructor(private http: HttpClient, private router: Router, private signupService: SignupService) { }
+  constructor(private router: Router, private signupService: SignupService) { }
 
   getEmailErrorMessage() {
     if (this.email.hasError('required')) {
@@ -70,10 +68,6 @@ export class SignupComponent {
     return '';
   }
 
-  isValidInput() {
-    return false;
-  }
-
   onSubmit() {
     const data = {
       email: this.email.value,
@@ -93,9 +87,8 @@ export class SignupComponent {
 
         localStorage.setItem("jwt-auth-token", data.token);
         localStorage.setItem("jwt-refr-token", data.refresh);
-        localStorage.setItem("account-type", data.accountType);
 
-        if (localStorage.getItem("account-type") === "2") {
+        if (data.accountType === 2) {
           this.router.navigate(['/industry-dashboard']);
         } else {
           this.router.navigate(['/home']);
