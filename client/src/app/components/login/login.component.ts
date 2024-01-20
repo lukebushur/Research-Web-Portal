@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { LoginService } from 'src/controllers/login-controller/login.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -10,8 +9,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  apiUrl = environment.apiUrl;
-
+  
+  // Reactive login form
   loginForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -62,18 +61,19 @@ export class LoginComponent {
       password: this.loginForm.value.password,
     };
 
-    this.loginService.login(loginData).subscribe(
-      (response: any) => {
-        console.log('login success', response);
+    this.loginService.login(loginData).subscribe({
+      next: (response: any) => {
+        console.log('Login Successful!', response);
 
-        // Check if the authentication token is present in the response
         const authToken = response?.success?.accessToken;
         const accountType = response?.success?.accountType;
+
+        // Check if the authentication token is present in the response
         if (authToken) {
           // Store the authentication token in local storage
           localStorage.setItem("jwt-auth-token", authToken);
 
-          // Redirect or perform any other action upon successful login
+          // Navigate based on the account type
           if (accountType === 2) {
             this.router.navigate(['/industry-dashboard']);
           } else {
@@ -83,9 +83,9 @@ export class LoginComponent {
           console.error('Authentication token not found in the response.');
         }
       },
-      (error) => {
+      error: (error) => {
         console.error('error logging in', error);
-      }
-    );
+      },
+    });
   }
 }
