@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/controllers/login-controller/login.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -74,7 +75,7 @@ export class LoginComponent {
           localStorage.setItem("jwt-auth-token", authToken);
 
           // Navigate based on the account type
-          if (accountType === 2) {
+          if (accountType === environment.industryType) {
             this.router.navigate(['/industry-dashboard']);
           } else {
             this.router.navigate(['/faculty-dashboard']);

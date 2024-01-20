@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupService } from 'src/controllers/signup-controller/signup.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -98,7 +99,7 @@ export class SignupComponent {
           localStorage.setItem("jwt-refr-token", refreshToken);
 
           // Navigate based on the account type
-          if (accountType === 2) {
+          if (accountType === environment.industryType) {
             this.router.navigate(['/industry-dashboard']);
           } else {
             this.router.navigate(['/home']);
