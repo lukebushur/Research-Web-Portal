@@ -29,7 +29,7 @@ import { OpportunityComponent } from './components/apply-to-post/opportunity/opp
 import { ImageComponent } from './components/apply-to-post/image/image.component';
 import { TextFieldComponent } from './components/apply-to-post/text-field/text-field.component';
 import { PostProjectComponent } from './components/post_creation/posts.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
 import { DemoProjectsComponent } from './components/demoProjects/demoProject.component';
 import { SpinnerComponent } from './components/spinner/spinner.component'
