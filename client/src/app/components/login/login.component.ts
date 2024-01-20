@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { LoginService } from 'src/controllers/login-controller/login.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,15 +11,55 @@ import { LoginService } from 'src/controllers/login-controller/login.service';
 })
 export class LoginComponent {
   apiUrl = environment.apiUrl;
-  email: string = '';
-  password: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {}
+  loginForm = new FormGroup({
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.minLength(6),
+      Validators.maxLength(254),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(255),
+    ]),
+  });
+
+  constructor(private router: Router, private loginService: LoginService) { }
+
+  // Error message for email based on validators
+  emailErrorMessage() {
+    if (this.loginForm.get('email')?.hasError('required')) {
+      return 'You must enter an email.';
+    }
+    if (this.loginForm.get('email')?.hasError('minlength')) {
+      return 'Minimum email length: 6';
+    }
+    if (this.loginForm.get('email')?.hasError('maxlength')) {
+      return 'Maximum email length: 254';
+    }
+    return this.loginForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
+  }
+
+  // Error message for password based on validators
+  passwordErrorMessage() {
+    if (this.loginForm.get('password')?.hasError('required')) {
+      return 'You must enter an password.';
+    }
+    if (this.loginForm.get('password')?.hasError('minlength')) {
+      return 'Minimum password length: 10';
+    }
+    if (this.loginForm.get('password')?.hasError('maxlength')) {
+      return 'Maximum password length: 255';
+    }
+    return '';
+  }
 
   onSubmit() {
     const loginData = {
-      email: this.email,
-      password: this.password
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password,
     };
 
     this.loginService.login(loginData).subscribe(
@@ -31,10 +72,9 @@ export class LoginComponent {
         if (authToken) {
           // Store the authentication token in local storage
           localStorage.setItem("jwt-auth-token", authToken);
-          localStorage.setItem("account-type", accountType);
 
           // Redirect or perform any other action upon successful login
-          if (localStorage.getItem("account-type") === "2") {
+          if (accountType === 2) {
             this.router.navigate(['/industry-dashboard']);
           } else {
             this.router.navigate(['/faculty-dashboard']);
