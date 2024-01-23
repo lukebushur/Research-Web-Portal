@@ -29,29 +29,24 @@
         matTooltipClass="example-tooltip-uppercase"><i class="material-icons">help_outline</i></span></p>
     <ng-container #categories></ng-container>
     <br>
-    <input type="button" value="Add New Research Category" (click)="createNewCategory('')">
+    <input type="button" value="Add New Research Category" (click)="createNewCategory('', false)">
     <br><br>
 
     <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa" min="0" max="4">
     </label><br>
-    <label> Major(s): <input type="text" [(ngModel)]="major" name="major">
-    </label><br>
+    <label> Major(s): <input type="button" value="Add New Major" (click)="createNewCategory('', true)">
+    </label>
     <br>
-
+    <ng-container #majors></ng-container>
+    <br>
     <br>
     <label> Deadline: <input type="date" [(ngModel)]="deadline" id="choose-date" name="choose-date"></label>
     <br><br>
 
-    <ng-container #customRequirements></ng-container>
+    <ng-container #customQuestions></ng-container>
 
     <input type="button" value="Create Custom Requirement" (click)="openDialog()">
-    <br>
-
-    <br>
-    <label> Other Experience: <input type="text" [(ngModel)]="miscExperience" name="misc">
-    </label>
-
-    <br><br>
+    <br><br><br>
     <button type="button">Next Page</button>
   </div>
 
