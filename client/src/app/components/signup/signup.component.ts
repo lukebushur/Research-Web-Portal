@@ -81,7 +81,7 @@ export class SignupComponent {
       password: this.signupForm.value.password,
       name: this.signupForm.value.name,
       // TODO: incorportate accountType changer via a dropdown menu
-      accountType: 2,
+      // accountType: 2,
     };
 
     this.signupService.signup(data).subscribe({
