@@ -34,10 +34,10 @@
 
     <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa" min="0" max="4">
     </label><br>
-    <label> Major(s): <input type="button" value="Add New Major" (click)="createNewCategory('', true)">
-    </label>
+    <label> Major(s):</label>
     <br>
     <ng-container #majors></ng-container>
+    <input type="button" value="Add New Major" (click)="createNewCategory('', true)">
     <br>
     <br>
     <label> Deadline: <input type="date" [(ngModel)]="deadline" id="choose-date" name="choose-date"></label>
