@@ -24,20 +24,26 @@ export class CustomFieldDialogue {
     public dialogRef: MatDialogRef<CustomFieldDialogue>,
     @Inject(MAT_DIALOG_DATA) public data: CustomFieldDialogData
   ) {}
+  
+  formIsValid: boolean = false; 
+  type: string = "test"; //this type is used to determine what question type will be created through the question component
+  question: string = ""; //this string is the actual text of the question
+  create: boolean = false; //this boolean is used to determine if the question componenet should be created in the post creation component
 
-  formIsValid: boolean = false;
-  type: string = "test";
-  question: string = "";
-
-  onCreate(): void {
+  //This method is used to send the necessary information to create a new question component, it should only be called if the form is valid
+  onCreate(): void { 
+    this.create = true;
     let obj = {
       question: this.question,
-      type: this.type
+      type: this.type,
+      create: this.create,
     }
     this.dialogRef.close(obj);
-  }
+  } 
 
+  //This is used to handle the cancelation of the create question component.
   onCancel(): void {
+    this.create = false;
     this.dialogRef.close();
   }
 }

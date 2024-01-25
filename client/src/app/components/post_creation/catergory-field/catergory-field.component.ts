@@ -9,6 +9,7 @@ import { Component, ElementRef, EventEmitter, Output } from '@angular/core';
 //This catergory component is used to dynamically create new fields for the faculty to label their project during creation
 export class CatergoryFieldComponent {
   value: String = ""; //value of the catergory
+  type: String = ""; //Todo in future, add ngIfs to create a searchable dropdown for faculty to select majors from.
 
   constructor(private host: ElementRef<HTMLElement>) { }
 

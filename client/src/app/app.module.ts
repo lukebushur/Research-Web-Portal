@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -40,6 +41,8 @@ import { SignoutComponent } from './components/signout/signout.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CatergoryFieldComponent } from './components/post_creation/catergory-field/catergory-field.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
+import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
+
 
 @NgModule({
   declarations: [
@@ -61,6 +64,7 @@ import { ViewApplicationComponent } from './components/view-application/view-app
     SignoutComponent,
     CatergoryFieldComponent,
     ViewApplicationComponent,
+    CustomQuestionComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,6 +88,7 @@ import { ViewApplicationComponent } from './components/view-application/view-app
     MatMenuModule,
     MatRadioModule,
     MatTooltipModule,
+    MatCheckboxModule
   ],
   providers: [
     {
@@ -92,4 +97,5 @@ import { ViewApplicationComponent } from './components/view-application/view-app
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

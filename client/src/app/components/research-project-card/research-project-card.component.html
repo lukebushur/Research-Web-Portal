@@ -8,44 +8,45 @@
   <button mat-raised-button color="primary" class="project-creation-button" (click)="redirectToCreateProject()">Create
     Project</button>
 </div>
+<div class="scroll-x">
+  <div *ngFor="let project of projects" class="project-card-container">
+    <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" [id]="'p'+project.number"
+      [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
+      (click)="regenerateTableData(project, project.number)">
+      <mat-card-title class="project-card-title">
+        {{ project.projectName }}
+      </mat-card-title>
+      <mat-card-content>
+        <!-- <p>Professor: {{ project.professor }}</p> -->
+        <p>Posted Date: {{ project.posted | date:'medium' }}</p>
+        <p>Application Deadline: {{ project.deadline }}</p>
+        <p>
+          Number of Applicants: {{project.numApp}}
+        </p>
+        <!-- <p>{{project._id}}</p> -->
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" *ngIf="project.projectType === 'active'">Update</button>
+          <button mat-raised-button color="accent" *ngIf="project.projectType === 'active'"
+            (click)="buttonArchiveProject(project.id)">Archive</button>
+          <button mat-raised-button color="warn" *ngIf="project.projectType === 'active'"
+            (click)="buttonDeleteProject(project.id,'Active')">Delete</button>
 
-<div *ngFor="let project of projects" class="project-card-container">
-  <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" [id]="'p'+project.number"
-    [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
-    (click)="regenerateTableData(project, project.number)">
-    <mat-card-title class="project-card-title">
-      {{ project.projectName }}
-    </mat-card-title>
-    <mat-card-content>
-      <!-- <p>Professor: {{ project.professor }}</p> -->
-      <p>Posted Date: {{ project.posted | date:'medium' }}</p>
-      <p>Application Deadline: {{ project.deadline }}</p>
-      <p>
-        Number of Applicants: {{project.numApp}}
-      </p>
-      <!-- <p>{{project._id}}</p> -->
-    </mat-card-content>
-    <mat-card-actions>
-      <div class="action-buttons">
-        <button mat-raised-button color="primary" *ngIf="project.projectType === 'active'">Update</button>
-        <button mat-raised-button color="accent" *ngIf="project.projectType === 'active'"
-          (click)="buttonArchiveProject(project.id)">Archive</button>
-        <button mat-raised-button color="warn" *ngIf="project.projectType === 'active'"
-          (click)="buttonDeleteProject(project.id,'Active')">Delete</button>
+          <button mat-raised-button color="warn" *ngIf="project.projectType === 'archived'"
+            (click)="buttonDeleteProject(project.id,'Archived')">Delete</button>
 
-        <button mat-raised-button color="warn" *ngIf="project.projectType === 'archived'"
-          (click)="buttonDeleteProject(project.id,'Archived')">Delete</button>
-
-        <button mat-raised-button color="primary" *ngIf="project.projectType === 'draft'">Update</button>
-        <button mat-raised-button color="accent" *ngIf="project.projectType === 'draft'">Publish</button>
-        <button mat-raised-button color="warn" *ngIf="project.projectType === 'draft'"
-          (click)="buttonDeleteProject(project.id,'Draft')">Delete</button>
-      </div>
-    </mat-card-actions>
-  </mat-card>
-  <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" style="margin-left:-3%;" [id]="'p'+project.number"
-    [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'">  
-    <p style="text-align: center; font-size: 1em; font-weight: 500;">APPLICANTS:</p>
-    <p style="text-align: center; font-size: 5.5em; font-weight: 500; margin: auto;">{{project.numApp}}</p>
-  </mat-card>
+          <button mat-raised-button color="primary" *ngIf="project.projectType === 'draft'">Update</button>
+          <button mat-raised-button color="accent" *ngIf="project.projectType === 'draft'">Publish</button>
+          <button mat-raised-button color="warn" *ngIf="project.projectType === 'draft'"
+            (click)="buttonDeleteProject(project.id,'Draft')">Delete</button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+    <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" style="margin-left:-3%;"
+      [id]="'p'+project.number" [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'">
+      <p style="text-align: center; font-size: 1em; font-weight: 500;">APPLICANTS:</p>
+      <p style="text-align: center; font-size: 5.5em; font-weight: 500; margin: auto;">{{project.numApp}}</p>
+    </mat-card>
+  </div>
 </div>
