@@ -39,18 +39,34 @@ const createProject = async (req, res) => {
 
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
-
-            let projectObject = {
-                projectName: req.body.projectDetails.project.projectName,
-                professorId: userId,
-                posted: new Date(),
-                deadline: req.body.projectDetails.project.deadline,
-                description: req.body.projectDetails.project.description,
-                responsibilities: req.body.projectDetails.project.responsibilities,
-                questions: req.body.projectDetails.project.questions,
-                GPA: req.body.projectDetails.project.gpa,
-                majors: req.body.projectDetails.project.majors,
-                categories: req.body.projectDetails.project.categories,
+            let projectObject
+            //Two seperate blocks of code are needed, one for if the project type is active and one for draft. This is because draft projects 
+            //can be partially incomplete while active projects need to complete as they are available for student access
+            if (projectType === "Active") {
+                projectObject = {
+                    projectName: req.body.projectDetails.project.projectName,
+                    professorId: userId,
+                    posted: new Date(),
+                    deadline: req.body.projectDetails.project.deadline,
+                    description: req.body.projectDetails.project.description,
+                    responsibilities: req.body.projectDetails.project.responsibilities,
+                    questions: req.body.projectDetails.project.questions,
+                    GPA: req.body.projectDetails.project.gpa,
+                    majors: req.body.projectDetails.project.majors,
+                    categories: req.body.projectDetails.project.categories,
+                }
+            } else if (projectType === "Draft") {
+                projectObject = { //first apply all non-required properties from the request body. If they don't exist it is fine, as they are not required
+                    professorId: userId,
+                    deadline: req.body.projectDetails.project.deadline,
+                    questions: req.body.projectDetails.project.questions,
+                    GPA: req.body.projectDetails.project.gpa,
+                    majors: req.body.projectDetails.project.majors,
+                    categories: req.body.projectDetails.project.categories,
+                    responsibilities: req.body.projectDetails.project.responsibilities,
+                }
+                if (!req.body.projectName) { projectObject.projectName = "Temporary Title" }
+                if (!req.body.description) { projectObject.description = "Temporary description" }
             }
 
             //if there is no active mongodb record for this professor's active projects then create a new record
@@ -184,13 +200,6 @@ const getProjects = async (req, res) => {
             let allProjects = []
             let count = 1;
             //Grab all the projects and put them into the allProjects array
-            if (archivedProjects) {
-                archivedProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "archived", count);
-                    count++;
-                    allProjects.push(y);
-                });
-            }
             if (activeProjects) {
                 activeProjects.projects.forEach(x => {
                     y = createProjectObj(x, "active", count);
@@ -201,6 +210,13 @@ const getProjects = async (req, res) => {
             if (draftProjects) {
                 draftProjects.projects.forEach(x => {
                     y = createProjectObj(x, "draft", count);
+                    count++;
+                    allProjects.push(y);
+                });
+            }
+            if (archivedProjects) {
+                archivedProjects.projects.forEach(x => {
+                    y = createProjectObj(x, "archived", count);
                     count++;
                     allProjects.push(y);
                 });

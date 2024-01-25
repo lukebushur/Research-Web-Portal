@@ -121,7 +121,7 @@ const register = async (req, res) => {
                 },
             });
 
-            await sendEmailConfirmation(user);
+            //await sendEmailConfirmation(user);
 
             res.status(200).header().json(
                 generateRes(true, 200, "REGISTER_SUCCESS", {
