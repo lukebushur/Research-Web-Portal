@@ -1,0 +1,36 @@
+<label>Question: </label>
+<mat-form-field>
+    <mat-label>Enter Question Here</mat-label>
+    <textarea matInput name="responsibilities" [formControl]="form.get('question')"></textarea>
+</mat-form-field>
+<form [formGroup]="form">
+    <div formArrayName="options" *ngIf="type === 'radio buttons'">
+        <mat-radio-group>
+            <mat-radio-button *ngFor="let option of options.controls; let i = index" [value]="i" disabled>
+                <textarea matInput formControlName="{{i}}"></textarea>
+                <button mat-button type="button" (click)="removeOption(i)">Remove</button>
+            </mat-radio-button>
+        </mat-radio-group>
+        <button mat-button type="button" (click)="addOption()">Add Option</button>
+    </div>
+
+    <div id="textquesion" *ngIf="type=='text'">
+        <mat-form-field>
+            <mat-label>Student Response</mat-label>
+            <textarea matInput readonly>Student response goes here</textarea>
+        </mat-form-field>
+    </div>
+
+
+    <div formArrayName="options" id="checkquestion" *ngIf="type=='check box'">
+        <mat-checkbox *ngFor="let option of options.controls; let i = index">
+            <textarea matInput formControlName="{{i}}"></textarea>
+            <button mat-button type="button" (click)="removeOption(i)">Remove</button>
+        </mat-checkbox>
+        <button mat-button type="button" (click)="addOption()">Add Option</button>
+    </div>
+
+    <mat-checkbox [formControl]="form.get('required')">required</mat-checkbox>
+    <button mat-button (click)="onDelete()">Delete</button>
+    <br>
+</form>

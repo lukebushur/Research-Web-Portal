@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -41,6 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CatergoryFieldComponent } from './components/post_creation/catergory-field/catergory-field.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
+import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,7 @@ import { IndustryDashboardComponent } from './components/industry-dashboard/indu
     CatergoryFieldComponent,
     ViewApplicationComponent,
     IndustryDashboardComponent,
+    CustomQuestionComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,6 +89,7 @@ import { IndustryDashboardComponent } from './components/industry-dashboard/indu
     MatMenuModule,
     MatRadioModule,
     MatTooltipModule,
+    MatCheckboxModule
   ],
   providers: [
     {
@@ -94,4 +98,5 @@ import { IndustryDashboardComponent } from './components/industry-dashboard/indu
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

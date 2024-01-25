@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: "signout", component: SignoutComponent },
   { path: "industry-dashboard", component: IndustryDashboardComponent, canActivate: [AuthGuard] },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
-  { path: "application/:projectID/:applicationID", component: ViewApplicationComponent }
+  { path: "application/:projectID/:applicationID", component: ViewApplicationComponent },
 ];
 
 @NgModule({

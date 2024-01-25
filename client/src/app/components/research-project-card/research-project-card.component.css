@@ -1,6 +1,7 @@
 .project-card-container {
   display: inline-flex;
-  flex-wrap: nowrap; /* Prevent cards from wrapping to the next line */
+  flex-wrap: nowrap;
+  /* Prevent cards from wrapping to the next line */
 }
 
 .project-card {
@@ -26,6 +27,50 @@
 
 .action-buttons button {
   flex-basis: 30%;
+}
+
+.scroll-x {
+  overflow-x: scroll;
+}
+
+/* Custom scrollbar for Material UI standards */
+
+/* Scrollbar Track */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Width of the scrollbar */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #bda274;
+  /* Color when hovered */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c3aa7e;
+  /* Color of the scrollbar handle */
+  border-radius: 4px;
+  /* Rounded corners */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  /* Color of the scrollbar track */
+}
+
+/* Handle on active state */
+::-webkit-scrollbar-thumb:active {
+  background: #b29362
+  /* Color when active/pressed */
+}
+
+/* Corner */
+::-webkit-scrollbar-corner {
+  background: transparent;
+  /* Background color of the scrollbar corner */
 }
 
 .faculty-project-selection-column {
