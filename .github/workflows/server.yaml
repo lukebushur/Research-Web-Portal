@@ -27,10 +27,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name : 'Move to server dir'
-      run:  cd server
-    - name: 'Create env file'
+    - name: 'Move to server dir, Create env file, Install dependencies, Run tests'
       run: |
+        cd server
         echo "${{ secrets.ENV }}" > .env
-    - run: npm install
-    - run: npm test
+        npm install
+        npm test
