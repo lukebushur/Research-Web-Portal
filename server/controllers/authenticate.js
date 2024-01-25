@@ -39,6 +39,7 @@ const login = async (req, res) => {
                         res.status(200).json(generateRes(true, 200, "LOGIN_SUCCESS", {
                             accessToken: accessToken,
                             refreshToken: refreshToken,
+                            accountType: user.userType.Type,
                         }));
                     } else {
                         res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -92,7 +93,7 @@ const register = async (req, res) => {
                 "Economics",
                 "Mechanical Engineering",
                 "Environmental Science"
-              ];
+            ];
             const randomIndex = Math.floor(Math.random() * commonMajors.length);
 
             //create new user instance
@@ -146,6 +147,7 @@ const register = async (req, res) => {
                         id: user.id,
                         email: user.email,
                         name: user.name,
+                        accountType: user.userType.Type,
                     }
                 }));
         }

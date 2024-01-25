@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupService } from 'src/controllers/signup-controller/signup.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -12,102 +11,106 @@ import { SignupService } from 'src/controllers/signup-controller/signup.service'
 })
 export class SignupComponent {
 
-  name = new FormControl('', [
-    Validators.required,
-    Validators.minLength(2),
-    Validators.maxLength(25)
-  ]);
-  email = new FormControl('', [
-    Validators.required,
-    Validators.email,
-    Validators.minLength(6),
-    Validators.maxLength(254)
-  ]);
-  password = new FormControl('', [
-    Validators.required,
-    Validators.minLength(10),
-    Validators.maxLength(255)
-  ]);
+  // Reactive registration form
+  signupForm = new FormGroup({
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(25),
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.minLength(6),
+      Validators.maxLength(254),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(255),
+    ]),
+  })
 
-  constructor(private http: HttpClient, private router: Router, private signupService: SignupService) { }
+  constructor(private router: Router, private signupService: SignupService) { }
 
-  getEmailErrorMessage() {
-    if (this.email.hasError('required')) {
+  // Error message for email based on validators
+  emailErrorMessage() {
+    if (this.signupForm.get('email')?.hasError('required')) {
       return 'You must enter an email.';
     }
-    if (this.email.hasError('minlength')) {
+    if (this.signupForm.get('email')?.hasError('minlength')) {
       return 'Minimum email length: 6';
     }
-    if (this.email.hasError('maxlength')) {
+    if (this.signupForm.get('email')?.hasError('maxlength')) {
       return 'Maximum email length: 254';
     }
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+    return this.signupForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
 
-  getNameErrorMessage() {
-    if (this.name.hasError('required')) {
+  // Error message for name based on validators
+  nameErrorMessage() {
+    if (this.signupForm.get('name')?.hasError('required')) {
       return 'You must enter a name.';
     }
-    if (this.name.hasError('minlength')) {
+    if (this.signupForm.get('name')?.hasError('minlength')) {
       return 'Minimum name length: 2';
     }
-    if (this.name.hasError('maxlength')) {
+    if (this.signupForm.get('name')?.hasError('maxlength')) {
       return 'Maximum name length: 25';
     }
     return '';
   }
 
-  getPasswordErrorMessage() {
-    if (this.password.hasError('required')) {
+  // Error message for password based on validators
+  passwordErrorMessage() {
+    if (this.signupForm.get('password')?.hasError('required')) {
       return 'You must enter an password.';
     }
-    if (this.password.hasError('minlength')) {
+    if (this.signupForm.get('password')?.hasError('minlength')) {
       return 'Minimum password length: 10';
     }
-    if (this.password.hasError('maxlength')) {
+    if (this.signupForm.get('password')?.hasError('maxlength')) {
       return 'Maximum password length: 255';
     }
     return '';
   }
 
-  isValidInput() {
-    return false;
-  }
-
   onSubmit() {
     const data = {
-      email: this.email.value,
-      password: this.password.value,
-      name: this.name.value
+      email: this.signupForm.value.email,
+      password: this.signupForm.value.password,
+      name: this.signupForm.value.name,
+      // TODO: incorportate accountType changer via a dropdown menu
+      // accountType: 2,
     };
-
-    // success: {
-    //   status: 200,
-    //   message: 'REGISTER_SUCCESS',
-    //   accessToken: access_token,
-    //   refreshToken: refreshToken,
-    //   user: {
-    //       id: user.id,
-    //       email: user.email,
-    //   }
-    // }
 
     this.signupService.signup(data).subscribe({
       next: (response: any) => {
-        console.log('Registration successful!', response);
-        const data = {
-          token: response.success.accessToken,
-          refresh: response.success.refreshToken
+        console.log('Registration Successful!', response);
+
+        const authToken = response?.success?.accessToken;
+        const refreshToken = response?.success?.refreshToken;
+        const accountType = response?.success?.user.accountType;
+
+        // Check if the authentication token is present in the response
+        if (authToken) {
+          // Store the authentication token and refresh token in local storage
+          localStorage.setItem("jwt-auth-token", authToken);
+          localStorage.setItem("jwt-refr-token", refreshToken);
+
+          // Navigate based on the account type
+          if (accountType === environment.industryType) {
+            this.router.navigate(['/industry-dashboard']);
+          } else {
+            this.router.navigate(['/home']);
+          }
+        } else {
+          console.error('Authentication token not found in the response.');
         }
-
-        localStorage.setItem("jwt-auth-token", data.token);
-        localStorage.setItem("jwt-refr-token", data.refresh);
-
-        this.router.navigate(['/home']);
       },
       error: (error: any) => {
         console.error('Registration failed.', error);
-      }
+      },
     });
   }
 }
