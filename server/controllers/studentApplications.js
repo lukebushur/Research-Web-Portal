@@ -266,7 +266,7 @@ const getApplications = async (req, res) => {
                             opportunityRecordId: applications.applications[appIndex].opportunityRecordId,
                             opportunityId: applications.applications[appIndex].opportunityId,
                             projectName: postItem.projects[projIndex].projectName,
-                            prosted: postItem.projects[projIndex].posted,
+                            posted: postItem.projects[projIndex].posted,
                             description: postItem.projects[projIndex].description,
                             professorEmail: postItem.professorEmail
                         }
@@ -308,8 +308,6 @@ const demoGetStudentInfo = async (req, res) => {
         res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
     }
 }
-
-
 
 module.exports = {
     createApplication, deleteApplication,
