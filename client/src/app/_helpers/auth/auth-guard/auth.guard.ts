@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateFn } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard {
-  constructor(private router: Router) {}
+class AuthenticationService {
+
+  constructor(private router: Router) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree {
+    
     const authToken = localStorage.getItem("jwt-auth-token");
 
     if (authToken) {
@@ -19,4 +21,8 @@ export class AuthGuard {
       return this.router.parseUrl('/signup');
     }
   }
+}
+
+export const AuthGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
+  return inject(AuthenticationService).canActivate(route, state);
 }
