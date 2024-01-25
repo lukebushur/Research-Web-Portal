@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AutoSignUpComponentComponent } from './auto-sign-up-component.component';
+import { AutoSignUpComponent } from './auto-sign-up-component.component';
 
 describe('AutoSignUpComponentComponent', () => {
-  let component: AutoSignUpComponentComponent;
-  let fixture: ComponentFixture<AutoSignUpComponentComponent>;
+  let component: AutoSignUpComponent;
+  let fixture: ComponentFixture<AutoSignUpComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AutoSignUpComponentComponent]
+      declarations: [AutoSignUpComponent]
     });
-    fixture = TestBed.createComponent(AutoSignUpComponentComponent);
+    fixture = TestBed.createComponent(AutoSignUpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
