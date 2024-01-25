@@ -75,25 +75,14 @@ const register = async (req, res) => {
             //hash the user's password
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.password, salt);
-            const GPA = Math.floor(Math.random() * (400 - 250) + 250) / 100;
-            const commonMajors = [
-                "Computer Science",
-                "Psychology",
-                "Biology",
-                "Business Administration",
-                "Chemistry",
-                "English Literature",
-                "Electrical Engineering",
-                "Sociology",
-                "Mathematics",
-                "Graphic Design",
-                "Political Science",
-                "History",
-                "Economics",
-                "Mechanical Engineering",
-                "Environmental Science"
-              ];
-            const randomIndex = Math.floor(Math.random() * commonMajors.length);
+
+            let userInfo = {
+                Type: req.body.accountType,
+                Confirmed: false,
+            };
+            //if the usertype is student, then grab the gpa & majors from the request and store it in the account
+            if (req.body.accountType === process.env.STUDENT) { userInfo.GPA = req.body.GPA; userInfo.Major = req.body.Major; }
+
 
             //create new user instance
             const user = new User({
@@ -110,13 +99,9 @@ const register = async (req, res) => {
                         expiry: null
                     }
                 },
-                userType: { //Temporarialy hardcoded, will make every account a faculty account, will be updated in the future
-                    Type: req.body.accountType,
-                    Confirmed: true,
-                    GPA: GPA,
-                    Major: commonMajors[randomIndex]
-                },
+                userType: userInfo,
             });
+
 
             //attempt save user
             await user.save();

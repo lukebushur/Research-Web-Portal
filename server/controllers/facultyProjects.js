@@ -13,8 +13,7 @@ const generateRes = require('../helpers/generateJSON');
     projectType (String, the type of project being created (Draft or Active)) professor (String, name of professor) - 
     projectDetails (Object, contain all the project details) projectDetails fields : 
     posted (Date, date project was created) - description (String, description of the project) - projectName (String, name of the project)
-    questions (Array of Strings, questions for applicants) - requirements (Array of Objects, the objects have the fields requirementType (int), 
-    requirement Value (TBD), and required (Boolean))
+    questions (Array of Strings, questions for applicants)
 */
 const createProject = async (req, res) => {
     try {
@@ -28,7 +27,7 @@ const createProject = async (req, res) => {
         if (user.userType.Type == process.env.FACULTY) {
             const userId = user._id;
             let projectType = req.body.projectType;
-            //validate schema and ensure that the questions array has as many elements as the requirements array
+            //validate schema 
             const { error } = projectSchema.validate(req.body.projectDetails.project);
             if (error && projectType == 'Active') {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
@@ -40,7 +39,7 @@ const createProject = async (req, res) => {
 
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
-            
+
             let projectObject = {
                 projectName: req.body.projectDetails.project.projectName,
                 professorId: userId,
@@ -51,7 +50,7 @@ const createProject = async (req, res) => {
                 questions: req.body.projectDetails.project.questions,
                 GPA: req.body.projectDetails.project.gpa,
                 majors: req.body.projectDetails.project.majors,
-                categories: req.body.projectDetails.project.categories, 
+                categories: req.body.projectDetails.project.categories,
             }
 
             //if there is no active mongodb record for this professor's active projects then create a new record
@@ -184,71 +183,30 @@ const getProjects = async (req, res) => {
 
             let allProjects = []
             let count = 1;
+            //Grab all the projects and put them into the allProjects array
             if (archivedProjects) {
                 archivedProjects.projects.forEach(x => {
-                    y = {
-                        projectType: "archived",
-                        applications: x.applications,
-                        description: x.description,
-                        majors: x.majors,
-                        projectName: x.projectName,
-                        professorId: x.professorId,
-                        id: x._id.toString(),
-                        questions: x.questions,
-                        requirement: x.requirements,
-                        posted: x.posted,
-                        GPA: x.GPA,
-                        number: count,
-                        numApp: x.applications.length
-                    }
+                    y = createProjectObj(x, "archived", count);
                     count++;
                     allProjects.push(y);
                 });
             }
             if (activeProjects) {
                 activeProjects.projects.forEach(x => {
-                    y = {
-                        projectType: "active",
-                        applications: x.applications,
-                        description: x.description,
-                        majors: x.majors,
-                        projectName: x.projectName,
-                        professorId: x.professorId,
-                        id: x._id.toString(),
-                        questions: x.questions,
-                        requirement: x.requirements,
-                        posted: x.posted,
-                        GPA: x.GPA,
-                        number: count,
-                        numApp: x.applications.length
-                    }
+                    y = createProjectObj(x, "active", count);
                     count++;
                     allProjects.push(y);
                 });
             }
             if (draftProjects) {
                 draftProjects.projects.forEach(x => {
-                    y = {
-                        projectType: "draft",
-                        applications: x.applications,
-                        description: x.description,
-                        majors: x.majors,
-                        projectName: x.projectName,
-                        professorId: x.professorId,
-                        id: x._id.toString(),
-                        questions: x.questions,
-                        requirement: x.requirements,
-                        posted: x.posted,
-                        GPA: x.GPA,
-                        number: count,
-                        numApp: x.applications.length
-                    }
+                    y = createProjectObj(x, "draft", count);
                     count++;
                     allProjects.push(y);
                 });
             }
 
-            //This specific response doesn't work with the generateRes method, will look into solutions
+            //This specific response doesn't work with the generateRes method, so the allProjects just gets inserted directly
             res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", projects: allProjects } });
         } else {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
@@ -277,9 +235,9 @@ const updateProject = async (req, res) => {
         if (user.userType.Type == process.env.FACULTY) {
             const userId = user._id;
 
-            //validate schema and ensure that the questions array has as many elements as the requirements array
-            const { error } = projectSchema.validate(req.body.projectDetails);
-            if (error || req.body.projectDetails.project.questions.length !== req.body.projectDetails.project.requirements.length) {
+            //validate schema
+            const { error } = projectSchema.validate(req.body.projectDetails.project);
+            if (error) {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
@@ -311,9 +269,13 @@ const updateProject = async (req, res) => {
                         "projects.$.projectName": req.body.projectDetails.project.projectName,
                         "projects.$.professorId": userId,
                         "projects.$.posted": req.body.projectDetails.project.posted,
+                        "projects.$.deadline": req.body.projectDetails.project.deadline,
                         "projects.$.description": req.body.projectDetails.project.description,
+                        "projects.$.responsibilities": req.body.projectDetails.project.responsibilities,
                         "projects.$.questions": req.body.projectDetails.project.questions,
-                        "projects.$.requirements": req.body.projectDetails.project.requirements,
+                        "projects.$.categories": req.body.projectDetails.project.categories,
+                        "projects.$.majors": req.body.projectDetails.project.majors,
+                        "projects.$.GPA": req.body.projectDetails.project.GPA,
                     }
                 })
                 //check that the project was actually updated, if not send error response
@@ -374,11 +336,14 @@ const archiveProject = async (req, res) => {
                         professorId: archProject.professorId,
                         archived: new Date(),
                         posted: archProject.posted,
+                        deadline: archProject.deadline,
                         description: archProject.description,
+                        responsibilities: archProject.responsibilities,
                         questions: archProject.questions,
-                        requirements: archProject.requirements,
+                        applications: archProject.applications,
                         GPA: archProject.GPA,
                         majors: archProject.majors,
+                        categories: archProject.categories,
                     }]
                 });
                 await newArchiveList.save(); //Save the archlive list
@@ -391,11 +356,14 @@ const archiveProject = async (req, res) => {
                     professorId: archProject.professorId,
                     archived: new Date(),
                     posted: archProject.posted,
+                    deadline: archProject.deadline,
                     description: archProject.description,
+                    responsibilities: archProject.responsibilities,
                     questions: archProject.questions,
-                    requirements: archProject.requirements,
+                    applications: archProject.applications,
                     GPA: archProject.GPA,
                     majors: archProject.majors,
+                    categories: archProject.categories,
                 };
                 await Project.updateOne({ _id: user.userType.FacultyProjects.Archived }, {
                     $push: { //push new project to the array 
@@ -578,16 +546,17 @@ const fetchApplicant = async (req, res) => {
             //sets up the projectData to set back in the response
             let projectData = {
                 projectName: project.projectName,
-                gpaRequirement: project.GPA,
-                majors: project.majors,
+                professorId: project.professorId,
+                archived: new Date(),
                 posted: project.posted,
                 deadline: project.deadline,
-                archived: project.archived,
                 description: project.description,
                 responsibilities: project.responsibilities,
                 questions: project.questions,
-                requirements: project.requirements,
-                projectID: project.id,
+                applications: project.applications,
+                GPA: project.GPA,
+                majors: project.majors,
+                categories: project.categories,
             }
             //prepares the final object that will be returned in the response.
             let response = {
@@ -639,6 +608,26 @@ const demoFetchApplicants = async (req, res) => {
     } catch (error) {
         res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
     }
+}
+
+//This helper method is used to create a object that contains all project information which will be used to send back to users using getProjects
+function createProjectObj(project, projectType, count) {
+    if (typeof projectType !== 'string') { throw new Error('projectType is not a string!') }
+    let obj = {
+        projectType: projectType,
+        applications: project.applications,
+        description: project.description,
+        majors: project.majors,
+        projectName: project.projectName,
+        professorId: project.professorId,
+        id: project._id.toString(),
+        questions: project.questions,
+        posted: project.posted,
+        GPA: project.GPA,
+        number: count,
+        numApp: project.applications.length
+    }
+    return obj;
 }
 
 module.exports = {
