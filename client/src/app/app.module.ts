@@ -30,7 +30,7 @@ import { OpportunityComponent } from './components/apply-to-post/opportunity/opp
 import { ImageComponent } from './components/apply-to-post/image/image.component';
 import { TextFieldComponent } from './components/apply-to-post/text-field/text-field.component';
 import { PostProjectComponent } from './components/post_creation/posts.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
 import { DemoProjectsComponent } from './components/demoProjects/demoProject.component';
 import { SpinnerComponent } from './components/spinner/spinner.component'
@@ -41,8 +41,8 @@ import { SignoutComponent } from './components/signout/signout.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CatergoryFieldComponent } from './components/post_creation/catergory-field/catergory-field.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
+import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
-
 
 @NgModule({
   declarations: [
@@ -64,6 +64,7 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
     SignoutComponent,
     CatergoryFieldComponent,
     ViewApplicationComponent,
+    IndustryDashboardComponent,
     CustomQuestionComponent,
   ],
   imports: [

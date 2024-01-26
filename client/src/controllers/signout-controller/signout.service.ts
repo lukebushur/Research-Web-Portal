@@ -9,5 +9,6 @@ export class SignoutService {
 
   signout() {
     localStorage.setItem("jwt-auth-token", "garbage");
+    localStorage.setItem("account-type", "");
   }
 }

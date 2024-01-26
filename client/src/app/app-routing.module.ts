@@ -12,6 +12,7 @@ import { FacultyDashboardApplyComponent } from './components/faculty-accept/acce
 import { DemoProjectsComponent } from './components/demoProjects/demoProject.component';
 import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
+import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
   { path: "demoProjects", component: DemoProjectsComponent },
   { path: "signout", component: SignoutComponent },
+  { path: "industry-dashboard", component: IndustryDashboardComponent, canActivate: [AuthGuard] },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
   { path: "application/:projectID/:applicationID", component: ViewApplicationComponent },
 ];

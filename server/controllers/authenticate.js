@@ -39,6 +39,7 @@ const login = async (req, res) => {
                         res.status(200).json(generateRes(true, 200, "LOGIN_SUCCESS", {
                             accessToken: accessToken,
                             refreshToken: refreshToken,
+                            accountType: user.userType.Type,
                         }));
                     } else {
                         res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -82,7 +83,6 @@ const register = async (req, res) => {
             };
             //if the usertype is student, then grab the gpa & majors from the request and store it in the account, needs == because account type is number and env is string
             if (req.body.accountType == process.env.STUDENT) { userInfo["GPA"] = req.body.GPA; userInfo["Major"] = req.body.Major; }
-
 
             //create new user instance
             const user = new User({
@@ -131,6 +131,7 @@ const register = async (req, res) => {
                         id: user.id,
                         email: user.email,
                         name: user.name,
+                        accountType: user.userType.Type,
                     }
                 }));
         }
