@@ -60,12 +60,12 @@ const userSchema = new mongoose.Schema({
         },
         GPA: {
             type: Number,
-            default: 3.1
+            double: true,
         },
-        Major: {
+        Major: [{
             type: String,
-            default: "Computer Science"
-        }
+            required: false
+        }]
     },
     emailToken: {
         type: String

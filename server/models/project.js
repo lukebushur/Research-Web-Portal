@@ -17,17 +17,18 @@ const researchOpp = new mongoose.Schema({
     projects: [{
         projectName: {
             type: String,
-            required: true
+            required: true,
+            default: "Temporary Title"
         },
         GPA: {
             type: Number,
+            double: true,
             required: false,
         },
-        majors:
-            [{
-                type: String,
-                required: false
-            }],
+        majors: [{
+            type: String,
+            required: false
+        }],
         categories: [{
             type: String,
             required: false
@@ -50,12 +51,13 @@ const researchOpp = new mongoose.Schema({
                 name: {
                     type: String
                 },
-                gpa: {
-                    type: Number
+                GPA: {
+                    type: Number,
+                    double: true,
                 },
-                major: {
-                    type: String
-                },
+                major: [{
+                    type: String,
+                }],
                 email: {
                     type: String
                 },
@@ -66,7 +68,7 @@ const researchOpp = new mongoose.Schema({
         ],
         posted: {
             type: Date,
-            required: true
+            required: false
         },
         deadline: {
             type: Date,

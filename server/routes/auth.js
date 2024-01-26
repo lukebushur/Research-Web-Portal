@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/auth/test', [rateLimiter(50, 10), verifyToken], authController.test);
 
 //POST REGISTER
-router.post('/register', rateLimiter(50, 10), authController.register);
+router.post('/register', authController.register);
 
 //POST TOKEN
 router.post('/token', authController.token);

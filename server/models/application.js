@@ -24,6 +24,10 @@ const Applications = new mongoose.Schema({
             appliedDate: {
                 type: Date,
                 required: false,
+            },
+            lastModified: {
+                type: Date,
+                required: true,
             }
         }
     ]
