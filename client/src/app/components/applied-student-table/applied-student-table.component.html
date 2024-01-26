@@ -43,8 +43,8 @@
       </th>
       <td mat-cell *matCellDef="let student">
         <p *ngIf="student.status === 'Accepted' || student.status === 'Rejected'"
-          [class.accept-status-text]="student.status === 'Accepted'"
-          [class.reject-status-text]="student.status === 'Rejected'" class="status-text">{{student.status}}</p>
+          [class.accept-status-text]="student.status === 'Accept'"
+          [class.reject-status-text]="student.status === 'Reject'" class="status-text">{{student.status}}</p>
         <!-- <p *ngIf="student.status === 'Rejected'" [style.background-color]="'red'">{{student.status}}</p> -->
         <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
           (click)="applicationDecision(student.application, 'Accept')" class="accept-button">Accept</button>

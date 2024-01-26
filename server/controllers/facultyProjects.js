@@ -51,7 +51,7 @@ const createProject = async (req, res) => {
                     description: req.body.projectDetails.project.description,
                     responsibilities: req.body.projectDetails.project.responsibilities,
                     questions: req.body.projectDetails.project.questions,
-                    GPA: req.body.projectDetails.project.gpa,
+                    GPA: req.body.projectDetails.project.GPA,
                     majors: req.body.projectDetails.project.majors,
                     categories: req.body.projectDetails.project.categories,
                 }
@@ -60,7 +60,7 @@ const createProject = async (req, res) => {
                     professorId: userId,
                     deadline: req.body.projectDetails.project.deadline,
                     questions: req.body.projectDetails.project.questions,
-                    GPA: req.body.projectDetails.project.gpa,
+                    GPA: req.body.projectDetails.project.GPA,
                     majors: req.body.projectDetails.project.majors,
                     categories: req.body.projectDetails.project.categories,
                     responsibilities: req.body.projectDetails.project.responsibilities,
@@ -417,7 +417,7 @@ const archiveProject = async (req, res) => {
 const applicationDecision = async (req, res) => {
     try {
         const decision = req.body.decision; //checks if the decision is valid otherwise ends the request
-        if (decision != "Accept" && decision != "Reject") { generateRes(false, 400, "INPUT_ERROR", {}); return; }
+        if (decision != "Accept" && decision != "Reject" && decision != "Hold") { generateRes(false, 400, "INPUT_ERROR", {}); return; }
 
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
@@ -450,10 +450,11 @@ const applicationDecision = async (req, res) => {
             projectStatus = project.projects[projIndex].applications[projAppIndex].status;
             applicationStatus = application.applications[appIndex].status;
             //if the status are not pending, then the request shouldn't modify anything because the decision is already made - MIGHT CHANGE IN FUTURE!
-            if (projectStatus != "Pending" || applicationStatus != "Pending") { res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); return; }
+            if ((projectStatus != "Pending" || applicationStatus != "Pending") && (projectStatus != "Hold" || applicationStatus != "Hold")) { res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); return; }
             //Set status
-            project.projects[projIndex].applications[projAppIndex].status = decision + "ed";
-            application.applications[appIndex].status = decision + "ed";
+            project.projects[projIndex].applications[projAppIndex].status = decision;
+            application.applications[appIndex].status = decision;
+            application.applications[appIndex].lastModified = new Date();
 
             const savePromises = [
                 project.save(),
@@ -494,7 +495,7 @@ const getAllActiveProjects = async (req, res) => {
                     professorEmail: x.professorEmail,
                     title: y.projectName,
                     projectID: y.id,
-                    gpa: y.GPA,
+                    GPA: y.GPA,
                     majors: y.majors,
                     applications: y.applications
                 }
@@ -551,7 +552,7 @@ const fetchApplicant = async (req, res) => {
                 applicantData = {
                     status: applicant.status,
                     name: applicant.name,
-                    gpa: applicant.gpa,
+                    GPA: applicant.GPA,
                     major: applicant.major,
                     email: applicant.email,
                     appliedDate: application.appliedDate,

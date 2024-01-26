@@ -22,6 +22,7 @@ const researchOpp = new mongoose.Schema({
         },
         GPA: {
             type: Number,
+            double: true,
             required: false,
         },
         majors: [{
@@ -50,12 +51,13 @@ const researchOpp = new mongoose.Schema({
                 name: {
                     type: String
                 },
-                gpa: {
-                    type: Number
+                GPA: {
+                    type: Number,
+                    double: true,
                 },
-                major: {
-                    type: String
-                },
+                major: [{
+                    type: String,
+                }],
                 email: {
                     type: String
                 },

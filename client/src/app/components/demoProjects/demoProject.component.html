@@ -60,10 +60,10 @@
                 <p *ngIf="alreadyApplied(element.projectID, false) && canApplyToPosition(element.majors, element.gpa) && getApplicationStatus(element.projectID, true) == 'Pending'"
                     class="status-text pending-status-text">
                     Pending</p>
-                <p *ngIf="alreadyApplied(element.projectID, false) && canApplyToPosition(element.majors, element.gpa) && getApplicationStatus(element.projectID, true) == 'Accepted'"
+                <p *ngIf="alreadyApplied(element.projectID, false) && canApplyToPosition(element.majors, element.gpa) && getApplicationStatus(element.projectID, true) == 'Accept'"
                     class="status-text accept-status-text">
                     Accepted </p>
-                <p *ngIf="alreadyApplied(element.projectID, false) && canApplyToPosition(element.majors, element.gpa) && getApplicationStatus(element.projectID, true) == 'Rejected'"
+                <p *ngIf="alreadyApplied(element.projectID, false) && canApplyToPosition(element.majors, element.gpa) && getApplicationStatus(element.projectID, true) == 'Reject'"
                     class="status-text reject-status-text">
                     Rejected </p>
                 <button mat-stroked-button disabled *ngIf="!canApplyToPosition(element.majors, element.gpa)"

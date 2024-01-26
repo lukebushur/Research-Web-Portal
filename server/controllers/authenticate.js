@@ -80,8 +80,8 @@ const register = async (req, res) => {
                 Type: req.body.accountType,
                 Confirmed: false,
             };
-            //if the usertype is student, then grab the gpa & majors from the request and store it in the account
-            if (req.body.accountType === process.env.STUDENT) { userInfo.GPA = req.body.GPA; userInfo.Major = req.body.Major; }
+            //if the usertype is student, then grab the gpa & majors from the request and store it in the account, needs == because account type is number and env is string
+            if (req.body.accountType == process.env.STUDENT) { userInfo["GPA"] = req.body.GPA; userInfo["Major"] = req.body.Major; }
 
 
             //create new user instance

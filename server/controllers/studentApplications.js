@@ -3,15 +3,15 @@ const Project = require('../models/project');
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../helpers/generateJSON');
+const project = require('../models/project');
 
-/*  TODO ADD REQUEST VERIFICATION!!!! + No multiple Applications?!?!?
-    This function handles the application creation for the student accounts. This function should be used with POST requests and 
+/*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
     an object that has the application object ID and record ID in the project that the student applied too.
 
     This request takes four fields : 
     projectID (String, the object id of the project that the student is applying to) - professorEmail (String, the email of the professor
-    that created the project) - questions (Array, the questions of the application) - answers (Array, the student answers of the questions)
+    that created the project) - questions (Array, the questions objects that stores all information for the application) 
 */
 const createApplication = async (req, res) => {
     try {
@@ -33,7 +33,6 @@ const createApplication = async (req, res) => {
             student = results[0];
             faculty = results[1];
         });
-        console.log(student.GPA + student.Major);
         //check if user type is student
         if (student && student.userType.Type == process.env.STUDENT) {
 
@@ -49,6 +48,15 @@ const createApplication = async (req, res) => {
             }
             //gets the ID of the record that holds the student applications 
             const applicationRecord = student.userType.studentApplications;
+            const status = "Pending";
+
+            //This validates that the student meets the minimum criteria i.e. GPA / Major
+            if (existingProject.GPA > student.userType.GPA) { res.status(409).json(generateRes(false, 409, "INVALID_GPA", {})); return; }
+            let majorIncluded = false;
+            student.userType.Major.forEach((major) => {
+                if (existingProject.majors.includes(major)) { majorIncluded = true; }
+            });
+            if (!majorIncluded) { res.status(409).json(generateRes(false, 409, "INVALID_MAJOR", {})); return; }
 
             //if there is no active mongodb record for student's applications then create a new record
             if (!applicationRecord) {
@@ -57,11 +65,11 @@ const createApplication = async (req, res) => {
                     applications: [
                         {
                             questions: req.body.questions,
-                            answers: req.body.answers,
                             opportunityRecordId: activeProjectID,
                             opportunityId: existingProject._id,
-                            status: "Pending",
-                            appliedDate : new Date(),
+                            status: status,
+                            appliedDate: new Date(),
+                            lastModified: new Date(),
                         }
                     ]
                 });
@@ -73,9 +81,9 @@ const createApplication = async (req, res) => {
                             'projects.$.applications': {
                                 'applicationRecordID': applicationList._id,
                                 'application': applicationList.applications[0]._id,
-                                'status': "Pending",
+                                'status': status,
                                 'name': student.name,
-                                'gpa': student.userType.GPA,
+                                'GPA': student.userType.GPA,
                                 'major': student.userType.Major,
                                 'email': student.email,
                                 'appliedDate': new Date(),
@@ -91,13 +99,19 @@ const createApplication = async (req, res) => {
                 //save all
                 await Promise.all(savePromises);
             } else { //otherwise there exists a faculty record for active projects so add a new element to the record's array
+                //This checks if an application for the project was already made, as if it was teh applicationRecordID that corresponds to the
+                //student will exist in the applicants pool, otherwise it will not and the application can be made
+
+                const existingApp = existingProject.applications.find(x => x.applicationRecordID == applicationRecord._id.toString());
+                if (existingApp) { res.status(403).json(generateRes(false, 403, "APPLICATION_ALREADY_EXISTS", {})); return; }
+
                 let newApplication = {
                     questions: req.body.questions,
-                    answers: req.body.answers,
                     opportunityRecordId: activeProjectID,
                     opportunityId: existingProject._id,
-                    appliedDate : new Date(),
-                    status: "Pending"
+                    appliedDate: new Date(),
+                    status: status,
+                    lastModified: new Date(),
                 };
                 //these await statements cannot be used with a promise because they require the newApplication ID which needs to be 
                 //pushed and then fetched from the database
@@ -106,7 +120,8 @@ const createApplication = async (req, res) => {
                         applications: newApplication,
                     }
                 });
-                //Retrieve the updated document and then get the newApplication object into newApp
+                //Because the ID in the db doesn't exist until it is in the db, retrieve the updated document and then
+                //get the newApplication object into newApp
                 const doc = await Application.findOne({ _id: applicationRecord });
                 const newApp = doc._doc.applications.find(y => y.opportunityId.toString() == existingProject.id);
                 //update the project with a new application
@@ -116,9 +131,9 @@ const createApplication = async (req, res) => {
                         'projects.$.applications': {
                             'applicationRecordID': applicationRecord,
                             'application': newApp._id,
-                            'status': "Pending",
+                            'status': status,
                             'name': student.name,
-                            'gpa': student.userType.GPA,
+                            'GPA': student.userType.GPA,
                             'major': student.userType.Major,
                             'email': student.email,
                             'appliedDate': new Date(),
@@ -261,12 +276,11 @@ const getApplications = async (req, res) => {
                         //create a new index for the return array from the values of the project records and application records
                         let newObj = {
                             questions: applications.applications[appIndex].questions,
-                            answers: applications.applications[appIndex].answers,
                             status: applications.applications[appIndex].status,
                             opportunityRecordId: applications.applications[appIndex].opportunityRecordId,
                             opportunityId: applications.applications[appIndex].opportunityId,
                             projectName: postItem.projects[projIndex].projectName,
-                            prosted: postItem.projects[projIndex].posted,
+                            posted: postItem.projects[projIndex].posted,
                             description: postItem.projects[projIndex].description,
                             professorEmail: postItem.professorEmail
                         }
