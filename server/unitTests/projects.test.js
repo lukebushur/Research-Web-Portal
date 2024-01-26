@@ -388,10 +388,14 @@ describe('GET /api/projects/getProjects', () => {
 //Ensure that the records created are deleted 
 after(async () => {
     try {
-        await User.deleteOne({ _id: removeID });
-        await Project.deleteOne({ _id: projectRecordID });
-        await Project.deleteOne({ _id: draftRecordID });
-        await Project.deleteOne({ _id: archiveRecordID });
+        const promises = [
+            User.deleteOne({ _id: removeID }),
+            Project.deleteOne({ _id: projectRecordID }),
+            Project.deleteOne({ _id: draftRecordID }),
+            Project.deleteOne({ _id: archiveRecordID })
+        ];
+
+        await Promise.all(promises);
     } catch (err) {
         console.error(err);
     }
