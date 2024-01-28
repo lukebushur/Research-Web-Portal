@@ -29,9 +29,12 @@ describe('SignupComponent', () => {
       }
     };
 
+    // Create a spy to 'replace' the call to SignupService's signup function.
+    // This spy returns an observable with the value of testSignupResponse.
     const signupService = jasmine.createSpyObj('SignupService', ['signup']);
     signupSpy = signupService.signup.and.returnValue(of(testSignupResponse));
 
+    // Create a spy to 'replace' the call to Router's navigate function.
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate;
 
@@ -44,6 +47,7 @@ describe('SignupComponent', () => {
         MatInputModule,
         BrowserAnimationsModule,
       ],
+      // Use the spies defined in this test instead of the actual services
       providers: [
         { provide: SignupService, useValue: signupService },
         { provide: Router, useValue: router },
