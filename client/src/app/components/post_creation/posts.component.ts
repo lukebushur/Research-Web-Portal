@@ -5,7 +5,7 @@ import { CatergoryFieldComponent } from './catergory-field/catergory-field.compo
 import { FieldComponent } from './custom-field-modal/field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
-import { PostCreationService } from 'src/controllers/post-creation-controller/post-creation.service';
+import { PostCreationService } from 'src/app/controllers/post-creation-controller/post-creation.service';
 import { CustomQuestionComponent } from './custom-question/custom-question.component';
 
 
@@ -13,7 +13,6 @@ import { CustomQuestionComponent } from './custom-question/custom-question.compo
   selector: 'app-posts',
   templateUrl: './posts.component.html',
 })
-
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = ""; //Title of the project
   description: string | null = ""; //Description of the project
@@ -64,7 +63,9 @@ export class PostProjectComponent implements AfterViewInit {
 
   //This is required to implement the afterViewInit() interface
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    // Commented to pass tests
+    // TODO: implement this method
+    // throw new Error('Method not implemented.');
   }
 
   //This method is used to handle the opening of dialog boxes, which is used to specify the question and question type when creating questions
@@ -76,10 +77,15 @@ export class PostProjectComponent implements AfterViewInit {
     //after the dialog is closed, it then creates a new question component if the create button is selected
     dialogRef.afterClosed().subscribe(result => {
       if (result.create) { //check if the question show be created
+        console.log(result.type);
+        
         const question = this.customQuestions.createComponent(CustomQuestionComponent); 
-        question.instance.type = result.type; //set the type and question values of the component
-        question.instance.question = result.question; 
+        
+        //set the type and question values of the component
+        question.instance.typeStr = result.type;
+        question.instance.questionStr = result.question;
         this.customQuestionsObjects.push(question); //push the new question to the array
+
         question.instance.deleted.subscribe(() => { //set the on delete to remove the component from the array.
           let index = this.customQuestionsObjects.indexOf(question);
           if (index > -1) {
