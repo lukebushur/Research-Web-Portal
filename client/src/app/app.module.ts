@@ -8,6 +8,7 @@ import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
 import { HeaderBarComponent } from './components/header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
@@ -72,6 +73,7 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    HttpClientTestingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
