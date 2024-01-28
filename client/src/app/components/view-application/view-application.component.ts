@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FacultyProjectService } from 'src/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { ActivatedRoute } from '@angular/router';
-import { DateConverterService } from 'src/controllers/dateConverter-controller/date-converter.service';
+import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 
 @Component({
   selector: 'app-view-application',
