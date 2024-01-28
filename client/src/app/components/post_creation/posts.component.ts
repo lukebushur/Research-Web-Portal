@@ -19,9 +19,6 @@ export class PostProjectComponent implements AfterViewInit {
   description: string | null = ""; //Description of the project
   responsibilities: string | null = "";
   gpa: Number | null = 3;
-  majors: string[] | null = [];
-  major: string | null = ""; // ADDED to appease the Angular compiler's strict mode
-  // TODO: fix the above
   standing: string | null = "";
   fileName: string = "";
   deadline: Date = new Date();
