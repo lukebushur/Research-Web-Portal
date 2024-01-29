@@ -298,6 +298,83 @@ const getApplications = async (req, res) => {
     }
 }
 
+const getTopRecentApplicantions = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const student = await User.findOne({ email: decodeAccessToken.email });
+
+        if (student.userType.Type === parseInt(process.env.STUDENT)) {
+            const applicationList = student.userType.studentApplications;
+            //get the project lists for active, archived, and draft projects
+            const applications = await Application.findById(applicationList);
+            let recordIDs = []; //array for each projectRecordID
+            let opportunityIDs = {}; //dictionary where each key is a projectRecordID and its value is an array with each element being an array of size 2, with the opporutnityID and the index of that application
+
+            const sortedApplications = applications.applications.toSorted((a, b) => {
+                // a.lastModified.
+            });
+
+            applications.applications.forEach((item, index) => {
+                /*  it was difficult to compare the IDs of the objects in the application as they are not stored as strings but rather objects.
+                    So what I did was I added both the ID object and the same ID but with .toString() to make it a string, I then checked if the 
+                    ID.toString() was in the array of records and if so I didn't add the duplicated project record id. Below I only grabbed the 
+                    even elements to avoid duplication
+                */
+                if (!recordIDs.includes(item.opportunityRecordId.toString())) {
+                    recordIDs.push(item.opportunityRecordId);
+                    recordIDs.push(item.opportunityRecordId.toString());
+                }
+
+                //This checks if the opporunityIDs object has the opportunityRecord as a field and if not creates an array, otherwise pushes to the array
+                if (!opportunityIDs[item.opportunityRecordId.toString()]) {
+                    opportunityIDs[item.opportunityRecordId.toString()] = [[item.opportunityId, index]];
+                } else {
+                    opportunityIDs[item.opportunityRecordId.toString()].push([item.opportunityId, index]);
+                }
+            });
+            //Get the even elements and intialize a return array
+            const evenElements = [...recordIDs].filter((element, index) => index % 2 === 0);
+            let returnArray = [];
+            //get the project records that are in the array of record ids
+            const posts = await Project.find({ _id: { $in: evenElements } });
+            /*  For each projectrecord in the posts array, check if the opporunityIDs object has a field for that specified projectRecord 
+                Then for each of the array elements in the corresponding value, get the application from the index in the value array and the projectIndex from the 
+                opporunity id in the value array
+            */
+            posts.forEach((postItem) => {
+                if (opportunityIDs[postItem.id]) {
+                    opportunityIDs[postItem.id].forEach((item) => {
+                        const appIndex = item[1];
+                        const projIndex = postItem._doc.projects.findIndex(y => y.id === item[0].toString());
+                        //create a new index for the return array from the values of the project records and application records
+                        let newObj = {
+                            questions: applications.applications[appIndex].questions,
+                            status: applications.applications[appIndex].status,
+                            opportunityRecordId: applications.applications[appIndex].opportunityRecordId,
+                            opportunityId: applications.applications[appIndex].opportunityId,
+                            projectName: postItem.projects[projIndex].projectName,
+                            posted: postItem.projects[projIndex].posted,
+                            description: postItem.projects[projIndex].description,
+                            professorEmail: postItem.professorEmail
+                        }
+                        returnArray.push(newObj);
+                    })
+                }
+            });
+
+            res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+
+};
+
 const demoGetStudentInfo = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
