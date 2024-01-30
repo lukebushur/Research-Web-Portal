@@ -211,6 +211,42 @@ describe('POST /api/applications/createApplication', () => {
     })
 });
 
+//Unit test for updating the application from the student's side, i.e. changing an answer
+describe('POST /api/applications/updateApplication', () => {
+    it("Should return a successful application update response", (done) => {
+        chai.request(server)
+            .post('/api/applications/updateApplication')
+            .set({ "Authorization": `Bearer ${student_access_token}` })
+            .send({
+                "applicationID": applicationID,
+                "questions": [{
+                    "question": "Can you eat frogs?",
+                    "requirementType": "radio button",
+                    "required": true,
+                    "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"],
+                    "answers": ["No, I cannot eat frogs!"]
+                }, {
+                    "question": "Write a 3-page paper on why baby shark is the best song ever.",
+                    "requirementType": "text",
+                    "required": true,
+                    "answers": ["This is 3 pages if the font is size 900."]
+                }, {
+                    "question": "Frogs?",
+                    "requirementType": "check box",
+                    "required": true,
+                    "choices": ["Frogs", "frogs"],
+                    "answers": ["Frogs", "frogs"]
+                },]
+            }).end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('APPLICATION_UPDATED');
+                done();
+            })
+    })
+});
+
 //Unit test for updating application decision to hold status
 describe('PUT /api/projects/application', () => {
     it("Should return a successful project status update response", (done) => {
@@ -231,7 +267,8 @@ describe('PUT /api/projects/application', () => {
             })
     })
 });
-//Unit test for get applications 
+//Unit test for get applications, additionally tests for functionality of the update application route by ensuring that
+//the answer of the first question for the first application has been updated to "No, I cannot eat frogs!"
 describe('GET /api/applications/getApplications', () => {
     it("Should return a successful applications retrieval response", (done) => {
         chai.request(server)
@@ -250,6 +287,7 @@ describe('GET /api/applications/getApplications', () => {
                 expect(res.body.success.applications[0]).to.have.property('opportunityId');
                 expect(res.body.success.applications[0]).to.have.property('opportunityRecordId');
                 expect(res.body.success.applications[0].questions).to.have.length(3);
+                expect(res.body.success.applications[0].questions[0].answers[0]).to.equal("No, I cannot eat frogs!");
                 expect(res.body.success.applications[0]).to.have.property('projectName').to.equal("Bioinformatics Project");
                 done();
             })

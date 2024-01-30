@@ -44,12 +44,20 @@ const projectSchema = Joi.object({
         })
     ).required(),
 })
-
-const createApplicationSchema = Joi.object({
-    "projectID": Joi.string().required(),
-    "professorEmail": Joi.string().required(),
-    "questions": Joi.array().required(),
-    "answers": Joi.array().required()
+//This applicationSchema is used to validate both the update application request and create application request
+const applicationSchema = Joi.object({
+    "projectID": Joi.string(),
+    "applicationID": Joi.string(),
+    "professorEmail": Joi.string(),
+    "questions": Joi.array().items(
+        Joi.object({
+            "question": Joi.string().required(),
+            "requirementType": Joi.string().required(),
+            "required": Joi.boolean().required(),
+            "choices": Joi.array().items(Joi.string()),
+            "answers": Joi.array().items(Joi.string()),
+        })
+    ).required(),
 })
 
 const appDecision = Joi.object({
@@ -62,4 +70,5 @@ module.exports = {
     registerSchema, loginSchema,
     emailSchema, projectSchema,
     deleteProjectSchema, appDecision,
+    applicationSchema
 }

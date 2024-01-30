@@ -22,5 +22,7 @@ router.get('/getApplications', verifyToken, applications.getApplications);
 
 router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
 
+//POST Update Applications
+router.post('/updateApplication', verifyToken, applications.updateApplication);
 
 module.exports = router;

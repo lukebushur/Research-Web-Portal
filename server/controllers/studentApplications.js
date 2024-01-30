@@ -4,19 +4,27 @@ const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../helpers/generateJSON');
 const project = require('../models/project');
+const { applicationSchema } = require('../helpers/inputValidation/validation');
 
 /*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
     an object that has the application object ID and record ID in the project that the student applied too.
 
-    This request takes four fields : 
+    This request takes three fields : 
     projectID (String, the object id of the project that the student is applying to) - professorEmail (String, the email of the professor
     that created the project) - questions (Array, the questions objects that stores all information for the application) 
 */
 const createApplication = async (req, res) => {
     try {
-        //ensure that the number of questions equals number of answers
-        //if((req.body.answers.length != req.body.questions.length)) {generateRes(false, 400, "INPUT_ERROR", { "details": "Numbers of questions and answers do not match" }); return;}
+        //Check for error in application http request
+        const { error } = applicationSchema.validate(req.body);
+        if (error) {
+            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                errors: error.details,
+                original: error._original
+            }));
+            return;
+        }
 
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
@@ -142,6 +150,55 @@ const createApplication = async (req, res) => {
                 });
             }
             res.status(200).json(generateRes(true, 200, "APPLICATION_CREATED", {}));
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
+/*  This function handles the application update for the student accounts. This function should be used with POST requests and 
+    requires an access token. This function should update an existing student application and takes most of the same data as the create application
+    function
+
+    This request takes two fields : 
+    questions (Array, the questions objects that stores all information for the application) - applicationID (String, the id
+    of the applicantion object that will be updated)
+*/
+const updateApplication = async (req, res) => {
+    try {
+        //Validate the http request body
+        const { error } = applicationSchema.validate(req.body);
+        if (error) {
+            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                errors: error.details,
+                original: error._original
+            }));
+            return;
+        }
+
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        let student = await User.findOne({ email: decodeAccessToken.email });
+
+        if (student && student.userType.Type === parseInt(process.env.STUDENT)) {
+            //fetch application list from db, then check if it exists
+            let applications = await Application.findOne({ _id: student.userType.studentApplications });
+            if (!applications) { res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); return; }
+
+            applications = await Application.updateOne({ _id: student.userType.studentApplications, "applications": { "$elemMatch": { "_id": req.body.applicationID } } }, {
+                $set: {
+                    "applications.$.questions": req.body.questions
+                }
+            });
+            //ensure that the application was actually updated
+            if (applications.matchedCount === 0 || applications.modifiedCount === 0)
+                res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {}));
+            else
+                res.status(200).json(generateRes(true, 200, "APPLICATION_UPDATED", {}));
+
         } else {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
@@ -325,5 +382,6 @@ const demoGetStudentInfo = async (req, res) => {
 
 module.exports = {
     createApplication, deleteApplication,
-    getApplications, demoGetStudentInfo
+    getApplications, demoGetStudentInfo,
+    updateApplication
 };

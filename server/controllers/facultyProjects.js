@@ -294,8 +294,8 @@ const updateProject = async (req, res) => {
                         "projects.$.GPA": req.body.projectDetails.project.GPA,
                     }
                 })
-                //check that the project was actually updated, if not send error response
-                if (project.matchedCount === 0)
+                //check that the project was actually found then updated, if not send error response
+                if (project.matchedCount === 0 || project.modifiedCount === 0)
                     res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
                 else
                     res.status(200).json(generateRes(true, 200, "PROJECT_UPDATED", {}));
