@@ -73,7 +73,6 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    HttpClientTestingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
