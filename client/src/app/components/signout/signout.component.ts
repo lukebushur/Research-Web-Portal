@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SignoutService } from 'src/controllers/signout-controller/signout.service';
+import { SignoutService } from 'src/app/controllers/signout-controller/signout.service';
 
 @Component({
   selector: 'app-signout',

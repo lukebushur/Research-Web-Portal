@@ -13,7 +13,7 @@ import { OpportunityComponent } from './opportunity/opportunity.component';
   standalone: true,
   schemas: [NO_ERRORS_SCHEMA]
 })
-export class ApplyToOpp implements OnInit {
+export class ApplyToPostComponent implements OnInit {
   title = 'applyToOpp';
 
   questions: Array<string> = [

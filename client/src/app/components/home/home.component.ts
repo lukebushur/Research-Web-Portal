@@ -13,7 +13,7 @@ export class HomeComponent {
   constructor() {
     const authToken = localStorage.getItem("jwt-auth-token");
 
-    if (authToken) {
+    if (authToken && authToken !== 'garbage') {
       const decodedToken = jwt_decode(authToken) as JwtPayload;
       this.name = decodedToken.name;
     }
