@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -7,19 +7,19 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule } f
   styleUrls: ['./custom-question.component.css'],
 })
 export class CustomQuestionComponent {
-  form: FormGroup; //Form group to be used for building the form
-  type: string = ''; //the type of question, i.e. text box, radio buttons, or text
-  required: boolean = true; //A boolean to indicate if the question will be required by the faculty member
-  question: String = ""; //The actual question written by the faculty
+  @Input() typeStr = ''; //The type of question, i.e. text box, radio buttons, or text
+  @Input() questionStr = ''; //The actual question written by the faculty
+
+  question = new FormControl(this.questionStr); //Form control for the question
+  form: FormGroup; //FormGroup for the custom question form
 
   constructor(private host: ElementRef<HTMLElement>, private fb: FormBuilder) { }
 
   ngOnInit() {  //On initalization, create a formGroup with the question, options, required, and type fields
-    this.form = this.fb.group({
-      question: this.question,
-      options: this.fb.array([]),
-      required: this.required,
-      type: this.type,
+    this.form = this.fb.group({ //Form group for the form containing the options, required, and type fields
+      options: this.fb.array([]), //Choices for a radio button/checkbox question
+      required: [true], //A boolean to indicate if the question will be required by the faculty member
+      type: [this.typeStr], //The type of question, i.e. text box, radio buttons, or text
     });
 
     this.options.push(this.fb.control('New Option'));
@@ -49,14 +49,14 @@ export class CustomQuestionComponent {
   }
 
   //This method is used to get the data from the component
-  getData() : any { 
+  getData(): any {
     //first, it maps the option values from the formGroup array of options, then it creates an object containg the necessary question information
     const optionValues = this.options.controls.map((control) => control.value);
     let obj = {
-      question : this.question,
-      type : this.type,
-      required : this.required,
-      choices : optionValues,
+      question: this.question.value,
+      type: this.form.get('type')?.value,
+      required: this.form.get('required')?.value,
+      choices: optionValues,
     };
 
     return obj;

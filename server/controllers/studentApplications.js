@@ -400,8 +400,6 @@ const demoGetStudentInfo = async (req, res) => {
     }
 }
 
-
-
 module.exports = {
     createApplication, deleteApplication,
     getApplications, demoGetStudentInfo

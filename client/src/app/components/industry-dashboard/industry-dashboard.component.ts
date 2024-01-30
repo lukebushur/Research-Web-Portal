@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IndustryDashboardService } from 'src/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
 
 @Component({
   selector: 'app-industry-dashboard',

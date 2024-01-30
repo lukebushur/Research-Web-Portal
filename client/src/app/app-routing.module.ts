@@ -6,7 +6,7 @@ import { ConfirmEmailComponent } from './components/confirmemail/email.component
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { AuthGuard } from './_helpers/auth/auth-guard/auth.guard';
 import { LoginComponent } from './components/login/login.component';
-import { ApplyToOpp } from './components/apply-to-post/apply-to-post.component';
+import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { PostProjectComponent } from './components/post_creation/posts.component';
 import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
 import { DemoProjectsComponent } from './components/demoProjects/demoProject.component';
@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'faculty-dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
   { path: "confirm-email/:emailtoken", component: ConfirmEmailComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
-  { path: "apply-to-post", component: ApplyToOpp, canActivate: [AuthGuard] },
+  { path: "apply-to-post", component: ApplyToPostComponent, canActivate: [AuthGuard] },
   { path: "create-post", component: PostProjectComponent, canActivate: [AuthGuard] },
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
   { path: "demoProjects", component: DemoProjectsComponent },

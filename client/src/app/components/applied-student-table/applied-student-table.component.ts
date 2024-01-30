@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service'
-import { FacultyProjectService } from '../../../controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 
 //Interface for an entries to the applied student table
 export interface AppliedStudentList {

@@ -1,10 +1,10 @@
 <label>Question: </label>
 <mat-form-field>
     <mat-label>Enter Question Here</mat-label>
-    <textarea matInput name="responsibilities" [formControl]="form.get('question')"></textarea>
+    <textarea matInput name="responsibilities" [formControl]="question"></textarea>
 </mat-form-field>
 <form [formGroup]="form">
-    <div formArrayName="options" *ngIf="type === 'radio buttons'">
+    <div formArrayName="options" *ngIf="form.get('type')?.value === 'radio buttons'">
         <mat-radio-group>
             <mat-radio-button *ngFor="let option of options.controls; let i = index" [value]="i" disabled>
                 <textarea matInput formControlName="{{i}}"></textarea>
@@ -14,15 +14,14 @@
         <button mat-button type="button" (click)="addOption()">Add Option</button>
     </div>
 
-    <div id="textquesion" *ngIf="type=='text'">
+    <div id="textquesion" *ngIf="form.get('type')?.value === 'text'">
         <mat-form-field>
             <mat-label>Student Response</mat-label>
             <textarea matInput readonly>Student response goes here</textarea>
         </mat-form-field>
     </div>
 
-
-    <div formArrayName="options" id="checkquestion" *ngIf="type=='check box'">
+    <div formArrayName="options" id="checkquestion" *ngIf="form.get('type')?.value === 'check box'">
         <mat-checkbox *ngFor="let option of options.controls; let i = index">
             <textarea matInput formControlName="{{i}}"></textarea>
             <button mat-button type="button" (click)="removeOption(i)">Remove</button>
@@ -30,7 +29,7 @@
         <button mat-button type="button" (click)="addOption()">Add Option</button>
     </div>
 
-    <mat-checkbox [formControl]="form.get('required')">required</mat-checkbox>
+    <mat-checkbox formControlName="required">required</mat-checkbox>
     <button mat-button (click)="onDelete()">Delete</button>
     <br>
 </form>
