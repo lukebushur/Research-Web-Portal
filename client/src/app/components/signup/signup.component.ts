@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SignupService } from 'src/controllers/signup-controller/signup.service';
+import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

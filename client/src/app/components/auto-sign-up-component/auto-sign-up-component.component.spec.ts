@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AutoSignUpComponent } from './auto-sign-up-component.component';
 
@@ -8,7 +9,8 @@ describe('AutoSignUpComponentComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AutoSignUpComponent]
+      declarations: [AutoSignUpComponent],
+      imports: [HttpClientTestingModule],
     });
     fixture = TestBed.createComponent(AutoSignUpComponent);
     component = fixture.componentInstance;

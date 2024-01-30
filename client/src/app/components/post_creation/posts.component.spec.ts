@@ -1,13 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PostProjectComponent } from './posts.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('CustomQuestionComponent', () => {
+import { PostProjectComponent } from './posts.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+
+describe('PostProjectComponent', () => {
   let component: PostProjectComponent;
   let fixture: ComponentFixture<PostProjectComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PostProjectComponent]
+      declarations: [PostProjectComponent],
+      imports: [
+        HttpClientTestingModule,
+        MatDialogModule,
+        MatRadioModule,
+        FormsModule,
+      ],
     });
     fixture = TestBed.createComponent(PostProjectComponent);
     component = fixture.componentInstance;
@@ -18,5 +29,4 @@ describe('CustomQuestionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  
 });
