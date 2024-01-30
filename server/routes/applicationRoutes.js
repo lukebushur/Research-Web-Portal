@@ -20,7 +20,9 @@ router.delete('/deleteApplication', verifyToken, applications.deleteApplication)
 //GET Get Applications
 router.get('/getApplications', verifyToken, applications.getApplications);
 
-router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
+router.get('/getTopRecentApplications', verifyToken, applications.getTopRecentApplications);
+router.get('/getTopRecentApplications/:num', verifyToken, applications.getTopRecentApplications);
 
+router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
 
 module.exports = router;
