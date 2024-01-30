@@ -314,10 +314,10 @@ const getTopRecentApplicantions = async (req, res) => {
             let opportunityIDs = {}; //dictionary where each key is a projectRecordID and its value is an array with each element being an array of size 2, with the opporutnityID and the index of that application
 
             const sortedApplications = applications.applications.toSorted((a, b) => {
-                // a.lastModified.
+                a.lastModified.getTime() - b.lastModified.getTime();
             });
 
-            applications.applications.forEach((item, index) => {
+            sortedApplications.forEach((item, index) => {
                 /*  it was difficult to compare the IDs of the objects in the application as they are not stored as strings but rather objects.
                     So what I did was I added both the ID object and the same ID but with .toString() to make it a string, I then checked if the 
                     ID.toString() was in the array of records and if so I didn't add the duplicated project record id. Below I only grabbed the 
