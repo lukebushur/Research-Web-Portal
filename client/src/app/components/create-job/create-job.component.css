@@ -1,0 +1,15 @@
+h1 {
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.page-container {
+  margin: 0px 20%;
+  padding: 20px;
+  height: max-content;
+  background-color: white;
+}
+
+/* .form-field {
+  width: 70%;
+} */
