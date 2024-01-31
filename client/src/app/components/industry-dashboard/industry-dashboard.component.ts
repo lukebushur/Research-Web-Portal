@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard
 export class IndustryDashboardComponent {
   userName: string = "";
 
-  constructor(private industryDashboardService: IndustryDashboardService) { }
+  constructor(private router: Router, private industryDashboardService: IndustryDashboardService) { }
 
   ngOnInit() {
     this.industryDashboardService.getName().subscribe({
@@ -17,5 +18,9 @@ export class IndustryDashboardComponent {
         this.userName = data.success.name;
       }
     });
+  }
+
+  createJob() {
+    this.router.navigate(['/create-job']);
   }
 }
