@@ -16,12 +16,12 @@ const loginSchema = Joi.object({
 
 const emailSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
-})
+});
 
 const deleteProjectSchema = Joi.object({
     "projectID": Joi.string().required(),
     "projectType": Joi.string().required()
-})
+});
 //This schema validates that the http request to create a project is valid. It should contain a projectName, array of applicable majors 
 //and research category, deadline date, questions object, and description. Optional fields are GPA requirement and position responsbilities
 const projectSchema = Joi.object({
@@ -43,23 +43,40 @@ const projectSchema = Joi.object({
             "answers": Joi.array().items(Joi.string()),
         })
     ).required(),
-})
+});
 
 const createApplicationSchema = Joi.object({
     "projectID": Joi.string().required(),
     "professorEmail": Joi.string().required(),
     "questions": Joi.array().required(),
     "answers": Joi.array().required()
-})
+});
 
 const appDecision = Joi.object({
     "projectID": Joi.string().required(),
     "applicationID": Joi.string().required(),
     "decision": Joi.string().required()
-})
+});
+
+const jobSchema = Joi.object({
+    employer: Joi.string().required(),
+    title: Joi.string().required(),
+    isInternship: Joi.boolean().required(),
+    isFullTime: Joi.boolean().required(),
+    description: Joi.string().required(),
+    location: Joi.string().required(),
+    reqYearsExp: Joi.number().min(0).required(),
+    tags: Joi.array().items(Joi.string()),
+    timeCommitment: Joi.string(),
+    pay: Joi.string(),
+    deadline: Joi.date(),
+    startDate: Joi.date(),
+    endDate: Joi.date(),
+});
 
 module.exports = {
     registerSchema, loginSchema,
     emailSchema, projectSchema,
     deleteProjectSchema, appDecision,
-}
+    jobSchema,
+};

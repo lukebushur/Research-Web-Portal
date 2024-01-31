@@ -65,7 +65,11 @@ const userSchema = new mongoose.Schema({
         Major: [{
             type: String,
             required: false
-        }]
+        }],
+        industryData: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'IndustryData',
+        },
     },
     emailToken: {
         type: String
