@@ -8,7 +8,6 @@ import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
 import { HeaderBarComponent } from './components/header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
@@ -44,6 +43,9 @@ import { CatergoryFieldComponent } from './components/post_creation/catergory-fi
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
+import { CreateJobComponent } from './components/create-job/create-job.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -67,13 +69,13 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
+    CreateJobComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    HttpClientTestingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -91,7 +93,9 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
     MatMenuModule,
     MatRadioModule,
     MatTooltipModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [
     {
