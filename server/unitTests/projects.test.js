@@ -3,6 +3,7 @@ const chaiHTTP = require('chai-http');
 const server = require('../server.js');
 const User = require('../models/user');
 const Project = require('../models/project.js');
+require('dotenv').config();
 
 const expect = chai.expect;
 chai.use(chaiHTTP);
@@ -31,10 +32,13 @@ before(function (done) {
 
 //Basic register request, should return a success response
 describe('POST /api/register', () => {
-    it('should return a registeration success response', (done) => {
+    it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
-            .send({ "email": randomEmail, "name": randomName, "password": randomPass, "accountType": 1 })
+            .send({
+                "email": randomEmail, "name": randomName, "password": randomPass,
+                "accountType": process.env.FACULTY, "universityLocation": "Purdue University Fort Wayne"
+            })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');

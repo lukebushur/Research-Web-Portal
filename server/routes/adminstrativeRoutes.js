@@ -1,6 +1,19 @@
+const express = require('express');
+const majorsRoutes = require('../controllers/administrativeControllers/universityMajors');
 
-//Route for grabbing majors from a master list 
+//API MIDDLEWARE
+const verifyToken = require('../helpers/verifyToken')
+const rateLimiter = require('../helpers/rateLimiter');
+//Router initialisation
+const router = express.Router();
 
-//Route for add a major(s) to a master list
+//POST add majors Route for add a major(s) to a master list
+router.post('/addMajor', verifyToken, majorsRoutes.addMajors);
 
-//Route for removing a major(s) to a master list
+//DELETE Route for removing a major(s) to a master list
+router.delete('/deleteMajor', verifyToken, majorsRoutes.deleteMajors);
+
+//POST for replacing majors
+router.post('/replaceMajors', verifyToken, majorsRoutes.replaceMajors);
+
+module.exports = router;

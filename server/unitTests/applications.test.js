@@ -4,6 +4,7 @@ const server = require('../server.js');
 const User = require('../models/user');
 const Project = require('../models/project.js');
 const Application = require('../models/application.js');
+require('dotenv').config();
 
 const expect = chai.expect;
 chai.use(chaiHTTP);
@@ -32,10 +33,13 @@ before(function (done) {
 
 //Basic register request for the faculty, should return a success response
 describe('POST /api/register', () => {
-    it('should return a registeration success response', (done) => {
+    it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
-            .send({ "email": randomEmail, "name": randomName, "password": randomPass, "accountType": 1 })
+            .send({
+                "email": randomEmail, "name": randomName, "password": randomPass,
+                "accountType": process.env.FACULTY, "universityLocation": "Purdue University Fort Wayne"
+            })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -56,10 +60,13 @@ describe('POST /api/register', () => {
 
 //Student register request, should return a success response
 describe('POST /api/register', () => {
-    it('should return a registeration success response', (done) => {
+    it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
-            .send({ "email": "a" + randomEmail, "name": randomName, "password": randomPass, "accountType": 0, "GPA": 3.5, "Major": ["Computer Science"] })
+            .send({
+                "email": "a" + randomEmail, "name": randomName, "password": randomPass, "accountType": process.env.STUDENT,
+                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Purdue University Fort Wayne"
+            })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');

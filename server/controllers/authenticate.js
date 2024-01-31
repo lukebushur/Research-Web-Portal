@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const moment = require('moment');
 const generateRes = require('../helpers/generateJSON');
+const Majors = require('../models/majors');
 
 /*  This function handles the login funciton, should only be used with a POST request
     This funciton takes the login credentials and returns an accesstoken and refresh token
@@ -91,6 +92,7 @@ const register = async (req, res) => {
                 name: req.body.name,
                 emailConfirmed: false,
                 emailToken: uuidv4(),
+                universityLocation: req.body.universityLocation,
                 security: {
                     tokens: [],
                     passwordReset: {
@@ -411,6 +413,31 @@ const changeEmail = async (req, res) => {
     }
 }
 
+/*  This function gets the list of available majors from a university. It requires an access token and can be used by any account type,
+    student, faculty, or industry, it takes no fields in the request body.
+*/
+const getAvailableMajors = async (req, res) => {
+    try {
+        //Decode Access Token
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        const user = await User.findOne({ email: decodeAccessToken.email });
+        if (user) {
+            majorsRecord = await Majors.findOne({ location: user.universityLocation });
+
+            if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
+
+            res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
+        } else {
+            res.status(400).json(generateRes(false, 400, "EMAIL_EXISTS", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
+
+
 /* Test function, nothing important here */
 const test = async (req, res) => {
     try {
@@ -496,9 +523,6 @@ const changeEmailConfirmation = async (user) => {
     });
 };
 
-
-
-
 // These two function handles the token generation, either accesstoken for accessing api/webapp or refresh token for regenerating an access token
 const generateAccessToken = (id, email, uName) => {
     let items = {
@@ -569,5 +593,6 @@ module.exports = {
     test, register, token,
     confirmEmailToken, login,
     resetPassword, resetPasswordConfirm,
-    changeEmail, changeEmailConfirm
+    changeEmail, changeEmailConfirm,
+    getAvailableMajors
 };

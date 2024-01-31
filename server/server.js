@@ -16,12 +16,14 @@ const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const applicationRoutes = require('./routes/applicationRoutes');
 const industryRoutes = require('./routes/industry');
+const adminRoutes = require('./routes/adminstrativeRoutes')
 
 //Endpoints
 app.use('/api', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/industry', industryRoutes);
+app.use('/api/admin', adminRoutes);
 
 const port = process.env.PORT || 5000;
 
