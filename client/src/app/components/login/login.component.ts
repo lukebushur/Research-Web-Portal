@@ -57,6 +57,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    console.log("Hello!");
     const loginData = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
@@ -65,7 +66,7 @@ export class LoginComponent {
     this.loginService.login(loginData).subscribe({
       next: (response: any) => {
         console.log('Login Successful!', response);
-
+        
         const authToken = response?.success?.accessToken;
         const accountType = response?.success?.accountType;
 

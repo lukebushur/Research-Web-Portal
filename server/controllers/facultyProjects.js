@@ -163,6 +163,70 @@ const deleteProject = async (req, res) => {
         res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
     }
 }
+/*  This function handles the access of a single faculty project, should only be used with a POST request, and requires an access token
+    This funciton takes the projectID and type and then retrieves the project specified, either active, draft, or archived
+    
+    The request body requires the following fields : 
+    projectID (String, the mongodb __id of the project object to delete from array) - projectType (String, the type of project to access)
+*/
+const getProject = async (req, res) => {
+    try {
+        if (!req.body.projectType || !req.body.projectID) { return res.status(400).json(generateRes(400, "INPUT_ERROR", {})); }
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+        if (user.userType.Type == process.env.FACULTY) {
+            const userId = user._id;
+
+            let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
+            switch (req.body.projectType) {
+                case "Active":
+                    recordID = user.userType.FacultyProjects.Active;
+                    break;
+                case "Archived":
+                    recordID = user.userType.FacultyProjects.Archived;
+                    break;
+                case "Draft":
+                    recordID = user.userType.FacultyProjects.Draft;
+                    break;
+                default:
+                    throw error; //if the projectType is not draft, archived, or active then there is an error
+            }
+
+            let projectRecord = await Project.findById(recordID);
+            if (!projectRecord) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            else { //If the project list was found, then continue
+                //get and update the project from the project array that has the matching information 
+                const project = projectRecord.projects.find(x => x.id === req.body.projectID);
+                if (project) {
+                    const deadline = new Date(project.deadline);
+                    let returnProject = {
+                        projectName : project.projectName,
+                        questions : project.questions,
+                        description : project.description,
+                        deadline : deadline.toDateString(),
+                        professorId : userId,
+                        categories : project.categories,
+                        majors : project.majors,
+                        GPA : project.GPA,
+                        responsibilities : project.responsibilities
+                    }
+                    return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
+                }
+                else
+                    return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND"));
+            }
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+}
 
 /*  This function handles the requests to get the faculty projects, it should only be used with GET requests, and requires a valid access token
 
@@ -652,5 +716,5 @@ module.exports = {
     getProjects, updateProject,
     archiveProject, applicationDecision,
     getAllActiveProjects, demoFetchApplicants,
-    fetchApplicant,
+    fetchApplicant, getProject
 };

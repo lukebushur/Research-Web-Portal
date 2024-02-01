@@ -252,6 +252,53 @@ describe('GET /api/projects/getProjects', () => {
             });
     });
 });
+
+//Unit test for getting a singular project, this unit test grabs a draft project
+describe('POST /api/projects/getProject', () => {
+    it('Should return a successful draft project retrieval reponse', (done) => {
+        chai.request(server)
+            .post('/api/projects/getProject')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({
+                "projectType": "Draft",
+                "projectID": draftID
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('PROJECT_FOUND');
+                expect(res.body.success).to.have.property('project');
+                expect(res.body.success.project).to.have.property('projectName').to.equal('Temporary Title');
+                expect(res.body.success.project).to.have.property('questions');
+                done();
+            })
+    })
+});
+
+//Unit test for getting a singular active project, this unit test grabs an active project
+describe('POST /api/projects/getProject', () => {
+    it('Should return a successful project retrieval reponse', (done) => {
+        chai.request(server)
+            .post('/api/projects/getProject')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({
+                "projectType": "Active",
+                "projectID": projectID2
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('PROJECT_FOUND');
+                expect(res.body.success).to.have.property('project');
+                expect(res.body.success.project).to.have.property('projectName').to.equal('Bioinformatics Project 2');
+                expect(res.body.success.project).to.have.property('questions');
+                done();
+            })
+    })
+});
+
 //Update project request, this should update the first active project to have a name of FROGS
 describe('PUT /api/projects/updateProject', () => {
     it('should return a successful project update response', (done) => {

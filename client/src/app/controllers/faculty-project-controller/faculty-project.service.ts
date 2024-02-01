@@ -32,6 +32,18 @@ export class FacultyProjectService {
 
     return this.http.get(`${this.apiUrl}/projects/getProjects`, { headers });
   }
+  //This method accesses the getProject api route, which grabs a singular project from the DB, it takes a projectid and the project type
+  getProject(projectId: string, projectType: string): Observable<any> {
+    const headers = this.authService.getHeaders();
+
+    const data = {
+      "projectID": projectId,
+      "projectType": projectType
+    }
+
+    return this.http.post(`${this.apiUrl}/projects/getProject`, data, { headers });
+  }
+
 
   deleteProject(projectId: string, projectType: string): Observable<any> {
     const headers = this.authService.getHeaders();
@@ -52,6 +64,13 @@ export class FacultyProjectService {
     const data = { "projectID": projectId }
 
     return this.http.put(`${this.apiUrl}/projects/archiveProject`, data, { headers });
+  }
+  //Method to access the updateProject API route, it takes the data necessary for the route which should be:
+  //ProjectID, ProjectType, projectDetails{project{projectName, GPA, majors, categories, description, questions{}, deadline}}
+  updateProject(data: any): Observable<any> {
+    const headers = this.authService.getHeaders();
+
+    return this.http.put(`${this.apiUrl}/projects/updateProject`, data, { headers });
   }
 
   demoGetActiveProjects(): Observable<any> {
