@@ -355,6 +355,78 @@ const getApplications = async (req, res) => {
     }
 }
 
+const getTopRecentApplications = async (req, res) => {
+    try {
+        const numApplications = req.params.num || 3;
+
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const student = await User.findOne({ email: decodeAccessToken.email });
+
+        if (student.userType.Type == parseInt(process.env.STUDENT)) {
+            const applicationList = student.userType.studentApplications;
+            //get the project lists for active, archived, and draft projects
+            const applications = await Application.findById(applicationList);
+
+            // sort according to most recent
+            const sortedApplications = applications.applications.toSorted((a, b) => {
+                b.lastModified.getTime() - a.lastModified.getTime();
+            });
+            
+            const changedApplications = sortedApplications.filter(application => {
+                application.lastModified !== application.appliedDate;
+            }).toSpliced(numApplications);
+            const unchangedApplications = sortedApplications.filter(application => {
+                application.lastModified === application.appliedDate;
+            });
+
+            // get the top n applications by getting the most recently updated applictions
+            // first (e.g., status updated to accepted/reject), followed by most recently
+            // posted if necessary
+            const topApplications = (changedApplications.length < numApplications)
+                ? changedApplications.concat(unchangedApplications).toSpliced(numApplications)
+                : changedApplications;
+            
+            const opportunitySet = new Set();
+            for (const application of topApplications) {
+                const recordId = application.opportunityRecordId.toString();
+                opportunitySet.add(recordId);
+            }
+
+            // find the professors associated with the top applications
+            const professors = await Project.find({ _id: { $in: opportunitySet.values().toArray() } });
+
+            // compile relevent information about the top applications in an array
+            const topApplicationsData = new Array(topApplications.length);
+            for (const application of topApplications) {
+                const professor = professors.find((prof) => prof.id.toString() === application.opportunityRecordId.toString());
+                const project = professor.projects.find((proj) => proj.id.toString() === application.opportunityId.toString());
+                
+                let applicationData = {
+                    questions: application.questions,
+                    status: application.status,
+                    opportunityRecordId: application.opportunityRecordId,
+                    opportunityId: application.opportunityId,
+                    projectName: project.projectName,
+                    posted: project.posted,
+                    description: project.description,
+                    professorEmail: professor.professorEmail,
+                };
+                topApplicationsData.push(applicationData);
+            }
+            
+            res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
+        } else {
+            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+    }
+
+};
+
 const demoGetStudentInfo = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -382,6 +454,7 @@ const demoGetStudentInfo = async (req, res) => {
 
 module.exports = {
     createApplication, deleteApplication,
-    getApplications, demoGetStudentInfo,
-    updateApplication
+    getApplications, getTopRecentApplications,
+    demoGetStudentInfo
+
 };
