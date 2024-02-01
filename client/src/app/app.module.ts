@@ -46,6 +46,8 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
 import { CreateJobComponent } from './components/create-job/create-job.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -96,6 +98,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatChipsModule,
+    MatSnackBarModule,
   ],
   providers: [
     {
