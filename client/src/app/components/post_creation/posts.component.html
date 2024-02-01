@@ -65,8 +65,8 @@
   <br>
   <h1>Create Research Listing</h1>
 
-  <button mat-button type="submit">Submit</button>
-  <button mat-button type="button" *ngIf="projectID === null" (click)="createDraft()">Create {{projectType}}</button>
+  <button mat-button type="submit" *ngIf="projectID === null && projectType === 'Active'">Create New Project</button>
+  <button mat-button type="button" *ngIf="projectID === null" (click)="createDraft()">Create Draft</button>
   <button mat-button type="button" *ngIf="projectID !== null" (click)="saveProject()">Save {{projectType}} Project</button>
 
 </form>
