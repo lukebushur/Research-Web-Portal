@@ -10,6 +10,15 @@ h1 {
   background-color: white;
 }
 
-/* .form-field {
-  width: 70%;
-} */
+.item-to-center {
+  display: block;
+  margin: 0em 12% 1em 12%;
+}
+
+h1.item-to-center {
+  margin-top: 1em;
+}
+
+button.item-to-center {
+  margin-top: 2em;
+}
