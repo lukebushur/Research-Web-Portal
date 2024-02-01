@@ -33,7 +33,7 @@ const createJob = async (req, res) => {
         const user = await User.findOne({ email: decodeAccessToken.email });
 
         // check if user type is industry
-        if (user.userType.Type !== process.env.INDUSTRY) {
+        if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
@@ -74,7 +74,7 @@ const createJob = async (req, res) => {
             pay: req.body.jobDetails.pay,
             deadline: req.body.jobDetails.deadline,
             startDate: req.body.jobDetails.startDate,
-            endDate: req.body.jobDetails.startDate,
+            endDate: req.body.jobDetails.endDate,
             datePosted: new Date(),
         };
 
