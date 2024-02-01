@@ -1,10 +1,10 @@
 <label>Question: </label>
 <mat-form-field>
     <mat-label>Enter Question Here</mat-label>
-    <textarea matInput name="responsibilities" [formControl]="question"></textarea>
+    <textarea matInput name="responsibilities" [(ngModel)]="questionStr"></textarea>
 </mat-form-field>
 <form [formGroup]="form">
-    <div formArrayName="options" *ngIf="form.get('type')?.value === 'radio buttons'">
+    <div formArrayName="options" *ngIf="form.get('type')?.value === 'radio button'">
         <mat-radio-group>
             <mat-radio-button *ngFor="let option of options.controls; let i = index" [value]="i" disabled>
                 <textarea matInput formControlName="{{i}}"></textarea>

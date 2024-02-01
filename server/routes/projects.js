@@ -26,14 +26,19 @@ router.put('/updateProject', verifyToken, facultyProjects.updateProject);
 //PUT Archive a Project and move it to archived from Active
 router.put('/archiveProject', verifyToken, facultyProjects.archiveProject);
 
-//PUT Accpet or Reject an application for a project
+//PUT Accept or Reject an application for a project
 router.put('/application', verifyToken, facultyProjects.applicationDecision);
 
+//GET gets all projects for faculty
 router.get('/getAllProjects', verifyToken, facultyProjects.getAllActiveProjects);
 
-router.post('/getApplicants', verifyToken, facultyProjects.demoFetchApplicants)
+//POST Get all applicants 
+router.post('/getApplicants', verifyToken, facultyProjects.demoFetchApplicants);
 
-router.post('/getApplicant', verifyToken, facultyProjects.fetchApplicant)
+//POST Get data about an applicant
+router.post('/getApplicant', verifyToken, facultyProjects.fetchApplicant);
 
+//POST Get single project
+router.post('/getProject', verifyToken, facultyProjects.getProject);
 
 module.exports = router;
