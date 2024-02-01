@@ -308,7 +308,7 @@ const getTopRecentApplications = async (req, res) => {
         //check if user exists
         const student = await User.findOne({ email: decodeAccessToken.email });
 
-        if (student.userType.Type === parseInt(process.env.STUDENT)) {
+        if (student.userType.Type == parseInt(process.env.STUDENT)) {
             const applicationList = student.userType.studentApplications;
             //get the project lists for active, archived, and draft projects
             const applications = await Application.findById(applicationList);
