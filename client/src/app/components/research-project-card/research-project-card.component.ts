@@ -58,7 +58,7 @@ export class ResearchProjectCardComponent implements OnInit {
   }
 
   redirectToCreateProject() { 
-    this.router.navigate(['/create-post']);
+    this.router.navigate(['/create-post/Active/new']);
   }
 
   unselectAll() { //This method unselects all of the project cards, is used when switching between active/draft/archived projects
@@ -120,6 +120,10 @@ export class ResearchProjectCardComponent implements OnInit {
   updateProjectType(type: string): void {
     this.currentProjectType = type;
     this.tableData.updateData([], -1);
+  }
+
+  buttonUpdateProject(projectID: string, projectType: string): void {
+    this.router.navigate([`/create-post/${projectType}/${projectID}`]);
   }
 
   buttonDeleteProject(projectID: string, projectType: string): void {

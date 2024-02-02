@@ -36,4 +36,7 @@ router.post('/changeEmail', verifyToken, authController.changeEmail);
 //POST Confirm Change Email
 router.post('/changeEmailConfirm', verifyToken, authController.changeEmailConfirm);
 
+//GET Get available Majors
+router.get('/getMajors', verifyToken, authController.getAvailableMajors)
+
 module.exports = router;
