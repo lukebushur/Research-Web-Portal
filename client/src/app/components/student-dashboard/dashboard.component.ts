@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
+import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 
 @Component({
   selector: 'student-dashboard',
@@ -9,11 +8,21 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./dashboard.component.css']
 })
 export class StudentDashboard {
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService) {}
 
-  url: string = environment.apiUrl;
+  applications: any[] = [];
 
-  constructor(private http: HttpClient, private router: Router) {}
-
-  
-  
+  //function for the see all applications button
+  //this will let you view all the things you have applied to
+  getStudentApplications() {
+    this.studentDashboardService.getStudentApplications().subscribe({
+      next: (data) => {
+        this.applications = data.success.applications;
+        console.log(this.applications);
+      },
+      error: (error) => {
+        console.error('Error fetching applications', error);
+      },
+    });
+  }
 }
