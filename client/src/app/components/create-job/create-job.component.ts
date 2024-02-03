@@ -91,7 +91,9 @@ export class CreateJobComponent {
 
   onSubmit() {
     if (this.createForm.invalid) {
-      this.snackBar.open('1 or more invalid fields', 'Close');
+      this.snackBar.open('1 or more invalid fields', 'Close', {
+        duration: 5000,
+      });
       return;
     }
 
@@ -122,7 +124,9 @@ export class CreateJobComponent {
         if (response.success) {
           this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
             if (navigated) {
-              this.snackBar.open('Job successfully created!', 'Close');
+              this.snackBar.open('Job successfully created!', 'Close', {
+                duration: 5000,
+              });
             }
           });
         } else {
