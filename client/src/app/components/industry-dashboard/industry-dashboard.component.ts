@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { JobCardData } from './job-card-data';
 
 @Component({
   selector: 'app-industry-dashboard',
@@ -8,19 +9,24 @@ import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard
   styleUrls: ['./industry-dashboard.component.css']
 })
 export class IndustryDashboardComponent {
-  userName: string = "";
+  activeJobs: JobCardData[];
+  draftedJobs: JobCardData[];
+  archivedJobs: JobCardData[];
 
   constructor(private router: Router, private industryDashboardService: IndustryDashboardService) { }
 
-  ngOnInit() {
-    this.industryDashboardService.getName().subscribe({
+  ngOnInit(): void {
+    this.industryDashboardService.getJobs().subscribe({
       next: (data: any) => {
-        this.userName = data.success.name;
+        if (data.success) {
+          this.activeJobs = data.success.result.active;
+          this.draftedJobs = data.success.result.draft;
+          this.archivedJobs = data.success.result.archived;
+        }
+      },
+      error: (data: any) => {
+        console.log('Get jobs failed.', data.error);
       }
     });
-  }
-
-  createJob() {
-    this.router.navigate(['/create-job']);
   }
 }

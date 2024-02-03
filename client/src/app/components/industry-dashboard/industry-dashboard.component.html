@@ -1,3 +1,15 @@
-<app-faculty-toolbar></app-faculty-toolbar>
-<h1>Hello industry user {{userName}}!</h1>
-<button mat-raised-button color="primary" (click)="createJob()">Create New Job</button>
+<mat-tab-group color="accent">
+  <mat-tab label="Active Jobs">
+    <div class="active-jobs-container">
+      <app-job-card *ngFor="let activejob of activeJobs;" [jobData]="activejob"></app-job-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Drafted Jobs">
+    <div class="drafted-jobs-container"></div>
+  </mat-tab>
+  <mat-tab label="Archived Jobs">
+    <div class="archived-jobs-container"></div>
+  </mat-tab>
+</mat-tab-group>
+<div class="bottom-portion">  
+</div>

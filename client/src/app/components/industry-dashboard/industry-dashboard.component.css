@@ -1,7 +1,12 @@
-h1 {
-  font-weight: 500;
+.active-jobs-container {
+  display: flex;
+  margin: 20px;
 }
 
-button, h1 {
-  margin: 20px 0px 0px 20px;
-}
+/* div {
+  background-color: #d9d9d9;
+} */
+
+/* .bottom-portion {
+  min-height: 100%;
+} */
