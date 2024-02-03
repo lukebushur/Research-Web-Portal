@@ -11,12 +11,6 @@ export class IndustryDashboardService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getName() {
-    const headers = this.authService.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/industry/getName`, { headers });
-  }
-
   getJobs() {
     const headers = this.authService.getHeaders();
 
