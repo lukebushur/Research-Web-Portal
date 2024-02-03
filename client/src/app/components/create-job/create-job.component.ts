@@ -120,7 +120,7 @@ export class CreateJobComponent {
     this.createJobService.createJob(data).subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.router.navigate(['/industry-dashboard']).then((navigated: boolean) => {
+          this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
             if (navigated) {
               this.snackBar.open('Job successfully created!', 'Close');
             }
