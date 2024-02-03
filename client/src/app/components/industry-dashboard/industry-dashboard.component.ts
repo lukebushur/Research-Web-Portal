@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
-import { JobCardData } from './job-card-data';
+import { JobCardData } from './job-card/job-card-data';
 
 @Component({
   selector: 'app-industry-dashboard',
