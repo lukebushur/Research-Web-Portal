@@ -49,6 +49,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
+import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { JobCardComponent } from './components/industry-dashboard/job-card/job-card.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +77,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     IndustryDashboardComponent,
     CustomQuestionComponent,
     CreateJobComponent,
+    IndustryToolbarComponent,
+    JobCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,6 +108,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatChipsModule,
     MatSnackBarModule,
     MatSidenavModule,
+    MatListModule,
+    MatTabsModule,
   ],
   providers: [
     {
