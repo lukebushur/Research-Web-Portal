@@ -82,9 +82,9 @@ const jobSchema = Joi.object({
     tags: Joi.array().items(Joi.string()),
     timeCommitment: Joi.string(),
     pay: Joi.string(),
-    deadline: Joi.date(),
-    startDate: Joi.date(),
-    endDate: Joi.date(),
+    deadline: Joi.date().allow(null),
+    startDate: Joi.date().allow(null),
+    endDate: Joi.date().allow(null),
 });
 
 module.exports = {
