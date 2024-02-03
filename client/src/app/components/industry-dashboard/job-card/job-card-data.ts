@@ -9,8 +9,8 @@ export interface JobCardData {
   tags: string[] | undefined;
   timeCommitment: string | undefined;
   pay: string | undefined;
-  deadline: Date | undefined;
-  startDate: Date | undefined;
-  endDate: Date | undefined;
-  datePosted: Date;
+  deadline: string | undefined;
+  startDate: string | undefined;
+  endDate: string | undefined;
+  datePosted: string;
 }
