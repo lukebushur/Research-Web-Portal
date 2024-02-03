@@ -1,0 +1,59 @@
+textarea {
+    width: 400px;
+    height: 150px;
+}
+  
+label {
+    position: absolute;
+    top: 0.2ex;
+    z-index: 1;
+    left: 2em;
+    background-color: white;
+    padding: 0 5px;
+
+    border: 1px solid gray;
+    border-radius: 6px;
+    position: relative;
+    width: 200px;
+    margin: 10px;
+    line-height: 6ex;
+
+}
+  
+mat-sidenav-container {
+    height: calc(205vh - 115vh);
+}
+
+mat-sidenav {
+    width: 200px;
+    background-color: rgb(222, 222, 222);
+
+}
+
+#navButton {
+    background: none;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+#navButton :hover {
+    width: 28px;
+}
+
+.icon {
+    padding-top: 5%;
+    width: 24px;
+}
+
+.navTitle {
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.oppPic {
+    max-height: 100px;
+}

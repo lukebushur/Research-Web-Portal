@@ -4,9 +4,10 @@ const registerSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
     "name": Joi.string().min(2).max(25).required(),
     "password": Joi.string().min(10).max(255).required(),
-    "accountType": Joi.number().max(2).min(0).required(),
-    "GPA" : Joi.number().max(4).min(0),
-    "Major" : Joi.array().items(Joi.string()),
+    "accountType": Joi.number().required(),
+    "GPA": Joi.number().max(4).min(0),
+    "Major": Joi.array().items(Joi.string()),
+    "universityLocation": Joi.string().min(2).max(86),
 });
 
 const loginSchema = Joi.object({
@@ -19,7 +20,7 @@ const emailSchema = Joi.object({
 });
 
 const deleteProjectSchema = Joi.object({
-    "projectID": Joi.string().required(),
+    "projectID": Joi.string().required().min(24).max(24),
     "projectType": Joi.string().required()
 });
 //This schema validates that the http request to create a project is valid. It should contain a projectName, array of applicable majors 
@@ -44,17 +45,29 @@ const projectSchema = Joi.object({
         })
     ).required(),
 });
+//This applicationSchema is used to validate both the update application request and create application request
+const applicationSchema = Joi.object({
+    "projectID": Joi.string().min(24).max(24),
+    "applicationID": Joi.string().min(24).max(24),
+    "professorEmail": Joi.string(),
+    "questions": Joi.array().items(
+        Joi.object({
+            "question": Joi.string().required(),
+            "requirementType": Joi.string().required(),
+            "required": Joi.boolean().required(),
+            "choices": Joi.array().items(Joi.string()),
+            "answers": Joi.array().items(Joi.string()),
+        })
+    ).required(),
+});
 
-const createApplicationSchema = Joi.object({
-    "projectID": Joi.string().required(),
-    "professorEmail": Joi.string().required(),
-    "questions": Joi.array().required(),
-    "answers": Joi.array().required()
+const adminMajors = Joi.object({
+    "majors": Joi.array().items(Joi.string().min(4).max(86)),
 });
 
 const appDecision = Joi.object({
-    "projectID": Joi.string().required(),
-    "applicationID": Joi.string().required(),
+    "projectID": Joi.string().required().min(24).max(24),
+    "applicationID": Joi.string().required().min(24).max(24),
     "decision": Joi.string().required()
 });
 
@@ -78,5 +91,6 @@ module.exports = {
     registerSchema, loginSchema,
     emailSchema, projectSchema,
     deleteProjectSchema, appDecision,
+    applicationSchema, adminMajors,
     jobSchema,
 };

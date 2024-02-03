@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ResearchProjectCardComponent } from './components/research-project-card/research-project-card.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
@@ -100,6 +101,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatNativeDateModule,
     MatChipsModule,
     MatSnackBarModule,
+    MatSidenavModule,
   ],
   providers: [
     {

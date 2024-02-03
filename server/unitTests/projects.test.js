@@ -3,6 +3,7 @@ const chaiHTTP = require('chai-http');
 const server = require('../server.js');
 const User = require('../models/user');
 const Project = require('../models/project.js');
+require('dotenv').config();
 
 const expect = chai.expect;
 chai.use(chaiHTTP);
@@ -31,10 +32,13 @@ before(function (done) {
 
 //Basic register request, should return a success response
 describe('POST /api/register', () => {
-    it('should return a registeration success response', (done) => {
+    it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
-            .send({ "email": randomEmail, "name": randomName, "password": randomPass, "accountType": 1 })
+            .send({
+                "email": randomEmail, "name": randomName, "password": randomPass,
+                "accountType": process.env.FACULTY, "universityLocation": "Purdue University Fort Wayne"
+            })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -248,6 +252,53 @@ describe('GET /api/projects/getProjects', () => {
             });
     });
 });
+
+//Unit test for getting a singular project, this unit test grabs a draft project
+describe('POST /api/projects/getProject', () => {
+    it('Should return a successful draft project retrieval reponse', (done) => {
+        chai.request(server)
+            .post('/api/projects/getProject')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({
+                "projectType": "Draft",
+                "projectID": draftID
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('PROJECT_FOUND');
+                expect(res.body.success).to.have.property('project');
+                expect(res.body.success.project).to.have.property('projectName').to.equal('Temporary Title');
+                expect(res.body.success.project).to.have.property('questions');
+                done();
+            })
+    })
+});
+
+//Unit test for getting a singular active project, this unit test grabs an active project
+describe('POST /api/projects/getProject', () => {
+    it('Should return a successful project retrieval reponse', (done) => {
+        chai.request(server)
+            .post('/api/projects/getProject')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({
+                "projectType": "Active",
+                "projectID": projectID2
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('PROJECT_FOUND');
+                expect(res.body.success).to.have.property('project');
+                expect(res.body.success.project).to.have.property('projectName').to.equal('Bioinformatics Project 2');
+                expect(res.body.success.project).to.have.property('questions');
+                done();
+            })
+    })
+});
+
 //Update project request, this should update the first active project to have a name of FROGS
 describe('PUT /api/projects/updateProject', () => {
     it('should return a successful project update response', (done) => {
@@ -388,10 +439,14 @@ describe('GET /api/projects/getProjects', () => {
 //Ensure that the records created are deleted 
 after(async () => {
     try {
-        await User.deleteOne({ _id: removeID });
-        await Project.deleteOne({ _id: projectRecordID });
-        await Project.deleteOne({ _id: draftRecordID });
-        await Project.deleteOne({ _id: archiveRecordID });
+        const promises = [
+            User.deleteOne({ _id: removeID }),
+            Project.deleteOne({ _id: projectRecordID }),
+            Project.deleteOne({ _id: draftRecordID }),
+            Project.deleteOne({ _id: archiveRecordID })
+        ];
+
+        await Promise.all(promises);
     } catch (err) {
         console.error(err);
     }
