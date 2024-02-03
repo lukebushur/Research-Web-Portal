@@ -24,6 +24,88 @@ const getName = async (req, res) => {
     }
 }
 
+const getJobs = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        const industryData = await IndustryData.findById(user.userType.industryData);
+        if (!industryData) {
+            return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
+        }
+
+        const result = {
+            active: industryData.jobs.active.map(job => {
+                return {
+                    employer: job.employer,
+                    title: job.title,
+                    isInternship: job.isInternship,
+                    isFullTime: job.isFullTime,
+                    description: job.description,
+                    location: job.location,
+                    reqYearsExp: job.reqYearsExp,
+                    tags: job.tags,
+                    timeCommitment: job.timeCommitment,
+                    pay: job.pay,
+                    deadline: job.deadline,
+                    startDate: job.startDate,
+                    endDate: job.endDate,
+                    datePosted: job.datePosted,
+                };
+            }),
+            draft: industryData.jobs.draft.map(job => {
+                return {
+                    employer: job.employer,
+                    title: job.title,
+                    isInternship: job.isInternship,
+                    isFullTime: job.isFullTime,
+                    description: job.description,
+                    location: job.location,
+                    reqYearsExp: job.reqYearsExp,
+                    tags: job.tags,
+                    timeCommitment: job.timeCommitment,
+                    pay: job.pay,
+                    deadline: job.deadline,
+                    startDate: job.startDate,
+                    endDate: job.endDate,
+                    datePosted: job.datePosted,
+                };
+            }),
+            archived: industryData.jobs.draft.map(job => {
+                return {
+                    employer: job.employer,
+                    title: job.title,
+                    isInternship: job.isInternship,
+                    isFullTime: job.isFullTime,
+                    description: job.description,
+                    location: job.location,
+                    reqYearsExp: job.reqYearsExp,
+                    tags: job.tags,
+                    timeCommitment: job.timeCommitment,
+                    pay: job.pay,
+                    deadline: job.deadline,
+                    startDate: job.startDate,
+                    endDate: job.endDate,
+                    datePosted: job.datePosted,
+                };
+            }),
+        };
+
+        return res.status(200).json(generateRes(true, 200, "JOBS_FOUND", { result }));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+
+}
+
 const createJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -37,7 +119,6 @@ const createJob = async (req, res) => {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        const userId = user._id;
         const jobType = req.body.jobType;
 
         // validate schema
@@ -99,5 +180,6 @@ const createJob = async (req, res) => {
 
 module.exports = {
     getName,
+    getJobs,
     createJob,
 };

@@ -12,6 +12,8 @@ const router = express.Router();
 // GET user's name 
 router.get('/getName', verifyToken, industryController.getName);
 
+router.get('/getJobs', verifyToken, industryController.getJobs);
+
 // POST - create a new job associated with a user
 router.post('/createJob', verifyToken, industryController.createJob);
 
