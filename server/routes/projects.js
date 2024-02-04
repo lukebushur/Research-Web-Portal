@@ -33,7 +33,7 @@ router.put('/application', verifyToken, facultyProjects.applicationDecision);
 router.get('/getAllProjects', verifyToken, facultyProjects.getAllActiveProjects);
 
 //POST Get all applicants 
-router.post('/getApplicants', verifyToken, facultyProjects.demoFetchApplicants);
+router.post('/getApplicants', verifyToken, facultyProjects.fetchApplicants);
 
 //POST Get data about an applicant
 router.post('/getApplicant', verifyToken, facultyProjects.fetchApplicant);

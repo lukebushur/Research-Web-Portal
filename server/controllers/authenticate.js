@@ -53,17 +53,17 @@ const login = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error);
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
 /*  This Incomplete function handles the account creation, should only be used with a POST request
-    This funciton takes the information required to create an account and creates an account in the database. It is still incomplete pending the finalization
-    of the account creation frontend, as we will add additional fields. This function should return an access & refresh token and account information upon success 
+    This function takes the information required to create an account and creates an account in the database. This function should return an access & 
+    refresh token and account information upon success 
     
     The request body requires the following fields : 
-    email (String, email of account) - name (String, name of user) - password (String, password for the account)
+    email (String, email of account) - name (String, name of user) - password (String, password for the account) - accountType (The identifier for the account type) 
+    Major (Optional String for the student's major) - universityLocation (Optinal string for the account's location) - GPA (Optional number, the gpa of the student)
 */
 const register = async (req, res) => {
     try {
@@ -180,7 +180,7 @@ const token = async (req, res) => {
             res.status(401).json(generateRes(false, 401, "INVALID_REFRESH_TOKEN", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -218,7 +218,7 @@ const confirmEmailToken = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -258,7 +258,7 @@ const resetPassword = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -303,7 +303,7 @@ const resetPasswordConfirm = async (req, res) => {
             res.status(401).json(generateRes(false, 401, "INVALID_PWD_TOKEN", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -362,7 +362,7 @@ const changeEmailConfirm = async (req, res) => {
             });
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 };
 
@@ -409,7 +409,7 @@ const changeEmail = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -433,7 +433,7 @@ const getAvailableMajors = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "EMAIL_EXISTS", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 

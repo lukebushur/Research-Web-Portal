@@ -20,7 +20,7 @@ class question extends mongoose.SchemaType {
     //The below method cast, will ensure that the provided data is validated against the below object schema.
     //question : { question: String, requirementType: String, required: Boolean, choices: Array[String], answers: Array[String]}
     cast(val) {
-        let returnVal = {};
+        let returnVal = {}; //This returnVal is built after each field gets validated, ensuring only the information that matters is stored in the db
         //This ensures that the val is an object, otherwise throws an error
         if (typeof val !== 'object') {
             throw new Error('question: ' + val + ' is not a object. It needs to be an object.');

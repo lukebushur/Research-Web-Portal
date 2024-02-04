@@ -94,7 +94,7 @@ const createProject = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -160,7 +160,7 @@ const deleteProject = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 /*  This function handles the access of a single faculty project, should only be used with a POST request, and requires an access token
@@ -224,7 +224,7 @@ const getProject = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -292,7 +292,7 @@ const getProjects = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -360,7 +360,7 @@ const updateProject = async (req, res) => {
                 })
                 //check that the project was actually found then updated, if not send error response
                 if (project.matchedCount === 0 || project.modifiedCount === 0)
-                    res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
+                    res.status(404).json(generateRes(false, 404, "PROJECT_NOT_UPDATED", {}));
                 else
                     res.status(200).json(generateRes(true, 200, "PROJECT_UPDATED", {}));
             }
@@ -368,7 +368,7 @@ const updateProject = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -466,7 +466,7 @@ const archiveProject = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -532,10 +532,10 @@ const applicationDecision = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
-
+//Demo route - used for the demostration to get a list of all active projects.
 const getAllActiveProjects = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -544,9 +544,6 @@ const getAllActiveProjects = async (req, res) => {
         //check if user exists
         const user = await User.findOne({ email: decodeAccessToken.email });
 
-        //check if user type is faculty
-
-        const projectsList = user.userType.FacultyProjects;
         //get the project lists for active, archived, and draft projects
         let activeProjects = await Project.find({ type: "Active" });
 
@@ -572,7 +569,7 @@ const getAllActiveProjects = async (req, res) => {
 
 
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -628,13 +625,11 @@ const fetchApplicant = async (req, res) => {
             let projectData = {
                 projectName: project.projectName,
                 professorId: project.professorId,
-                archived: new Date(),
                 posted: project.posted,
                 deadline: project.deadline,
                 description: project.description,
                 responsibilities: project.responsibilities,
                 questions: project.questions,
-                applications: project.applications,
                 GPA: project.GPA,
                 majors: project.majors,
                 categories: project.categories,
@@ -650,12 +645,12 @@ const fetchApplicant = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
 
-const demoFetchApplicants = async (req, res) => {
+const fetchApplicants = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
@@ -682,12 +677,12 @@ const demoFetchApplicants = async (req, res) => {
             }
 
             //This specific response doesn't work with the generateRes method, will look into solutions
-            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", applicants: theApplicants } });
+            res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
         } else {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -697,6 +692,7 @@ function createProjectObj(project, projectType, count) {
     let obj = {
         projectType: projectType,
         applications: project.applications,
+        deadline: project.deadline,
         description: project.description,
         majors: project.majors,
         projectName: project.projectName,
@@ -715,6 +711,6 @@ module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
     archiveProject, applicationDecision,
-    getAllActiveProjects, demoFetchApplicants,
+    getAllActiveProjects, fetchApplicants,
     fetchApplicant, getProject
 };

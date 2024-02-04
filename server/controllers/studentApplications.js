@@ -154,7 +154,7 @@ const createApplication = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -203,7 +203,7 @@ const updateApplication = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -275,7 +275,7 @@ const deleteApplication = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -351,7 +351,7 @@ const getApplications = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -422,7 +422,7 @@ const getTopRecentApplications = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 
 };
@@ -448,7 +448,7 @@ const demoGetStudentInfo = async (req, res) => {
             res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 

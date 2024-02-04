@@ -24,7 +24,7 @@ router.get('/getTopRecentApplications', verifyToken, applications.getTopRecentAp
 router.get('/getTopRecentApplications/:num', verifyToken, applications.getTopRecentApplications);
 
 //POST Update Applications
-router.post('/updateApplication', verifyToken, applications.updateApplication);
+router.put('/updateApplication', verifyToken, applications.updateApplication);
 
 router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
 
