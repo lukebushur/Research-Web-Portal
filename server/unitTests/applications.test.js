@@ -219,10 +219,10 @@ describe('POST /api/applications/createApplication', () => {
 });
 
 //Unit test for updating the application from the student's side, i.e. changing an answer
-describe('POST /api/applications/updateApplication', () => {
+describe('PUT /api/applications/updateApplication', () => {
     it("Should return a successful application update response", (done) => {
         chai.request(server)
-            .post('/api/applications/updateApplication')
+            .put('/api/applications/updateApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
                 "applicationID": applicationID,
