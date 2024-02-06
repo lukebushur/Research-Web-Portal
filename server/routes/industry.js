@@ -9,9 +9,7 @@ const router = express.Router();
 
 // Routes
 
-// GET user's name 
-router.get('/getName', verifyToken, industryController.getName);
-
+// GET - get all the active, draft, and archived jobs from a user
 router.get('/getJobs', verifyToken, industryController.getJobs);
 
 // POST - create a new job associated with a user
