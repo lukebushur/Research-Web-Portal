@@ -19,9 +19,9 @@ export class IndustryDashboardComponent {
     this.industryDashboardService.getJobs().subscribe({
       next: (data: any) => {
         if (data.success) {
-          this.activeJobs = data.success.result.active;
-          this.draftedJobs = data.success.result.draft;
-          this.archivedJobs = data.success.result.archived;
+          this.activeJobs = data.success.jobs.active;
+          this.draftedJobs = data.success.jobs.draft;
+          this.archivedJobs = data.success.jobs.archived;
         }
       },
       error: (data: any) => {
