@@ -4,26 +4,7 @@ const IndustryData = require('../models/industryData');
 const { jobSchema } = require('../helpers/inputValidation/validation');
 const generateRes = require('../helpers/generateJSON');
 
-const getName = async (req, res) => {
-    try {
-        const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
-        //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
-
-        //check if user type is industry
-        if (user.userType.Type == process.env.INDUSTRY) {
-            return res.status(200).json(generateRes(true, 200, "INDUSTRY_USER_NAME", {
-                name: user.name,
-            }));
-        }
-        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
-    } catch (error) {
-        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
-    }
-}
-
+// Get all the jobs associated with an industry user.
 const getJobs = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -42,7 +23,7 @@ const getJobs = async (req, res) => {
             return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
         }
 
-        const result = {
+        const jobs = {
             active: industryData.jobs.active.map(job => {
                 return {
                     employer: job.employer,
@@ -99,13 +80,14 @@ const getJobs = async (req, res) => {
             }),
         };
 
-        return res.status(200).json(generateRes(true, 200, "JOBS_FOUND", { result }));
+        return res.status(200).json(generateRes(true, 200, "JOBS_FOUND", { jobs: jobs }));
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
     }
 
 }
 
+// Create a job with the data given in the request payload
 const createJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -179,7 +161,6 @@ const createJob = async (req, res) => {
 };
 
 module.exports = {
-    getName,
     getJobs,
     createJob,
 };
