@@ -2,7 +2,8 @@ const User = require('../../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
 const Major = require('../../models/majors');
-const { adminMajors } = require('../../helpers/inputValidation/validation');
+const { adminMajors } = require('../../helpers/inputValidation/requestValidation');
+const majors = require('../../models/majors');
 
 
 /*  This function handles the addition of new major(s) to the database, requires a JWT, should be used with a POST request, and should only
@@ -27,6 +28,8 @@ const addMajors = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
         let admin = await User.findOne({ email: decodeAccessToken.email });
+        const majorsSet = new Set(req.body.majors);
+        const majorsArr = [...majorsSet];
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
             let majorsRecord = await Major.findOne({ location: admin.universityLocation });
@@ -34,12 +37,12 @@ const addMajors = async (req, res) => {
             if (!majorsRecord) {
                 let majors = new Major({
                     location: admin.universityLocation,
-                    majors: req.body.majors
+                    majors: majorsArr
                 })
                 await majors.save();
             } else {
                 //Get a new array of all elements from the request body that do not exist in the db, then concat them into the db
-                let newMajors = req.body.majors.filter(major => !majorsRecord.majors.includes(major));
+                let newMajors = majorsArr.filter(major => !majorsRecord.majors.includes(major));
                 //checks if there exists any new majors, otherwise returns an error
                 if (newMajors.length === 0) { return res.status(409).json(generateRes(true, 409, "MAJOR_ALREADY_EXIST")); }
                 await Major.findOneAndUpdate({ _id: majorsRecord.id }, { "$push": { "majors": { "$each": newMajors } } });
@@ -116,6 +119,8 @@ const replaceMajors = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
         let admin = await User.findOne({ email: decodeAccessToken.email });
+        const majorsSet = new Set(req.body.majors);
+        const majorsArr = [...majorsSet];
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
             let majorsRecord = await Major.findOne({ location: admin.universityLocation });
@@ -123,7 +128,7 @@ const replaceMajors = async (req, res) => {
             if (!majorsRecord) {
                 let majors = new Major({
                     location: admin.universityLocation,
-                    majors: req.body.majors
+                    majors: majorsArr
                 })
                 await majors.save();
             } else {

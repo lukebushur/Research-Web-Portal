@@ -3,8 +3,7 @@ const Project = require('../models/project');
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../helpers/generateJSON');
-const project = require('../models/project');
-const { applicationSchema } = require('../helpers/inputValidation/validation');
+const { applicationSchema } = require('../helpers/inputValidation/requestValidation');
 
 /*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
@@ -194,7 +193,7 @@ const updateApplication = async (req, res) => {
                 }
             });
             //ensure that the application was actually updated
-            if (applications.matchedCount === 0 || applications.modifiedCount === 0)
+            if (applications.matchedCount === 0)
                 res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {}));
             else
                 res.status(200).json(generateRes(true, 200, "APPLICATION_UPDATED", {}));

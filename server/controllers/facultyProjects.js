@@ -2,7 +2,7 @@ const Project = require('../models/project');
 const Application = require('../models/application');
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
-const { projectSchema, deleteProjectSchema, appDecision } = require('../helpers/inputValidation/validation');
+const { projectSchema, deleteProjectSchema, appDecision } = require('../helpers/inputValidation/requestValidation');
 const generateRes = require('../helpers/generateJSON');
 
 /*  This function handles the faculty project creation, should only be used as a POST request, and requires and access token
@@ -50,7 +50,7 @@ const createProject = async (req, res) => {
                     deadline: req.body.projectDetails.project.deadline,
                     description: req.body.projectDetails.project.description,
                     responsibilities: req.body.projectDetails.project.responsibilities,
-                    questions: req.body.projectDetails.project.questions,
+                    questions: req.body.projectDetails.project.questions || [], //If no questions exist, create empty array which will be used in validation if applications are submitted without questions
                     GPA: req.body.projectDetails.project.GPA,
                     majors: req.body.projectDetails.project.majors,
                     categories: req.body.projectDetails.project.categories,
@@ -59,7 +59,7 @@ const createProject = async (req, res) => {
                 projectObject = { //first apply all non-required properties from the request body. If they don't exist it is fine, as they are not required
                     professorId: userId,
                     deadline: req.body.projectDetails.project.deadline,
-                    questions: req.body.projectDetails.project.questions,
+                    questions: req.body.projectDetails.project.questions || [], //If there does not exist questions, create an empty array
                     GPA: req.body.projectDetails.project.GPA,
                     majors: req.body.projectDetails.project.majors,
                     categories: req.body.projectDetails.project.categories,

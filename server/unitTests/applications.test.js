@@ -106,16 +106,16 @@ describe('POST /api/projects/createProject', () => {
                             "question": "Can you eat frogs?",
                             "requirementType": "radio button",
                             "required": true,
-                            "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"]
+                            "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"],
                         }, {
                             "question": "Write a 3-page paper on why baby shark is the best song ever.",
                             "requirementType": "text",
-                            "required": true
+                            "required": true,
                         }, {
                             "question": "Frogs?",
                             "requirementType": "check box",
                             "required": true,
-                            "choices": ["Frogs", "frogs"]
+                            "choices": ["Frogs", "frogs"],
                         },]
                     }
                 }

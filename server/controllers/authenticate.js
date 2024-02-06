@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
-const { registerSchema, loginSchema, emailSchema } = require('../helpers/inputValidation/validation');
+const { registerSchema, loginSchema, emailSchema } = require('../helpers/inputValidation/requestValidation');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
