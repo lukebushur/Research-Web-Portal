@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     universityLocation: {
         type: String,
-        default: "Purdue Fort Wayne"
+        default: "Purdue University Fort Wayne"
     },
     userType: {
         Type: {

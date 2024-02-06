@@ -133,7 +133,7 @@ const replaceMajors = async (req, res) => {
                 await majors.save();
             } else {
                 //otherwise update majors
-                await Major.findOneAndUpdate({ _id: majorsRecord.id }, { "$set": { "majors": req.body.majors } });
+                await Major.findOneAndUpdate({ _id: majorsRecord.id }, { "$set": { "majors": majorsArr } });
             }
             return res.status(200).json(generateRes(true, 200, "MAJORS_REPLACED"));
         }

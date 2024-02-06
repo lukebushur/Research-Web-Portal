@@ -30,11 +30,10 @@ const createProject = async (req, res) => {
             //validate schema 
             const { error } = projectSchema.validate(req.body.projectDetails.project);
             if (error && projectType == 'Active') {
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
                 }));
-                return;
             }
 
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
@@ -89,12 +88,12 @@ const createProject = async (req, res) => {
                     }
                 })
             }
-            res.status(200).json(generateRes(true, 200, "PROJECT_CREATED", {}));
+            return res.status(200).json(generateRes(true, 200, "PROJECT_CREATED", {}));
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -116,11 +115,10 @@ const deleteProject = async (req, res) => {
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
             const { error } = deleteProjectSchema.validate(req.body);
             if (error) { //validates request body otherwise returns an error
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
                 }));
-                return;
             }
 
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
@@ -140,27 +138,26 @@ const deleteProject = async (req, res) => {
 
             //gets the project record, otherwise sends error response 
             let project = await Project.findById(recordID);
-            if (!project) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else {
                 //If there is no error, get the number of projects from the projects array and then remove an the selected project from the array
                 let numProjects = project._doc.projects.length;
                 let selectedProject = project.projects.pull(req.body.projectID);
 
                 if (selectedProject.length == numProjects) { //Check that an element was removed, if not send error response
-                    res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
-                    return;
+                    return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
                 }
                 else {
                     await project.save();
-                    res.status(200).json(generateRes(true, 200, "PROJECT_DELETED", {}));
+                    return res.status(200).json(generateRes(true, 200, "PROJECT_DELETED", {}));
                 }
             }
 
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 /*  This function handles the access of a single faculty project, should only be used with a POST request, and requires an access token
@@ -198,22 +195,22 @@ const getProject = async (req, res) => {
             }
 
             let projectRecord = await Project.findById(recordID);
-            if (!projectRecord) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            if (!projectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get and update the project from the project array that has the matching information 
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
                     const deadline = new Date(project.deadline);
                     let returnProject = {
-                        projectName : project.projectName,
-                        questions : project.questions,
-                        description : project.description,
-                        deadline : deadline.toDateString(),
-                        professorId : userId,
-                        categories : project.categories,
-                        majors : project.majors,
-                        GPA : project.GPA,
-                        responsibilities : project.responsibilities
+                        projectName: project.projectName,
+                        questions: project.questions,
+                        description: project.description,
+                        deadline: deadline.toDateString(),
+                        professorId: userId,
+                        categories: project.categories,
+                        majors: project.majors,
+                        GPA: project.GPA,
+                        responsibilities: project.responsibilities
                     }
                     return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
                 }
@@ -221,10 +218,10 @@ const getProject = async (req, res) => {
                     return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND"));
             }
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -287,12 +284,12 @@ const getProjects = async (req, res) => {
             }
 
             //This specific response doesn't work with the generateRes method, so the allProjects just gets inserted directly
-            res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", projects: allProjects } });
+            return res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", projects: allProjects } });
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -318,11 +315,10 @@ const updateProject = async (req, res) => {
             //validate schema
             const { error } = projectSchema.validate(req.body.projectDetails.project);
             if (error) {
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
                 }));
-                return;
             }
 
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
@@ -341,7 +337,7 @@ const updateProject = async (req, res) => {
             }
 
             let project = await Project.findById(recordID);
-            if (!project) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get and update the project from the project array that has the matching information 
                 project = await Project.updateOne({ _id: recordID, "projects": { "$elemMatch": { "_id": req.body.projectID } } }, {
@@ -360,15 +356,15 @@ const updateProject = async (req, res) => {
                 })
                 //check that the project was actually found then updated, if not send error response
                 if (project.matchedCount === 0 || project.modifiedCount === 0)
-                    res.status(404).json(generateRes(false, 404, "PROJECT_NOT_UPDATED", {}));
+                    return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_UPDATED", {}));
                 else
-                    res.status(200).json(generateRes(true, 200, "PROJECT_UPDATED", {}));
+                    return res.status(200).json(generateRes(true, 200, "PROJECT_UPDATED", {}));
             }
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -389,21 +385,19 @@ const archiveProject = async (req, res) => {
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
             if (!req.body.projectID) {
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
                 }));
-                return;
             }
 
             const userId = user._id; //Grabs the active projects from the user specified by the access token and then checks to see if the list exists
             let project = await Project.findById(user.userType.FacultyProjects.Active);
-            if (!project) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
 
             const archProject = project._doc.projects.find(x => x.id === req.body.projectID); //Grabs the specified project from the array from the Record
             if (!archProject) {
-                res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
-                return;
+                return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
             }
             //If there is not an archived project list, create an archived project list
             if (!user.userType.FacultyProjects.Archived) {
@@ -456,17 +450,17 @@ const archiveProject = async (req, res) => {
             let selectedProject = project.projects.pull(req.body.projectID);
 
             if (selectedProject.length == numProjects) { //Check that an element was removed, if not send error response
-                res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
+                return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
             }
             else {
                 await project.save();
-                res.status(200).json(generateRes(true, 200, "PROJECT_ARCHIVED", {}));
+                return res.status(200).json(generateRes(true, 200, "PROJECT_ARCHIVED", {}));
             }
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -481,8 +475,7 @@ const archiveProject = async (req, res) => {
 const applicationDecision = async (req, res) => {
     try {
         const decision = req.body.decision; //checks if the decision is valid otherwise ends the request
-        if (decision != "Accept" && decision != "Reject" && decision != "Hold") { generateRes(false, 400, "INPUT_ERROR", {}); return; }
-
+        
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
@@ -493,28 +486,27 @@ const applicationDecision = async (req, res) => {
         if (faculty.userType.Type == process.env.FACULTY) {
             const { error } = appDecision.validate(req.body);
             if (error) { //validates request body otherwise returns an error
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
                 }));
-                return;
             }
             //get the projectlist from the faculty account
             let project = await Project.findOne({ _id: faculty.userType.FacultyProjects.Active });
-            if (!project) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             //get the index of the project for the projects array and the application index in the specified project's application array
             const projIndex = project.projects.findIndex(y => y.id === req.body.projectID);
             const projAppIndex = project.projects[projIndex].applications.findIndex(x => x.application.toString() === req.body.applicationID);
             //get the application list from the application id
             let application = await Application.findOne({ _id: project.projects[projIndex].applications[projAppIndex].applicationRecordID });
-            if (!application) { res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); return; }
+            if (!application) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
             //get the application index from the application record
             const appIndex = application.applications.findIndex(x => x.id === req.body.applicationID);
             //grabs the statuses from the project and application records
             projectStatus = project.projects[projIndex].applications[projAppIndex].status;
             applicationStatus = application.applications[appIndex].status;
             //if the status are not pending, then the request shouldn't modify anything because the decision is already made - MIGHT CHANGE IN FUTURE!
-            if ((projectStatus != "Pending" || applicationStatus != "Pending") && (projectStatus != "Hold" || applicationStatus != "Hold")) { res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); return; }
+            if ((projectStatus != "Pending" || applicationStatus != "Pending") && (projectStatus != "Hold" || applicationStatus != "Hold")) { return res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); }
             //Set status
             project.projects[projIndex].applications[projAppIndex].status = decision;
             application.applications[appIndex].status = decision;
@@ -526,13 +518,13 @@ const applicationDecision = async (req, res) => {
             ];
 
             await Promise.all(savePromises);
-            res.status(200).json(generateRes(true, 200, "APPLICATION_STATUS_UPDATED", {}));
+            return res.status(200).json(generateRes(true, 200, "APPLICATION_STATUS_UPDATED", {}));
 
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 //Demo route - used for the demostration to get a list of all active projects.
@@ -565,11 +557,11 @@ const getAllActiveProjects = async (req, res) => {
         });
 
         //This specific response doesn't work with the generateRes method, will look into solutions
-        res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", data } });
+        return res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", data } });
 
 
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -600,7 +592,7 @@ const fetchApplicant = async (req, res) => {
             if (activeProjects) {
                 project = activeProjects.projects.find((element) => element.id = req.body.projectID);
                 applicantIndex = project.applications.findIndex((element) => element.application.toString() === req.body.applicationID);
-                if (applicantIndex == -1) { res.status(404).json(generateRes(false, 404, "APPLICANT_NOT_FOUND")); return; }
+                if (applicantIndex == -1) { return res.status(404).json(generateRes(false, 404, "APPLICANT_NOT_FOUND")); }
                 else { applicant = project.applications[applicantIndex]; }
             }
 
@@ -640,12 +632,12 @@ const fetchApplicant = async (req, res) => {
                 projectData: projectData
             }
 
-            res.status(200).json({ success: { status: 200, message: "APPLICANT_FOUND", responseData: response } });
+            return res.status(200).json({ success: { status: 200, message: "APPLICANT_FOUND", responseData: response } });
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -677,12 +669,12 @@ const fetchApplicants = async (req, res) => {
             }
 
             //This specific response doesn't work with the generateRes method, will look into solutions
-            res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
+            return res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 

@@ -4,7 +4,7 @@ const applications = require('../controllers/studentApplications');
 //API MIDDLEWARE
 const verifyToken = require('../helpers/verifyToken');
 const rateLimiter = require('../helpers/rateLimiter');
-const { questionAnswerValidation } = require('../helpers/inputValidation/projectValidation');
+const { applicationValidation } = require('../helpers/inputValidation/projectValidation');
 
 
 //Router initialisation
@@ -13,7 +13,7 @@ const router = express.Router();
 //routes
 
 //POST Create Application 
-router.post('/createApplication', verifyToken, questionAnswerValidation, applications.createApplication);
+router.post('/createApplication', verifyToken, applicationValidation, applications.createApplication);
 
 //POST Create Project 
 router.delete('/deleteApplication', verifyToken, applications.deleteApplication);
@@ -25,7 +25,7 @@ router.get('/getTopRecentApplications', verifyToken, applications.getTopRecentAp
 router.get('/getTopRecentApplications/:num', verifyToken, applications.getTopRecentApplications);
 
 //POST Update Applications
-router.put('/updateApplication', verifyToken, questionAnswerValidation, applications.updateApplication);
+router.put('/updateApplication', verifyToken, applicationValidation, applications.updateApplication);
 
 router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
 

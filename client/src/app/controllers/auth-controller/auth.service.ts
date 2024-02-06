@@ -30,6 +30,6 @@ export class AuthService {
   getMajors(): Observable<any> {
     const headers = this.getHeaders();
 
-    return this.http.get(`${this.apiUrl}/applications/demoGetStudentInfo`, { headers });
+    return this.http.get(`${this.apiUrl}/getMajors`, { headers });
   }
 }
