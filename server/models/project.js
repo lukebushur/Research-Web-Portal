@@ -63,6 +63,9 @@ const researchOpp = new mongoose.Schema({
                 },
                 appliedDate: {
                     type: Date
+                }, 
+                location: {
+                    type: String
                 }
             }
         ],

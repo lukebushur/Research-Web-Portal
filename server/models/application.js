@@ -28,6 +28,10 @@ const Applications = new mongoose.Schema({
             lastModified: {
                 type: Date,
                 required: true,
+            },
+            lastUpdated: {
+                type: Date,
+                required: true,
             }
         }
     ]

@@ -75,6 +75,7 @@ const createApplication = async (req, res) => {
                             status: status,
                             appliedDate: new Date(),
                             lastModified: new Date(),
+                            lastUpdated: new Date(),
                         }
                     ]
                 });
@@ -92,6 +93,7 @@ const createApplication = async (req, res) => {
                                 'major': student.userType.Major,
                                 'email': student.email,
                                 'appliedDate': new Date(),
+                                'location': student.universityLocation,
                             }
                         }
                     }),
@@ -117,6 +119,7 @@ const createApplication = async (req, res) => {
                     appliedDate: new Date(),
                     status: status,
                     lastModified: new Date(),
+                    lastUpdated: new Date(),
                 };
                 //these await statements cannot be used with a promise because they require the newApplication ID which needs to be 
                 //pushed and then fetched from the database
@@ -142,6 +145,7 @@ const createApplication = async (req, res) => {
                             'major': student.userType.Major,
                             'email': student.email,
                             'appliedDate': new Date(),
+                            'location': student.universityLocation,
                         }
                     }
                 });
@@ -186,7 +190,8 @@ const updateApplication = async (req, res) => {
 
             applications = await Application.updateOne({ _id: student.userType.studentApplications, "applications": { "$elemMatch": { "_id": req.body.applicationID } } }, {
                 $set: {
-                    "applications.$.questions": req.body.questions
+                    "applications.$.questions": req.body.questions,
+                    "applications.$.lastUpdated": new Date()
                 }
             });
             //ensure that the application was actually updated

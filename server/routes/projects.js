@@ -34,12 +34,15 @@ router.put('/application', verifyToken, decisionValidation, facultyProjects.appl
 router.get('/getAllProjects', verifyToken, facultyProjects.getAllActiveProjects);
 
 //POST Get all applicants 
-router.post('/getApplicants', verifyToken, facultyProjects.fetchApplicants);
+router.post('/getApplicants', verifyToken, facultyProjects.fetchAllApplicants);
 
 //POST Get data about an applicant
 router.post('/getApplicant', verifyToken, facultyProjects.fetchApplicant);
 
 //POST Get single project
 router.post('/getProject', verifyToken, facultyProjects.getProject);
+
+//POST Get detailed applicant data
+router.post('/getDetailedApplicants', verifyToken, facultyProjects.fetchApplicantsFromProject);
 
 module.exports = router;

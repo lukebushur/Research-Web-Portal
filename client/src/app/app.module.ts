@@ -46,6 +46,7 @@ import { IndustryDashboardComponent } from './components/industry-dashboard/indu
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { ViewProjectComponent } from './components/view-project/view-project.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
+    ViewProjectComponent,
   ],
   imports: [
     BrowserModule,

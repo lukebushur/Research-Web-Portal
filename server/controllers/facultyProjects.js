@@ -475,7 +475,7 @@ const archiveProject = async (req, res) => {
 const applicationDecision = async (req, res) => {
     try {
         const decision = req.body.decision; //checks if the decision is valid otherwise ends the request
-        
+
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
@@ -641,8 +641,14 @@ const fetchApplicant = async (req, res) => {
     }
 }
 
+/*  This is a general fetchApplicants route which fetches only basic information from each application. This is used in the faculty overiew web page,
+    and is seperate from the fetchApplicantsFromProject which grabs more indepth information from the database and uses a lot more network operations
 
-const fetchApplicants = async (req, res) => {
+    This function grabs the basic information from all applicants from an active projects, it requires a faculty access token and a projectID in the request body.
+    This function should be used with put requests, and it will grab the applicant data from the specified project. That data includes :
+    applicationRecordID, application, status, name, GPA, major, email, appliedDate, and application object id
+*/
+const fetchAllApplicants = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
@@ -659,14 +665,84 @@ const fetchApplicants = async (req, res) => {
 
             activeProjects = await Project.findById(projectsList.Active);
 
-            let theApplicants = {};
+            let theApplicants = {}; //object to store the array of applicants
             if (activeProjects) {
-                activeProjects.projects.forEach(x => {
-                    if (x._id.toString() === req.body.projectID) {
-                        theApplicants = x.applications
+                for (let i = 0; i < activeProjects.projects.length; i++) { //Checks every project and if it matches the provided id, then store the applicants in the obj
+                    if (activeProjects.projects[i]._id.toString() === req.body.projectID) {
+                        theApplicants = activeProjects.projects[i].applications;
+                        break;
                     }
-                });
+                }
+            } else {
+                return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: "No active project list exists." }));
             }
+
+            //This specific response doesn't work with the generateRes method, will look into solutions
+            return res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
+        } else {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+    }
+}
+
+/*  This is a more specific fetchApplicants function. This will grab additional data only available in student records, and as such requires more
+    network operations. It will be used with the faculty view project page. The data returned by this function includes: question object (with answers),
+    GPA, majors, name, staus, email, and applied date.
+
+    This request only requires a projectID in the body, as well as a faculty access token. 
+*/
+const fetchApplicantsFromProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is faculty
+        if (user.userType.Type === parseInt(process.env.FACULTY)) {
+            const projectsList = user.userType.FacultyProjects;
+            //get the project lists for active, archived, and draft projects
+
+            let activeProjects, project;
+            activeProjects = await Project.findById(projectsList.Active);
+
+            let theApplicants = []; //An array for the applicants
+            if (activeProjects) {
+                project = activeProjects.projects.find(x => x.id == req.body.projectID);
+            } else {
+                return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: "No active project list exists." }));
+            }
+
+            const applications = project.applications; //grab applications from project
+            const promises = []; //Promises array
+
+            applications.forEach(x => promises.push(Application.findOne({ _id: x.applicationRecordID })
+                .then(applicationRecord => {
+                    if (applicationRecord) {
+                        let application = applicationRecord.applications.find(y => y.id === x.application.toString());
+
+                        if (application) {
+                            theApplicants.push({
+                                questions: application.questions,
+                                email: x.email,
+                                status: x.status,
+                                GPA: x.GPA,
+                                name: x.name,
+                                majors: x.major,
+                                appliedDate: x.appliedDate,
+                                lastModified: application.lastUpdated,
+                                location: x.location
+                            })
+                        }
+                    }
+                })
+            ));
+
+            await Promise.all(promises);
+            theApplicants.sort((x, y) => x.name.localeCompare(y.name)); //Sorts applicants by name
 
             //This specific response doesn't work with the generateRes method, will look into solutions
             return res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
@@ -703,6 +779,7 @@ module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
     archiveProject, applicationDecision,
-    getAllActiveProjects, fetchApplicants,
-    fetchApplicant, getProject
+    getAllActiveProjects, fetchAllApplicants,
+    fetchApplicant, getProject,
+    fetchApplicantsFromProject
 };
