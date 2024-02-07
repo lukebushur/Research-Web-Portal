@@ -35,7 +35,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
-                "accountType": process.env.ADMIN, "universityLocation": "Purdue University Fort Wayne"
+                "accountType": process.env.ADMIN, "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);

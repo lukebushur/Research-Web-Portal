@@ -312,7 +312,7 @@ describe('PUT /api/projects/updateProject', () => {
                     "project": {
                         "projectName": "FROGS",
                         "GPA": 2.0,
-                        "majors": ["FROG", "Mathematics", "Biology"],
+                        "majors": ["Mathematics", "Biology"],
                         "categories": ["FROG", "Computer Science", "Biology"],
                         "deadline": "01/08/2024",
                         "description": "FROG",
