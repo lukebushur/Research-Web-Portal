@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiHTTP = require('chai-http');
 const server = require('../server.js');
 const User = require('../models/user');
+require('dotenv').config();
 
 const expect = chai.expect;
 chai.use(chaiHTTP);
@@ -20,7 +21,7 @@ before(function (done) { //This waits for the connection to the DB to be set up 
 
 //Basic register unit test, expects the response to output successful register response
 describe('POST /api/register', () => {
-    after(async () => { 
+    after(async () => {
         const user = await User.findOne({ email: randomEmail });
         emailToken = user.emailToken; //store email token for email confirmation
     });
@@ -28,7 +29,11 @@ describe('POST /api/register', () => {
     it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
-            .send({ "email": randomEmail, "name": randomName, "password": randomPass, "accountType": 0, "GPA": 2.5, "Major": ["Computer Science"] })
+            .send({
+                "email": randomEmail, "name": randomName,
+                "password": randomPass, "accountType": process.env.STUDENT, "GPA": 2.5,
+                "Major": ["Computer Science"], "universityLocation": "Purdue University Fort Wayne"
+            })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');

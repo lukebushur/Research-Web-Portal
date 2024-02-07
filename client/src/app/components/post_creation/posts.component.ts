@@ -1,12 +1,13 @@
 import { Component, ComponentRef, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CatergoryFieldComponent } from './catergory-field/catergory-field.component';
 import { FieldComponent } from './custom-field-modal/field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomFieldDialogue } from './custom-field-modal/modal.component';
 import { PostCreationService } from 'src/app/controllers/post-creation-controller/post-creation.service';
 import { CustomQuestionComponent } from './custom-question/custom-question.component';
+import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service'
 
 
 @Component({
@@ -21,9 +22,12 @@ export class PostProjectComponent implements AfterViewInit {
   gpa: Number | null = 3;
   standing: string | null = "";
   fileName: string = "";
-  deadline: Date = new Date();
-  requirementsType: number = 0; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
+  deadline: Date;
+  requirementsType: number = -1; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
   categoriesArr: String[] = []; //The array of categories for the research posting
+  projectID: any; //The id for the project, grabbed through the URL parameter
+  projectData: any;
+  projectType: string;
 
   //These arrays are used to store the multiple components of major, question or categories.
   categoryObjects: Array<ComponentRef<CatergoryFieldComponent>> = [];
@@ -31,7 +35,7 @@ export class PostProjectComponent implements AfterViewInit {
   customQuestionsObjects: Array<ComponentRef<CustomQuestionComponent>> = [];
 
   //These three are used to access the html and place the new major, question, or category fields in the html
-  @ViewChild('categories', { read: ViewContainerRef }) 
+  @ViewChild('categories', { read: ViewContainerRef })
   categories!: ViewContainerRef;
   @ViewChild('customQuestions', { read: ViewContainerRef })
   customQuestions!: ViewContainerRef;
@@ -58,15 +62,67 @@ export class PostProjectComponent implements AfterViewInit {
     }
   ]
 
-  constructor(private http: HttpClient, private router: Router, public dialog: MatDialog, private postCreationService: PostCreationService) {
-
+  constructor(private http: HttpClient, private router: Router, public dialog: MatDialog, private facultyProjectService: FacultyProjectService,
+    private postCreationService: PostCreationService, private route: ActivatedRoute) {
   }
+
 
   //This is required to implement the afterViewInit() interface
   ngAfterViewInit(): void {
-    // Commented to pass tests
-    // TODO: implement this method
-    // throw new Error('Method not implemented.');
+    this.route.params.subscribe(params => {
+      this.projectID = params['projectID'];
+      this.projectType = params['projectType'];
+      if (this.projectID.length === 24) { //MongoDB ids are of length 24
+        this.facultyProjectService.getProject(this.projectID, this.projectType).subscribe({
+          next: (data) => {
+            const project = data.success.project;
+            this.requirementsType = 0;
+            //These lines set the project obj to the data retrieved from the request, then assigns the variables that are used in ngModel 
+            //to the data obtained from the request.
+            this.title = project.projectName;
+            this.gpa = project.GPA;
+            this.description = project.description;
+            this.deadline = new Date(project.deadline); //deadline doesn't update so we need to fix it lol
+            console.log(this.deadline);
+            this.responsibilities = project.responsibilities;
+            //Creates the major categories from the array obtained from the data
+            setTimeout(() => {
+              project.majors.forEach((major: string) => {
+                this.createNewCategory(major, true) //creates a new major element using the method
+              });
+              //Creates the category from the array obtained from the category field
+              project.categories.forEach((category: string) => {
+                this.createNewCategory(category, false);
+              });
+
+              project.questions.forEach((question: any) => {
+                const newQuestion = this.customQuestions.createComponent(CustomQuestionComponent);
+
+                //set the type and question values of the component
+                newQuestion.instance.typeStr = question.requirementType;
+                newQuestion.instance.questionStr = question.question;
+                newQuestion.instance.isRequired = question.required;
+                newQuestion.instance.choices = question.choices;
+
+                this.customQuestionsObjects.push(newQuestion); //push the new question to the array
+
+                newQuestion.instance.deleted.subscribe(() => { //set the on delete to remove the component from the array.
+                  let index = this.customQuestionsObjects.indexOf(newQuestion);
+                  if (index > -1) {
+                    this.customQuestionsObjects.splice(index, 1);
+                    newQuestion.destroy();
+                  }
+                })
+              });
+            }, 1000);
+
+          },
+          error: (error) => {
+            this.projectID = null;
+          }
+        })
+      } else { this.projectID = null; }
+    })
   }
 
   //This method is used to handle the opening of dialog boxes, which is used to specify the question and question type when creating questions
@@ -79,9 +135,9 @@ export class PostProjectComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result.create) { //check if the question show be created
         console.log(result.type);
-        
-        const question = this.customQuestions.createComponent(CustomQuestionComponent); 
-        
+
+        const question = this.customQuestions.createComponent(CustomQuestionComponent);
+
         //set the type and question values of the component
         question.instance.typeStr = result.type;
         question.instance.questionStr = result.question;
@@ -97,6 +153,7 @@ export class PostProjectComponent implements AfterViewInit {
       }
     });
   }
+
 
   onFileSelected(event: any) {
 
@@ -118,6 +175,37 @@ export class PostProjectComponent implements AfterViewInit {
 
   //This method is just used to prepare the data for form submission to create a new project
   onSubmit() {
+
+    this.postCreationService.createPost(this.getSubmissionData("Active")) //make the request to create the project
+      .subscribe((response: any) => {
+        this.router.navigate(['/faculty-dashboard']);
+      }, (error: any) => {
+        console.error('Registration failed.', error);
+      });
+  };
+  //This method is used to save a draft and accesses the updateProject route
+  saveProject() {
+    let data = this.getSubmissionData(this.projectType);
+    data.projectID = this.projectID;
+    this.facultyProjectService.updateProject(data) //make the request to create the project
+      .subscribe((response: any) => {
+        this.router.navigate(['/faculty-dashboard']);
+      }, (error: any) => {
+        console.error('Registration failed.', error);
+      });
+  };
+  //This method is very similar to the onsubmit, but creates a draft instead of a new active project
+  createDraft() {
+    this.postCreationService.createPost(this.getSubmissionData("Draft")) //make the request to create the project
+      .subscribe((response: any) => {
+        this.router.navigate(['/faculty-dashboard']);
+      }, (error: any) => {
+        console.error('Registration failed.', error);
+      });
+  }
+  //This help method sets up the data necessary for onSubmit, createDraft, or saveDraft as each of these methods make a request
+  //to updateProject or create project which both have very similar request bodies.
+  getSubmissionData(projectType: string): any {
     //Grabs the values from the arrays of components
     const categoriesValues = this.categoryObjects.map(category => category.instance.getValue()); //grabs category values
     const majorsValues = this.majorObjects.map(major => major.instance.getValue()); //grabs major values
@@ -125,7 +213,7 @@ export class PostProjectComponent implements AfterViewInit {
     let questions: any = [];
     //the above questions array is used to store the questions, which need to be in a particular format to ensure the request is valid
     customQuestionValues.forEach(question => { //This block of code creates an object then populates its properties with the field needed for the request 
-      let obj: any = {}
+      let obj: any = {};
       obj = {
         requirementType: question.type,
         required: question.required,
@@ -138,7 +226,7 @@ export class PostProjectComponent implements AfterViewInit {
     });
 
     const data: any = { //sets up all the required data for the request 
-      projectType: "Active",
+      projectType: projectType,
       projectDetails: {
         project: {
           projectName: this.title,
@@ -153,24 +241,17 @@ export class PostProjectComponent implements AfterViewInit {
     };
 
     if (this.responsibilities) { data.responsibilities = this.responsibilities };
-
-    this.postCreationService.createPost(data) //make the request to create the project
-      .subscribe((response: any) => {
-        console.log('Project creation successful!', response);
-
-        this.router.navigate(['/faculty-dashboard']);
-      }, (error: any) => {
-        console.error('Registration failed.', error);
-      });
-  };
+    return data;
+  }
 
   //This method creates a new field, either for the project categories or the applicable majors for the project.
   //Currently, it takes two parameters: name, a string, which will be the initial text of the field. and major, a boolean, which is 
   //true if the field will be for majors and false otherwise. Might change that to a string if additional fields are required.
-  createNewCategory(name: string | null, major: boolean) {
+  createNewCategory(name: string, major: boolean) {
     if (!major) { //These blocks of code are nearly identical, they each create a new componenet and add it to the array of componenets, 
       const category = this.categories.createComponent(CatergoryFieldComponent);
       category.instance.type = "category";
+      category.instance.value = name;
       this.categoryObjects.push(category);
       category.instance.deleted.subscribe(() => { //On delete of the component, remove it from the array
         let index = this.categoryObjects.indexOf(category); //find its index
@@ -182,6 +263,7 @@ export class PostProjectComponent implements AfterViewInit {
     } else {
       const major = this.majors.createComponent(CatergoryFieldComponent);
       major.instance.type = "majors";
+      major.instance.value = name;
       this.categoryObjects.push(major);
       major.instance.deleted.subscribe(() => {
         let index = this.categoryObjects.indexOf(major);

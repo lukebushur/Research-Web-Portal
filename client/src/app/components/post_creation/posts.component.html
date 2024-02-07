@@ -58,7 +58,11 @@
       <button type="button" (click)="createNewCategory('', true)">Add New Major</button>
       <br>
       <br>
-      <label> Deadline: <input type="date" [(ngModel)]="deadline" id="choose-date" name="choose-date"></label>
+      <label> Deadline: <mat-form-field color="accent" appearance="fill">
+        <input matInput [(ngModel)]="deadline" [matDatepicker]="picker" name="date" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field> </label>
       <br><br>
 
       <ng-container #customQuestions></ng-container>
@@ -79,7 +83,10 @@
     <br>
     <h1>Create Research Listing</h1>
 
-    <button type="submit">Submit</button>
-
+    <button mat-button type="submit" *ngIf="projectID === null && projectType === 'Active'">Create New Project</button>
+  <button mat-button type="button" *ngIf="projectID === null" (click)="createDraft()">Create Draft</button>
+  <button mat-button type="button" *ngIf="projectID !== null" (click)="saveProject()">Save {{projectType}} Project</button>
   </form>
+<app-spinner></app-spinner>
+
 </main>  
