@@ -3,8 +3,7 @@ const Project = require('../models/project');
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../helpers/generateJSON');
-const project = require('../models/project');
-const { applicationSchema } = require('../helpers/inputValidation/validation');
+const { applicationSchema } = require('../helpers/inputValidation/requestValidation');
 
 /*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
@@ -19,11 +18,10 @@ const createApplication = async (req, res) => {
         //Check for error in application http request
         const { error } = applicationSchema.validate(req.body);
         if (error) {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                 errors: error.details,
                 original: error._original
             }));
-            return;
         }
 
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -46,25 +44,24 @@ const createApplication = async (req, res) => {
 
             const activeProjectID = faculty.userType.FacultyProjects.Active; //activeProjectID is the id of the activeProjects record for the faculty accounts
             const activeProjects = await Project.findOne(_id = activeProjectID); //grabs the array of active projects from the project record
-            if (!activeProjects) { res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); return; }
+            if (!activeProjects) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})) }
 
             const existingProject = activeProjects._doc.projects.find(x => x.id === req.body.projectID); //Grabs the specified project from the array by the projectID in the request
 
             if (!existingProject) { //checks if the project specified by the ID exists
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { "details": "Invalid projectID" }));
-                return;
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { "details": "Invalid projectID" }));
             }
             //gets the ID of the record that holds the student applications 
             const applicationRecord = student.userType.studentApplications;
             const status = "Pending";
 
             //This validates that the student meets the minimum criteria i.e. GPA / Major
-            if (existingProject.GPA > student.userType.GPA) { res.status(409).json(generateRes(false, 409, "INVALID_GPA", {})); return; }
+            if (existingProject.GPA > student.userType.GPA) { return res.status(409).json(generateRes(false, 409, "INVALID_GPA", {})) }
             let majorIncluded = false;
             student.userType.Major.forEach((major) => {
                 if (existingProject.majors.includes(major)) { majorIncluded = true; }
             });
-            if (!majorIncluded) { res.status(409).json(generateRes(false, 409, "INVALID_MAJOR", {})); return; }
+            if (!majorIncluded) { return res.status(409).json(generateRes(false, 409, "INVALID_MAJOR", {})) }
 
             //if there is no active mongodb record for student's applications then create a new record
             if (!applicationRecord) {
@@ -78,6 +75,7 @@ const createApplication = async (req, res) => {
                             status: status,
                             appliedDate: new Date(),
                             lastModified: new Date(),
+                            lastUpdated: new Date(),
                         }
                     ]
                 });
@@ -95,6 +93,7 @@ const createApplication = async (req, res) => {
                                 'major': student.userType.Major,
                                 'email': student.email,
                                 'appliedDate': new Date(),
+                                'location': student.universityLocation,
                             }
                         }
                     }),
@@ -111,7 +110,7 @@ const createApplication = async (req, res) => {
                 //student will exist in the applicants pool, otherwise it will not and the application can be made
 
                 const existingApp = existingProject.applications.find(x => x.applicationRecordID == applicationRecord._id.toString());
-                if (existingApp) { res.status(403).json(generateRes(false, 403, "APPLICATION_ALREADY_EXISTS", {})); return; }
+                if (existingApp) { return res.status(403).json(generateRes(false, 403, "APPLICATION_ALREADY_EXISTS", {})) }
 
                 let newApplication = {
                     questions: req.body.questions,
@@ -120,6 +119,7 @@ const createApplication = async (req, res) => {
                     appliedDate: new Date(),
                     status: status,
                     lastModified: new Date(),
+                    lastUpdated: new Date(),
                 };
                 //these await statements cannot be used with a promise because they require the newApplication ID which needs to be 
                 //pushed and then fetched from the database
@@ -145,16 +145,17 @@ const createApplication = async (req, res) => {
                             'major': student.userType.Major,
                             'email': student.email,
                             'appliedDate': new Date(),
+                            'location': student.universityLocation,
                         }
                     }
                 });
             }
-            res.status(200).json(generateRes(true, 200, "APPLICATION_CREATED", {}));
+            return res.status(200).json(generateRes(true, 200, "APPLICATION_CREATED", {}));
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -171,11 +172,10 @@ const updateApplication = async (req, res) => {
         //Validate the http request body
         const { error } = applicationSchema.validate(req.body);
         if (error) {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                 errors: error.details,
                 original: error._original
             }));
-            return;
         }
 
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -186,24 +186,25 @@ const updateApplication = async (req, res) => {
         if (student && student.userType.Type === parseInt(process.env.STUDENT)) {
             //fetch application list from db, then check if it exists
             let applications = await Application.findOne({ _id: student.userType.studentApplications });
-            if (!applications) { res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); return; }
+            if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})) }
 
             applications = await Application.updateOne({ _id: student.userType.studentApplications, "applications": { "$elemMatch": { "_id": req.body.applicationID } } }, {
                 $set: {
-                    "applications.$.questions": req.body.questions
+                    "applications.$.questions": req.body.questions,
+                    "applications.$.lastUpdated": new Date()
                 }
             });
             //ensure that the application was actually updated
-            if (applications.matchedCount === 0 || applications.modifiedCount === 0)
-                res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {}));
+            if (applications.matchedCount === 0)
+                return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {}));
             else
-                res.status(200).json(generateRes(true, 200, "APPLICATION_UPDATED", {}));
+                return res.status(200).json(generateRes(true, 200, "APPLICATION_UPDATED", {}));
 
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -226,11 +227,10 @@ const deleteApplication = async (req, res) => {
         if (student.userType.Type === parseInt(process.env.STUDENT)) {
 
             if (!applicationID) { //if there isn't an applicationID throw an error
-                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                     errors: error.details,
                     original: error._original
                 }));
-                return;
             }
 
             //recordID is the student's application record ID and will be used to get the application list 
@@ -238,7 +238,7 @@ const deleteApplication = async (req, res) => {
 
             //gets the application record, otherwise sends error response 
             let applications = await Application.findById(recordID);
-            if (!applications) { res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); return; }
+            if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})) }
             else {
                 //get the specific application object to get the project object id and then fetch that project
                 const selectedApp = applications._doc.applications.find(y => y.id === applicationID);
@@ -257,8 +257,7 @@ const deleteApplication = async (req, res) => {
                 const selectedApplication = applications.applications.pull(applicationID);
                 //if the length of the new arrays + 1 is not equal to the length of the old arrays, then the application was not removed therefore an error occurred
                 if (selectedApplication.length + 1 != numApplications || projectSelectedApplication.length + 1 != projectNumApplications) { //Check that an element was removed, if not send error response
-                    res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {}));
-                    return;
+                    return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {}));
                 }
                 else {
                     const savePromises = [
@@ -267,15 +266,15 @@ const deleteApplication = async (req, res) => {
                     ];
 
                     await Promise.all(savePromises);
-                    res.status(200).json(generateRes(true, 200, "APPLICATION_DELETED", {}));
+                    return res.status(200).json(generateRes(true, 200, "APPLICATION_DELETED", {}));
                 }
             }
 
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -346,12 +345,12 @@ const getApplications = async (req, res) => {
                 }
             });
 
-            res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
+            return res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 
@@ -417,14 +416,13 @@ const getTopRecentApplications = async (req, res) => {
                 topApplicationsData.push(applicationData);
             }
             
-            res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
+            return res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
-
 };
 
 const demoGetStudentInfo = async (req, res) => {
@@ -443,12 +441,12 @@ const demoGetStudentInfo = async (req, res) => {
                 name: student.name
             }
 
-            res.status(200).json({ success: { status: 200, message: "DATA_FOUND", data } });
+            return res.status(200).json({ success: { status: 200, message: "DATA_FOUND", data } });
         } else {
-            res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
 

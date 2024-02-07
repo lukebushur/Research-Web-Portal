@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const majorsRecord = new mongoose.Schema({
     location: {
         type: String,
-        required: true
+        required: true,
+        unqiue: true,
     },
     majors: [{
         type: String,
