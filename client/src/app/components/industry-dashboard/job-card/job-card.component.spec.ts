@@ -55,4 +55,35 @@ intellectually stimulating environment, apply now!`,
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should create a material card', () => {
+    const cardElement: HTMLElement = fixture.nativeElement;
+    const matCard = cardElement.querySelector('mat-card')!;
+    expect(matCard).toBeTruthy();
+  });
+
+  it('should create 6 chips in the mat-chip-set', () => {
+    const cardElement: HTMLElement = fixture.nativeElement;
+    const matChips = cardElement.querySelectorAll('mat-chip')!;
+    expect(matChips.length).toEqual(6);
+  });
+
+  it('should create 3 card buttons', () => {
+    const cardElement: HTMLElement = fixture.nativeElement;
+    const buttons = cardElement.querySelectorAll('button')!;
+    expect(buttons.length).toEqual(3);
+  });
+
+  it('should return a proper jobTypeString', () => {
+    const jts = component.jobTypeString;
+    expect(jts).toEqual('Full-Time Job');
+  });
+
+  it('should return a proper display string for dateToString()', () => {
+    let dateStrResult = component.dateToString(undefined);
+    expect(dateStrResult).toEqual('None');
+    const dateStr = component.jobData.deadline!;
+    dateStrResult = component.dateToString(dateStr);
+    expect(dateStrResult).toEqual('Mar 15, 2024');
+  });
 });
