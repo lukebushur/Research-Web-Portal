@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors')
+const generateRes = require('./helpers/generateJSON');
 
 app.set('trust proxy', '127.0.0.1');
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,12 +17,19 @@ const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const applicationRoutes = require('./routes/applicationRoutes');
 const industryRoutes = require('./routes/industry');
+const adminRoutes = require('./routes/adminstrativeRoutes');
 
 //Endpoints
 app.use('/api', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/industry', industryRoutes);
+app.use('/api/admin', adminRoutes);
+
+//This is the 404 Route. THIS MUST REMAIN LAST IT CATCHES ALL OTHER REQUESTS 
+app.use('*', function (req, res) {
+    res.status(404).json(generateRes(false, 404, "ROUTE_NOT_FOUND", {}));
+});
 
 const port = process.env.PORT || 5000;
 

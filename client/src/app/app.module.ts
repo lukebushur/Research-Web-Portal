@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ResearchProjectCardComponent } from './components/research-project-card/research-project-card.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
@@ -45,6 +46,9 @@ import { ViewApplicationComponent } from './components/view-application/view-app
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ViewProjectComponent } from './components/view-project/view-project.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +72,8 @@ import { StudentDashboard } from './components/student-dashboard/dashboard.compo
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
-    StudentDashboard
+    StudentDashboard,
+    ViewProjectComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,7 +98,10 @@ import { StudentDashboard } from './components/student-dashboard/dashboard.compo
     MatMenuModule,
     MatRadioModule,
     MatTooltipModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSidenavModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ],
   providers: [
     {

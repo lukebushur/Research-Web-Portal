@@ -64,7 +64,6 @@ export class LoginComponent {
 
     this.loginService.login(loginData).subscribe({
       next: (response: any) => {
-        console.log('Login Successful!', response);
 
         const authToken = response?.success?.accessToken;
         const accountType = response?.success?.accountType;

@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: true
     },
+    universityLocation: {
+        type: String,
+        default: "Purdue University Fort Wayne"
+    },
     userType: {
         Type: {
             type: Number, 

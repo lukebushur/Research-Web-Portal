@@ -27,7 +27,8 @@
       </mat-card-content>
       <mat-card-actions>
         <div class="action-buttons">
-          <button mat-raised-button color="primary" *ngIf="project.projectType === 'active'">Update</button>
+          <button mat-raised-button color="primary" *ngIf="project.projectType === 'active'"
+            (click)="buttonUpdateProject(project.id,'Active')">Update</button>
           <button mat-raised-button color="accent" *ngIf="project.projectType === 'active'"
             (click)="buttonArchiveProject(project.id)">Archive</button>
           <button mat-raised-button color="warn" *ngIf="project.projectType === 'active'"
@@ -36,17 +37,13 @@
           <button mat-raised-button color="warn" *ngIf="project.projectType === 'archived'"
             (click)="buttonDeleteProject(project.id,'Archived')">Delete</button>
 
-          <button mat-raised-button color="primary" *ngIf="project.projectType === 'draft'">Update</button>
+          <button mat-raised-button color="primary" *ngIf="project.projectType === 'draft'"
+            (click)="buttonUpdateProject(project.id,'Draft')">Update</button>
           <button mat-raised-button color="accent" *ngIf="project.projectType === 'draft'">Publish</button>
           <button mat-raised-button color="warn" *ngIf="project.projectType === 'draft'"
             (click)="buttonDeleteProject(project.id,'Draft')">Delete</button>
         </div>
       </mat-card-actions>
-    </mat-card>
-    <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" style="margin-left:-3%;"
-      [id]="'p'+project.number" [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'">
-      <p style="text-align: center; font-size: 1em; font-weight: 500;">APPLICANTS:</p>
-      <p style="text-align: center; font-size: 5.5em; font-weight: 500; margin: auto;">{{project.numApp}}</p>
     </mat-card>
   </div>
 </div>

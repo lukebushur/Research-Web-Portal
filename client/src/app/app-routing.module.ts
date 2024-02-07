@@ -14,6 +14,7 @@ import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
+import { ViewProjectComponent } from './components/view-project/view-project.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -23,7 +24,7 @@ const routes: Routes = [
   { path: "confirm-email/:emailtoken", component: ConfirmEmailComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
   { path: "apply-to-post", component: ApplyToPostComponent, canActivate: [AuthGuard] },
-  { path: "create-post", component: PostProjectComponent, canActivate: [AuthGuard] },
+  { path: "create-post/:projectType/:projectID", component: PostProjectComponent, canActivate: [AuthGuard] },
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
   { path: "demoProjects", component: DemoProjectsComponent },
   { path: "signout", component: SignoutComponent },
@@ -31,6 +32,8 @@ const routes: Routes = [
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
   { path: "application/:projectID/:applicationID", component: ViewApplicationComponent },
   { path: "student-dashboard", component: StudentDashboard}
+  //This route is used to view a specific project and its applicants
+  { path: "viewProject/:projectType/:projectID", component: ViewProjectComponent },
 ];
 
 @NgModule({
