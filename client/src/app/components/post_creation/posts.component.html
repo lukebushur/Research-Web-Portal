@@ -1,66 +1,85 @@
-<form (ngSubmit)="onSubmit()">
-  <label> Post Title: <input type="text" [(ngModel)]="title" name="title" required>
-  </label>
-  <br>
-  <label> Post Image:<input type="file" accept="image/*" id="imageCapturer" (change)="onFileSelected($event)">
-  </label>
-  <br>
-
-  <label id="requirement-selection-label">Select the requirement creation medium</label>
-  <br>
-  <mat-radio-group [(ngModel)]="requirementsType" name="requirementSelection">
-    <mat-radio-button [value]="0">Requirements through the website</mat-radio-button>
-    <mat-radio-button [value]="1">Requirements through a file</mat-radio-button>
-    <mat-radio-button [value]="2">Requirements through the website and a file</mat-radio-button>
-  </mat-radio-group>
-  <br><br>
-
-  <div id="websiteReqs" *ngIf="requirementsType == 0">
-
-    <label> Description: <input type="text" [(ngModel)]="description" name="description" required>
+<main>
+  <form (ngSubmit)="onSubmit()">
+    <label> 
+      Post Title: <br>
+      <input type="text" [(ngModel)]="title" name="title" required>
+      <br>
     </label>
-    <br />
-    <label> Responsibilities: <input type="text" [(ngModel)]="responsibilities" name="responsibilities" required>
-    </label>
-    <br />
-
-    <p>Research Category<span
-        matTooltip="Research categories are used to recommend opportunites to relevant students and for searching"
-        matTooltipClass="example-tooltip-uppercase"><i class="material-icons">help_outline</i></span></p>
-    <ng-container #categories></ng-container>
     <br>
-    <input type="button" value="Add New Research Category" (click)="createNewCategory('', false)">
+    <label> 
+      Post Image: <br>
+      <input type="file" accept="image/*" id="imageCapturer" (change)="onFileSelected($event)">
+      <br>
+    </label>
+    <br>
+
+    <label id="requirement-selection-label">Select the requirement creation medium</label>
+    <br>
+    <mat-radio-group [(ngModel)]="requirementsType" name="requirementSelection">
+      <mat-radio-button [value]="0">Requirements through the website</mat-radio-button> <br>
+      <mat-radio-button [value]="1">Requirements through a file</mat-radio-button> <br>
+      <mat-radio-button [value]="2">Requirements through the website and a file</mat-radio-button> <br>
+    </mat-radio-group>
     <br><br>
 
-    <label> GPA Requirement: <input type="number" [(ngModel)]="gpa" name="gpa" min="0" max="4">
-    </label><br>
-    <label> Major(s):</label>
+    <div id="websiteReqs" *ngIf="requirementsType == 0">
+
+      <label> 
+        Description: <br> 
+        <input class = "text-field" type="text" [(ngModel)]="description" name="description" required>
+        <br>
+      </label>
+      <br />
+      <label> 
+        Responsibilities: <br>
+        <input class = "text-field" type="text" [(ngModel)]="responsibilities" name="responsibilities" required>
+        <br>
+      </label>
+      <br />
+
+      <p class = "title">Research Category: <span
+          matTooltip="Research categories are used to recommend opportunites to relevant students and for searching"
+          matTooltipClass="example-tooltip-uppercase"><i class="material-icons">help_outline</i></span></p>
+      <ng-container #categories></ng-container>
+      <br>
+      <button type="button" (click)="createNewCategory('', false)">Add New Research Category</button>
+      <br><br>
+
+      <label> 
+        GPA Requirement: 
+        <input class ="gpa" type="number" [(ngModel)]="gpa" name="gpa" min="0" max="4">
+        <br><br>
+      </label><br>
+      <label> 
+        Major(s): <br>
+      </label>
+      <br>
+      <ng-container #majors></ng-container>
+      <button type="button" (click)="createNewCategory('', true)">Add New Major</button>
+      <br>
+      <br>
+      <label> Deadline: <input type="date" [(ngModel)]="deadline" id="choose-date" name="choose-date"></label>
+      <br><br>
+
+      <ng-container #customQuestions></ng-container>
+
+      <button type="button" (click)="openDialog()">Create Custom Requirement</button> 
+      <br><br><br>
+      <button type="button">Next Page</button>
+    </div>
+
+    <div id="fileReqs" *ngIf="requirementsType == 1">
+      <label>Upload requirements file</label>
+      <input type="file" accept=".doc,.docx,application/msword,.pdf,.txt">
+      <p>Warning: Using a file with all requirements will prevent you from using advanced searching / filtering on
+        applicants. Consider using a combination of file requirements and website requirements if you require advanced
+        searching / filtering.</p>
+    </div>
+
     <br>
-    <ng-container #majors></ng-container>
-    <input type="button" value="Add New Major" (click)="createNewCategory('', true)">
-    <br>
-    <br>
-    <label> Deadline: <input type="date" [(ngModel)]="deadline" id="choose-date" name="choose-date"></label>
-    <br><br>
+    <h1>Create Research Listing</h1>
 
-    <ng-container #customQuestions></ng-container>
+    <button type="submit">Submit</button>
 
-    <input type="button" value="Create Custom Requirement" (click)="openDialog()">
-    <br><br><br>
-    <button type="button">Next Page</button>
-  </div>
-
-  <div id="fileReqs" *ngIf="requirementsType == 1">
-    <label>Upload requirements file</label>
-    <input type="file" accept=".doc,.docx,application/msword,.pdf,.txt">
-    <p>Warning: Using a file with all requirements will prevent you from using advanced searching / filtering on
-      applicants. Consider using a combination of file requirements and website requirements if you require advanced
-      searching / filtering.</p>
-  </div>
-
-  <br>
-  <h1>Create Research Listing</h1>
-
-  <button type="submit">Submit</button>
-
-</form>
+  </form>
+</main>  

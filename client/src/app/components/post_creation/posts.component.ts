@@ -12,6 +12,7 @@ import { CustomQuestionComponent } from './custom-question/custom-question.compo
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
+  styleUrls: ['./posts.component.css']
 })
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = ""; //Title of the project
@@ -21,7 +22,7 @@ export class PostProjectComponent implements AfterViewInit {
   standing: string | null = "";
   fileName: string = "";
   deadline: Date = new Date();
-  requirementsType: number = -1; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
+  requirementsType: number = 0; //0 for website requirement creation, 1 for file requirements, 2 for a combination 
   categoriesArr: String[] = []; //The array of categories for the research posting
 
   //These arrays are used to store the multiple components of major, question or categories.
