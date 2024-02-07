@@ -16,7 +16,12 @@ export class StudentDashboardService {
   //service that will call to the /getApplications backend route
   getStudentApplications() : Observable<any> {
     const headers = this.authService.getHeaders()
-    
+
     return this.http.get(`${this.apiUrl}/applications/getApplications`, { headers });
+  }
+
+  getOpportunities() : Observable<any> {
+    const headers = this.authService.getHeaders();
+    return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers })
   }
 }

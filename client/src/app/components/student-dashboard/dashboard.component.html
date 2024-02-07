@@ -1,7 +1,27 @@
 <div class="student-dashboard-page-container">
     <div class="student-ongoing-applications">
-        <h1>Ongoing appications</h1>
-        <button mat-raised-button (click)="getStudentApplications()">See all applications</button>
-        <button mat-raised-button>Search opportunities</button>
+      <h1>Ongoing applications</h1>
+      <button mat-raised-button (click)="getStudentApplications()">See all applications</button>
+      <button mat-raised-button (click)="getAllOpportunities()">Search opportunities</button>
     </div>
-</div>
+  
+    <!-- Display opportunities grouped by major -->
+    <div *ngFor="let major of majors">
+      <h2>{{ major }} Opportunities</h2>
+  
+      <div *ngFor="let opportunity of majorOpportunities[major]" class="opportunities-container">
+        <mat-card>
+          <mat-card-title class="opportunity-card-title">
+            {{ opportunity.title }}
+          </mat-card-title>
+        </mat-card>
+        <mat-card-content>
+          <p>Professor name: {{ opportunity.professorName }}</p>
+          <p>Application email: {{ opportunity.professorEmail }}</p>
+          <p> Number of Applicants: {{ opportunity.applications.length }}</p>
+          <p> GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</p>
+        </mat-card-content>
+      </div>
+    </div>
+  </div>
+  
