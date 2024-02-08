@@ -13,6 +13,7 @@ import { FacultyProjectService } from '../../controllers/faculty-project-control
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
+  styleUrls: ['./posts.component.css']
 })
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = ""; //Title of the project
