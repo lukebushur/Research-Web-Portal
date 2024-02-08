@@ -42,7 +42,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
-                "accountType": process.env.FACULTY, "universityLocation": "Purdue University Fort Wayne"
+                "accountType": process.env.FACULTY, "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -69,7 +69,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": "a" + randomEmail, "name": "a" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
-                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Purdue University Fort Wayne"
+                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -96,7 +96,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": "z" + randomEmail, "name": "z" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
-                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Purdue University Fort Wayne"
+                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
