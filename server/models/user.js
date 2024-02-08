@@ -35,10 +35,6 @@ const userSchema = new mongoose.Schema({
             type: Number, 
             required: true,
             default: 0
-            // 0 is student 
-            // 1 is faculty
-            // 2 is industry
-            // >3 is admin
         },
         Confirmed: {
             type: Boolean,
