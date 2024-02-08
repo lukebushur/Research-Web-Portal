@@ -19,7 +19,13 @@
     </mat-sidenav>
 
     <mat-sidenav-content>  
-      <button id = "navButton" mat-button (click)="opened = !opened">
+      <!-- this is temporary - the component will eventually just be created using a project as input -->
+      <ng-container *ngIf="project">
+        <h1>{{ project.title }}</h1>
+        <p>{{ project.description }}</p>
+      </ng-container>
+
+      <!-- <button id = "navButton" mat-button (click)="opened = !opened">
         <img src="../../../assets/photos/burger-menu-24.png" />
       </button>
       <div>
@@ -30,14 +36,13 @@
         <label>Major:<major major="Comp Sci">Computer Science</major> &nbsp;&nbsp;&nbsp;&nbsp;</label>
         <label>Standing: <standing standing="Senior">Senior</standing> &nbsp;&nbsp;&nbsp;&nbsp;</label>
       </div>
-      <br><br>
-
+      <br><br> -->
       <!-- <div *ngFor="let question of questions">
         <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
       </div> -->
 
-      <br><br>
-        <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button>
+      <!-- <br><br>
+        <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button> -->
     </mat-sidenav-content>  
 </mat-sidenav-container>
 </main>

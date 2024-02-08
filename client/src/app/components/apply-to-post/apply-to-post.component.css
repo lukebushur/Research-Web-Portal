@@ -2,7 +2,7 @@ textarea {
     width: 400px;
     height: 150px;
 }
-  
+
 label {
     position: absolute;
     top: 0.2ex;
@@ -19,7 +19,7 @@ label {
     line-height: 6ex;
 
 }
-  
+
 mat-sidenav-container {
     height: calc(205vh - 115vh);
 }
@@ -38,6 +38,7 @@ mat-sidenav {
     width: 24px;
     height: 24px;
 }
+
 #navButton :hover {
     width: 28px;
 }
