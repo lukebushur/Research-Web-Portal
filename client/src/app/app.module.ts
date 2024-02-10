@@ -48,7 +48,9 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
+import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page/student-opportunites-search-page.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +76,7 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
     CustomQuestionComponent,
     StudentDashboard,
     ViewProjectComponent,
+    StudentOpportunitesSearchPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,7 +104,8 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
     MatCheckboxModule,
     MatSidenavModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatPaginatorModule,
   ],
   providers: [
     {

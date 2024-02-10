@@ -24,4 +24,9 @@ export class StudentDashboardService {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers })
   }
+
+  getAvailableMajors() : Observable<any> {
+    const headers = this.authService.getHeaders();
+    return this.http.get(`${this.apiUrl}/getMajors`, { headers })
+  }
 }

@@ -10,6 +10,10 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService) {}
 
+
+  ngOnInit() {
+    this.getAllOpportunities();
+  }
   applications: any[] = [];
   opportunities: any[] = [];
   majorOpportunities: { [major: string]: any[] } = {};
@@ -55,5 +59,9 @@ export class StudentDashboard {
         console.error('Error getting opportunities', error);
       }
     });
+  }
+
+  searchOpportunities() {
+    this.router.navigate(['/student-opportunities']);
   }
 }
