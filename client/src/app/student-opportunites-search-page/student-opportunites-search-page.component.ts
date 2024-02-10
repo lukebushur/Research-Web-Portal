@@ -13,8 +13,6 @@ export class StudentOpportunitesSearchPageComponent {
   ngOnInit() {
     this.getAllOpportunities();
     this.getAvailableMajors();
-    console.log(this.availableMajors);
-
   }
 
   opportunities: any[] = [];
@@ -27,7 +25,6 @@ export class StudentOpportunitesSearchPageComponent {
     this.studentDashboardService.getOpportunities().subscribe({
       next: (data) => {
         this.opportunities = data.success.data;
-
         // Filter opportunities initially
         this.filterOpportunities();
       },
@@ -38,13 +35,19 @@ export class StudentOpportunitesSearchPageComponent {
   }
 
   filterOpportunities() {
-    // Filter opportunities based on search query
+    // Filter opportunities based on search query and selected majors
     this.filteredOpportunities = this.opportunities.filter(opportunity => {
-      return opportunity.title.toLowerCase().includes(this.searchQuery.toLowerCase());
+      return opportunity.title.toLowerCase().includes(this.searchQuery.toLowerCase()) && this.checkMajorFilter(opportunity.majors);
     });
+  }
 
-    //clear the search bar after clicking the search button or hitting enter
-    this.searchQuery = '';
+  checkMajorFilter(majors: string[]): boolean {
+    // If no majors are selected, return true to include all opportunities
+    if (this.selectedMajors.length === 0) {
+      return true;
+    }
+    // Check if any selected majors match the opportunity's majors
+    return majors.some(major => this.selectedMajors.includes(major));
   }
 
   onSearchKeyPress(event: KeyboardEvent) {
@@ -65,7 +68,20 @@ export class StudentOpportunitesSearchPageComponent {
       error: (error) => {
         console.error('Error getting available majors.', error);
       }
-    })
+    });
   }
 
+  onCheckboxChange(major: string, isChecked: boolean) {
+    // Update the selectedMajors array based on checkbox changes
+    if (isChecked) {
+      this.selectedMajors.push(major);
+    } else {
+      const index = this.selectedMajors.indexOf(major);
+      if (index >= 0) {
+        this.selectedMajors.splice(index, 1);
+      }
+    }
+    // Update filtered opportunities when checkboxes change
+    this.filterOpportunities();
+  }
 }

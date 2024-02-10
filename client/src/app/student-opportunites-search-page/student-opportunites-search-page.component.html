@@ -8,7 +8,7 @@
 
     <!-- checkboxes for majors -->
     <div class="majors-list">
-        <mat-checkbox *ngFor="let major of availableMajors">
+        <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
             {{ major }}
         </mat-checkbox>
     </div>
