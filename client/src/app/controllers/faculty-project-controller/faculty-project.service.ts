@@ -133,4 +133,12 @@ export class FacultyProjectService {
     console.log(app + " " + projectID);
     return this.applicationDecision(data); //Use the other method that creates a server request to update decision.
   }
+
+  //This method gets detailed information from a specific project, i.e. it also grabs the student's questions + answers from the database
+  detailedFetchApplicants(projectId: String): Observable<any> {
+    const headers = this.authService.getHeaders();
+    const data = { "projectID": projectId };
+
+    return this.http.post(`${this.apiUrl}/projects/getDetailedApplicants`, data, { headers: headers });
+  }
 }
