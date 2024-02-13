@@ -20,14 +20,16 @@
     <br>
     <!--[==[
       Handle the AccountType
-      The system sets the {{accountType}} on start
-      ]==]-->
-    <h4>{{accountType}} Account Type</h4>
-    <mat-slider min="0" max="2" step="1" showTickMarks value="0">
-      <input matSliderThumb (input)="onInputChange($event)">
-    </mat-slider>
+      This will take automatically expand based on the list of account-types in "accountTypes" interface 
+    ]==]-->
+    <mat-form-field class="form-field">
+        <mat-label> Account Type </mat-label>
+        <mat-select placeholder="Select" required formControlName="accountType">
+          <mat-option *ngFor="let option of accountTypes" [value]="option.value">{{ option.text }}</mat-option>
+        </mat-select>
+    </mat-form-field>
     <br>
     <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid"
       class="submit-button">Submit</button>
-  </form>
+  </form> 
 </div>

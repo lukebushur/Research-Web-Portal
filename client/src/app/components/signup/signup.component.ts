@@ -4,6 +4,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
 import { environment } from 'src/environments/environment';
 
+interface AccountType {
+  value: number;
+  text: string;
+}
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -29,20 +34,19 @@ export class SignupComponent {
       Validators.minLength(10),
       Validators.maxLength(255),
     ]),
+    accountType: new FormControl(0, [
+      Validators.required,
+    ])
   })
 
-  // Setup the variables for the account type slider 
-  accountType: string = "ThisStringShouldChange";
-  accountTypeInt: number = 0;
-  typeToString: Array<string> = [
-    "Student",
-    "Faculty",
-    "Industry"
+  // Setup the variables for the account type dropdown 
+  accountTypes: AccountType[] = [
+   {value: 0, text: 'Student'},
+   {value: 1, text: 'Faculty'},
+   {value: 2, text: 'Industry'},
   ];
 
-  constructor(private router: Router, private signupService: SignupService) {
-    this.accountType = this.typeToString[this.accountTypeInt - 1];
-  }
+  constructor(private router: Router, private signupService: SignupService) {  }
 
   // Error message for email based on validators
   emailErrorMessage() {
@@ -86,26 +90,12 @@ export class SignupComponent {
     return '';
   }
 
-  // This is to setup the Account Type system of the signup page
-  // This will handle the input of the 
-  onInputChange(event: Event) {
-    // This converts the string value to an integer
-    // Which then correlates to an "account type"
-    const value : number = parseInt((event.target as HTMLInputElement).value);
-    // Set the integer, this is used in the request. 
-    // It should be 0-2, 0 for Student, 1 for Faculty, 2 for Industry
-    this.accountTypeInt = value;
-    // This converts the account-type to an array-supported index without having
-    // a "nil" entry in the array which looks weird
-    this.accountType = this.typeToString[this.accountTypeInt];
-  }
-
   onSubmit() {
     const data = {
       email: this.signupForm.value.email,
       password: this.signupForm.value.password,
       name: this.signupForm.value.name,
-      accountType: this.accountTypeInt, // Pass in the user account type
+      accountType: this.signupForm.value.accountType, // Pass in the user account type
     };
 
     this.signupService.signup(data).subscribe({

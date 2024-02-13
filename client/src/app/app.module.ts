@@ -47,7 +47,7 @@ import { CustomQuestionComponent } from './components/post_creation/custom-quest
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -99,7 +99,7 @@ import { MatSliderModule } from '@angular/material/slider';
     MatSidenavModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatSliderModule
+    MatSelectModule
   ],
   providers: [
     {
