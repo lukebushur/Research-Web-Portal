@@ -33,10 +33,6 @@ const researchOpp = new mongoose.Schema({
             type: String,
             required: false
         }],
-        professorId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-        },
         applications: [
             {
                 applicationRecordID: {
