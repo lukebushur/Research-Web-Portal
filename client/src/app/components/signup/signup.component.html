@@ -18,6 +18,15 @@
       <mat-error *ngIf="signupForm.get('password')?.invalid">{{ passwordErrorMessage() }}</mat-error>
     </mat-form-field>
     <br>
+    <!--[==[
+      Handle the AccountType
+      The system sets the {{accountType}} on start
+      ]==]-->
+    <h4>{{accountType}} Account Type</h4>
+    <mat-slider min="0" max="2" step="1" showTickMarks value="0">
+      <input matSliderThumb (input)="onInputChange($event)">
+    </mat-slider>
+    <br>
     <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid"
       class="submit-button">Submit</button>
   </form>
