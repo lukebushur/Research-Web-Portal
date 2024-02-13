@@ -31,7 +31,18 @@ export class SignupComponent {
     ]),
   })
 
-  constructor(private router: Router, private signupService: SignupService) { }
+  // Setup the variables for the account type slider 
+  accountType: string = "ThisStringShouldChange";
+  accountTypeInt: number = 0;
+  typeToString: Array<string> = [
+    "Student",
+    "Faculty",
+    "Industry"
+  ];
+
+  constructor(private router: Router, private signupService: SignupService) {
+    this.accountType = this.typeToString[this.accountTypeInt - 1];
+  }
 
   // Error message for email based on validators
   emailErrorMessage() {
@@ -75,13 +86,26 @@ export class SignupComponent {
     return '';
   }
 
+  // This is to setup the Account Type system of the signup page
+  // This will handle the input of the 
+  onInputChange(event: Event) {
+    // This converts the string value to an integer
+    // Which then correlates to an "account type"
+    const value : number = parseInt((event.target as HTMLInputElement).value);
+    // Set the integer, this is used in the request. 
+    // It should be 0-2, 0 for Student, 1 for Faculty, 2 for Industry
+    this.accountTypeInt = value;
+    // This converts the account-type to an array-supported index without having
+    // a "nil" entry in the array which looks weird
+    this.accountType = this.typeToString[this.accountTypeInt];
+  }
+
   onSubmit() {
     const data = {
       email: this.signupForm.value.email,
       password: this.signupForm.value.password,
       name: this.signupForm.value.name,
-      // TODO: incorportate accountType changer via a dropdown menu
-      accountType: 0,
+      accountType: this.accountTypeInt, // Pass in the user account type
     };
 
     this.signupService.signup(data).subscribe({
