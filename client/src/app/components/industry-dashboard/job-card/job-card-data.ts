@@ -1,4 +1,5 @@
 export interface JobCardData {
+  _id: string;
   employer: string;
   title: string;
   isInternship: boolean;
