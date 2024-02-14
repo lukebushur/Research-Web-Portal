@@ -3,14 +3,14 @@ const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
 const Major = require('../../models/majors');
 const { adminMajors } = require('../../helpers/inputValidation/requestValidation');
-const majors = require('../../models/majors');
 
 
 /*  This function handles the addition of new major(s) to the database, requires a JWT, should be used with a POST request, and should only
     be accessible by adminstrative accounts. This will take an array of one or more majors and add them to the database if they
     do not already exist. 
 
-    This function takes one field in the request body: majors (Array of Strings, the list of majors or major to be added to the db)
+    This function takes two field in the request body: majors (Array of Strings, the list of majors or major to be added to the db) - 
+    location (String, the university name that the majors are being removed from)
 */
 const addMajors = async (req, res) => {
     try {
@@ -32,11 +32,11 @@ const addMajors = async (req, res) => {
         const majorsArr = [...majorsSet];
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
-            let majorsRecord = await Major.findOne({ location: admin.universityLocation });
+            let majorsRecord = await Major.findOne({ location: req.body.location });
             //checks if a major record could be found, if so then adds the majors to the db, otherwise creates a new record.
             if (!majorsRecord) {
                 let majors = new Major({
-                    location: admin.universityLocation,
+                    location: req.body.location,
                     majors: majorsArr
                 })
                 await majors.save();
@@ -59,7 +59,8 @@ const addMajors = async (req, res) => {
     be accessible by adminstrative accounts. This will take an array of one or more majors and remove them from the database if they
     exist.
 
-    This function takes one field in the request body: majors (Array of Strings, the list of majors or major to be removed from the db)
+    This function takes two fields in the request body: majors (Array of Strings, the list of majors or major to be removed from the db) and 
+    location (String, the location of the university the majors are being removed from)
 */
 const deleteMajors = async (req, res) => {
     try {
@@ -79,7 +80,7 @@ const deleteMajors = async (req, res) => {
         let admin = await User.findOne({ email: decodeAccessToken.email });
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
-            let majorsRecord = await Major.findOne({ location: admin.universityLocation });
+            let majorsRecord = await Major.findOne({ location: req.body.location });
             //checks if a major record could be found, if so then adds the majors to the db, otherwise creates a new record.
             if (!majorsRecord) {
                 return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND"));
@@ -101,7 +102,8 @@ const deleteMajors = async (req, res) => {
 /*  This function handles the replacement of majors to the database, requires a JWT, should be used with a POST request, and should only
     be accessible by adminstrative accounts. This will take an array of one or more majors and set the majors in the db to that array.
 
-    This function takes one field in the request body: majors (Array of Strings, the list of majors or major to be replaced in the db)
+    This function takes two fields in the request body: majors (Array of Strings, the list of majors or major to be replaced in the db)
+    location (String, the name of the university where records will be added or removed)
 */
 const replaceMajors = async (req, res) => {
     try {
@@ -123,11 +125,11 @@ const replaceMajors = async (req, res) => {
         const majorsArr = [...majorsSet];
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
-            let majorsRecord = await Major.findOne({ location: admin.universityLocation });
+            let majorsRecord = await Major.findOne({ location: req.body.location });
             //checks if a major record could be found, if so then adds the majors to the db, otherwise creates a new record.
             if (!majorsRecord) {
                 let majors = new Major({
-                    location: admin.universityLocation,
+                    location: req.body.location,
                     majors: majorsArr
                 })
                 await majors.save();

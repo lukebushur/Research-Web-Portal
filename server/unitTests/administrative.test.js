@@ -61,7 +61,10 @@ describe('POST /api/admin/addMajor', () => {
         chai.request(server)
             .post('/api/admin/addMajor')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
-            .send({ "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics", "Biology"] })
+            .send({
+                "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics", "Biology"],
+                "location": "Test University"
+            })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -95,7 +98,10 @@ describe('DELETE /api/admin/deleteMajor', () => {
         chai.request(server)
             .delete('/api/admin/deleteMajor')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
-            .send({ "majors": ["Music"] })
+            .send({
+                "majors": ["Music"],
+                "location": "Test University"
+            })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -118,6 +124,42 @@ describe('GET /api/getMajors', () => {
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('MAJORS_FOUND');
                 expect(res.body.success).to.have.property('majors').to.have.length(4);
+                done();
+            })
+    })
+});
+
+//Unit test for replacing majors in the major record via the admin routes
+describe('POST /api/admin/replaceMajors', () => {
+    it('Should return a successful add major response', (done) => {
+        chai.request(server)
+            .post('/api/admin/replaceMajors')
+            .set({ "Authorization": `Bearer ${admin_access_token}` })
+            .send({
+                "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics", "Biology", "Frogs"],
+                "location": "Test University"
+            })
+            .end((end, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('MAJOR_LIST_UPDATED');
+                done();
+            })
+    })
+});
+//This unit test ensures that the replace majors test aboved worked and actually update the database
+describe('GET /api/getMajors', () => {
+    it('Should return a successful majors retrieval response', (done) => {
+        chai.request(server)
+            .get('/api/getMajors')
+            .set({ "Authorization": `Bearer ${admin_access_token}` })
+            .end((end, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('MAJORS_FOUND');
+                expect(res.body.success).to.have.property('majors').to.have.length(6);
                 done();
             })
     })
