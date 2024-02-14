@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { JobCardData } from './job-card-data';
+import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-job-card',
@@ -9,7 +11,7 @@ import { JobCardData } from './job-card-data';
 export class JobCardComponent {
   @Input() jobData: JobCardData;
 
-  constructor() { }
+  constructor(private industryDashboardService: IndustryDashboardService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void { }
 
@@ -26,5 +28,20 @@ export class JobCardComponent {
     const date = new Date(dateString);
     const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
     return dateTimeFormat.format(date);
+  }
+
+  deleteJob() {
+    this.industryDashboardService.deleteJob(this.jobData._id).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.snackBar.open('Job successfully deleted!', 'Close', {
+            duration: 5000,
+          });
+        }
+      },
+      error: (data: any) => {
+        console.log('Delete job failed!');
+      },
+    });
   }
 }

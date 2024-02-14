@@ -16,4 +16,12 @@ export class IndustryDashboardService {
 
     return this.http.get(`${this.apiUrl}/industry/getJobs`, { headers });
   }
+
+  deleteJob(jobId: string) {
+    const headers = this.authService.getHeaders();
+    console.log(jobId);
+    
+
+    return this.http.delete(`${this.apiUrl}/industry/deleteJob/${jobId}`, { headers },);
+  }
 }
