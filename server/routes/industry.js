@@ -15,4 +15,6 @@ router.get('/getJobs', verifyToken, industryController.getJobs);
 // POST - create a new job associated with a user
 router.post('/createJob', verifyToken, industryController.createJob);
 
+router.delete('/deleteJob/:jobId', verifyToken, industryController.deleteJob);
+
 module.exports = router;
