@@ -10,10 +10,12 @@
       <input matInput type="text" formControlName="title">
     </mat-form-field>
     <mat-radio-group aria-label="Select a job type" formControlName="isInternship" class="item-to-center">
+      <span>Job Type*:</span>
       <mat-radio-button [value]="true">Internship</mat-radio-button>
       <mat-radio-button [value]="false">Job</mat-radio-button>
     </mat-radio-group>
     <mat-radio-group aria-label="Select a position type" formControlName="isFullTime" class="item-to-center">
+      <span>Position Type*:</span>
       <mat-radio-button [value]="true">Full-Time</mat-radio-button>
       <mat-radio-button [value]="false">Part-Time</mat-radio-button>
     </mat-radio-group>

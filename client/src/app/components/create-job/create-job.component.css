@@ -1,13 +1,13 @@
-h1 {
-  font-weight: 500;
-  margin-bottom: 20px;
-}
-
 .page-container {
   margin: 0px 20%;
   padding: 20px;
   height: max-content;
   background-color: white;
+}
+
+h1 {
+  font-weight: 500;
+  margin-bottom: 20px;
 }
 
 .item-to-center {
@@ -21,4 +21,8 @@ h1.item-to-center {
 
 button.item-to-center {
   margin-top: 2em;
+}
+
+span {
+  margin-left: 1em;
 }
