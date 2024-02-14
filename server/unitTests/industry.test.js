@@ -12,6 +12,7 @@ chai.use(chaiHTTP);
 let industry_access_token; //access token for industry account
 let industryRecordID; //id of the industry account
 let industryDataRecordID; // id of the industry data associated with the user
+let industryDataActiveJobRecordID; // id of the created job
 
 //randomly generated password, name, email, and job details
 const randomPass = Math.random().toString(36).substring(0).repeat(2);
@@ -139,10 +140,28 @@ describe('GET /api/industry/getJobs with jobs', () => {
                     .to.be.an('array').of.length(3);
                 expect(res.body.success.jobs.active[0]).to.have.property('deadline')
                     .to.equal(randomJobDetails.deadline.toISOString());
+                industryDataActiveJobRecordID = res.body.success.jobs.active[0]._id;
                 expect(res.body.success.jobs).to.have.property('draft');
                 expect(res.body.success.jobs.draft).to.be.an('array').of.length(0);
                 expect(res.body.success.jobs).to.have.property('archived');
                 expect(res.body.success.jobs.archived).to.be.an('array').of.length(0);
+                done();
+            });
+    });
+});
+
+describe('DELETE /api/industry/deleteJob', () => {
+    it('should return a job successfully deleted response', (done) => {
+        console.log(industryDataActiveJobRecordID);
+        chai.request(server)
+            .delete(`/api/industry/deleteJob/${industryDataActiveJobRecordID}`)
+            .set({ "Authorization": `Bearer ${industry_access_token}` })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message')
+                    .to.equal('JOB_DELETED');
                 done();
             });
     });
