@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
 import { JobCardData } from './job-card/job-card-data';
+import { Subscription, interval, startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-industry-dashboard',
@@ -9,6 +10,8 @@ import { JobCardData } from './job-card/job-card-data';
   styleUrls: ['./industry-dashboard.component.css']
 })
 export class IndustryDashboardComponent {
+  timeInterval: Subscription;
+
   activeJobs: JobCardData[];
   draftedJobs: JobCardData[];
   archivedJobs: JobCardData[];
@@ -16,7 +19,10 @@ export class IndustryDashboardComponent {
   constructor(private router: Router, private industryDashboardService: IndustryDashboardService) { }
 
   ngOnInit(): void {
-    this.industryDashboardService.getJobs().subscribe({
+    this.timeInterval = interval(5000).pipe(
+      startWith(0),
+      switchMap(() => this.industryDashboardService.getJobs())
+    ).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.activeJobs = data.success.jobs.active;
@@ -28,5 +34,9 @@ export class IndustryDashboardComponent {
         console.log('Get jobs failed.', data.error);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.timeInterval.unsubscribe();
   }
 }
