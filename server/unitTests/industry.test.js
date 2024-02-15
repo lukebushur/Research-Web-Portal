@@ -152,7 +152,6 @@ describe('GET /api/industry/getJobs with jobs', () => {
 
 describe('DELETE /api/industry/deleteJob', () => {
     it('should return a job successfully deleted response', (done) => {
-        console.log(industryDataActiveJobRecordID);
         chai.request(server)
             .delete(`/api/industry/deleteJob/${industryDataActiveJobRecordID}`)
             .set({ "Authorization": `Bearer ${industry_access_token}` })
