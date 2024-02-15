@@ -13,7 +13,7 @@ describe('IndustryDashboardService', () => {
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'delete']);
-    authService = new AuthService();
+    authService = new AuthService(httpClientSpy);
     service = new IndustryDashboardService(httpClientSpy, authService);
   });
 
