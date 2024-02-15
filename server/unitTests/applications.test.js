@@ -294,7 +294,26 @@ describe('POST /api/applications/createApplication', () => {
             })
     })
 });
-
+//This unit test modifies the student's account information the changes should be reflected in their applications 
+describe('POST /api/accountManagement/updateAccount', () => {
+    it("Should return a successful account update response", (done) => {
+        chai.request(server)
+            .post('/api/accountManagement/updateAccount')
+            .set({ "Authorization": `Bearer ${student_access_token}` })
+            .send({
+                "name": "Jeremy Jengas Junior",
+                "GPA": 4,
+                "Major": ["Frogs"]
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('ACCOUNT_UPDATED');
+                done();
+            })
+    })
+});
 //Unit test for fetching the general information of applicants
 describe('POST /api/projects/getApplicants', () => {
     it("Should return a successful applicants retrieval response", (done) => {
@@ -308,12 +327,12 @@ describe('POST /api/projects/getApplicants', () => {
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('APPLICANTS_FOUND');
                 expect(res.body.success).to.have.property('applicants').to.have.length(2);
-                expect(res.body.success.applicants[0]).to.have.property('name');
+                expect(res.body.success.applicants[0]).to.have.property('name').to.equal('Jeremy Jengas Junior');
                 expect(res.body.success.applicants[0]).to.have.property('applicationRecordID');
                 expect(res.body.success.applicants[0]).to.have.property('application');
                 expect(res.body.success.applicants[0]).to.have.property('status');
-                expect(res.body.success.applicants[0]).to.have.property('GPA');
-                expect(res.body.success.applicants[0]).to.have.property('major');
+                expect(res.body.success.applicants[0]).to.have.property('GPA').to.equal(4);
+                expect(res.body.success.applicants[0].major[0]).to.equal("Frogs");
                 expect(res.body.success.applicants[0]).to.have.property('email');
                 expect(res.body.success.applicants[0]).to.have.property('appliedDate');
                 done();
@@ -334,7 +353,7 @@ describe('POST /api/projects/getDetailedApplicants', () => {
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('APPLICANTS_FOUND');
                 expect(res.body.success).to.have.property('applicants').to.have.length(2);
-                expect(res.body.success.applicants[0].name).to.equal("a" + randomName);
+                expect(res.body.success.applicants[0].name).to.equal("Jeremy Jengas Junior");
                 expect(res.body.success.applicants[1].name).to.equal("z" + randomName);
                 expect(res.body.success.applicants[0]).to.have.property('questions');
                 expect(res.body.success.applicants[0]).to.have.property('name');

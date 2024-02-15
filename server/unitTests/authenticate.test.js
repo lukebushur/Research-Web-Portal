@@ -89,6 +89,29 @@ describe('POST /api/confirmEmail', () => {
             });
     });
 });
+//This unit test gets the account information and also tests for the email confirmation by checking if the emailConfirmed is changed to true
+describe('GET /api/accountManagement/getAccountInfo', () => {
+    it('should return a the account information of the new account', (done) => {
+        chai.request(server)
+            .get('/api/accountManagement/getAccountInfo')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send()
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('ACCOUNT_FOUND');
+                expect(res.body.success).to.have.property('accountData');
+                expect(res.body.success.accountData).to.have.property('name').to.equal(randomName);
+                expect(res.body.success.accountData).to.have.property('email').to.equal(randomEmail);
+                expect(res.body.success.accountData).to.have.property('universityLocation').to.equal('Test University');
+                expect(res.body.success.accountData).to.have.property('emailConfirmed').to.equal(true);
+                expect(res.body.success.accountData.Major[0]).to.equal("Computer Science");
+                expect(res.body.success.accountData).to.have.property('GPA').to.equal(2.5);
+                done();
+            })
+    })
+})
 //Unit test for regenerating access token, expects a successful response with new access token
 describe('POST /api/token', () => {
     it('should return a success response and provide new access token', (done) => {
@@ -111,7 +134,7 @@ describe('POST /api/token', () => {
 });
 
 //unit test for initiating password reset process, should return a successful response 
-describe('POST /api/resetPassword', () => {
+describe('POST /api/accountManagement/resetPassword', () => {
     after(async () => {
         const user = await User.findOne({ email: randomEmail });
         PWD_reset_token = user.security.passwordReset.token; //store password reset token from database
@@ -119,7 +142,7 @@ describe('POST /api/resetPassword', () => {
 
     it('should return a success response', (done) => {
         chai.request(server)
-            .post('/api/resetPassword')
+            .post('/api/accountManagement/resetPassword')
             .send({ "email": randomEmail, "provisionalPassword": randomPass.substring(2, 9).repeat(2) })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -131,10 +154,10 @@ describe('POST /api/resetPassword', () => {
     });
 });
 //Unit test for reseting user password, uses the previous password reset token. Expects a successfully reset password
-describe('POST /api/confirmResetPassword', () => {
+describe('POST /api/accountManagement/confirmResetPassword', () => {
     it('should return a successful reset password response', (done) => {
         chai.request(server)
-            .post('/api/confirmResetPassword')
+            .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token, "email": randomEmail })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -146,7 +169,7 @@ describe('POST /api/confirmResetPassword', () => {
     });
 });
 //Unit test for initiating the email change process, expects a successful response
-describe('POST /api/changeEmail', () => {
+describe('POST /api/accountManagement/changeEmail', () => {
     after(async () => {
         const user = await User.findOne({ email: randomEmail });
         email_reset_token = user.security.changeEmail.token; //stores the email reset token
@@ -154,7 +177,7 @@ describe('POST /api/changeEmail', () => {
 
     it('should return a successful changeEmail response', (done) => {
         chai.request(server)
-            .post('/api/changeEmail')
+            .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "provisionalEmail": changeRandomEmail })
             .end((err, res) => {
@@ -167,10 +190,10 @@ describe('POST /api/changeEmail', () => {
     });
 });
 //Unit test for confirming the email change, uses the email reset token and should return a success response
-describe('POST /api/changeEmailConfirm', () => {
+describe('POST /api/accountManagement/changeEmailConfirm', () => {
     it('should return a successful confirmed change email response', (done) => {
         chai.request(server)
-            .post('/api/changeEmailConfirm')
+            .post('/api/accountManagement/changeEmailConfirm')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "changeEmailToken": email_reset_token })
             .end((err, res) => {
