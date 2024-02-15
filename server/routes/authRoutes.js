@@ -2,8 +2,9 @@ const express = require('express');
 const authController = require('../controllers/authenticate');
 
 //API MIDDLEWARE
-const verifyToken = require('../helpers/verifyToken')
+const verifyToken = require('../helpers/verifyToken');
 const rateLimiter = require('../helpers/rateLimiter');
+const { registerMajorValidation } = require('../helpers/inputValidation/accountValidation');
 
 
 //Router initialisation
@@ -13,7 +14,7 @@ const router = express.Router();
 router.get('/auth/test', [rateLimiter(50, 10), verifyToken], authController.test);
 
 //POST REGISTER
-router.post('/register', authController.register);
+router.post('/register', registerMajorValidation, authController.register);
 
 //POST TOKEN
 router.post('/token', authController.token);

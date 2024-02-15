@@ -89,6 +89,29 @@ describe('POST /api/confirmEmail', () => {
             });
     });
 });
+//This unit test gets the account information and also tests for the email confirmation by checking if the emailConfirmed is changed to true
+describe('GET /api/accountManagement/getAccountInfo', () => {
+    it('should return a the account information of the new account', (done) => {
+        chai.request(server)
+            .get('/api/accountManagement/getAccountInfo')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send()
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('ACCOUNT_FOUND');
+                expect(res.body.success).to.have.property('accountData');
+                expect(res.body.success.accountData).to.have.property('name').to.equal(randomName);
+                expect(res.body.success.accountData).to.have.property('email').to.equal(randomEmail);
+                expect(res.body.success.accountData).to.have.property('universityLocation').to.equal('Test University');
+                expect(res.body.success.accountData).to.have.property('emailConfirmed').to.equal(true);
+                expect(res.body.success.accountData.Major[0]).to.equal("Computer Science");
+                expect(res.body.success.accountData).to.have.property('GPA').to.equal(2.5);
+                done();
+            })
+    })
+})
 //Unit test for regenerating access token, expects a successful response with new access token
 describe('POST /api/token', () => {
     it('should return a success response and provide new access token', (done) => {

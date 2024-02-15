@@ -100,14 +100,14 @@ const getAccountInfo = async (req, res) => {
 
         if (user.userType.Type === parseInt(process.env.STUDENT)) {
             accountData.GPA = user.userType.GPA;
-            accountData.GPA = user.userType.Major;
+            accountData.Major = user.userType.Major;
         } else if (user.userType.Type === parseInt(process.env.FACULTY)) {
             //Currently empty as there is no faculty only fields that should be returned by this function as of now, however this else if 
             //statement is still included for future modification the the user record at which point this case will include the new data
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", { "details": "Invalid account type for this route." }));
         }
-
+        
         return res.status(200).json(generateRes(true, 200, "ACCOUNT_FOUND", { accountData: accountData }));
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));

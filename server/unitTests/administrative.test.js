@@ -136,14 +136,14 @@ describe('POST /api/admin/replaceMajors', () => {
             .post('/api/admin/replaceMajors')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
             .send({
-                "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics", "Biology", "Frogs"],
+                "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics", "Biology", "Frogs", "Business"],
                 "location": "Test University"
             })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
-                expect(res.body.success).to.have.property('message').to.equal('MAJOR_LIST_UPDATED');
+                expect(res.body.success).to.have.property('message').to.equal('MAJORS_REPLACED');
                 done();
             })
     })
@@ -159,7 +159,7 @@ describe('GET /api/getMajors', () => {
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('MAJORS_FOUND');
-                expect(res.body.success).to.have.property('majors').to.have.length(6);
+                expect(res.body.success).to.have.property('majors').to.have.length(7);
                 done();
             })
     })
