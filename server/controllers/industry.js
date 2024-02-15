@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const IndustryData = require('../models/industryData');
-const { jobSchema } = require('../helpers/inputValidation/validation');
+const { jobSchema } = require('../helpers/inputValidation/requestValidation');
 const generateRes = require('../helpers/generateJSON');
 
 // Get all the jobs associated with an industry user.
