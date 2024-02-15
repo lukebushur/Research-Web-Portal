@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const customObjects = require('./dbObjects');
+const customObjects = require('./customDBObjects/questionObject');
 
 const Applications = new mongoose.Schema({
     user: {
@@ -28,6 +28,9 @@ const Applications = new mongoose.Schema({
             lastModified: {
                 type: Date,
                 required: true,
+            },
+            lastUpdated: {
+                type: Date,
             }
         }
     ]

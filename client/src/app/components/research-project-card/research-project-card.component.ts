@@ -1,8 +1,9 @@
-import { Component, OnInit,  } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service'
+import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 
 @Component({
   selector: 'app-research-project-card',
@@ -15,7 +16,7 @@ export class ResearchProjectCardComponent implements OnInit {
   currentProjectType: string = 'active'; // Default to the list of active projects
   currentId: number; //each project card has an id, starting from 0, and it is used to index the selected array for which card to highlight and generate applicants for
   currentProject: any; //the project object of the currently selected project. Has information such as gpa requirement, applicants, post date, etc.
-  
+
   //These bools are used to decide which project type is being selected
   showActiveProjectButtons: boolean = true;
   showArchivedProjectButtons: boolean = false;
@@ -24,7 +25,8 @@ export class ResearchProjectCardComponent implements OnInit {
   constructor(
     private facultyProjectService: FacultyProjectService,
     private router: Router,
-    private tableData: TableDataSharingService
+    private tableData: TableDataSharingService,
+    private dateConverter: DateConverterService
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +35,7 @@ export class ResearchProjectCardComponent implements OnInit {
 
   //This method regenerates the table data for each of the project cards, it takes the database projectID, and the integer number "id" of 
   //the same project that will have its data displayed by a table.
-  regenerateTableData(project: any, id: number): void { 
+  regenerateTableData(project: any, id: number): void {
     this.currentId = id; //currentID is used for deciding which project is selected on the faculty dashboard
     this.currentProject = project; //this is the database object of the project, and is updated from the parameter
     let applications: any[] = []; //array of application that will be displayed by the table
@@ -41,7 +43,7 @@ export class ResearchProjectCardComponent implements OnInit {
     project.applications.forEach((x: any) => { //for loop to set up the data for each table entry
       let y: any = {};
       y.name = x.name;
-      y.gpa = x.gpa;
+      y.GPA = x.GPA;
       y.major = x.major;
       y.email = x.email;
       y.status = x.status;
@@ -57,7 +59,7 @@ export class ResearchProjectCardComponent implements OnInit {
     this.selected[id] = true; //This selects the specified project card
   }
 
-  redirectToCreateProject() { 
+  redirectToCreateProject() {
     this.router.navigate(['/create-post/Active/new']);
   }
 
@@ -70,16 +72,16 @@ export class ResearchProjectCardComponent implements OnInit {
   //This method fetches the projects from the database and then regenerates table data, the automatic parameter is used to 
   //determine if the method is being ran automatically and can be ignored unless it will be used for a live demo. It basically
   //is used to decide whether to unselect the currently selected projec card or not.
-  fetchProjects(automatic: boolean): void { 
+  fetchProjects(automatic: boolean): void {
     this.facultyProjectService.getProjects().subscribe({
       next: (data) => {
         this.projects = data.success.projects;
-        console.log(this.projects);
+        this.adjustDates(this.projects);
         if (!automatic) {
           for (let x: number = 0; x < this.projects.length; x++) {
             this.selected[x] = false;
           }
-          if(this.currentId && this.currentProject) {
+          if (this.currentId && this.currentProject) {
             this.regenerateTableData(this.currentProject, this.currentId);
           }
         }
@@ -154,5 +156,9 @@ export class ResearchProjectCardComponent implements OnInit {
           console.error('Error archiving project:', error);
         }
       });
+  }
+
+  adjustDates(projects: any[]): void {
+    projects.forEach(x => x.deadline = this.dateConverter.convertDate(x.deadline));
   }
 }

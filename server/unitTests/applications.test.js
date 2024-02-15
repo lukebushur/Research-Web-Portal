@@ -12,12 +12,16 @@ chai.use(chaiHTTP);
 let projectID, //id of the active project
     faculty_access_token, //access token for faculty account
     student_access_token, //access token for student account
+    student_access_token2, //access token of the second student account
     studentRecordID, //id of the student account
+    studentRecordID2, //id of the second student account
     facultyRecordID, //id of the faculty account
     projectRecordID, //id of the record of the active projects
     projectApplicationID, //id of the application in the projects array
-    applicationRecordID, //id the application record
-    applicationID; //id the application in the application record
+    applicationRecordID, //id the application record,
+    applicationRecordID2, //id the second application record
+    applicationID, //id the application in the application record
+    applicationID2; //if of the second student's application in the application record
 
 //randomly generated password, name, and email
 const randomPass = Math.random().toString(36).substring(0).repeat(2);
@@ -38,7 +42,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
-                "accountType": process.env.FACULTY, "universityLocation": "Purdue University Fort Wayne"
+                "accountType": process.env.FACULTY, "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -64,8 +68,8 @@ describe('POST /api/register', () => {
         chai.request(server)
             .post('/api/register')
             .send({
-                "email": "a" + randomEmail, "name": randomName, "password": randomPass, "accountType": process.env.STUDENT,
-                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Purdue University Fort Wayne"
+                "email": "a" + randomEmail, "name": "a" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
+                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -80,6 +84,33 @@ describe('POST /api/register', () => {
                 //Store access token and the id of the user
                 student_access_token = res.body.success.accessToken;
                 studentRecordID = res.body.success.user.id;
+                done();
+            });
+    });
+});
+
+//Student register request, should return a success response. This second student will be used to test the fetchApplicants routes
+describe('POST /api/register', () => {
+    it('should return a registration success response', (done) => {
+        chai.request(server)
+            .post('/api/register')
+            .send({
+                "email": "z" + randomEmail, "name": "z" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
+                "GPA": 3.5, "Major": ["Computer Science"], "universityLocation": "Test University"
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('REGISTER_SUCCESS');
+
+                expect(res.body.success).to.have.property('accessToken');
+                expect(res.body.success).to.have.property('refreshToken');
+                expect(res.body.success).to.have.property('user');
+                expect(res.body.success.user).to.have.property('id');
+                //Store access token and the id of the user
+                student_access_token2 = res.body.success.accessToken;
+                studentRecordID2 = res.body.success.user.id;
                 done();
             });
     });
@@ -106,16 +137,16 @@ describe('POST /api/projects/createProject', () => {
                             "question": "Can you eat frogs?",
                             "requirementType": "radio button",
                             "required": true,
-                            "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"]
+                            "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"],
                         }, {
                             "question": "Write a 3-page paper on why baby shark is the best song ever.",
                             "requirementType": "text",
-                            "required": true
+                            "required": true,
                         }, {
                             "question": "Frogs?",
                             "requirementType": "check box",
                             "required": true,
-                            "choices": ["Frogs", "frogs"]
+                            "choices": ["Frogs", "frogs"],
                         },]
                     }
                 }
@@ -150,7 +181,7 @@ describe('GET /api/projects/getProjects', () => {
             });
     });
 });
-//Unit test for creating an application 
+//Unit test for creating an application with the first student
 describe('POST /api/applications/createApplication', () => {
     after(async () => { //grabs the project record ID and application id
         let user = await User.findOne({ email: randomEmail });
@@ -182,7 +213,7 @@ describe('POST /api/applications/createApplication', () => {
         applicationRecordID = apps.id;
         applicationID = apps.applications[0].id;
     });
-    it('Should return a application creation response', (done) => {
+    it('Should return a first application creation response', (done) => {
         chai.request(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
@@ -218,11 +249,110 @@ describe('POST /api/applications/createApplication', () => {
     })
 });
 
+//Unit test for creating an application with the second student
+describe('POST /api/applications/createApplication', () => {
+    after(async () => { //grabs the project record ID and application id
+        let student = await User.findOne({ email: "z" + randomEmail })
+
+        let apps = await Application.findOne({ _id: student.userType.studentApplications })
+
+        applicationRecordID2 = apps.id;
+        applicationID2 = apps.applications[0].id;
+    });
+    it('Should return a second application creation response', (done) => {
+        chai.request(server)
+            .post('/api/applications/createApplication')
+            .set({ "Authorization": `Bearer ${student_access_token2}` })
+            .send({
+                "professorEmail": randomEmail,
+                "projectID": projectID,
+                "questions": [{
+                    "question": "Can you eat frogs?",
+                    "requirementType": "radio button",
+                    "required": true,
+                    "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"],
+                    "answers": ["Yes, I can eat frogs!"]
+                }, {
+                    "question": "Write a 3-page paper on why baby shark is the best song ever.",
+                    "requirementType": "text",
+                    "required": true,
+                    "answers": ["This is 3 pages if the font is size 900."]
+                }, {
+                    "question": "Frogs?",
+                    "requirementType": "check box",
+                    "required": true,
+                    "choices": ["Frogs", "frogs"],
+                    "answers": ["Frogs", "frogs"]
+                },]
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('APPLICATION_CREATED');
+                done();
+            })
+    })
+});
+
+//Unit test for fetching the general information of applicants
+describe('POST /api/projects/getApplicants', () => {
+    it("Should return a successful applicants retrieval response", (done) => {
+        chai.request(server)
+            .post('/api/projects/getApplicants')
+            .set({ "Authorization": `Bearer ${faculty_access_token}` })
+            .send({ "projectID": projectID })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('APPLICANTS_FOUND');
+                expect(res.body.success).to.have.property('applicants').to.have.length(2);
+                expect(res.body.success.applicants[0]).to.have.property('name');
+                expect(res.body.success.applicants[0]).to.have.property('applicationRecordID');
+                expect(res.body.success.applicants[0]).to.have.property('application');
+                expect(res.body.success.applicants[0]).to.have.property('status');
+                expect(res.body.success.applicants[0]).to.have.property('GPA');
+                expect(res.body.success.applicants[0]).to.have.property('major');
+                expect(res.body.success.applicants[0]).to.have.property('email');
+                expect(res.body.success.applicants[0]).to.have.property('appliedDate');
+                done();
+            })
+    })
+});
+
+//Unit test for fetching the detailed information of applicants
+describe('POST /api/projects/getDetailedApplicants', () => {
+    it("Should return a successful applicants retrieval response", (done) => {
+        chai.request(server)
+            .post('/api/projects/getDetailedApplicants')
+            .set({ "Authorization": `Bearer ${faculty_access_token}` })
+            .send({ "projectID": projectID })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('APPLICANTS_FOUND');
+                expect(res.body.success).to.have.property('applicants').to.have.length(2);
+                expect(res.body.success.applicants[0].name).to.equal("a" + randomName);
+                expect(res.body.success.applicants[1].name).to.equal("z" + randomName);
+                expect(res.body.success.applicants[0]).to.have.property('questions');
+                expect(res.body.success.applicants[0]).to.have.property('name');
+                expect(res.body.success.applicants[0]).to.have.property('status');
+                expect(res.body.success.applicants[0]).to.have.property('GPA');
+                expect(res.body.success.applicants[0]).to.have.property('majors');
+                expect(res.body.success.applicants[0]).to.have.property('email');
+                expect(res.body.success.applicants[0]).to.have.property('appliedDate');
+                done();
+            })
+    })
+});
+
 //Unit test for updating the application from the student's side, i.e. changing an answer
-describe('POST /api/applications/updateApplication', () => {
+describe('PUT /api/applications/updateApplication', () => {
     it("Should return a successful application update response", (done) => {
         chai.request(server)
-            .post('/api/applications/updateApplication')
+            .put('/api/applications/updateApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
                 "applicationID": applicationID,
@@ -388,9 +518,11 @@ after(async () => {
     try {
         const promises = [
             User.deleteOne({ _id: studentRecordID }),
+            User.deleteOne({ _id: studentRecordID2 }),
             User.deleteOne({ _id: facultyRecordID }),
             Project.deleteOne({ _id: projectRecordID }),
-            Application.deleteOne({ _id: applicationRecordID })
+            Application.deleteOne({ _id: applicationRecordID }),
+            Application.deleteOne({ _id: applicationRecordID2 })
         ];
 
         await Promise.all(promises);

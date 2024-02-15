@@ -3,6 +3,7 @@ const chaiHTTP = require('chai-http');
 const server = require('../server.js');
 const User = require('../models/user');
 const Project = require('../models/project.js');
+const Majors = require('../models/majors.js');
 require('dotenv').config();
 
 const expect = chai.expect;
@@ -37,7 +38,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
-                "accountType": process.env.FACULTY, "universityLocation": "Purdue University Fort Wayne"
+                "accountType": process.env.FACULTY, "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -312,7 +313,7 @@ describe('PUT /api/projects/updateProject', () => {
                     "project": {
                         "projectName": "FROGS",
                         "GPA": 2.0,
-                        "majors": ["FROG", "Mathematics", "Biology"],
+                        "majors": ["Mathematics", "Biology"],
                         "categories": ["FROG", "Computer Science", "Biology"],
                         "deadline": "01/08/2024",
                         "description": "FROG",
@@ -443,7 +444,8 @@ after(async () => {
             User.deleteOne({ _id: removeID }),
             Project.deleteOne({ _id: projectRecordID }),
             Project.deleteOne({ _id: draftRecordID }),
-            Project.deleteOne({ _id: archiveRecordID })
+            Project.deleteOne({ _id: archiveRecordID }),
+            Majors.deleteOne({ location: "Test University"})
         ];
 
         await Promise.all(promises);

@@ -13,6 +13,7 @@ import { FacultyProjectService } from '../../controllers/faculty-project-control
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
+  styleUrls: ['./posts.component.css']
 })
 export class PostProjectComponent implements AfterViewInit {
   title: string | null = ""; //Title of the project
@@ -208,6 +209,7 @@ export class PostProjectComponent implements AfterViewInit {
     //Grabs the values from the arrays of components
     const categoriesValues = this.categoryObjects.map(category => category.instance.getValue()); //grabs category values
     const majorsValues = this.majorObjects.map(major => major.instance.getValue()); //grabs major values
+    console.log(majorsValues);
     const customQuestionValues = this.customQuestionsObjects.map(question => question.instance.getData()); //puts questions into an array
     let questions: any = [];
     //the above questions array is used to store the questions, which need to be in a particular format to ensure the request is valid
@@ -263,9 +265,9 @@ export class PostProjectComponent implements AfterViewInit {
       const major = this.majors.createComponent(CatergoryFieldComponent);
       major.instance.type = "majors";
       major.instance.value = name;
-      this.categoryObjects.push(major);
+      this.majorObjects.push(major);
       major.instance.deleted.subscribe(() => {
-        let index = this.categoryObjects.indexOf(major);
+        let index = this.majorObjects.indexOf(major);
         if (index > -1) {
           this.categoryObjects.splice(index, 1);
           major.destroy();

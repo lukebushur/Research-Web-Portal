@@ -28,17 +28,13 @@ const userSchema = new mongoose.Schema({
     },
     universityLocation: {
         type: String,
-        default: "Purdue Fort Wayne"
+        default: "Purdue University Fort Wayne"
     },
     userType: {
         Type: {
             type: Number, 
             required: true,
             default: 0
-            // 0 is student 
-            // 1 is faculty
-            // 2 is industry
-            // >3 is admin
         },
         Confirmed: {
             type: Boolean,

@@ -35,7 +35,7 @@ describe('POST /api/register', () => {
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
-                "accountType": process.env.ADMIN, "universityLocation": "Purdue University Fort Wayne"
+                "accountType": process.env.ADMIN, "universityLocation": "Test University"
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -61,7 +61,7 @@ describe('POST /api/admin/addMajor', () => {
         chai.request(server)
             .post('/api/admin/addMajor')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
-            .send({ "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics"] })
+            .send({ "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics", "Biology"] })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -78,13 +78,12 @@ describe('GET /api/getMajors', () => {
         chai.request(server)
             .get('/api/getMajors')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
-            .send({ "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics"] })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('MAJORS_FOUND');
-                expect(res.body.success).to.have.property('majors').to.have.length(4);
+                expect(res.body.success).to.have.property('majors').to.have.length(5);
                 done();
             })
     })
@@ -96,7 +95,7 @@ describe('DELETE /api/admin/deleteMajor', () => {
         chai.request(server)
             .delete('/api/admin/deleteMajor')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
-            .send({ "majors": ["Music", "Mathematics"] })
+            .send({ "majors": ["Music"] })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -113,13 +112,12 @@ describe('GET /api/getMajors', () => {
         chai.request(server)
             .get('/api/getMajors')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
-            .send({ "majors": ["Computer Science", "BioInformatics", "Music", "Mathematics"] })
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('MAJORS_FOUND');
-                expect(res.body.success).to.have.property('majors').to.have.length(2);
+                expect(res.body.success).to.have.property('majors').to.have.length(4);
                 done();
             })
     })
@@ -130,7 +128,6 @@ after(async () => {
     try {
         const promises = [
             User.deleteOne({ _id: adminRecordID }),
-            Majors.deleteOne({ location: majorsLocation })
         ];
 
         await Promise.all(promises);

@@ -53,6 +53,7 @@ import { MatListModule } from '@angular/material/list';
 import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { JobCardComponent } from './components/industry-dashboard/job-card/job-card.component';
+import { ViewProjectComponent } from './components/view-project/view-project.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { JobCardComponent } from './components/industry-dashboard/job-card/job-c
     CreateJobComponent,
     IndustryToolbarComponent,
     JobCardComponent,
+    ViewProjectComponent,
   ],
   imports: [
     BrowserModule,

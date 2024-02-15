@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const customObjects = require('./dbObjects');
+const customObjects = require('./customDBObjects/questionObject');
 
 const researchOpp = new mongoose.Schema({
     type: {
@@ -33,10 +33,6 @@ const researchOpp = new mongoose.Schema({
             type: String,
             required: false
         }],
-        professorId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-        },
         applications: [
             {
                 applicationRecordID: {
@@ -63,6 +59,9 @@ const researchOpp = new mongoose.Schema({
                 },
                 appliedDate: {
                     type: Date
+                }, 
+                location: {
+                    type: String
                 }
             }
         ],
