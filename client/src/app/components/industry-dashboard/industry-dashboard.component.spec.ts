@@ -18,11 +18,11 @@ class JobCardStubComponent { @Input() jobData: JobCardData }
 describe('IndustryDashboardComponent', () => {
   let component: IndustryDashboardComponent;
   let fixture: ComponentFixture<IndustryDashboardComponent>;
-  let testgetJobsResponse: Object;
+  let testGetJobsResponse: Object;
   let getJobsSpy: jasmine.Spy;
 
   beforeEach(() => {
-    testgetJobsResponse = {
+    testGetJobsResponse = {
       success: {
         jobs: {
           active: [
@@ -63,7 +63,7 @@ intellectually stimulating environment, apply now!`,
     };
 
     const industryDashboardService = jasmine.createSpyObj('IndustryDashboardService', ['getJobs']);
-    getJobsSpy = industryDashboardService.getJobs.and.returnValue(of(testgetJobsResponse));
+    getJobsSpy = industryDashboardService.getJobs.and.returnValue(of(testGetJobsResponse));
 
     TestBed.configureTestingModule({
       declarations: [IndustryDashboardComponent],
