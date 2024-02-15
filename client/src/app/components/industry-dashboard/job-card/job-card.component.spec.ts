@@ -4,23 +4,47 @@ import { JobCardComponent } from './job-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { of } from 'rxjs';
+import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('JobCardComponent', () => {
   let component: JobCardComponent;
   let fixture: ComponentFixture<JobCardComponent>;
+  let testDeleteJobsResponse: Object;
+  let deleteJobSpy: jasmine.Spy;
 
   beforeEach(() => {
+    testDeleteJobsResponse = {
+      success: {
+        status: 200,
+        message: 'JOB_DELETED',
+      },
+    };
+
+    const industryDashboardService = jasmine.createSpyObj('IndustryDashboardService', ['deleteJob']);
+    deleteJobSpy = industryDashboardService.deleteJob.and.returnValue(of(testDeleteJobsResponse));
+
     TestBed.configureTestingModule({
       declarations: [JobCardComponent],
       imports: [
+        HttpClientTestingModule,
         MatCardModule,
         MatChipsModule,
         MatDividerModule,
+        MatSnackBarModule,
+        BrowserAnimationsModule,
+      ],
+      providers: [
+        { provide: IndustryDashboardService, useValue: industryDashboardService }
       ],
     });
     fixture = TestBed.createComponent(JobCardComponent);
     component = fixture.componentInstance;
     component.jobData = {
+      _id: '1234',
       employer: 'Quantum Innovations Co.',
       title: 'Senior Quantum Computing Engineer',
       isInternship: false,
@@ -85,5 +109,10 @@ intellectually stimulating environment, apply now!`,
     const dateStr = component.jobData.deadline!;
     dateStrResult = component.dateToString(dateStr);
     expect(dateStrResult).toEqual('Mar 15, 2024');
+  });
+
+  it('should call deleteJob() from the industryDashboardService', () => {
+    component.deleteJob();
+    expect(deleteJobSpy).toHaveBeenCalledOnceWith(component.jobData._id);
   });
 });
