@@ -56,7 +56,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { JobCardComponent } from './components/industry-dashboard/job-card/job-card.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
-import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page/student-opportunites-search-page.component';
+import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 
 @NgModule({
   declarations: [

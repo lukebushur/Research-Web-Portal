@@ -18,7 +18,7 @@ import { IndustryToolbarComponent } from './components/industry-toolbar/industry
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
-import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page/student-opportunites-search-page.component';
+import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
