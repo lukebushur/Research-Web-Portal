@@ -8,6 +8,7 @@ import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+// import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
 import { HeaderBarComponent } from './components/header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
@@ -45,6 +46,7 @@ import { ViewApplicationComponent } from './components/view-application/view-app
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
 import { CreateJobComponent } from './components/create-job/create-job.component';
+import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
@@ -53,7 +55,9 @@ import { MatListModule } from '@angular/material/list';
 import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { JobCardComponent } from './components/industry-dashboard/job-card/job-card.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
+import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page/student-opportunites-search-page.component';
 
 @NgModule({
   declarations: [
@@ -80,13 +84,16 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
     CreateJobComponent,
     IndustryToolbarComponent,
     JobCardComponent,
+    StudentDashboard,
     ViewProjectComponent,
+    StudentOpportunitesSearchPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    // HttpClientTestingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -107,6 +114,7 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatPaginatorModule,
     MatChipsModule,
     MatSnackBarModule,
     MatSidenavModule,
