@@ -5,6 +5,8 @@ import random
 from datetime import datetime, date, time, timedelta
 from bson.objectid import ObjectId
 
+import bcrypt
+
 # Define the main Faker class
 fake = faker.Faker()
 
@@ -40,7 +42,7 @@ def generateUserObject():
 
    # generate a random token for email reset?
    emailToken = str(uuid.uuid4())
-   password = "example_data" # hash it to a base password?
+   password = bcrypt.hashpw(bytes(email), bcrypt.gensalt(10))
    Major = [],
    
    UserObject = {
