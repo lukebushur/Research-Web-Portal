@@ -58,7 +58,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
-import { ProfileScreenComponent } from './profile-screen/profile-screen.component';
+import { ProfileScreenComponent } from './components/profile-screen/profile-screen.component';
 
 @NgModule({
   declarations: [
