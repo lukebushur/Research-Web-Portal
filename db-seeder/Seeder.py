@@ -42,7 +42,7 @@ def generateUserObject():
 
    # generate a random token for email reset?
    emailToken = str(uuid.uuid4())
-   password = bcrypt.hashpw(bytes(email), bcrypt.gensalt(10))
+   password = bcrypt.hashpw(bytes(name.replace(" ", ""), encoding='utf8'), bcrypt.gensalt(10)).decode('ascii')
    Major = [],
    
    UserObject = {
