@@ -92,7 +92,7 @@ const createJob = async (req, res) => {
 
         if (jobType === "active") {
             industryData.jobs.active.push(newJob);
-        } else if (jobType === "draft" ) {
+        } else if (jobType === "draft") {
             industryData.jobs.draft.push(newJob);
         }
 
@@ -127,9 +127,14 @@ const deleteJob = async (req, res) => {
         }
 
         const industryData = await IndustryData.findById(user.userType.industryData);
-        industryData.jobs.active.pull({ _id: req.params.jobId });
+        const numJobs = industryData.jobs.active.length;
+        const jobsWithRemoved = industryData.jobs.active.pull({ _id: req.params.jobId });
+
+        if (numJobs === jobsWithRemoved.length) {
+            return res.status(404).json(generateRes(false, 404, "JOB_NOT_FOUND", {}));
+        }
         await industryData.save();
-        
+
         return res.status(200).json(generateRes(true, 200, 'JOB_DELETED', {}));
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
