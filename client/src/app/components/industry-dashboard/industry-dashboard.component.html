@@ -1,2 +1,19 @@
-<app-faculty-toolbar></app-faculty-toolbar>
-<h1>Hello industry user {{userName}}!</h1>
+<mat-tab-group color="accent">
+  <mat-tab label="Active Jobs">
+    <div class="jobs-container">
+      <app-job-card *ngFor="let activeJob of activeJobs;" [jobData]="activeJob"></app-job-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Drafted Jobs">
+    <div class="jobs-container">
+      <app-job-card *ngFor="let draftedJob of draftedJobs;" [jobData]="draftedJob"></app-job-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Archived Jobs">
+    <div class="jobs-container">
+      <app-job-card *ngFor="let archivedJob of archivedJobs;" [jobData]="archivedJob"></app-job-card>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+<div class="bottom-portion">  
+</div>
