@@ -2,8 +2,9 @@ const express = require('express');
 const authController = require('../controllers/authenticate');
 
 //API MIDDLEWARE
-const verifyToken = require('../helpers/verifyToken')
+const verifyToken = require('../helpers/verifyToken');
 const rateLimiter = require('../helpers/rateLimiter');
+const { registerMajorValidation } = require('../helpers/inputValidation/accountValidation');
 
 
 //Router initialisation
@@ -13,7 +14,7 @@ const router = express.Router();
 router.get('/auth/test', [rateLimiter(50, 10), verifyToken], authController.test);
 
 //POST REGISTER
-router.post('/register', authController.register);
+router.post('/register', registerMajorValidation, authController.register);
 
 //POST TOKEN
 router.post('/token', authController.token);
@@ -23,18 +24,6 @@ router.post('/confirmEmail', verifyToken, authController.confirmEmailToken);
 
 //POST Login
 router.post('/login', authController.login);
-
-//Post Reset Password request
-router.post('/resetPassword', authController.resetPassword);
-
-//Post Confirm Reset Password
-router.post('/confirmResetPassword', authController.resetPasswordConfirm);
-
-//POST Change Email
-router.post('/changeEmail', verifyToken, authController.changeEmail);
-
-//POST Confirm Change Email
-router.post('/changeEmailConfirm', verifyToken, authController.changeEmailConfirm);
 
 //GET Get available Majors
 router.get('/getMajors', verifyToken, authController.getAvailableMajors)

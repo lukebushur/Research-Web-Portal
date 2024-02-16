@@ -13,8 +13,10 @@ import { DemoProjectsComponent } from './components/demoProjects/demoProject.com
 import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
+import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
+import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page/student-opportunites-search-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -31,9 +33,12 @@ const routes: Routes = [
   { path: "industry-dashboard", component: IndustryDashboardComponent, canActivate: [AuthGuard] },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
   { path: "application/:projectID/:applicationID", component: ViewApplicationComponent },
+  { path: "student-dashboard", component: StudentDashboard},
   { path: "student-search-opps", component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
   //This route is used to view a specific project and its applicants
   { path: "viewProject/:projectType/:projectID", component: ViewProjectComponent },
+  //this route is used to view the full list of all opportunites available for students
+  { path: "student-opportunities", component: StudentOpportunitesSearchPageComponent},
 ];
 
 @NgModule({
