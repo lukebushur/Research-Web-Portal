@@ -556,7 +556,6 @@ const getAllActiveProjects = async (req, res) => {
                     responsibilities: y.responsibilities,
                     posted: y.posted,
                     deadline: y.deadline,
-                    applications: y.applications,
                     questions: y.questions
                 }
                 data.push(project);
