@@ -9,6 +9,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
 import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+
+@Component({ standalone: true, selector: 'app-spinner', template: '' })
+class SpinnerSubComponent {}
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -38,6 +42,7 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
       imports: [
+        SpinnerSubComponent,
         HttpClientTestingModule,
         ReactiveFormsModule,
         MatInputModule,

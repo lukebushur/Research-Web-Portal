@@ -114,7 +114,7 @@ export class SignupComponent {
 
           // Navigate based on the account type
           if (accountType === environment.industryType) {
-            this.router.navigate(['/industry-dashboard']);
+            this.router.navigate(['/industry/dashboard']);
           } else {
             this.router.navigate(['/home']);
           }

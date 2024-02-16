@@ -4,7 +4,7 @@ const facultyProjects = require('../controllers/facultyProjects');
 //API MIDDLEWARE
 const verifyToken = require('../helpers/verifyToken');
 const rateLimiter = require('../helpers/rateLimiter');
-const { projectMajorValidation, decisionValidation } = require('../helpers/inputValidation/projectValidation')
+const { projectMajorValidation, decisionValidation } = require('../helpers/inputValidation/projectValidation');
 
 
 //Router initialisation

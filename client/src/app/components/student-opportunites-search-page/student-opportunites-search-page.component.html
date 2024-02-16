@@ -1,0 +1,32 @@
+<div class="student-opportunites-search-page-container">
+    <div class="header">
+        <h1>Opportunites Search</h1>
+        <!-- Search input for opportunities -->
+        <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (keypress)="onSearchKeyPress($event)">
+        <button mat-raised-button (click)="onSearchButtonClick()">search</button>
+    </div>
+
+    <!-- checkboxes for majors -->
+    <div class="majors-list">
+        <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
+            {{ major }}
+        </mat-checkbox>
+    </div>
+
+    <!-- filtered opportunities -->
+    <div class="opportunities-list">
+        <div *ngFor="let opportunity of filteredOpportunities" class="opportunities-container">
+            <mat-card>
+                <mat-card-title class="opportunity-card-title">
+                    {{ opportunity.title }}
+                </mat-card-title>
+            </mat-card>
+            <mat-card-content>
+                <p>Professor name: {{ opportunity.professorName }}</p>
+                <p>Application email: {{ opportunity.professorEmail }}</p>
+                <p>Number of Applicants: {{ opportunity.applications.length }}</p>
+                <p>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</p>
+            </mat-card-content>
+        </div>
+    </div>
+</div>
