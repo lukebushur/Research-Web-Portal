@@ -67,7 +67,7 @@ def generateUserObject():
    return UserObject
 
 def generateUsers(professors, students, delete):
-   users = dbclient['practice']['users']
+   users = dbclient['users']['users']
    print("Generating users!")
    if delete:
       users.delete_many({})
@@ -143,8 +143,8 @@ def generateRandomProjects(facultyUser):
    return project
 
 def generateProjects(deleteProjects, howManyProfsShouldHaveProjects, projectsPerProfessor):
-   projects = dbclient['practice']['projects']
-   users = dbclient['practice']['users']
+   projects = dbclient['users']['projects']
+   users = dbclient['users']['users']
    if deleteProjects:
       projects.delete_many({})
       print("Deleted all existing projects!")
@@ -224,9 +224,9 @@ def generateRandomApplications(student, projectParent, randomProject):
    return clonedApp
 
 def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerStudent):
-   applicationcol = dbclient['practice']['applications']
-   users = dbclient['practice']['users']
-   projectCol = dbclient['practice']['projects']
+   applicationcol = dbclient['users']['applications']
+   users = dbclient['users']['users']
+   projectCol = dbclient['users']['projects']
    # If to destroy
    if destroy:
       applicationcol.delete_many({})
@@ -240,7 +240,7 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
    if len(existingUsers) < howManyStudentsShouldApply:
       howManyStudentsShouldApply = len(existingUsers)
 
-   projects = dbclient['practice']['projects'].find({"type": "Active"})
+   projects = dbclient['users']['projects'].find({"type": "Active"})
    
    existingProjects = []
    for project in projects:
