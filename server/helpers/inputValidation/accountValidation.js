@@ -15,18 +15,18 @@ const registerMajorValidation = async (req, res, next) => {
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid university location." }));
             return;
         }
-        //Validate that the GPA is within normal bounds: 
+        //If account type is a student, then validate its fields are valid
         if (req.body.accountType == process.env.STUDENT) {
             if (!req.body.GPA || !req.body.Major) {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Missing student fields." }));
                 return;
             }
-
+            //Validate that the GPA is within normal bounds: 
             if (req.body.GPA > 4 || req.body.gpa < 0) {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "GPA out of bounds." }));
                 return;
             }
-
+            //ensure the majors the student is selecting is valid
             if (!req.body.Major.every(x => majors.majors.includes(x))) {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Provided major do not align with the univeristy's major list." }));
                 return;
