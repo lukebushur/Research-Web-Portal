@@ -89,7 +89,7 @@ const studentAccountModification = Joi.object({
 const facultyAccountModification = Joi.object({
     "name": Joi.string().min(2).max(25),
     "universityLocation": Joi.string().min(2).max(86),
-})
+});
 
 const jobSchema = Joi.object({
     employer: Joi.string().required(),
