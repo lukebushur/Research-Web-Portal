@@ -1,6 +1,5 @@
 import { Component, NO_ERRORS_SCHEMA, OnInit, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-//import { RouterOutlet } from '@angular/router';
 import { TextFieldComponent } from './text-field/text-field.component';
 import { ImageComponent } from './image/image.component';
 import { OpportunityComponent } from './opportunity/opportunity.component';

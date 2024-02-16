@@ -89,12 +89,29 @@ const studentAccountModification = Joi.object({
 const facultyAccountModification = Joi.object({
     "name": Joi.string().min(2).max(25),
     "universityLocation": Joi.string().min(2).max(86),
-})
+});
+
+const jobSchema = Joi.object({
+    employer: Joi.string().required(),
+    title: Joi.string().required(),
+    isInternship: Joi.boolean().required(),
+    isFullTime: Joi.boolean().required(),
+    description: Joi.string().required(),
+    location: Joi.string().required(),
+    reqYearsExp: Joi.number().min(0).required(),
+    tags: Joi.array().items(Joi.string()),
+    timeCommitment: Joi.string(),
+    pay: Joi.string(),
+    deadline: Joi.date().allow(null),
+    startDate: Joi.date().allow(null),
+    endDate: Joi.date().allow(null),
+});
 
 module.exports = {
     registerSchema, loginSchema,
     emailSchema, projectSchema,
     deleteProjectSchema, appDecision,
     applicationSchema, adminMajors,
-    studentAccountModification, facultyAccountModification
+    studentAccountModification, facultyAccountModification,
+    jobSchema,
 }
