@@ -28,9 +28,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { AppliedStudentTableComponent } from './components/applied-student-table/applied-student-table.component';
 import { MatSortModule } from '@angular/material/sort';
-import { OpportunityComponent } from './components/apply-to-post/opportunity/opportunity.component';
-import { ImageComponent } from './components/apply-to-post/image/image.component';
-import { TextFieldComponent } from './components/apply-to-post/text-field/text-field.component';
 import { PostProjectComponent } from './components/post_creation/posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
@@ -51,6 +48,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page/student-opportunites-search-page.component';
+import { ApplyFormQuestionComponent } from './components/apply-to-post/apply-form-question/apply-form-question.component';
+import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +76,8 @@ import { StudentOpportunitesSearchPageComponent } from './student-opportunites-s
     StudentDashboard,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    ApplyToPostComponent,
+    ApplyFormQuestionComponent,
   ],
   imports: [
     BrowserModule,
@@ -94,9 +95,6 @@ import { StudentOpportunitesSearchPageComponent } from './student-opportunites-s
     MatToolbarModule,
     MatCardModule,
     MatSortModule,
-    OpportunityComponent,
-    ImageComponent,
-    TextFieldComponent,
     MatDialogModule,
     MatMenuModule,
     MatRadioModule,
