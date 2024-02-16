@@ -5,6 +5,11 @@ import { PostProjectComponent } from './posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
+
+@Component({ standalone: true, selector: 'app-spinner', template: '' })
+class SpinnerSubComponent {}
 
 describe('PostProjectComponent', () => {
   let component: PostProjectComponent;
@@ -14,10 +19,12 @@ describe('PostProjectComponent', () => {
     TestBed.configureTestingModule({
       declarations: [PostProjectComponent],
       imports: [
+        SpinnerSubComponent,
         HttpClientTestingModule,
         MatDialogModule,
         MatRadioModule,
         FormsModule,
+        RouterTestingModule,
       ],
     });
     fixture = TestBed.createComponent(PostProjectComponent);
