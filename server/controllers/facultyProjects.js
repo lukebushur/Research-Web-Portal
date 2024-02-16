@@ -741,7 +741,8 @@ const fetchApplicantsFromProject = async (req, res) => {
                                 majors: x.major,
                                 appliedDate: x.appliedDate,
                                 lastModified: application.lastUpdated,
-                                location: x.location
+                                location: x.location,
+                                application: x.application,
                             })
                         }
                     }

@@ -454,5 +454,4 @@ module.exports = {
     createApplication, deleteApplication,
     getApplications, getTopRecentApplications,
     demoGetStudentInfo, updateApplication
-
 };

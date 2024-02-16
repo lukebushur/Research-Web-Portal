@@ -13,11 +13,12 @@ app.use(cors());
 require('dotenv').config();
 
 //routes
-const authRoutes = require('./routes/auth');
-const projectRoutes = require('./routes/projects');
+const authRoutes = require('./routes/authRoutes');
+const projectRoutes = require('./routes/projectsRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
-const industryRoutes = require('./routes/industry');
+const industryRoutes = require('./routes/industryRoutes');
 const adminRoutes = require('./routes/adminstrativeRoutes');
+const accountManagment = require('./routes/accountManagementRoutes');
 
 //Endpoints
 app.use('/api', authRoutes);
@@ -25,6 +26,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/industry', industryRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/accountManagement', accountManagment);
 
 //This is the 404 Route. THIS MUST REMAIN LAST IT CATCHES ALL OTHER REQUESTS 
 app.use('*', function (req, res) {
