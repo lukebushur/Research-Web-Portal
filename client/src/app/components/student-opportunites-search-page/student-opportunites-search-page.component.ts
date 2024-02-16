@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { StudentDashboardService } from '../controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentDashboardService } from '../../controllers/student-dashboard-controller/student-dashboard.service';
 
 @Component({
   selector: 'app-student-opportunites-search-page',

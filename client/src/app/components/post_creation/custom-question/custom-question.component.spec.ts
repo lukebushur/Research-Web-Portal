@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CustomQuestionComponent } from './custom-question.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -15,6 +15,7 @@ describe('CustomQuestionComponent', () => {
     TestBed.configureTestingModule({
       declarations: [CustomQuestionComponent],
       imports: [
+        FormsModule,
         MatFormFieldModule,
         MatCheckboxModule,
         ReactiveFormsModule,
@@ -49,7 +50,7 @@ describe('CustomQuestionComponent', () => {
   });
 
   it('should remove an option from the radio button options', () => {
-    component.typeStr = 'radio buttons';
+    component.addOption();
     const initialOptionsLength = component.options.controls.length;
 
     component.removeOption(0);

@@ -11,9 +11,17 @@ export class IndustryDashboardService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getName() {
+  getJobs() {
     const headers = this.authService.getHeaders();
 
-    return this.http.get(`${this.apiUrl}/industry/getName`, { headers });
+    return this.http.get(`${this.apiUrl}/industry/getJobs`, { headers });
+  }
+
+  deleteJob(jobId: string) {
+    const headers = this.authService.getHeaders();
+    console.log(jobId);
+    
+
+    return this.http.delete(`${this.apiUrl}/industry/deleteJob/${jobId}`, { headers },);
   }
 }

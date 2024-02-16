@@ -1,0 +1,25 @@
+.job-card {
+  margin: 0px 10px 0px 10px;
+  width: 300px;
+}
+
+/* .description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+} */
+
+.tags-container {
+  margin: 10px;
+}
+
+span {
+  font-weight: 500;
+  margin: auto 0px;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: space-around;
+}
