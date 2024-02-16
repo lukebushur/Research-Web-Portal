@@ -5,6 +5,11 @@ import random
 from datetime import datetime, date, time, timedelta
 from bson.objectid import ObjectId
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv() 
+
 import bcrypt
 
 # Define the main Faker class
@@ -336,19 +341,19 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
       # 'appliedDate': new Date(),
       # 'location': student.universityLocation,
       
-FacultyUsers = 5
-StudentUsers = 20
-DeleteExistingStudentUsers = True
+FacultyUsers = os.getenv("FacultyUsers")
+StudentUsers = os.getenv("StudentUsers")
+DeleteExistingStudentUsers = os.getenv("DeleteExistingUsers") == "y"
 generateUsers(FacultyUsers, StudentUsers, DeleteExistingStudentUsers)
 
-DeleteExistingProjects = True 
-HowManyProfessorsShouldHaveProjects = 5
-HowManyProjectsPerProfessor = 2
+DeleteExistingProjects = os.getenv("DeleteExistingProjectS") == "y" 
+HowManyProfessorsShouldHaveProjects = os.getenv("NumFacultyWithProjects")
+HowManyProjectsPerProfessor = os.getenv("HowManyProjectsPerFaculty")
 generateProjects(True, HowManyProfessorsShouldHaveProjects, HowManyProjectsPerProfessor)
 
 # NOTE: Deleting existing applications just clears applications collection, NOT fully clearing all applications from projects & users
 # You would want to delete users & projects too to have a fresh start as I cannot guarantee stability at this moment
-DeleteExistingApplications = True
-HowManyStudentsShouldApply = 15
-HowManyApplicationsPerStudent = 2
+DeleteExistingApplications = os.getenv("DeleteExistingApplications")
+HowManyStudentsShouldApply = os.getenv("HowManyStudentsShouldApply")
+HowManyApplicationsPerStudent = os.getenv("HowManyApplicationsPerStudent")
 generateStudentApplications(True, HowManyStudentsShouldApply, HowManyApplicationsPerStudent)
