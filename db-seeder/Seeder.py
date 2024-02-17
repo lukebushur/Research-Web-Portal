@@ -67,7 +67,7 @@ def generateUserObject():
    return UserObject
 
 def generateUsers(professors, students, delete):
-   users = dbclient['users']['users']
+   users = dbclient['users']
    print("Generating users!")
    if delete:
       users.delete_many({})

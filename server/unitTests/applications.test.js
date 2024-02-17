@@ -6,6 +6,8 @@ const Project = require('../models/project.js');
 const Application = require('../models/application.js');
 require('dotenv').config();
 
+server.unitTest = true;
+
 const expect = chai.expect;
 chai.use(chaiHTTP);
 //variables for unit testing, to ensure future requests succeed
