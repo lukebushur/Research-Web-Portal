@@ -28,7 +28,7 @@ fake.add_provider(RandomCheckboxQuestions)
 
 # Fetch the database
 print("Getting database...")
-dbclient = get_database()[os.getenv("DATABASE")
+dbclient = get_database()[os.getenv("DATABASE")]
 print("Got database!")
 
 def generateUserObject():
