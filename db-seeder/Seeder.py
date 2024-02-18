@@ -84,7 +84,7 @@ def generateUsers(professors, students, delete):
       # Create the student profile object
       UserObject = generateUserObject()
       # Set a random GPA between 1.0 and 4.0
-      UserObject['userType']['GPA'] = random.randint(10, 40) / 10
+      UserObject['userType']['GPA'] = random.randint(100, 400) / 100
 
       newUsers.append(UserObject)
    for i in range(professors): 
