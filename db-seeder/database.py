@@ -18,4 +18,4 @@ def get_database():
 if __name__ == "__main__":   
   
    # Get the database
-   dbname = get_database()[os.getenv("DATABASE")]
+   dbname = get_database()
