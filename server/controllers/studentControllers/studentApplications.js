@@ -1,9 +1,9 @@
-const Application = require('../models/application');
-const Project = require('../models/project');
-const User = require('../models/user');
+const Application = require('../../models/application');
+const Project = require('../../models/project');
+const User = require('../../models/user');
 const JWT = require('jsonwebtoken');
-const generateRes = require('../helpers/generateJSON');
-const { applicationSchema } = require('../helpers/inputValidation/requestValidation');
+const generateRes = require('../../helpers/generateJSON');
+const { applicationSchema } = require('../../helpers/inputValidation/requestValidation');
 
 /*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
@@ -373,7 +373,7 @@ const getTopRecentApplications = async (req, res) => {
             const sortedApplications = applications.applications.toSorted((a, b) => {
                 b.lastModified.getTime() - a.lastModified.getTime();
             });
-            
+
             const changedApplications = sortedApplications.filter(application => {
                 application.lastModified !== application.appliedDate;
             }).toSpliced(numApplications);
@@ -387,7 +387,7 @@ const getTopRecentApplications = async (req, res) => {
             const topApplications = (changedApplications.length < numApplications)
                 ? changedApplications.concat(unchangedApplications).toSpliced(numApplications)
                 : changedApplications;
-            
+
             const opportunitySet = new Set();
             for (const application of topApplications) {
                 const recordId = application.opportunityRecordId.toString();
@@ -402,7 +402,7 @@ const getTopRecentApplications = async (req, res) => {
             for (const application of topApplications) {
                 const professor = professors.find((prof) => prof.id.toString() === application.opportunityRecordId.toString());
                 const project = professor.projects.find((proj) => proj.id.toString() === application.opportunityId.toString());
-                
+
                 let applicationData = {
                     questions: application.questions,
                     status: application.status,
@@ -415,7 +415,7 @@ const getTopRecentApplications = async (req, res) => {
                 };
                 topApplicationsData.push(applicationData);
             }
-            
+
             return res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
         } else {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
@@ -450,8 +450,65 @@ const demoGetStudentInfo = async (req, res) => {
     }
 }
 
+const getProjectData = async (req, res) => {
+    try {
+        if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(400, "INPUT_ERROR", {})); }
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        const promises = [
+            User.findOne({ email: decodeAccessToken.email }),
+            User.findOne({ email: req.body.professorEmail })]
+
+        let student;
+        let user;
+
+
+        await Promise.all(promises).then(results => {
+            student = results[0];
+            faculty = results[1];
+        });
+
+        //check if user type is faculty
+        if (student.userType.Type == process.env.STUDENT) {
+            const profID = faculty._id;
+
+            let recordID = faculty.userType.FacultyProjects.Active;; //recordID will be taken from the user's record depending on the projectType field in the request
+
+            let projectRecord = await Project.findById(recordID);
+            if (!projectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
+            else { //If the project list was found, then continue
+                //get and update the project from the project array that has the matching information 
+                const project = projectRecord.projects.find(x => x.id === req.body.projectID);
+                if (project) {
+                    const deadline = new Date(project.deadline);
+                    let returnProject = {
+                        projectName: project.projectName,
+                        questions: project.questions,
+                        description: project.description,
+                        deadline: deadline.toDateString(),
+                        professorId: profID,
+                        categories: project.categories,
+                        majors: project.majors,
+                        GPA: project.GPA,
+                        responsibilities: project.responsibilities
+                    }
+                    return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
+                }
+                else
+                    return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND"));
+            }
+        } else {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+    }
+}
+
 module.exports = {
     createApplication, deleteApplication,
     getApplications, getTopRecentApplications,
-    demoGetStudentInfo, updateApplication
+    demoGetStudentInfo, updateApplication,
+    getProjectData
 };

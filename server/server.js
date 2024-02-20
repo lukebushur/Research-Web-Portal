@@ -19,6 +19,7 @@ const applicationRoutes = require('./routes/applicationRoutes');
 const industryRoutes = require('./routes/industryRoutes');
 const adminRoutes = require('./routes/adminstrativeRoutes');
 const accountManagment = require('./routes/accountManagementRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 //Endpoints
 app.use('/api', authRoutes);
@@ -27,6 +28,7 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/industry', industryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/accountManagement', accountManagment);
+app.use('/api/search', searchRoutes);
 
 //This is the 404 Route. THIS MUST REMAIN LAST IT CATCHES ALL OTHER REQUESTS 
 app.use('*', function (req, res) {

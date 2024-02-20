@@ -98,6 +98,10 @@ const accountModifyMajorValidation = async (req, res, next) => {
         return;
     }
 }
+//This will ensure the account is validated before allowing the request to continue. It will also pass the user object along to the next function that handles the request
+confirmAccountValidation = async (req, res, next) => {
+
+}
 
 module.exports = {
     accountModifyMajorValidation, registerMajorValidation
