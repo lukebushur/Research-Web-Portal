@@ -21,10 +21,10 @@ const modifyAccount = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
+        //grab account info
         const user = await User.findOne({ email: decodeAccessToken.email });
 
-        if (user.userType.Type === parseInt(process.env.STUDENT)) {
+        if (user.userType.Type === parseInt(process.env.STUDENT)) { //check if account is student
             //Validate the http request body for a student request
             const { error } = studentAccountModification.validate(req.body);
             if (error) {
@@ -33,14 +33,14 @@ const modifyAccount = async (req, res) => {
                     original: error._original
                 }));
             }
-
+            //store the original data of the student's account
             originalData = {
                 GPA: user.userType.GPA,
                 major: user.userType.Major,
                 universityLocation: user.universityLocation,
                 name: user.name,
             }
-
+            //Assign each new piece of data to the student's account
             if (req.body.name) {
                 user.name = req.body.name;
             }
@@ -54,7 +54,8 @@ const modifyAccount = async (req, res) => {
                 user.universityLocation = req.body.universityLocation;
             }
 
-            await user.save();
+            await user.save(); //Save the student account
+            //Check if the updating of applicationRecords was successful, if it was not, the original data was used to reset the account information
             const success = await updateApplicationRecords(user, req.body, originalData);
             if (!success) {
                 return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
