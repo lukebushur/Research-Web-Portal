@@ -131,7 +131,7 @@ const createApplication = async (req, res) => {
                 //Because the ID in the db doesn't exist until it is in the db, retrieve the updated document and then
                 //get the newApplication object into newApp
                 const doc = await Application.findOne({ _id: applicationRecord });
-                const newApp = doc._doc.applications.find(y => y.opportunityId.toString() == existingProject.id);
+                const newApp = doc._doc.applications.find(y => y.opportunityId == existingProject.id);
                 //update the project with a new application
                 console.log(student.GPA + student.Major);
                 await Project.updateOne({ _id: activeProjectID, "projects": { "$elemMatch": { "_id": existingProject._id } } }, {
