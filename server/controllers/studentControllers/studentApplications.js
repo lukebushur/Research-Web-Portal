@@ -482,10 +482,12 @@ const getProjectData = async (req, res) => {
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
                     const deadline = new Date(project.deadline);
+                    const posted = new Date(project.posted);
                     let returnProject = {
                         projectName: project.projectName,
                         questions: project.questions,
                         description: project.description,
+                        posted: posted.toDateString(),
                         deadline: deadline.toDateString(),
                         professorId: profID,
                         categories: project.categories,
