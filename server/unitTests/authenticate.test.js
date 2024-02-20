@@ -4,6 +4,8 @@ const server = require('../server.js');
 const User = require('../models/user');
 require('dotenv').config();
 
+server.unitTest = true;
+
 const expect = chai.expect;
 chai.use(chaiHTTP);
 //These variables are used to store information needed to make successful requests to the server
