@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
-import { ProjectData } from './projectData';
-import { QuestionData } from './questionData';
-import { ApplyFormQuestionComponent } from './apply-form-question/apply-form-question.component';
+import { ProjectData } from '../../_models/apply-to-post/projectData';
+import { QuestionData } from '../../_models/apply-to-post/questionData';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
 
 @Component({
   selector: 'app-to-post',
@@ -16,10 +17,24 @@ export class ApplyToPostComponent implements OnInit {
   project: ProjectData;
   questions: Array<QuestionData>;
 
-  @ViewChildren('app-text-field', { read: ViewContainerRef })
-  answer!: ViewContainerRef;
+  applyForm: FormGroup = new FormGroup({
+    formQuestions: new FormArray([]),
+  });
 
   constructor(private applyService: ApplyToPostService) { }
+
+  get formQuestions() {
+    return this.applyForm.get('formQuestions') as FormArray;
+  }
+
+  getCheckBoxControl(index: number, key: string): FormControl | null {
+    if (this.questions[index].requirementType === 'check box') {
+      const checkGroup =  this.formQuestions.at(index) as FormGroup;
+      return checkGroup.controls[key] as FormControl;
+    } else {
+      return null;
+    }
+  }
 
   ngOnInit() {
     this.applyService.getProjects().subscribe({
@@ -27,8 +42,24 @@ export class ApplyToPostComponent implements OnInit {
         if (response.success) {
           this.project = response.success.data[0];
           this.questions = this.project.questions;
-
-          console.log(this.project);
+          for (let i = 0; i < this.questions.length; i++) {
+            this.questions[i].questionNum = i + 1;
+            if (this.questions[i].requirementType === 'check box') {
+              let checkControls = {};
+              for (let choice of this.questions[i].choices!) {
+                checkControls = {
+                  ...checkControls,
+                  [choice]: new FormControl(false)
+                };
+                console.log(checkControls);
+              }
+              this.formQuestions.push(new FormGroup(checkControls));
+            } else {
+              const control = (this.questions[i].required) ? new FormControl('', [Validators.required]) : new FormControl('');
+              this.formQuestions.push(control);
+            }
+          }
+          // console.log(this.project);
           console.log(this.questions);
         }
       },
@@ -72,7 +103,48 @@ export class ApplyToPostComponent implements OnInit {
     return dateTimeFormat.format(date);
   }
 
-  submitApp(id: any) {
-    console.log(this.answer);
+  submitApp() {
+    const data: ApplyRequestData = {
+      projectID: this.project.projectID,
+      professorEmail: this.project.professorEmail,
+      questions: [], 
+    };
+    for (let i = 0; i < this.questions.length; i++) {
+      let question: QuestionData;
+      if (this.questions[i].requirementType === 'check box') {
+        const checkBoxGroup = this.formQuestions.at(i) as FormGroup;
+        const answersArray: string[] = [];
+        for (const [key, value] of Object.entries(checkBoxGroup.value)) {
+          if (value) {
+            answersArray.push(key);
+          }
+        }
+        question = {
+          ...this.questions[i],
+          answers: answersArray
+        };
+      } else {
+        question = {
+          ...this.questions[i],
+          answers: [this.formQuestions.at(i).value]
+        };
+      }
+      delete question.questionNum;
+      data.questions.push(question);
+    }
+    console.log(data);
+
+    this.applyService.createApplication(data).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          console.log(response);
+          
+        }
+      },
+      error: (response: any) => {
+        console.log('Error creating application');
+        console.log(response);
+      },
+    });
   }
 }

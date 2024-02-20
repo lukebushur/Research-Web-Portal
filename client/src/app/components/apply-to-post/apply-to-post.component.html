@@ -1,24 +1,24 @@
 <main>
   <mat-sidenav-container>
     <mat-sidenav mode="push" [opened]="opened">
-      <mat-list-item>        
-        <img class ="icon" src="../../../assets/photos/dashboard-24.png" /><a class="navTitle">Dashboard</a>
-        <br/>
+      <mat-list-item>
+        <img class="icon" src="../../../assets/photos/dashboard-24.png" /><a class="navTitle">Dashboard</a>
+        <br />
       </mat-list-item>
       <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/research-24.png" /><a class="navTitle">Research</a>
-        <br/>
+        <img class="icon" src="../../../assets/photos/research-24.png" /><a class="navTitle">Research</a>
+        <br />
       </mat-list-item>
       <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/steve-jobs-24.png" /><a class="navTitle">Jobs</a>
-        <br/>
+        <img class="icon" src="../../../assets/photos/steve-jobs-24.png" /><a class="navTitle">Jobs</a>
+        <br />
       </mat-list-item>
       <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/applications-24.png" /><a class="navTitle">Applications</a>
+        <img class="icon" src="../../../assets/photos/applications-24.png" /><a class="navTitle">Applications</a>
       </mat-list-item>
     </mat-sidenav>
 
-    <mat-sidenav-content>  
+    <mat-sidenav-content>
       <!-- this is temporary - the component will eventually just be created using a project as input -->
       <ng-container *ngIf="project">
         <h1>{{ project.title }}</h1>
@@ -29,7 +29,36 @@
         <p>Minimum GPA: {{ formatGPA() }}</p>
         <p>Date Posted: {{ dateToString(project.posted)}}</p>
         <p>Deadline: {{ dateToString(project.deadline)}}</p>
+        <br>
 
+        <div>
+          <form [formGroup]="applyForm" (ngSubmit)="submitApp()">
+            <div formArrayName="formQuestions">
+              <div *ngFor="let question of questions; index as i">
+                <label id="question-label">Question {{ question.questionNum }}: {{ question.question }}</label>
+                <div *ngIf="question.requirementType === 'radio button'">
+                  <mat-radio-group aria-labelledby="question-label" [formControlName]="i" class="radio-group">
+                    <mat-radio-button *ngFor="let choice of question.choices" [value]="choice">{{ choice
+                      }}</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+                  <mat-checkbox *ngFor="let choice of question.choices"
+                    [formControl]="getCheckBoxControl(i, choice)!">{{ choice }}</mat-checkbox>
+                </div>
+                <div *ngIf="question.requirementType === 'text'">
+                  <mat-form-field>
+                    <mat-label>Answer</mat-label>
+                    <textarea matInput [formControlName]="i"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button> -->
+        <button mat-raised-button color="primary" type="button" (click)="submitApp()"
+          [disabled]="applyForm.invalid">Submit</button>
       </ng-container>
 
       <!-- <button id = "navButton" mat-button (click)="opened = !opened">
@@ -50,9 +79,8 @@
 
       <!-- <br><br>
         <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button> -->
-    </mat-sidenav-content>  
-</mat-sidenav-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </main>
-
 
 <router-outlet></router-outlet>
