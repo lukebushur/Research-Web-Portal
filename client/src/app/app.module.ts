@@ -55,7 +55,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
-import { ApplyFormQuestionComponent } from './components/apply-to-post/apply-form-question/apply-form-question.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 
 @NgModule({
@@ -87,7 +86,6 @@ import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.c
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
     ApplyToPostComponent,
-    ApplyFormQuestionComponent,
   ],
   imports: [
     BrowserModule,
