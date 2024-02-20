@@ -2,5 +2,7 @@ export interface QuestionData {
   question: string;
   requirementType: string;
   required: boolean;
-  choices: Array<string> | null;
+  choices: string[] | null;
+  questionNum?: number;
+  answers?: string[];
 };

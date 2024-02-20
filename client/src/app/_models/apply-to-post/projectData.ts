@@ -7,10 +7,10 @@ export interface ProjectData {
   projectID: string;
   title: string;
   description: string;
-  categories: Array<string>;
+  categories: string[];
   GPA: number;
-  majors: Array<string>;
+  majors: string[];
   posted: string;
   deadline: string;
-  questions: Array<QuestionData>;
+  questions: QuestionData[];
 };
