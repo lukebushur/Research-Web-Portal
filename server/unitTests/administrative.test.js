@@ -4,6 +4,7 @@ const server = require('../server.js');
 const User = require('../models/user');
 const Majors = require('../models/majors.js');
 
+server.unitTest = true;
 
 const expect = chai.expect;
 chai.use(chaiHTTP);

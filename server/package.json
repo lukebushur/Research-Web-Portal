@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "startServer": "node server.js",
+    "startServer": "node server.js -- noTest",
     "dev": "nodemon server.js",
     "test": "npx mocha unitTests/**/*.js --recursive --exit --timeout 10000"
   },
