@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-controller/auth.service';
 import { ApplyRequestData } from 'src/app/_models/apply-to-post/applyRequestData';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +13,13 @@ export class ApplyToPostService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getProjects() {
+  getProjectInfo(data: any) : Observable<any> {
     const headers = this.authService.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers });
+    return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data, { headers });
   }
 
-  createApplication(data: ApplyRequestData) {
+  createApplication(data: ApplyRequestData) : Observable<any> {
     const headers = this.authService.getHeaders();
-
     return this.http.post(`${this.apiUrl}/applications/createApplication`, data, { headers });
   }
 }

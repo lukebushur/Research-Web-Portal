@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChildren, ViewContainerRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ProjectData } from '../../_models/apply-to-post/projectData';
 import { QuestionData } from '../../_models/apply-to-post/questionData';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-to-post',
@@ -21,7 +23,12 @@ export class ApplyToPostComponent implements OnInit {
     formQuestions: new FormArray([]),
   });
 
-  constructor(private applyService: ApplyToPostService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private applyService: ApplyToPostService
+  ) { }
 
   get formQuestions() {
     return this.applyForm.get('formQuestions') as FormArray;
@@ -29,7 +36,7 @@ export class ApplyToPostComponent implements OnInit {
 
   getCheckBoxControl(index: number, key: string): FormControl | null {
     if (this.questions[index].requirementType === 'check box') {
-      const checkGroup =  this.formQuestions.at(index) as FormGroup;
+      const checkGroup = this.formQuestions.at(index) as FormGroup;
       return checkGroup.controls[key] as FormControl;
     } else {
       return null;
@@ -37,10 +44,22 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.applyService.getProjects().subscribe({
+    const profName = this.route.snapshot.queryParamMap.get('profName')!;
+    const profEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
+    const oppId = this.route.snapshot.queryParamMap.get('oppId')!;
+
+    this.applyService.getProjectInfo({
+      professorEmail: profEmail,
+      projectID: oppId,
+    }).subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.project = response.success.data[0];
+          this.project = {
+            ...response.success.project,
+            professorName: profName,
+            professorEmail: profEmail,
+            projectID: oppId,
+          }
           this.questions = this.project.questions;
           for (let i = 0; i < this.questions.length; i++) {
             this.questions[i].questionNum = i + 1;
@@ -51,7 +70,6 @@ export class ApplyToPostComponent implements OnInit {
                   ...checkControls,
                   [choice]: new FormControl(false)
                 };
-                console.log(checkControls);
               }
               this.formQuestions.push(new FormGroup(checkControls));
             } else {
@@ -60,7 +78,7 @@ export class ApplyToPostComponent implements OnInit {
             }
           }
           // console.log(this.project);
-          console.log(this.questions);
+          // console.log(this.questions);
         }
       },
       error: (response: any) => {
@@ -70,6 +88,9 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   categoriesString(): string {
+    if (!this.project.categories || this.project.categories.length === 0) {
+      return 'None';
+    }
     let str = this.project.categories[0];
     for (let i = 1; i < this.project.categories.length; i++) {
       str += ', ' + this.project.categories[i];
@@ -78,6 +99,9 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   majorsString(): string {
+    if (!this.project.majors || this.project.majors.length === 0) {
+      return 'None';
+    }
     let str = this.project.majors[0];
     for (let i = 1; i < this.project.majors.length; i++) {
       str += ', ' + this.project.majors[i];
@@ -107,7 +131,7 @@ export class ApplyToPostComponent implements OnInit {
     const data: ApplyRequestData = {
       projectID: this.project.projectID,
       professorEmail: this.project.professorEmail,
-      questions: [], 
+      questions: [],
     };
     for (let i = 0; i < this.questions.length; i++) {
       let question: QuestionData;
@@ -137,13 +161,22 @@ export class ApplyToPostComponent implements OnInit {
     this.applyService.createApplication(data).subscribe({
       next: (response: any) => {
         if (response.success) {
-          console.log(response);
-          
+          this.router.navigate(['/student-dashboard']).then((navigated: boolean) => {
+            if (navigated) {
+              this.snackBar.open('Application submitted!', 'Close', {
+                duration: 5000,
+              });
+            } else {
+              console.log('Problem navigating');
+            }
+          });
         }
       },
       error: (response: any) => {
-        console.log('Error creating application');
-        console.log(response);
+        this.snackBar.open('Error submitting application.', 'Close', {
+          duration: 5000,
+        });
+        console.log('Error', response);
       },
     });
   }
