@@ -34,7 +34,7 @@ export class ApplyToPostComponent implements OnInit {
     return this.applyForm.get('formQuestions') as FormArray;
   }
 
-  getCheckBoxControl(index: number, key: string): FormControl | null {
+  getCheckBoxControl(index: number, key: string): FormControl | undefined | null {
     if (this.questions[index].requirementType === 'check box') {
       const checkGroup = this.formQuestions.at(index) as FormGroup;
       return checkGroup.controls[key] as FormControl;
