@@ -41,12 +41,12 @@ export class SignupComponent {
 
   // Setup the variables for the account type dropdown 
   accountTypes: AccountType[] = [
-   {value: 0, text: 'Student'},
-   {value: 1, text: 'Faculty'},
-   {value: 2, text: 'Industry'},
+    { value: 0, text: 'Student' },
+    { value: 1, text: 'Faculty' },
+    { value: 2, text: 'Industry' },
   ];
 
-  constructor(private router: Router, private signupService: SignupService) {  }
+  constructor(private router: Router, private signupService: SignupService) { }
 
   // Error message for email based on validators
   emailErrorMessage() {
