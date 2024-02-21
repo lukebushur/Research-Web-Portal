@@ -58,6 +58,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { StudentOpportunitesSearchPageComponent } from './components/student-opp
     StudentDashboard,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    PageNotFoundScreenComponent,
   ],
   imports: [
     BrowserModule,
