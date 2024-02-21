@@ -73,6 +73,7 @@ class search {
 
         for (const project of this.projectData) { //For each project of the total provided projects
             if (project[field] == null) { return; } //if the field is null or undefined, skip over it as it will cause errors otherwise
+
             let score = 0;
 
             let fieldTokens; //an array of each token in the field
@@ -81,8 +82,13 @@ class search {
                 fieldTokens = this.removeTitles(fieldValue.split(/\s+/)); //remove titles in case of titles in names, also filters for stopwords
             } else if (Array.isArray(project[field])) { //If the type of the field is an array of strings, make them lowercase and filter for stopwords
                 fieldTokens = project[field];
-                fieldTokens = fieldTokens.map(v => v.toLowerCase());
-                fieldTokens = fieldTokens.filter(word => !stopwords.has(word));
+                let newArr = [];
+                fieldTokens.forEach(element => {
+                    newArr = newArr.concat(element.split(" "));
+                });
+                newArr = newArr.map(v => v.toLowerCase());
+                newArr = newArr.filter(word => !stopwords.has(word));
+                fieldTokens = newArr;
             }
 
             for (const queryToken of this.query) { //for each query token in the query, increase the score by the number of times a querytoken exists in the field
