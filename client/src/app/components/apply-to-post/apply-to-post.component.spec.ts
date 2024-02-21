@@ -115,8 +115,52 @@ describe('ApplyToPostComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create and initialize project data', async () => {
+  it('should create and initialize project data', () => {
     expect(component).toBeTruthy();
     expect(component.project).toEqual(testProjectData);
+    expect(component.formQuestions.value).toEqual([
+      // Question 1 Answers
+      {
+        item1: false,
+        item2: false,
+        item3: false,
+      },
+      // Question 2 Answers
+      '',
+      // Question 3 Answers
+      '',
+    ]);
+  });
+
+  it('getCheckBoxControl() should function correctly', () => {
+    expect(component.getCheckBoxControl(0, 'item1')!.value).toBeFalse();
+    expect(component.getCheckBoxControl(1, 'item1')).toBeNull();
+    expect(component.getCheckBoxControl(0, 'none')).toBeUndefined();
+  });
+
+  it('categoriesString() should function correctly', () => {
+    expect(component.categoriesString()).toEqual('Technology, Documentation, Writing');
+  });
+
+  it('majorsString() should function correctly', () => {
+    expect(component.majorsString()).toEqual('Computer Science, Theatre');
+  });
+
+  it('formatGPA() should function correctly', () => {
+    expect(component.formatGPA()).toEqual('2.00');
+  });
+
+  it('dateToString() should function correctly', () => {
+    expect(component.dateToString(undefined)).toEqual('None');
+    const dateStr = component.project.deadline;
+    expect(component.dateToString(dateStr)).toEqual('Mar 17, 2024');
+  });
+
+  it('submitApp() should function correctly', () => {
+    component.formQuestions.at(0).get('item1')!.setValue(true);
+    component.formQuestions.at(0).get('item3')!.setValue(true);
+    console.log(component.formQuestions.at(0).value);
+    
+    expect(component.formatGPA()).toEqual('2.00');
   });
 });
