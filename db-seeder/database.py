@@ -19,5 +19,4 @@ def get_database():
 if __name__ == "__main__":   
   
    # Get the database
-   dbname = get_database()['dev']
-   print(dbname)
+   dbname = get_database()
