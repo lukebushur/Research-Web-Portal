@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "startServer": "node server.js -- noTest",
-    "dev": "nodemon server.js",
+    "startServer": "node server.js noTest",
+    "dev": "nodemon server.js noTest",
     "test": "npx mocha unitTests/**/*.js --recursive --exit --timeout 10000"
   },
   "author": "Sean Tierney",

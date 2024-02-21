@@ -37,8 +37,8 @@ app.use('*', function (req, res) {
 
 const port = process.env.PORT || 5000;
 
-let noTest = process.argv[2];
-if (noTest === "unitTests/**/*.js") { noTest = false; }
+let noTest = process.argv[1];
+if (noTest === "mocha") { noTest = false; }
 
 async function dbConnect() {
     const db_uri = noTest ? process.env.DB_URI + process.env.DB_DEV_COLLECTION : process.env.DB_URI + process.env.DB_UNIT_TEST_COLLECTION;
