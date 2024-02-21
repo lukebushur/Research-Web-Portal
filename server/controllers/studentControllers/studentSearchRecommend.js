@@ -4,21 +4,25 @@ const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
 const { search } = require('../../helpers/dataStructures/searchDataStructures');
 
-/*HTTP BODY :
-    GPA REQUIREMENT - minimum GPA amount, not required
-    Majors - array of majors for the search for applicable projects
-    Search Query - the string that is the actual search query, will be used against the project name, description, professor name, and categories
+/*  This route uses a get request and requires an access token to use. This route should return an array of relevant projects given the search criteria and query string. 
+    There is no body as it is a get request however there are url parameters that effect the route. 
+    Below are possible url parameters : 
 
-    step 1 - user GPA requirement, location, and majors to search for every project in the database that majors those criteria, 
+    <GPA> - The minimum GPA requirement for the projects. I.E. if the GPA is set to 2.5, all projects with 2.5 or higher will be included as apart of the document search.
+    <majors> - An array of string that represent the majors that projects have to have to be considered. I.E. if the majors array is ["Computer Science", "Biology"], only projects that have Computer Science or 
+    Biology in their majors requirements would be included in the search. The format for these is **&majors=Computer Science,Biology,Frogs**
+    <posted> - The earliest post date to be considered in the search in ISO format. I.E. if **&posted=2024-01-16T16:41:59.968325** is included, only projects that are created after that date will be included
+    <deadline> - The earliest deadline to be considered in the search in ISO format. I.E. if **&posted=2024-03-17T16:41:59.968325** is included, only projects with a deadline later than that will be included
 
-    step 2 - use some sort of algorithm + data structure to identify "correct" results based upon title, project name, description, professor name, and categories 
-    this will likely be done through a data structure with a map that identifies a score of based on the closeness to the string string for each category
+    Below is an example of a valid url with parameters for this route: 
+    http://localhost:5000/api/search/searchProjects?posted=2024-01-16T16:41:59.968325&query=Matthew Im Test&deadline=2024-03-17T16:41:59.968325&majors=Computer Science,Biology,Frogs
 
-    step 3 - sort the "correct" results and identify any that the student already applied to, and modify those. 
+
+    This route uses the search data structure to score each project that is obtained through the inital database query. Will update in future to limit the number of records retrieved/records returned once I 
+    figure out a good way to do so. 
 */
 const searchProjects = async (req, res) => {
     try {
-        //Don't need to decode the access token as this route can be used with any account
         const majors = (req.query.majors) ? req.query.majors.split(",") : false; //get and split majors if they exist, otherwise make it false
         let projects = []; //array for the 
 
@@ -57,36 +61,52 @@ const searchProjects = async (req, res) => {
             pipeline[1].$match['projects.GPA'] = { $gte: parseFloat(req.query.GPA) };
         }
 
-        const postedDate = req.query.posted ? new Date(req.query.posted) : null;
+        const postedDate = req.query.posted ? new Date(req.query.posted) : null; //Get a date if it exists in the query for posted and deadline
         const deadlineDate = req.query.deadline ? new Date(req.query.deadline) : null;
 
-        if (postedDate && postedDate instanceof Date) {
-            pipeline[1].$match['projects.posted'] = { $gt: postedDate };
+        if (postedDate && postedDate instanceof Date) { //get records that were posted after the posted date
+            pipeline[1].$match['projects.posted'] = { $gte: postedDate };
         }
 
-        if (deadlineDate && deadlineDate instanceof Date) {
-            pipeline[1].$match['projects.deadline'] = { $gt: deadlineDate };
+        if (deadlineDate && deadlineDate instanceof Date) { //get the records that have a deadline at or after deadline
+            pipeline[1].$match['projects.deadline'] = { $gte: deadlineDate };
         }
 
+        let student;
+        let searchResults;
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        await Project.aggregate(pipeline)
-            .then(results => { //do the results filtering / decision in this block, that way the ram is freed after it is finished.
-                if (results.length > 1) {
-                    for (let project of results) {
-                        project.projects.professorName = project.professorName;
-                        project.projects.professorEmail = project.professorEmail;
-                        projects.push(project.projects);
-                    }
+        const promises = [
+            User.findOne({ email: decodeAccessToken.email }),
+            Project.aggregate(pipeline)
+        ]
+        
+        await Promise.all(promises).then(results => {
+            student = results[0];
+            searchResults = results[1]
+        });
 
-                    const fields = ["projectName", "majors", "GPA", "professorName", "categories", "description", "responsibilities"];
-                    const searchTypes = [0, 0, 0, 0, 0, 1, 1];
-                    const weights = [1, 1, 1, 1, 1, 1, 1];
+        //check if user type is a student
+        if (student.userType.Type != process.env.STUDENT) { return res.status(401).json(generateRes(false, 401, "ACCESS_DENIED", { details: "Invalid account type for this operation." })); }
 
-                    searchEngine = new search(projects, req.query.query, fields, searchTypes, weights);
-                    projects = searchEngine.search();
-                    projects.sort((a, b) => b.score - a.score);
-                }
-            });
+        //do the results filtering / decision in this block, that way the ram is freed after it is finished.
+        if (searchResults.length > 1) { //if there exists results, do the filtering
+            for (let project of searchResults) { //add the name and email to each array element
+                project.projects.professorName = project.professorName;
+                project.projects.professorEmail = project.professorEmail;
+                projects.push(project.projects);
+            }
+            //set up the fields that will be used will the search data structure, also set up the type of search for each field and their respective weights
+            const fields = ["projectName", "majors", "professorName", "categories", "description", "responsibilities"];
+            const searchTypes = [0, 0, 0, 0, 1, 1];
+            const weights = [1, 1, 1, 1, 1, 1];
+            //create the search object and search, then sort by score descending
+            searchEngine = new search(projects, req.query.query, fields, searchTypes, weights);
+            projects = searchEngine.search();
+            projects.sort((a, b) => b.score - a.score);
+        }
+
 
         return res.status(200).json(generateRes(true, 200, "RESULTS_FOUND", { results: projects }));
     } catch (error) {
