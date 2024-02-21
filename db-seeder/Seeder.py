@@ -5,6 +5,11 @@ import random
 from datetime import datetime, date, time, timedelta
 from bson.objectid import ObjectId
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv() 
+
 import bcrypt
 
 # Define the main Faker class
@@ -23,7 +28,7 @@ fake.add_provider(RandomCheckboxQuestions)
 
 # Fetch the database
 print("Getting database...")
-dbclient = get_database()
+dbclient = get_database()[os.getenv("DATABASE")]
 print("Got database!")
 
 def generateUserObject():
@@ -73,13 +78,13 @@ def generateUsers(professors, students, delete):
       users.delete_many({})
       print("deleting all users!")
    newUsers = []
-   for i in range(students): 
+   for i in range(students):
       # Generate a random profile
       
       # Create the student profile object
       UserObject = generateUserObject()
       # Set a random GPA between 1.0 and 4.0
-      UserObject['userType']['GPA'] = random.randint(10, 40) / 10
+      UserObject['userType']['GPA'] = random.randint(100, 400) / 100
 
       newUsers.append(UserObject)
    for i in range(professors): 
@@ -89,7 +94,7 @@ def generateUsers(professors, students, delete):
       UserObject = generateUserObject()
       UserObject['userType']['Type'] = 1
       # Ensure the type is set to 1 (Faculty) and faculty projects is defined
-      UserObject['userType']['facultyProjects'] = {}
+      UserObject['userType']['FacultyProjects'] = {}
       
       newUsers.append(UserObject)
    print("Generated users! Creating in database...")
@@ -102,8 +107,8 @@ def generateRandomProjects(facultyUser):
       "projectName": facultyUser['name'] + " Project",
       "GPA": random.randint(10, 40) / 10,
       "majors": [fake.unique.random_pfw_major() for i in range(random.randint(1,5))],
-      "posted": datetime.now().isoformat(), # date now
-      "deadline": (currentDateTime + timedelta(days=30)).isoformat(),
+      "posted": datetime.now(), # date now
+      "deadline": (currentDateTime + timedelta(days=30)),
       "description": fake.paragraph(),
       "questions": [], # generate random questions
       "applications": [], # to fill in later! 
@@ -143,8 +148,8 @@ def generateRandomProjects(facultyUser):
    return project
 
 def generateProjects(deleteProjects, howManyProfsShouldHaveProjects, projectsPerProfessor):
-   projects = dbclient['users']['projects']
-   users = dbclient['users']['users']
+   projects = dbclient['projects']
+   users = dbclient['users']
    if deleteProjects:
       projects.delete_many({})
       print("Deleted all existing projects!")
@@ -187,7 +192,7 @@ def generateProjects(deleteProjects, howManyProfsShouldHaveProjects, projectsPer
          print("Updating project link for " + str(profId))
          users.update_one({"_id": ObjectId(profId)}, {
             "$set": {
-               "userType.facultyProjects.{}".format(projectData['type']): ObjectId(insert.inserted_id)
+               "userType.FacultyProjects.{}".format(projectData['type']): ObjectId(insert.inserted_id)
             }
          })
          print("Updated link! " + str(profId))
@@ -203,8 +208,8 @@ def generateRandomApplications(student, projectParent, randomProject):
       "OpportunityRecordId": projectParent['_id'],
       "OpportunityId": randomProject['_id'],
       "_id": ObjectId(),
-      "appliedDate": datetime.now().isoformat(),
-      "lastModified": datetime.now().isoformat(),
+      "appliedDate": datetime.now(),
+      "lastModified": datetime.now(),
       "status": "Pending",
       "questions": []
    }
@@ -224,9 +229,9 @@ def generateRandomApplications(student, projectParent, randomProject):
    return clonedApp
 
 def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerStudent):
-   applicationcol = dbclient['users']['applications']
-   users = dbclient['users']['users']
-   projectCol = dbclient['users']['projects']
+   applicationcol = dbclient['applications']
+   users = dbclient['users']
+   projectCol = dbclient['projects']
    # If to destroy
    if destroy:
       applicationcol.delete_many({})
@@ -240,7 +245,7 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
    if len(existingUsers) < howManyStudentsShouldApply:
       howManyStudentsShouldApply = len(existingUsers)
 
-   projects = dbclient['users']['projects'].find({"type": "Active"})
+   projects = dbclient['projects'].find({"type": "Active"})
    
    existingProjects = []
    for project in projects:
@@ -336,19 +341,19 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
       # 'appliedDate': new Date(),
       # 'location': student.universityLocation,
       
-FacultyUsers = 5
-StudentUsers = 20
-DeleteExistingStudentUsers = True
+FacultyUsers = int(os.getenv("FacultyUsers"))
+StudentUsers = int(os.getenv("StudentUsers"))
+DeleteExistingStudentUsers = os.getenv("DeleteExistingUsers") == "y"
 generateUsers(FacultyUsers, StudentUsers, DeleteExistingStudentUsers)
 
-DeleteExistingProjects = True 
-HowManyProfessorsShouldHaveProjects = 5
-HowManyProjectsPerProfessor = 2
-generateProjects(True, HowManyProfessorsShouldHaveProjects, HowManyProjectsPerProfessor)
+DeleteExistingProjects = os.getenv("DeleteExistingProjectS") == "y" 
+HowManyProfessorsShouldHaveProjects = int(os.getenv("NumFacultyWithProjects"))
+HowManyProjectsPerProfessor = int(os.getenv("HowManyProjectsPerFaculty"))
+generateProjects(DeleteExistingProjects, HowManyProfessorsShouldHaveProjects, HowManyProjectsPerProfessor)
 
 # NOTE: Deleting existing applications just clears applications collection, NOT fully clearing all applications from projects & users
 # You would want to delete users & projects too to have a fresh start as I cannot guarantee stability at this moment
-DeleteExistingApplications = True
-HowManyStudentsShouldApply = 15
-HowManyApplicationsPerStudent = 2
-generateStudentApplications(True, HowManyStudentsShouldApply, HowManyApplicationsPerStudent)
+DeleteExistingApplications = os.getenv("DeleteExistingApplications")
+HowManyStudentsShouldApply = int(os.getenv("HowManyStudentsShouldApply"))
+HowManyApplicationsPerStudent = int(os.getenv("HowManyApplicationsPerStudent"))
+generateStudentApplications(DeleteExistingApplications, HowManyStudentsShouldApply, HowManyApplicationsPerStudent)
