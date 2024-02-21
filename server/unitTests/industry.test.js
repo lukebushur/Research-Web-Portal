@@ -6,6 +6,8 @@ const User = require('../models/user');
 const IndustryData = require('../models/industryData.js');
 require('dotenv').config();
 
+server.unitTest = true;
+
 const expect = chai.expect;
 chai.use(chaiHTTP);
 //variables for unit testing, to ensure future requests succeed

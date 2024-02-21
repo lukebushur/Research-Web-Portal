@@ -6,6 +6,8 @@ const Project = require('../models/project.js');
 const Application = require('../models/application.js');
 require('dotenv').config();
 
+server.unitTest = true;
+
 const expect = chai.expect;
 chai.use(chaiHTTP);
 //variables for unit testing, to ensure future requests succeed
@@ -181,6 +183,154 @@ describe('GET /api/projects/getProjects', () => {
             });
     });
 });
+
+
+//2nd Project active creation request for usage with the search feature
+describe('POST /api/projects/createProject', () => {
+    it('should return a successful active project creation response', (done) => {
+        chai.request(server)
+            .post('/api/projects/createProject')
+            .set({ "Authorization": `Bearer ${faculty_access_token}` })
+            .send({
+                "professorEmail": randomEmail,
+                "projectType": "Active",
+                "projectDetails": {
+                    "project": {
+                        "projectName": "Banana Boy Project",
+                        "GPA": 3.5,
+                        "majors": ["Computer Science"],
+                        "categories": ["Virtual Reality"],
+                        "deadline": "01/29/2024",
+                        "description": "Create fruit, such as bananas, in virtual reality. Also eat the fruit in virtual reality",
+                        "questions": [{
+                            "question": "Can you eat frogs?",
+                            "requirementType": "radio button",
+                            "required": true,
+                            "choices": ["Yes, I can eat frogs!", "No, I cannot eat frogs!"],
+                        }, {
+                            "question": "Write a 3-page paper on why baby shark is the best song ever.",
+                            "requirementType": "text",
+                            "required": true,
+                        }, {
+                            "question": "Frogs?",
+                            "requirementType": "check box",
+                            "required": true,
+                            "choices": ["Frogs", "frogs"],
+                        },]
+                    }
+                }
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('PROJECT_CREATED');
+                done();
+            });
+    });
+});
+//search projects by faculty member name
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects by professor name and return 2 with scores greater than 0', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=' + randomName).set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(2);
+            expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
+            expect(res.body.success.results[1]).to.have.property('score').to.be.gt(0);
+            done();
+        });
+    });
+});
+//Search for projects by description
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects by description, and have the first project with a score greater than 0 and second with a score of 0', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=virtual reality').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(2);
+            expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
+            expect(res.body.success.results[1]).to.have.property('score').to.equal(0);
+            done();
+        });
+    });
+});
+
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects and retrieve two searching by major', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=Computer Science').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(2);
+            expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
+            expect(res.body.success.results[1]).to.have.property('score').to.be.gt(0);
+            expect(res.body.success.results[0]).to.have.property('projectName');
+            expect(res.body.success.results[0]).to.have.property('GPA');
+            expect(res.body.success.results[0]).to.have.property('categories');
+            expect(res.body.success.results[0]).to.have.property('posted');
+            expect(res.body.success.results[0]).to.have.property('deadline');
+            expect(res.body.success.results[0]).to.have.property('description');
+            expect(res.body.success.results[0]).to.have.property('questions');
+            expect(res.body.success.results[0]).to.have.property('professorName');
+            expect(res.body.success.results[0]).to.have.property('professorEmail');
+            done();
+        });
+    });
+});
+
+//Test the searchProjects route to see if it returns nothing when the search should not return anything
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects with criteria that will return no projects for majors, GPA, posted date, and deadline fields', (done) => {
+        chai.request(server).get('/api/search/searchProjects?posted=2124-01-16T16:41:59.968325&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
+            .send({}).end((err, res) => {
+                //search with invalid posted date 
+                expect(res).to.have.status(200); //test cases that return nothing
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success.results).to.have.length(0);
+
+                //GPA too high to get responses
+                chai.request(server).get('/api/search/searchProjects?GPA=3.6&query=Matthew Im Test').set({ "Authorization": `Bearer ${student_access_token}` })
+                    .send({}).end((err, res) => {
+                        expect(res.body.success.results).to.have.length(0);
+                        //deadline to high to get responses
+                        chai.request(server).get('/api/search/searchProjects?deadline=2124-01-16T16:41:59.968325&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
+                            .send({}).end((err, res) => {
+                                expect(res.body.success.results).to.have.length(0);
+                                //majors that don't exist
+                                chai.request(server).get('/api/search/searchProjects?majors=Art History,Bingus&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
+                                    .send({}).end((err, res) => {
+                                        expect(res.body.success.results).to.have.length(0);
+                                        done();
+                                    });
+                            });
+                    });
+            });
+    });
+});
+
+//Unit test for the student get project route 
+describe('POST /api/applications/getProjectInfo', () => {
+    it('should return a successful project retrieval response', (done) => {
+        chai.request(server)
+            .post('/api/applications/getProjectInfo')
+            .set({ "Authorization": `Bearer ${student_access_token}` })
+            .send({
+                "professorEmail": randomEmail,
+                "projectID": projectID,
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal("PROJECT_FOUND");
+                expect(res.body.success).to.have.property('project');
+                expect(res.body.success.project).to.have.property("projectName").to.equal("Bioinformatics Project");
+                expect(res.body.success.project).to.have.property("GPA").to.equal(3.0);
+                expect(res.body.success.project).to.have.property("majors").to.have.length(3);
+                expect(res.body.success.project).to.have.property("categories").to.have.length(3);
+                expect(res.body.success.project).to.have.property("questions").to.have.length(3);
+                expect(res.body.success.project).to.have.property("description").to.equal("We will be eating frogs!");
+                expect(res.body.success.project).to.have.property("deadline").to.equal("Thu Jan 18 2024");
+                done();
+            });
+    });
+})
+
 //Unit test for creating an application with the first student
 describe('POST /api/applications/createApplication', () => {
     after(async () => { //grabs the project record ID and application id

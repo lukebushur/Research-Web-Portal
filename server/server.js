@@ -19,6 +19,7 @@ const applicationRoutes = require('./routes/applicationRoutes');
 const industryRoutes = require('./routes/industryRoutes');
 const adminRoutes = require('./routes/adminstrativeRoutes');
 const accountManagment = require('./routes/accountManagementRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 //Endpoints
 app.use('/api', authRoutes);
@@ -27,6 +28,7 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/industry', industryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/accountManagement', accountManagment);
+app.use('/api/search', searchRoutes);
 
 //This is the 404 Route. THIS MUST REMAIN LAST IT CATCHES ALL OTHER REQUESTS 
 app.use('*', function (req, res) {
@@ -35,8 +37,12 @@ app.use('*', function (req, res) {
 
 const port = process.env.PORT || 5000;
 
+let noTest = process.argv[2];
+if (noTest === "unitTests/**/*.js") { noTest = false; }
+
 async function dbConnect() {
-    await mongoose.connect(process.env.DB_URI || "mongodb+srv://stierney0505:39sQaVUC2ZyEnmR@researchgateway.vora14h.mongodb.net/users?retryWrites=true&w=majority", {
+    const db_uri = noTest ? process.env.DB_URI + process.env.DB_DEV_COLLECTION : process.env.DB_URI + process.env.DB_UNIT_TEST_COLLECTION;
+    await mongoose.connect(db_uri, {
         autoIndex: true,
     }).then(() => {
         app.listen(port, () => {

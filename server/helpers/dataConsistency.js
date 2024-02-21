@@ -74,7 +74,7 @@ const updateApplicationRecords = async (user, modifyFields, originalData) => {
 }
 
 const updateQuestions = async() => {
-
+    
 }
 
 module.exports = {

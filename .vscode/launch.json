@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\server\\helpers\\inputValidation\\accountValidation.js",
+            "program": "${workspaceFolder}\\server\\helpers\\dataStructures\\bm25.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

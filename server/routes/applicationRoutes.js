@@ -1,5 +1,5 @@
 const express = require('express');
-const applications = require('../controllers/studentApplications');
+const applications = require('../controllers/studentControllers/studentApplications');
 
 //API MIDDLEWARE
 const verifyToken = require('../helpers/verifyToken');
@@ -28,6 +28,8 @@ router.get('/getTopRecentApplications/:num', verifyToken, applications.getTopRec
 router.put('/updateApplication', verifyToken, applicationValidation, applications.updateApplication);
 
 router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
+
+router.post('/getProjectInfo', verifyToken, applications.getProjectData);
 
 
 module.exports = router;
