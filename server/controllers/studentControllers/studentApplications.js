@@ -452,7 +452,7 @@ const demoGetStudentInfo = async (req, res) => {
 
 const getProjectData = async (req, res) => {
     try {
-        if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(400, "INPUT_ERROR", {})); }
+        if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
