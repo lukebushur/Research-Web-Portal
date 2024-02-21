@@ -78,7 +78,7 @@ def generateUsers(professors, students, delete):
       users.delete_many({})
       print("deleting all users!")
    newUsers = []
-   for i in range(students): 
+   for i in range(students):
       # Generate a random profile
       
       # Create the student profile object
@@ -341,19 +341,19 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
       # 'appliedDate': new Date(),
       # 'location': student.universityLocation,
       
-FacultyUsers = os.getenv("FacultyUsers")
-StudentUsers = os.getenv("StudentUsers")
+FacultyUsers = int(os.getenv("FacultyUsers"))
+StudentUsers = int(os.getenv("StudentUsers"))
 DeleteExistingStudentUsers = os.getenv("DeleteExistingUsers") == "y"
 generateUsers(FacultyUsers, StudentUsers, DeleteExistingStudentUsers)
 
 DeleteExistingProjects = os.getenv("DeleteExistingProjectS") == "y" 
-HowManyProfessorsShouldHaveProjects = os.getenv("NumFacultyWithProjects")
-HowManyProjectsPerProfessor = os.getenv("HowManyProjectsPerFaculty")
-generateProjects(True, HowManyProfessorsShouldHaveProjects, HowManyProjectsPerProfessor)
+HowManyProfessorsShouldHaveProjects = int(os.getenv("NumFacultyWithProjects"))
+HowManyProjectsPerProfessor = int(os.getenv("HowManyProjectsPerFaculty"))
+generateProjects(DeleteExistingProjects, HowManyProfessorsShouldHaveProjects, HowManyProjectsPerProfessor)
 
 # NOTE: Deleting existing applications just clears applications collection, NOT fully clearing all applications from projects & users
 # You would want to delete users & projects too to have a fresh start as I cannot guarantee stability at this moment
 DeleteExistingApplications = os.getenv("DeleteExistingApplications")
-HowManyStudentsShouldApply = os.getenv("HowManyStudentsShouldApply")
-HowManyApplicationsPerStudent = os.getenv("HowManyApplicationsPerStudent")
-generateStudentApplications(True, HowManyStudentsShouldApply, HowManyApplicationsPerStudent)
+HowManyStudentsShouldApply = int(os.getenv("HowManyStudentsShouldApply"))
+HowManyApplicationsPerStudent = int(os.getenv("HowManyApplicationsPerStudent"))
+generateStudentApplications(DeleteExistingApplications, HowManyStudentsShouldApply, HowManyApplicationsPerStudent)
