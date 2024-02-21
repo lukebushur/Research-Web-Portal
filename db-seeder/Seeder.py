@@ -94,7 +94,7 @@ def generateUsers(professors, students, delete):
       UserObject = generateUserObject()
       UserObject['userType']['Type'] = 1
       # Ensure the type is set to 1 (Faculty) and faculty projects is defined
-      UserObject['userType']['facultyProjects'] = {}
+      UserObject['userType']['FacultyProjects'] = {}
       
       newUsers.append(UserObject)
    print("Generated users! Creating in database...")
@@ -107,8 +107,8 @@ def generateRandomProjects(facultyUser):
       "projectName": facultyUser['name'] + " Project",
       "GPA": random.randint(10, 40) / 10,
       "majors": [fake.unique.random_pfw_major() for i in range(random.randint(1,5))],
-      "posted": datetime.now().isoformat(), # date now
-      "deadline": (currentDateTime + timedelta(days=30)).isoformat(),
+      "posted": datetime.now(), # date now
+      "deadline": (currentDateTime + timedelta(days=30)),
       "description": fake.paragraph(),
       "questions": [], # generate random questions
       "applications": [], # to fill in later! 
@@ -192,7 +192,7 @@ def generateProjects(deleteProjects, howManyProfsShouldHaveProjects, projectsPer
          print("Updating project link for " + str(profId))
          users.update_one({"_id": ObjectId(profId)}, {
             "$set": {
-               "userType.facultyProjects.{}".format(projectData['type']): ObjectId(insert.inserted_id)
+               "userType.FacultyProjects.{}".format(projectData['type']): ObjectId(insert.inserted_id)
             }
          })
          print("Updated link! " + str(profId))
@@ -208,8 +208,8 @@ def generateRandomApplications(student, projectParent, randomProject):
       "OpportunityRecordId": projectParent['_id'],
       "OpportunityId": randomProject['_id'],
       "_id": ObjectId(),
-      "appliedDate": datetime.now().isoformat(),
-      "lastModified": datetime.now().isoformat(),
+      "appliedDate": datetime.now(),
+      "lastModified": datetime.now(),
       "status": "Pending",
       "questions": []
    }
