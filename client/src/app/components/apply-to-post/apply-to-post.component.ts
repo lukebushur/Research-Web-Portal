@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ProjectData } from '../../_models/apply-to-post/projectData';
 import { QuestionData } from '../../_models/apply-to-post/questionData';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -43,6 +43,27 @@ export class ApplyToPostComponent implements OnInit {
     }
   }
 
+  requireCheckboxesToBeChecked(min = 1): ValidatorFn {
+    return function validate(formGroup: AbstractControl) {
+      if (formGroup instanceof FormGroup) {
+        let numChecked = 0;
+
+        Object.keys(formGroup.controls).forEach(key => {
+          const control = formGroup.controls[key];
+          if (control.value === true) {
+            numChecked++;
+          }
+        });
+
+        if (numChecked < min) {
+          return { requireCheckboxesToBeChecked: true };
+        }
+        return null;
+      }
+      throw new Error('formGroup is not an instance of FormGroup');
+    }
+  }
+
   ngOnInit() {
     const profName = this.route.snapshot.queryParamMap.get('profName')!;
     const profEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
@@ -71,14 +92,17 @@ export class ApplyToPostComponent implements OnInit {
                   [choice]: new FormControl(false)
                 };
               }
-              this.formQuestions.push(new FormGroup(checkControls));
+              const checkGroup = (this.questions[i].required)
+                ? new FormGroup(checkControls, [this.requireCheckboxesToBeChecked(1)])
+                : new FormGroup(checkControls);
+              this.formQuestions.push(checkGroup);
             } else {
-              const control = (this.questions[i].required) ? new FormControl('', [Validators.required]) : new FormControl('');
+              const control = (this.questions[i].required)
+                ? new FormControl('', [Validators.required])
+                : new FormControl('');
               this.formQuestions.push(control);
             }
           }
-          // console.log(this.project);
-          // console.log(this.questions);
         }
       },
       error: (response: any) => {
@@ -127,7 +151,7 @@ export class ApplyToPostComponent implements OnInit {
     return dateTimeFormat.format(date);
   }
 
-  submitApp() {
+  onSubmit() {
     const data: ApplyRequestData = {
       projectID: this.project.projectID,
       professorEmail: this.project.professorEmail,
@@ -156,7 +180,6 @@ export class ApplyToPostComponent implements OnInit {
       delete question.questionNum;
       data.questions.push(question);
     }
-    console.log(data);
 
     this.applyService.createApplication(data).subscribe({
       next: (response: any) => {
