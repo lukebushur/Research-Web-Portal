@@ -19,7 +19,9 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <!-- this is temporary - the component will eventually just be created using a project as input -->
+      <button id="navButton" mat-button (click)="opened = !opened">
+        <img src="../../../assets/photos/burger-menu-24.png" />
+      </button>
       <ng-container *ngIf="project">
         <h1>{{ project.projectName }}</h1>
         <p>{{ project.professorName }}, {{ project.professorEmail }}</p>
@@ -32,7 +34,7 @@
         <p>Deadline: {{ dateToString(project.deadline)}}</p>
         <br>
         <div>
-          <form [formGroup]="applyForm" (ngSubmit)="submitApp()">
+          <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
             <div formArrayName="formQuestions">
               <div *ngFor="let question of questions; index as i">
                 <label id="question-label">Question {{ question.questionNum }}: {{ question.question }}</label>
@@ -54,33 +56,10 @@
                 </div>
               </div>
             </div>
+            <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button>
           </form>
         </div>
-        <!-- <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button> -->
-        <button mat-raised-button color="primary" type="button" (click)="submitApp()"
-          [disabled]="applyForm.invalid">Submit</button>
       </ng-container>
-
-      <!-- <button id = "navButton" mat-button (click)="opened = !opened">
-        <img src="../../../assets/photos/burger-menu-24.png" />
-      </button>
-      <div>
-        <h2>Opportunity Name</h2>
-        <img class="oppPic" src="../../../assets/photos/monitor.jpg" /><br>
-        <opportunity text="Opportunity 1">Opportunity 1<br></opportunity>
-        <label>GPA: <gpa>3.0</gpa> &nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <label>Major:<major major="Comp Sci">Computer Science</major> &nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <label>Standing: <standing standing="Senior">Senior</standing> &nbsp;&nbsp;&nbsp;&nbsp;</label>
-      </div>
-      <br><br> -->
-      <!-- <div *ngFor="let question of questions">
-        <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
-      </div> -->
-
-      <!-- <br><br>
-        <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button> -->
     </mat-sidenav-content>
   </mat-sidenav-container>
 </main>
-
-<router-outlet></router-outlet>
