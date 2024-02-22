@@ -100,8 +100,6 @@ export class SignupComponent {
 
     this.signupService.signup(data).subscribe({
       next: (response: any) => {
-        console.log('Registration Successful!', response);
-
         const authToken = response?.success?.accessToken;
         const refreshToken = response?.success?.refreshToken;
         const accountType = response?.success?.user.accountType;
