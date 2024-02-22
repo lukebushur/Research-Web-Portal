@@ -37,10 +37,12 @@ app.use('*', function (req, res) {
 
 const port = process.env.PORT || 5000;
 
-app.unitTest = false;
+let noTest = true;
+if (process.argv[2] === 'unitTests/**/*.js') { noTest = false; }
 
 async function dbConnect() {
-    await mongoose.connect(app.unitTest ? process.env.DB_URI + process.env.DB_UNIT_TEST_COLLECTION : process.env.DB_URI + process.env.DB_DEV_COLLECTION, {
+    const db_uri = noTest ? process.env.DB_URI + process.env.DB_DEV_COLLECTION : process.env.DB_URI + process.env.DB_UNIT_TEST_COLLECTION;
+    await mongoose.connect(db_uri, {
         autoIndex: true,
     }).then(() => {
         app.listen(port, () => {

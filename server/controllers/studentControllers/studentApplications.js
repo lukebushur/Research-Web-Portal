@@ -449,36 +449,44 @@ const demoGetStudentInfo = async (req, res) => {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
+/*  This simple function allows students to get the project data of an active faculty project. It requires an a student access token to use and should be
+    used with a post request. It takes fields in the http body, professorEmail and projectID. These allow the server to grab the specified professor's 
+    active project through the id. This function should only ever be able to grab active project data as otherwise it could allow students to access data 
+    that is private. (archived or draft projects)
 
+    This response should return details about the project including and limited to :
+    projectName, questions, posted date, deadline, description, responsibilities, categories, majors, and GPA requirement. This route should NEVER be able 
+    to return applicant data!
+ */
 const getProjectData = async (req, res) => {
     try {
+        //ensure that the body contains the necessary fields
         if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        const promises = [
+        const promises = [ //promises to grab both accounts
             User.findOne({ email: decodeAccessToken.email }),
             User.findOne({ email: req.body.professorEmail })]
 
         let student;
-        let user;
-
+        let faculty;
 
         await Promise.all(promises).then(results => {
             student = results[0];
             faculty = results[1];
         });
 
-        //check if user type is faculty
+        //check if user type is a student
         if (student.userType.Type == process.env.STUDENT) {
-            const profID = faculty._id;
+            const profID = faculty._id; //store faculty id for later use
 
             let recordID = faculty.userType.FacultyProjects.Active;; //recordID will be taken from the user's record depending on the projectType field in the request
 
-            let projectRecord = await Project.findById(recordID);
+            let projectRecord = await Project.findById(recordID); //get the active project record
             if (!projectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
-                //get and update the project from the project array that has the matching information 
+                //get the project that matches the projectID
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
                     const deadline = new Date(project.deadline);
@@ -494,7 +502,7 @@ const getProjectData = async (req, res) => {
                         majors: project.majors,
                         GPA: project.GPA,
                         responsibilities: project.responsibilities
-                    }
+                    } 
                     return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
                 }
                 else
