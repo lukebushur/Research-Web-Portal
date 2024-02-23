@@ -58,6 +58,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -87,6 +89,7 @@ import { StudentOpportunitesSearchPageComponent } from './components/student-opp
     StudentDashboard,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -121,6 +124,7 @@ import { StudentOpportunitesSearchPageComponent } from './components/student-opp
     MatSidenavModule,
     MatListModule,
     MatTabsModule,
+    MatProgressBarModule,
   ],
   providers: [
     {
