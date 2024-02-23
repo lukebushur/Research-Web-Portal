@@ -48,6 +48,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { StudentSidenavComponent } from './components/student-sidenav/student-sidenav.component';
 import { MatListModule } from '@angular/material/list'; 
+import { ViewProjectComponent } from './components/view-project/view-project.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { MatListModule } from '@angular/material/list';
     IndustryDashboardComponent,
     CustomQuestionComponent,
     StudentSidenavComponent,
+    ViewProjectComponent,
   ],
   imports: [
     BrowserModule,

@@ -72,6 +72,8 @@ const routes: Routes = [
   { path: "student-search-opps", component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
   //This route is used to view a specific project and its applicants
   { path: "viewProject/:projectType/:projectID", component: ViewProjectComponent },
+  //This route is used to view a specific project and its applicants
+  { path: "viewProject/:projectType/:projectID", component: ViewProjectComponent },
   //this route is used to view the full list of all opportunites available for students
   { path: "student-opportunities", component: StudentOpportunitesSearchPageComponent },
   //this route is used to view the full list of all opportunites available for students
