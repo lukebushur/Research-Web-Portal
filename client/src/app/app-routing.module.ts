@@ -13,7 +13,13 @@ import { DemoProjectsComponent } from './components/demoProjects/demoProject.com
 import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
+import { CreateJobComponent } from './components/create-job/create-job.component';
+import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
+import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
+import { ViewProjectComponent } from './components/view-project/view-project.component';
+import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { StudentSidenavComponent } from './components/student-sidenav/student-sidenav.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -27,10 +33,49 @@ const routes: Routes = [
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
   { path: "demoProjects", component: DemoProjectsComponent },
   { path: "signout", component: SignoutComponent },
-  { path: "industry-dashboard", component: IndustryDashboardComponent, canActivate: [AuthGuard] },
+  //Thsese paths are for the industry view
+  {
+    path: "industry",
+    component: IndustryToolbarComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'dashboard',
+        component: IndustryDashboardComponent,
+      },
+      {
+        path: "create-job",
+        component: CreateJobComponent,
+      },
+    ],
+  },
+  //These paths are for the student view
+  {
+    path: "students",
+    component: StudentSidenavComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'dashboard',
+        component: ApplyToPostComponent,
+      },
+      {
+        path: "student-search-opps",
+        component: StudentSearchOppsComponent,
+      },
+    ],
+  },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
   { path: "application/:projectID/:applicationID", component: ViewApplicationComponent },
+  { path: "student-dashboard", component: StudentDashboard },
+  { path: "student-dashboard", component: StudentDashboard },
   { path: "student-search-opps", component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
+  //This route is used to view a specific project and its applicants
+  { path: "viewProject/:projectType/:projectID", component: ViewProjectComponent },
+  //this route is used to view the full list of all opportunites available for students
+  { path: "student-opportunities", component: StudentOpportunitesSearchPageComponent },
+  //this route is used to view the full list of all opportunites available for students
+  { path: "student-opportunities", component: StudentOpportunitesSearchPageComponent },
 ];
 
 @NgModule({

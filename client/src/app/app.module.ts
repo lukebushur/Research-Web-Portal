@@ -46,6 +46,8 @@ import { IndustryDashboardComponent } from './components/industry-dashboard/indu
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { StudentSidenavComponent } from './components/student-sidenav/student-sidenav.component';
+import { MatListModule } from '@angular/material/list'; 
 
 @NgModule({
   declarations: [
@@ -69,6 +71,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
+    StudentSidenavComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,7 +98,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatCheckboxModule,
     MatSidenavModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatListModule,
   ],
   providers: [
     {

@@ -7,12 +7,15 @@ import { OpportunityComponent } from './opportunity/opportunity.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FormsModule } from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+
+import { AppRoutingModule } from '../../app-routing.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-to-post',
   templateUrl: './apply-to-post.component.html',
-  imports: [TextFieldComponent, ImageComponent, OpportunityComponent, CommonModule, MatSidenavModule, FormsModule, MatIconModule],
+  imports: [TextFieldComponent, ImageComponent, OpportunityComponent, CommonModule, MatSidenavModule, FormsModule, MatIconModule,],
   styleUrls: ['./apply-to-post.component.css'],
   standalone: true,
   schemas: [NO_ERRORS_SCHEMA]
@@ -34,7 +37,7 @@ export class ApplyToPostComponent implements OnInit {
 
   }
 
-  constructor() {
+  constructor(private router: Router) {
     // Get the questions for this application
     // Set the questions
 
@@ -43,6 +46,9 @@ export class ApplyToPostComponent implements OnInit {
 
   }
 
+  goToDash(){
+    this.router.navigate(['/student-search-opps']);  // define your component where you want to go
+}
 
   
   submitApp(id: any) {

@@ -33,7 +33,6 @@ mat-sidenav-container {
 mat-sidenav {
     width: 200px;
     background-color: rgb(222, 222, 222);
-
 }
 
 #navButton {
@@ -60,6 +59,12 @@ mat-sidenav {
     vertical-align: middle;
 }
 
+/*Filter Main content*/
+mat-sidenav-content {
+    height: 100vh;
+    padding: 0%;
+}
+
 /* Filter sidebar styling */
 #left-panel {
     width: 25%;
@@ -77,21 +82,39 @@ mat-sidenav {
 #major-selection {    
     font-size: 2em;
 }
+
 .major-select {
-    padding-left:10%;
+    padding-left: 10%;
 }
+
+#gpa-slider {
+    margin-left: 5%;
+    color: black;;
+}
+
 
 /* Main panel styling */
 #main-panel {
     background-color: red;
-    height: 100vh;
-    width: 100%;
+    height: 100%;
+    margin-left: 25%;
+}
+
+.opp {
+    margin: 25%;
 }
 
 /*Search bar*/
 .searchbar {
     width: 300px;
     position: relative;
-    padding-left:50%;
+    padding-left:25%;
+    padding-right: 25%;
+}
+
+.opp {
+    width: 300px;
+    position: relative;
+    padding-left:25%;
     padding-right: 25%;
 }

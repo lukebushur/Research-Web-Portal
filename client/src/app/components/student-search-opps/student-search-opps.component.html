@@ -3,7 +3,7 @@
     <!--Sidenav-->
     <mat-sidenav mode="push" [(opened)]="opened">
       <mat-list-item>        
-        <img class ="icon" src="../../../assets/photos/dashboard-24.png" /><a class="navTitle">Dashboard</a>
+        <img class ="icon" src="../../../assets/photos/dashboard-24.png" (click)="goToDash()" /><a class="navTitle" (click)="goToDash()">Dashboard</a>
         <br/>       
       </mat-list-item>
       <mat-list-item>
@@ -22,16 +22,17 @@
 
     <!--Begin page content-->
     <mat-sidenav-content> 
-      <!--Nav button opener--> 
-      <button id = "navButton" mat-button (click)="opened = !opened">
-        <img src="../../../assets/photos/burger-menu-24.png" />
-      </button>
-
       <!--Filter panel-->
       <div id = "left-panel">
+
+        <!--Nav button opener--> 
+        <button id = "navButton" mat-button (click)="opened = !opened">
+          <img src="../../../assets/photos/burger-menu-24.png" />
+        </button>
+
         <div class="filter-comps">
-        <h1>Filter</h1>
-         <mat-checkbox class="major">Major</mat-checkbox>         
+          <h1>Filter</h1>
+          <mat-checkbox class="major">Major</mat-checkbox>         
         
           <!--Major selection-->
           <div id="major-selectction">
@@ -45,13 +46,19 @@
 
           <!--Category selection-->
           <div id="category">
-
+            <mat-checkbox class="major">Category</mat-checkbox>
           </div>
 
           <!--GPA selection-->
           <div id="gpa">
-
+            <mat-checkbox class="major">GPA</mat-checkbox>
+            <mat-slider min="0.0" max="4.0" step="0.01" showTickMarks discrete [displayWith]="formatLabel" id="gpa-slider">
+              <input matSliderStartThumb>
+              <input matSliderEndThumb>
+            </mat-slider>
           </div>
+
+
         </div>
       </div>
       <br><br>
@@ -73,9 +80,12 @@
         </form>
 
         <!--Results section-->
+
+        <div class="Titles" *ngFor="let opp of oppName">
+          <div class="opp">{{opp}}</div>
+        </div>
         
         <!--Need to have a component to represent each opportunity-->
-
       </div>
 
     </mat-sidenav-content>  
