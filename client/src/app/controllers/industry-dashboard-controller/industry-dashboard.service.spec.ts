@@ -1,6 +1,3 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
 import { IndustryDashboardService } from './industry-dashboard.service';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
@@ -54,7 +51,7 @@ describe('IndustryDashboardService', () => {
 
     httpClientSpy.delete.and.returnValue(of(expectedResponse));
 
-    service.deleteJob('1234').subscribe({
+    service.deleteJob('').subscribe({
       next: (data) => {
         expect(data).withContext('expected resposne').toEqual(expectedResponse);
         done();

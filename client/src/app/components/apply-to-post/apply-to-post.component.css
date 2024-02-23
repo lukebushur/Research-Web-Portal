@@ -1,9 +1,9 @@
-textarea {
+/* textarea {
     width: 400px;
     height: 150px;
-}
-  
-label {
+} */
+
+/* label {
     position: absolute;
     top: 0.2ex;
     z-index: 1;
@@ -18,8 +18,8 @@ label {
     margin: 10px;
     line-height: 6ex;
 
-}
-  
+} */
+
 mat-sidenav-container {
     height: calc(205vh - 115vh);
 }
@@ -38,6 +38,7 @@ mat-sidenav {
     width: 24px;
     height: 24px;
 }
+
 #navButton :hover {
     width: 28px;
 }
@@ -56,4 +57,14 @@ mat-sidenav {
 
 .oppPic {
     max-height: 100px;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
