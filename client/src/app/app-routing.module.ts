@@ -20,6 +20,8 @@ import { StudentSearchOppsComponent } from './components/student-search-opps/stu
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
+import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -29,6 +31,8 @@ const routes: Routes = [
   { path: 'confirm-email/:emailtoken', component: ConfirmEmailComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'forgot-password-submitted', component: ForgotPasswordSubmittedComponent },
+  { path: 'confirm-reset-password/:email/:id', component: ConfirmResetPasswordComponent },
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
   { path: 'create-post/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
   { path: 'project/applications', component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },

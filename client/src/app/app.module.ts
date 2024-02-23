@@ -58,6 +58,8 @@ import { StudentOpportunitesSearchPageComponent } from './components/student-opp
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
+import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +91,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     StudentOpportunitesSearchPageComponent,
     ApplyToPostComponent,
     ForgotPasswordComponent,
+    ConfirmResetPasswordComponent,
+    ForgotPasswordSubmittedComponent,
   ],
   imports: [
     BrowserModule,
