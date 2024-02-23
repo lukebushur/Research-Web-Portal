@@ -1,7 +1,7 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavChoice } from './navchoice';
+import { NavChoice } from '../../_models/toolbar/navchoice';
 
 @Component({
   selector: 'app-industry-toolbar',
@@ -37,10 +37,5 @@ export class IndustryToolbarComponent {
 
   ngOnDestroy(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-  }
-
-  isActiveRoute(route: string): boolean {
-    console.log(route, this.router.url);
-    return route === this.router.url;
   }
 }
