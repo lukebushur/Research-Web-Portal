@@ -1,4 +1,11 @@
 <div class="table-container">
+  <div>
+    <mat-form-field>
+      <mat-label>Search via name</mat-label>
+      <input matInput [(ngModel)]="searchByName">
+    </mat-form-field>
+  </div>
+  
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="student-table">
 
     <ng-container matColumnDef="name">

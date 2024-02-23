@@ -28,6 +28,7 @@ export class AppliedStudentTableComponent {
   testStudentData: any[] = []; //This array contains the student data for the table
   dataSource = new MatTableDataSource(this.testStudentData); //This object is used for the material table data source to allow for the table to work/sort etc
   
+  searchByName = "";
   
   constructor(private _liveAnnouncer: LiveAnnouncer, private tableData: TableDataSharingService,
     private facultyProjectService: FacultyProjectService,) {
