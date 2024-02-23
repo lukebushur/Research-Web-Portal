@@ -8,11 +8,12 @@ import { StudentDashboardService } from '../../controllers/student-dashboard-con
   styleUrls: ['./student-opportunites-search-page.component.css']
 })
 export class StudentOpportunitesSearchPageComponent {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService) {}
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService) { }
 
   ngOnInit() {
     this.getAllOpportunities();
     this.getAvailableMajors();
+    this.getStudentInfo();
   }
 
   opportunities: any[] = [];
@@ -20,6 +21,8 @@ export class StudentOpportunitesSearchPageComponent {
   filteredOpportunities: any[] = [];
   availableMajors: string[] = [];
   selectedMajors: string[] = [];
+  studentGPA: number = 0;
+  studentMajors: string[] = [];
 
   getAllOpportunities() {
     this.studentDashboardService.getOpportunities().subscribe({
@@ -30,6 +33,16 @@ export class StudentOpportunitesSearchPageComponent {
       },
       error: (error) => {
         console.error('Error getting opportunities', error);
+      }
+    });
+  }
+
+  applyToOpportunity(opportunity: any): void {
+    this.router.navigate(['/apply-to-post'], {
+      queryParams: {
+        profName: opportunity.professorName,
+        profEmail: opportunity.professorEmail,
+        oppId: opportunity.projectID,
       }
     });
   }
@@ -84,5 +97,24 @@ export class StudentOpportunitesSearchPageComponent {
     }
     // Update filtered opportunities when checkboxes change
     this.filterOpportunities();
+  }
+
+  getStudentInfo(): void {
+    this.studentDashboardService.getStudentInfo().subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.studentGPA = data.success.accountData.GPA;
+          this.studentMajors = data.success.accountData.Major;
+        }
+      },
+      error: (data: any) => {
+        console.log('Error', data);
+      },
+    });
+  }
+
+  meetRequirements(opportunity: any): boolean {
+    return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
+      && ((opportunity.majors.length === 0) || (opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
 }
