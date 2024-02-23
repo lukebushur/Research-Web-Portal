@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
 import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
 
 interface AccountType {
   value: number;
@@ -15,6 +16,24 @@ interface AccountType {
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
+
+  // Set up the variables for the universityLocation dropdown 
+  universityLocations: string[] = [
+    'Purdue University Fort Wayne',
+    'Purdue University',
+  ];
+
+  prevSelectedUniversity: string | undefined | null;
+  
+  // Set up the variables for the account type dropdown 
+  accountTypes: AccountType[] = [
+    { value: 0, text: 'Student' },
+    { value: 1, text: 'Faculty' },
+    { value: 2, text: 'Industry' },
+  ];
+
+  // Set up the variables for the major dropdown
+  majors: string[] = [];
 
   // Reactive registration form
   signupForm = new FormGroup({
@@ -34,19 +53,30 @@ export class SignupComponent {
       Validators.minLength(10),
       Validators.maxLength(255),
     ]),
-    accountType: new FormControl(0, [
+    universityLocation: new FormControl(this.universityLocations[0], [
       Validators.required,
-    ])
+    ]),
+    accountType: new FormControl<number | null>(null, [
+      Validators.required,
+    ]),
+    GPA: new FormControl('', [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(4),
+    ]),
+    Major: new FormControl('', [
+      Validators.required,
+    ]),
   })
 
-  // Setup the variables for the account type dropdown 
-  accountTypes: AccountType[] = [
-   {value: 0, text: 'Student'},
-   {value: 1, text: 'Faculty'},
-   {value: 2, text: 'Industry'},
-  ];
+  // Whether the password should be hidden or shown
+  hide: boolean = true;
 
-  constructor(private router: Router, private signupService: SignupService) {  }
+  constructor(
+    private router: Router,
+    private signupService: SignupService,
+    private authService: AuthService,
+  ) { }
 
   // Error message for email based on validators
   emailErrorMessage() {
@@ -90,21 +120,39 @@ export class SignupComponent {
     return '';
   }
 
+  async updateForm(): Promise<void> {
+    if (this.signupForm.get('accountType')?.value !== 0) {
+      this.signupForm.get('GPA')?.disable();
+      this.signupForm.get('Major')?.disable();
+      return;
+    }
+    if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.signupForm.get('universityLocation')?.value) {
+      this.majors = [];
+      this.prevSelectedUniversity = this.signupForm.get('universityLocation')?.value;
+      const getMajorsPromise = await this.authService.getMajors(this.prevSelectedUniversity ?? undefined);
+      getMajorsPromise.subscribe({
+        next: (data: any) => {
+          if (data.success) {
+            this.majors = data.success.majors.toSorted();
+          }
+        },
+        error: (data: any) => {
+          console.log('Error', data);
+        },
+      });
+    }
+    this.signupForm.get('GPA')?.enable();
+    this.signupForm.get('Major')?.enable();
+  }
+
   onSubmit() {
-    const data = {
-      email: this.signupForm.value.email,
-      password: this.signupForm.value.password,
-      name: this.signupForm.value.name,
-      accountType: this.signupForm.value.accountType, // Pass in the user account type
-    };
+    this.signupService.signup(this.signupForm.value).subscribe({
+      next: (data: any) => {
+        console.log('Registration Successful!', data);
 
-    this.signupService.signup(data).subscribe({
-      next: (response: any) => {
-        console.log('Registration Successful!', response);
-
-        const authToken = response?.success?.accessToken;
-        const refreshToken = response?.success?.refreshToken;
-        const accountType = response?.success?.user.accountType;
+        const authToken = data?.success?.accessToken;
+        const refreshToken = data?.success?.refreshToken;
+        const accountType = data?.success?.user.accountType;
 
         // Check if the authentication token is present in the response
         if (authToken) {
@@ -115,15 +163,17 @@ export class SignupComponent {
           // Navigate based on the account type
           if (accountType === environment.industryType) {
             this.router.navigate(['/industry/dashboard']);
+          } else if (accountType === environment.studentType) {
+            this.router.navigate(['/student-dashboard']);
           } else {
-            this.router.navigate(['/home']);
+            this.router.navigate(['/faculty-dashboard']);
           }
         } else {
           console.error('Authentication token not found in the response.');
         }
       },
-      error: (error: any) => {
-        console.error('Registration failed.', error);
+      error: (data: any) => {
+        console.error('Registration failed.', data);
       },
     });
   }
