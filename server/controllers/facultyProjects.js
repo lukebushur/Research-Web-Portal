@@ -551,13 +551,19 @@ const getAllActiveProjects = async (req, res) => {
         activeProjects.forEach(x => {
             x.projects.forEach(y => {
                 let project = {
+                    projectName: y.projectName,
                     professorName: x.professorName,
                     professorEmail: x.professorEmail,
                     title: y.projectName,
                     projectID: y.id,
                     GPA: y.GPA,
                     majors: y.majors,
-                    applications: y.applications
+                    categories: y.categories,
+                    description: y.description,
+                    responsibilities: y.responsibilities,
+                    posted: y.posted,
+                    deadline: y.deadline,
+                    questions: y.questions
                 }
                 data.push(project);
             });

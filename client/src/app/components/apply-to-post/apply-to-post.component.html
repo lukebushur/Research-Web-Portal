@@ -1,46 +1,65 @@
 <main>
   <mat-sidenav-container>
-    <mat-sidenav mode="push" [(opened)]="opened">
-      <mat-list-item>        
-        <img class ="icon" src="../../../assets/photos/dashboard-24.png" /><a class="navTitle">Dashboard</a>
-        <br/>       
+    <mat-sidenav mode="push" [opened]="opened">
+      <mat-list-item>
+        <img class="icon" src="../../../assets/photos/dashboard-24.png" /><a class="navTitle">Dashboard</a>
+        <br />
       </mat-list-item>
       <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/research-24.png" /><a class="navTitle">Research</a>
-        <br/>
+        <img class="icon" src="../../../assets/photos/research-24.png" /><a class="navTitle">Research</a>
+        <br />
       </mat-list-item>
       <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/steve-jobs-24.png" /><a class="navTitle">Jobs</a>
-        <br/>
+        <img class="icon" src="../../../assets/photos/steve-jobs-24.png" /><a class="navTitle">Jobs</a>
+        <br />
       </mat-list-item>
       <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/applications-24.png" /><a class="navTitle">Applications</a>
+        <img class="icon" src="../../../assets/photos/applications-24.png" /><a class="navTitle">Applications</a>
       </mat-list-item>
     </mat-sidenav>
 
-    <mat-sidenav-content>  
-      <button id = "navButton" mat-button (click)="opened = !opened">
+    <mat-sidenav-content>
+      <button id="navButton" mat-button (click)="opened = !opened">
         <img src="../../../assets/photos/burger-menu-24.png" />
       </button>
-      <div>
-        <h2>Opportunity Name</h2>
-        <img class="oppPic" src="../../../assets/photos/monitor.jpg" /><br>
-        <opportunity text="Opportunity 1">Opportunity 1<br></opportunity>
-        <label>GPA: <gpa>3.0</gpa> &nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <label>Major:<major major="Comp Sci">Computer Science</major> &nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <label>Standing: <standing standing="Senior">Senior</standing> &nbsp;&nbsp;&nbsp;&nbsp;</label>
-      </div>
-      <br><br>
-
-      <!-- <div *ngFor="let question of questions">
-        <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
-      </div> -->
-
-      <br><br>
-        <button id="btn1" type="submit" (click)="submitApp(this)">Submit</button>
-    </mat-sidenav-content>  
-</mat-sidenav-container>
+      <ng-container *ngIf="project">
+        <h1>{{ project.projectName }}</h1>
+        <p>{{ project.professorName }}, {{ project.professorEmail }}</p>
+        <p>Description: {{ project.description }}</p>
+        <p>Responsibilities: {{ project.responsibilities ? project.responsibilities : 'None' }}</p>
+        <p>Majors: {{ majorsString() }}</p>
+        <p>Categories: {{ categoriesString() }}</p>
+        <p>Minimum GPA: {{ formatGPA() }}</p>
+        <p>Date Posted: {{ dateToString(project.posted)}}</p>
+        <p>Deadline: {{ dateToString(project.deadline)}}</p>
+        <br>
+        <div>
+          <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
+            <div formArrayName="formQuestions">
+              <div *ngFor="let question of questions; index as i">
+                <label id="question-label">Question {{ question.questionNum }}: {{ question.question }}</label>
+                <div *ngIf="question.requirementType === 'radio button'">
+                  <mat-radio-group aria-labelledby="question-label" [formControlName]="i" class="radio-group">
+                    <mat-radio-button *ngFor="let choice of question.choices" [value]="choice">{{ choice
+                      }}</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+                  <mat-checkbox *ngFor="let choice of question.choices"
+                    [formControl]="getCheckBoxControl(i, choice)!">{{ choice }}</mat-checkbox>
+                </div>
+                <div *ngIf="question.requirementType === 'text'">
+                  <mat-form-field>
+                    <mat-label>Answer</mat-label>
+                    <textarea matInput [formControlName]="i"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button>
+          </form>
+        </div>
+      </ng-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </main>
-
-
-<router-outlet></router-outlet>

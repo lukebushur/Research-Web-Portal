@@ -1,9 +1,12 @@
 Step 1, ensure you have pip and Python installed! (At least Python 3.8.0)
+INSTALL > https://www.python.org/
+Make sure you install to the PATH environment variables too!
 
 Step 2, run 
 pip install -r path/to/requirements.txt
 
-Step 3, configure the variables at the bottom of the program
+Step 3, configure the variables at the bottom of the Seeder.py program!
 
 Step 4, in the command line run the seeder 
 python path/to/Seeder.py 
+

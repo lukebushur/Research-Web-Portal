@@ -24,9 +24,11 @@
             <mat-card-content>
                 <p>Professor name: {{ opportunity.professorName }}</p>
                 <p>Application email: {{ opportunity.professorEmail }}</p>
-                <p>Number of Applicants: {{ opportunity.applications.length }}</p>
+                <p>Number of Applicants: {{ opportunity.applications?.length ?? 0 }}</p>
                 <p>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</p>
             </mat-card-content>
+            <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
+                [disabled]="!meetRequirements(opportunity)">{{ meetRequirements(opportunity) ? 'Apply' : 'Cannot Apply' }}</button>
         </div>
     </div>
 </div>

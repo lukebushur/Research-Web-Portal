@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
 import { Router } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
@@ -45,6 +46,7 @@ describe('SignupComponent', () => {
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
+        MatSelectModule,
         BrowserAnimationsModule,
       ],
       // Use the spies defined in this test instead of the actual services
