@@ -30,10 +30,12 @@
     </div>
     <br>
     <p>Status: </p>
-    <p>{{responseData.applicantData.status}}</p>
-    <button *ngIf="responseData.applicantData.status  === 'Pending'" mat-raised-button color="primary"
-        (click)="applicationDecision(responseData.applicantData.application, responseData.projectData.projectID, 'Accept')"
+    <p *ngIf="responseData.applicantData.status=== 'Accept' || responseData.applicantData.status === 'Reject'"
+          [class.accept-status-text]="responseData.applicantData.status === 'Accept'"
+          [class.reject-status-text]="responseData.applicantData.status === 'Reject'" class="status-text">{{responseData.applicantData.status}}ed</p>
+    <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="primary"
+        (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
         class="accept-button">Accept</button>
     <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="warn"
-        (click)="applicationDecision(responseData.applicantData.application, responseData.projectData.projectID, 'Reject')">Reject</button>
+        (click)="applicationDecision(responseData.applicantData.application, projectID, 'Reject')">Reject</button>
 </div>

@@ -59,7 +59,7 @@ const getMajors = (req, res) => {
     let project = hasField(req.body, "project");
     let major = hasField(req.body, "Major");
 
-    if (!project && !major) { //Currently, only the update and creat project routes need to use the getMajors helper function. They both have a subfield of "project", so if it does not exist an error response is generated
+    if (!project && !major) { //Currently, only the update and create project routes need to use the getMajors helper function. They both have a subfield of "project", so if it does not exist an error response is generated
         res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Missing project or field." }));
         return
     } else if (project && !project.project.majors[0] && !major) { //This checks that the majors field exists, as future logic in the projectValidation will require it. This needs to be last

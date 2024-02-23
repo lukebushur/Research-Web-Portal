@@ -537,6 +537,11 @@ const getAllActiveProjects = async (req, res) => {
 
         //check if user exists
         const user = await User.findOne({ email: decodeAccessToken.email });
+        /*
+            if (user.userType.Type != process.env.FACULTY) {
+                return res.status(400).json(generateRes(false, 400, "UNAUTHORIZED", {details: "Invalid account type for this route"}));
+            }
+        */
 
         //get the project lists for active, archived, and draft projects
         let activeProjects = await Project.find({ type: "Active" });
@@ -592,7 +597,7 @@ const fetchApplicant = async (req, res) => {
             //This block of code grabs the specified project from the projects record, then grabs the applicant index from the array of applicants and sets the applicant variable
             let applicant, project, applicantIndex;
             if (activeProjects) {
-                project = activeProjects.projects.find((element) => element.id = req.body.projectID);
+                project = activeProjects.projects.find((element) => element.id.toString() == req.body.projectID);
                 applicantIndex = project.applications.findIndex((element) => element.application.toString() === req.body.applicationID);
                 if (applicantIndex == -1) { return res.status(404).json(generateRes(false, 404, "APPLICANT_NOT_FOUND")); }
                 else { applicant = project.applications[applicantIndex]; }

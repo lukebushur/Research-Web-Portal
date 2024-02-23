@@ -1,4 +1,5 @@
 const Project = require('../../models/project');
+const Applications = require('../../models/application');
 const User = require('../../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
@@ -36,7 +37,6 @@ const searchProjects = async (req, res) => {
             },
             {
                 $project: {
-                    _id: 1,
                     professorEmail: 1,
                     professorName: 1,
                     'projects.projectName': 1,
@@ -48,7 +48,8 @@ const searchProjects = async (req, res) => {
                     'projects.archived': 1,
                     'projects.description': 1,
                     'projects.responsibilities': 1,
-                    'projects.questions': 1
+                    'projects.questions': 1,
+                    'projects._id' : 1
                 }
             }
         ]
@@ -81,7 +82,7 @@ const searchProjects = async (req, res) => {
             User.findOne({ email: decodeAccessToken.email }),
             Project.aggregate(pipeline)
         ]
-        
+
         await Promise.all(promises).then(results => {
             student = results[0];
             searchResults = results[1]
@@ -105,8 +106,18 @@ const searchProjects = async (req, res) => {
             searchEngine = new search(projects, req.query.query, fields, searchTypes, weights);
             projects = searchEngine.search();
             projects.sort((a, b) => b.score - a.score);
+            //grab the student's applications
+            const applications = await Applications.findOne({ _id: student.userType.studentApplications });
+            projects.forEach((element) => element.applied = false); //initally set all projects to applied false
+            if (applications) { 
+                applications.applications.forEach((element) => { //for each element in the applications array, check if the student has already applied to the opportunities
+                    let index = projects.findIndex((project) => 
+                    element.opportunityId.equals(project._id)); //if the opportunity object id is the same as the project id, then the student has applied to a project that is being returned in the searhc
+                    if (index > -1) 
+                    { projects[index].applied = true; } //if index > -1 the project has already been applied to, 
+                });
+            }
         }
-
 
         return res.status(200).json(generateRes(true, 200, "RESULTS_FOUND", { results: projects }));
     } catch (error) {
