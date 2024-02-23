@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -29,7 +29,11 @@ export class ForgotPasswordComponent {
   // Whether the password should be hidden or shown
   hide: boolean = true;
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private snackbar: MatSnackBar,
+  ) { }
 
   // Error message for email based on validators
   emailErrorMessage(): string {
@@ -68,11 +72,11 @@ export class ForgotPasswordComponent {
     this.loginService.forgotPassword(forgotData).subscribe({
       next: (data: any) => {
         if (data.success) {
-          console.log('success!');
+          this.router.navigate(['/forgot-password-submitted']);
         }
       },
       error: (error) => {
-        console.error('error logging in', error);
+        this.snackbar.open('Request password reset failed.', 'Dismiss');
       },
     });
   }
