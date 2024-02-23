@@ -15,4 +15,8 @@ export class LoginService {
     console.log(this.apiUrl + data);
     return this.http.post(`${this.apiUrl}/login`, data);
   }
+
+  forgotPassword(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/accountManagement/resetPassword`, data);
+  }
 }
