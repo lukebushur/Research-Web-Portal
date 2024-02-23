@@ -4,6 +4,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
 import { environment } from 'src/environments/environment';
 
+interface AccountType {
+  value: number;
+  text: string;
+}
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -29,9 +34,19 @@ export class SignupComponent {
       Validators.minLength(10),
       Validators.maxLength(255),
     ]),
+    accountType: new FormControl(0, [
+      Validators.required,
+    ])
   })
 
-  constructor(private router: Router, private signupService: SignupService) { }
+  // Setup the variables for the account type dropdown 
+  accountTypes: AccountType[] = [
+   {value: 0, text: 'Student'},
+   {value: 1, text: 'Faculty'},
+   {value: 2, text: 'Industry'},
+  ];
+
+  constructor(private router: Router, private signupService: SignupService) {  }
 
   // Error message for email based on validators
   emailErrorMessage() {
@@ -80,8 +95,7 @@ export class SignupComponent {
       email: this.signupForm.value.email,
       password: this.signupForm.value.password,
       name: this.signupForm.value.name,
-      // TODO: incorportate accountType changer via a dropdown menu
-      accountType: 0,
+      accountType: this.signupForm.value.accountType, // Pass in the user account type
     };
 
     this.signupService.signup(data).subscribe({
@@ -100,7 +114,7 @@ export class SignupComponent {
 
           // Navigate based on the account type
           if (accountType === environment.industryType) {
-            this.router.navigate(['/industry-dashboard']);
+            this.router.navigate(['/industry/dashboard']);
           } else {
             this.router.navigate(['/home']);
           }

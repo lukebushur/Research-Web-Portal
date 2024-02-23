@@ -43,7 +43,7 @@ export class ResearchProjectCardComponent implements OnInit {
     project.applications.forEach((x: any) => { //for loop to set up the data for each table entry
       let y: any = {};
       y.name = x.name;
-      y.gpa = x.gpa;
+      y.GPA = x.GPA;
       y.major = x.major;
       y.email = x.email;
       y.status = x.status;

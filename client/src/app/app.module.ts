@@ -44,11 +44,22 @@ import { CatergoryFieldComponent } from './components/post_creation/catergory-fi
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
+import { CreateJobComponent } from './components/create-job/create-job.component';
+import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
+import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { JobCardComponent } from './components/industry-dashboard/job-card/job-card.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { StudentSidenavComponent } from './components/student-sidenav/student-sidenav.component';
 import { MatListModule } from '@angular/material/list'; 
 import { ViewProjectComponent } from './components/view-project/view-project.component';
+import { MatSelectModule } from '@angular/material/select';
+import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 
 @NgModule({
   declarations: [
@@ -72,8 +83,13 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
+    CreateJobComponent,
+    IndustryToolbarComponent,
+    JobCardComponent,
+    StudentDashboard,
     StudentSidenavComponent,
     ViewProjectComponent,
+    StudentOpportunitesSearchPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,10 +114,15 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
     MatRadioModule,
     MatTooltipModule,
     MatCheckboxModule,
-    MatSidenavModule,
-    MatNativeDateModule,
     MatDatepickerModule,
     MatListModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    MatSnackBarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatTabsModule,
   ],
   providers: [
     {

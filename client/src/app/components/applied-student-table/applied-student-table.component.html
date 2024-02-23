@@ -5,14 +5,15 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
         Name
       </th>
-      <td mat-cell *matCellDef="let student"><a href="application/{{student.project}}/{{student.application}}">{{student.name}} </a></td>
+      <td mat-cell *matCellDef="let student"><a
+          href="application/{{student.project}}/{{student.application}}">{{student.name}} </a></td>
     </ng-container>
 
     <ng-container matColumnDef="gpa">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by gpa">
         GPA
       </th>
-      <td mat-cell *matCellDef="let student"> {{student.gpa}} </td>
+      <td mat-cell *matCellDef="let student"> {{student.GPA}} </td>
     </ng-container>
 
     <ng-container matColumnDef="degree">
@@ -28,14 +29,6 @@
       </th>
       <td mat-cell *matCellDef="let student"> {{student.email}} </td>
     </ng-container>
-
-    <!-- <ng-container matColumnDef="experience">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by experience"
-      (click)="doSomething()">
-      Experience
-    </th>
-    <td mat-cell *matCellDef="let student"> {{student.experience}} </td>
-  </ng-container> -->
 
     <ng-container matColumnDef="buttons">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

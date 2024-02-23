@@ -18,7 +18,18 @@
       <mat-error *ngIf="signupForm.get('password')?.invalid">{{ passwordErrorMessage() }}</mat-error>
     </mat-form-field>
     <br>
+    <!--[==[
+      Handle the AccountType
+      This will take automatically expand based on the list of account-types in "accountTypes" interface 
+    ]==]-->
+    <mat-form-field class="form-field">
+        <mat-label> Account Type </mat-label>
+        <mat-select placeholder="Select" required formControlName="accountType">
+          <mat-option *ngFor="let option of accountTypes" [value]="option.value">{{ option.text }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
     <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid"
       class="submit-button">Submit</button>
-  </form>
+  </form> 
 </div>

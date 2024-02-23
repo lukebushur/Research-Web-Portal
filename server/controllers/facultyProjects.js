@@ -201,11 +201,13 @@ const getProject = async (req, res) => {
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
                     const deadline = new Date(project.deadline);
+                    const posted = new Date(project.posted);
                     let returnProject = {
                         projectName: project.projectName,
                         questions: project.questions,
                         description: project.description,
                         deadline: deadline.toDateString(),
+                        posted: posted.toDateString(),
                         professorId: userId,
                         categories: project.categories,
                         majors: project.majors,
@@ -734,7 +736,8 @@ const fetchApplicantsFromProject = async (req, res) => {
                                 majors: x.major,
                                 appliedDate: x.appliedDate,
                                 lastModified: application.lastUpdated,
-                                location: x.location
+                                location: x.location,
+                                application: x.application,
                             })
                         }
                     }

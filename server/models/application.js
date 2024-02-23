@@ -31,7 +31,6 @@ const Applications = new mongoose.Schema({
             },
             lastUpdated: {
                 type: Date,
-                required: true,
             }
         }
     ]
