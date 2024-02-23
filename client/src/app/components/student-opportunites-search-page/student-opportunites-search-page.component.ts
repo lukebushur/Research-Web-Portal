@@ -60,8 +60,9 @@ export class StudentOpportunitesSearchPageComponent {
     this.filterOpportunities();
   }
 
-  getAvailableMajors() {
-    this.studentDashboardService.getAvailableMajors().subscribe({
+  async getAvailableMajors() {
+    const getMajorsPromise = await this.studentDashboardService.getAvailableMajors();
+    getMajorsPromise.subscribe({
       next: (data) => {
         this.availableMajors = data.success.majors;
       },

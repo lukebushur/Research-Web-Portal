@@ -10,7 +10,7 @@ const expect = chai.expect;
 chai.use(chaiHTTP);
 //variables for unit testing, to ensure future requests succeed
 let adminRecordID, //id of the admin account
-    majorsLocation, //id the application record
+    majorsLocation, //name of the university with the associated major
     admin_access_token; //access token of admin
 
 //randomly generated password, name, and email
@@ -80,8 +80,7 @@ describe('POST /api/admin/addMajor', () => {
 describe('GET /api/getMajors', () => {
     it('Should return a successful majors retrieval response', (done) => {
         chai.request(server)
-            .get('/api/getMajors')
-            .set({ "Authorization": `Bearer ${admin_access_token}` })
+            .get('/api/getMajors?university=' + majorsLocation)
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -117,8 +116,7 @@ describe('DELETE /api/admin/deleteMajor', () => {
 describe('GET /api/getMajors', () => {
     it('Should return a successful majors retrieval response', (done) => {
         chai.request(server)
-            .get('/api/getMajors')
-            .set({ "Authorization": `Bearer ${admin_access_token}` })
+            .get('/api/getMajors?university=' + majorsLocation)
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -153,8 +151,7 @@ describe('POST /api/admin/replaceMajors', () => {
 describe('GET /api/getMajors', () => {
     it('Should return a successful majors retrieval response', (done) => {
         chai.request(server)
-            .get('/api/getMajors')
-            .set({ "Authorization": `Bearer ${admin_access_token}` })
+            .get('/api/getMajors?university=' + majorsLocation)
             .end((end, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');

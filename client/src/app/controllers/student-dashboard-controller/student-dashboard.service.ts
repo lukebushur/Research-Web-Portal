@@ -25,8 +25,8 @@ export class StudentDashboardService {
     return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers })
   }
 
-  getAvailableMajors() : Observable<any> {
+  async getAvailableMajors(university?: string) : Promise<Observable<any>> {
     const headers = this.authService.getHeaders();
-    return this.http.get(`${this.apiUrl}/getMajors`, { headers })
+    return await this.authService.getMajors(university);
   }
 }
