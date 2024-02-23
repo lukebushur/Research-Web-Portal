@@ -340,7 +340,7 @@ const sendPasswordResetConfirmation = async (user) => {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: 'Reset your password',
-        text: `Click link to reset your password: http://localhost:9000/reset-password/${user.passwordResetToken}`
+        text: `Click link to reset your password: http://${process.env.FRONT_END_IP}/confirm-reset-password/${user.email}/${user.passwordResetToken}`
     };
 
     await transport.sendMail(mailOptions, function (error, info) {
