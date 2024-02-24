@@ -63,6 +63,7 @@ export class SignupComponent {
       Validators.required,
       Validators.min(0),
       Validators.max(4),
+      Validators.pattern('^[0-4](\\.(\\d\\d?)?)?$'),
     ]),
     Major: new FormControl('', [
       Validators.required,
@@ -78,44 +79,67 @@ export class SignupComponent {
     private authService: AuthService,
   ) { }
 
-  // Error message for email based on validators
-  emailErrorMessage() {
-    if (this.signupForm.get('email')?.hasError('required')) {
-      return 'You must enter an email.';
-    }
-    if (this.signupForm.get('email')?.hasError('minlength')) {
-      return 'Minimum email length: 6';
-    }
-    if (this.signupForm.get('email')?.hasError('maxlength')) {
-      return 'Maximum email length: 254';
-    }
-    return this.signupForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
-  }
-
   // Error message for name based on validators
-  nameErrorMessage() {
+  nameErrorMessage(): string {
     if (this.signupForm.get('name')?.hasError('required')) {
-      return 'You must enter a name.';
+      return 'Name is a required field';
     }
     if (this.signupForm.get('name')?.hasError('minlength')) {
-      return 'Minimum name length: 2';
+      return 'Minimum length: 2';
     }
     if (this.signupForm.get('name')?.hasError('maxlength')) {
-      return 'Maximum name length: 25';
+      return 'Maximum length: 25';
     }
     return '';
   }
 
+  // Error message for email based on validators
+  emailErrorMessage(): string {
+    if (this.signupForm.get('email')?.hasError('required')) {
+      return 'Email is a required field';
+    }
+    if (this.signupForm.get('email')?.hasError('minlength')) {
+      return 'Minimum length: 6';
+    }
+    if (this.signupForm.get('email')?.hasError('maxlength')) {
+      return 'Maximum length: 254';
+    }
+    return this.signupForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
+  }
+
   // Error message for password based on validators
-  passwordErrorMessage() {
+  passwordErrorMessage(): string {
     if (this.signupForm.get('password')?.hasError('required')) {
-      return 'You must enter an password.';
+      return 'Password is a required field';
     }
     if (this.signupForm.get('password')?.hasError('minlength')) {
-      return 'Minimum password length: 10';
+      return 'Minimum length: 10';
     }
     if (this.signupForm.get('password')?.hasError('maxlength')) {
-      return 'Maximum password length: 255';
+      return 'Maximum length: 255';
+    }
+    return '';
+  }
+
+  requiredFieldErrorMessage(fieldName: string, displayName: string): string {
+    if (this.signupForm.get(fieldName)?.hasError('required')) {
+      return displayName + ' is a required field';
+    }
+    return '';
+  }
+
+  gpaErrorMessage(): string {
+    console.log(this.signupForm.get('GPA')?.errors);
+    
+    if (this.signupForm.get('GPA')?.hasError('required')) {
+      return 'GPA is a required field'
+    }
+    if (this.signupForm.get('GPA')?.hasError('min')
+      || this.signupForm.get('GPA')?.hasError('max')) {
+      return 'GPA must be between 0.00 and 4.00';
+    }
+    if (this.signupForm.get('GPA')?.hasError('pattern')) {
+      return 'GPA is invalid';
     }
     return '';
   }
@@ -148,8 +172,6 @@ export class SignupComponent {
   onSubmit() {
     this.signupService.signup(this.signupForm.value).subscribe({
       next: (data: any) => {
-        console.log('Registration Successful!', data);
-
         const authToken = data?.success?.accessToken;
         const refreshToken = data?.success?.refreshToken;
         const accountType = data?.success?.user.accountType;
