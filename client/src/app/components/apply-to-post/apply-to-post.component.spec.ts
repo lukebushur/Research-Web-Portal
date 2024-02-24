@@ -98,13 +98,14 @@ describe('ApplyToPostComponent', () => {
         { provide: ApplyToPostService, useValue: applyService },
         { provide: Router, useValue: router },
         {
-          provide: ActivatedRoute, useValue: {
+          provide: ActivatedRoute,
+          useValue: {
             snapshot: {
               queryParamMap: convertToParamMap({
                 profName: testProjectData.professorName,
                 profEmail: testProjectData.professorEmail,
                 oppId: testProjectData.projectID,
-              }),
+              })
             }
           }
         },
