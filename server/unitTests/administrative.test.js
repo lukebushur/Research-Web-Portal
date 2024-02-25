@@ -10,7 +10,7 @@ const expect = chai.expect;
 chai.use(chaiHTTP);
 //variables for unit testing, to ensure future requests succeed
 let adminRecordID, //id of the admin account
-    majorsLocation, //name of the university with the associated major
+    majorsLocation, //name of the university with the associated user major
     admin_access_token; //access token of admin
 
 //randomly generated password, name, and email

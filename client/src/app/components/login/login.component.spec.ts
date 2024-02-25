@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { LoginComponent } from './login.component';
-import { ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,24 +12,21 @@ import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let testLoginResponse: Object;
+  const testLoginResponse = {
+    success: {
+      accessToken: 'garbage',
+      accountType: 0,
+    }
+  };
   let loginSpy: jasmine.Spy;
   let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
-    // mock data for the login response
-    testLoginResponse = {
-      success: {
-        accessToken: 'garbage',
-        accountType: 0,
-      }
-    };
-    
     // Create a spy to 'replace' the call to loginService's login function.
     // This spy returns an observable with the value of testLoginResponse.
     const loginService = jasmine.createSpyObj('LoginService', ['login']);
@@ -106,7 +103,7 @@ describe('LoginComponent', () => {
     component.loginForm.get('email')?.setValue(testEmail);
     component.loginForm.get('password')?.setValue(testPassword);
     fixture.detectChanges();
-    
+
     const loginElement: HTMLElement = fixture.nativeElement;
     const submitButton = loginElement.querySelector('button')!;
     expect(submitButton.disabled).toBe(false);

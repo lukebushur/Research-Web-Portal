@@ -238,8 +238,9 @@ const confirmEmailToken = async (req, res) => {
     }
 }
 
-/*  This function gets the list of available majors from a university. It requires an access token and can be used by any account type,
-    student, faculty, or industry, it takes no fields in the request body.
+/*  This function gets the list of available majors from the university given as a 
+    query parameter. It has no other requirements and can be used by any account type, 
+    including student, faculty, and industry. It takes no fields in the request body.
 */
 const getAvailableMajors = async (req, res) => {
     try {

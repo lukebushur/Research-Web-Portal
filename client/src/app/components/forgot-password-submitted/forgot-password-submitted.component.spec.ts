@@ -20,6 +20,7 @@ describe('ForgotPasswordSubmittedComponent', () => {
   });
 
   it('should display correct HTML elements', () => {
+    // Tests static component has correct elements in the DOM
     const forgotSubmittedElement: HTMLElement = fixture.nativeElement;
     const title = forgotSubmittedElement.querySelector('h1')!;
     expect(title.textContent).toEqual('Reset Password Request Submitted');

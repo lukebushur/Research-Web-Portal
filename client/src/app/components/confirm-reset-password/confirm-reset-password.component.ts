@@ -18,9 +18,11 @@ export class ConfirmResetPasswordComponent {
   ) { }
 
   ngOnInit(): void {
+    // get route parameters
     const email = this.route.snapshot.paramMap.get('email');
     const id = this.route.snapshot.paramMap.get('id');
 
+    // no route parameters given -> erroneous usage of the route
     if (!email || !id) {
       this.router.navigate(['/login']).then((navigated: boolean) => {
         if (navigated) {
@@ -29,12 +31,15 @@ export class ConfirmResetPasswordComponent {
       });
     }
 
+    // attempt to confirm the password reset against the back-end
     this.loginService.confirmResetPassword({
       email: email,
       passwordResetToken: id,
     }).subscribe({
       next: (data: any) => {
         if (data.success) {
+          // on success, the password is changed, and the user is redirected to
+          // the login page
           this.router.navigate(['/login']).then((navigated: boolean) => {
             if (navigated) {
               this.snackbar.open('Reset password successful!', 'Dismiss');
@@ -43,6 +48,8 @@ export class ConfirmResetPasswordComponent {
         }
       },
       error: (data: any) => {
+        // on error, the password is not changed, and the user is redirected to
+        // the login page
         this.router.navigate(['/login']).then((navigated: boolean) => {
           if (navigated) {
             this.snackbar.open('Reset password failed: Invalid credentials', 'Dismiss');

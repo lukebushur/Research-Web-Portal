@@ -73,6 +73,7 @@ export class StudentOpportunitesSearchPageComponent {
     this.filterOpportunities();
   }
 
+  // Get the list of possible majors from the back-end
   async getAvailableMajors() {
     const getMajorsPromise = await this.studentDashboardService.getAvailableMajors();
     getMajorsPromise.subscribe({

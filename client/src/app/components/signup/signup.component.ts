@@ -23,6 +23,10 @@ export class SignupComponent {
     'Purdue University',
   ];
 
+  // University that the user previously selected
+  // This is used to cut down on requests to the back-end, as if the same university
+  // is selected twice in a row by the same user, there is no need to get the majors
+  // list from the back-end again
   prevSelectedUniversity: string | undefined | null;
   
   // Set up the variables for the account type dropdown 
@@ -121,6 +125,7 @@ export class SignupComponent {
     return '';
   }
 
+  // Error message for fields that have only Validators.required
   requiredFieldErrorMessage(fieldName: string, displayName: string): string {
     if (this.signupForm.get(fieldName)?.hasError('required')) {
       return displayName + ' is a required field';
@@ -128,6 +133,7 @@ export class SignupComponent {
     return '';
   }
 
+  // Error message for GPA based on validators
   gpaErrorMessage(): string {
     if (this.signupForm.get('GPA')?.hasError('required')) {
       return 'GPA is a required field'
@@ -142,12 +148,19 @@ export class SignupComponent {
     return '';
   }
 
+  // Update the form based on the selected university and accountType
+  //   Student accountType -> also needs to fill out their GPA and majors
+  //   Any other accountType -> GPA and majors not required
   async updateForm(): Promise<void> {
+    // Any accountType other than student -> GPA and majors not required
     if (this.signupForm.get('accountType')?.value !== 0) {
       this.signupForm.get('GPA')?.disable();
       this.signupForm.get('Major')?.disable();
       return;
     }
+    // Student accountType -> update majors list ONLY if the selected university
+    // is not the same as the previously selected university. In this case,
+    // the majors list is already stored
     if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.signupForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.signupForm.get('universityLocation')?.value;

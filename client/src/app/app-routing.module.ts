@@ -32,6 +32,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'forgot-password-submitted', component: ForgotPasswordSubmittedComponent },
+  // 2 route parameters: email associated with the account & uuid associated with the reset
   { path: 'confirm-reset-password/:email/:id', component: ConfirmResetPasswordComponent },
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
   { path: 'create-post/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },

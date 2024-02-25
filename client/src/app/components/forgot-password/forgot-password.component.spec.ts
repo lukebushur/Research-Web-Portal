@@ -24,9 +24,13 @@ describe('ForgotPasswordComponent', () => {
   let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
+    // Spy object for LoginService. Captures the provided function calls and returns
+    // predictable mock data instead.
     const loginService = jasmine.createSpyObj('LoginService', ['forgotPassword']);
     forgotPasswordSpy = loginService.forgotPassword.and.returnValue(of({ success: { status: 200 } }));
 
+    // Spy object for Router. Captures the provided function calls and returns
+    // predictable mock data instead.
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate;
 
@@ -43,11 +47,13 @@ describe('ForgotPasswordComponent', () => {
         BrowserAnimationsModule,
       ],
       providers: [
+        // Use Jasmine spy objects instead of the actual services/classes
         { provide: LoginService, useValue: loginService },
         { provide: Router, useValue: router },
       ],
     });
     fixture = TestBed.createComponent(ForgotPasswordComponent);
+    // For easier Angular material components testing
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -66,6 +72,7 @@ describe('ForgotPasswordComponent', () => {
     const testEmail = 'testemail@email.com';
     const testPassword = 'goodPassword';
 
+    // set email and password fields to valid values
     const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#email' }));
     await emailInput.setValue(testEmail);
     const passwordInput = await loader.getHarness(MatInputHarness.with({ selector: '#password' }));
@@ -81,6 +88,7 @@ describe('ForgotPasswordComponent', () => {
       provisionalPassword: 'betterPassword',
     };
 
+    // set form to valid values
     component.forgotForm.get('email')?.setValue(data.email);
     component.forgotForm.get('password')?.setValue(data.provisionalPassword);
     component.onSubmit();

@@ -35,6 +35,7 @@ describe('SignupComponent', () => {
     }
   };
   let getMajorsSpy: jasmine.Spy;
+  // mock data for the getMajors response
   const testGetMajorResponse = {
     success: {
       majors: [
@@ -52,6 +53,8 @@ describe('SignupComponent', () => {
     const signupService = jasmine.createSpyObj('SignupService', ['signup']);
     signupSpy = signupService.signup.and.returnValue(of(testSignupResponse));
 
+    // Create a spy to 'replace' the call to AuthService's getMajors function.
+    // This spy returns an observable with the value of testGetMajorResponse.
     const authService = jasmine.createSpyObj('AuthService', ['getMajors']);
     getMajorsSpy = authService.getMajors.and.returnValue(Promise.resolve(of(testGetMajorResponse)));
     
@@ -156,6 +159,8 @@ describe('SignupComponent', () => {
     const testName = 'First Last';
     const testEmail = 'testemail@email.com';
     const testPassword = '10characters';
+    
+    // set valid text field values in the DOM
     const nameInput = await loader.getHarness(MatInputHarness.with({ selector: '#name' }));
     await nameInput.setValue(testName);
     const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#email' }));
@@ -163,6 +168,7 @@ describe('SignupComponent', () => {
     const passwordInput = await loader.getHarness(MatInputHarness.with({ selector: '#password' }));
     await passwordInput.setValue(testPassword);
 
+    // set valid selector values in the DOM
     const universitySelector = await loader.getHarness(MatSelectHarness.with({ selector: '#universityLocation' }));
     await universitySelector.open();
     (await universitySelector.getOptions({ text: 'Purdue University Fort Wayne' }))[0].click();
@@ -181,6 +187,8 @@ describe('SignupComponent', () => {
     const testEmail = 'testemail@email.com';
     const testPassword = '10characters';
     const testGpa = '3.0';
+
+    // set valid text field values in the DOM
     const nameInput = await loader.getHarness(MatInputHarness.with({ selector: '#name' }));
     await nameInput.setValue(testName);
     const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#email' }));
@@ -188,6 +196,7 @@ describe('SignupComponent', () => {
     const passwordInput = await loader.getHarness(MatInputHarness.with({ selector: '#password' }));
     await passwordInput.setValue(testPassword);
 
+    // set valid selector values in the DOM
     const universitySelector = await loader.getHarness(MatSelectHarness.with({ selector: '#universityLocation' }));
     await universitySelector.open();
     await (await universitySelector.getOptions({ text: 'Purdue University Fort Wayne' }))[0].click();
@@ -196,8 +205,12 @@ describe('SignupComponent', () => {
     await accountTypeSelector.open();
     await (await accountTypeSelector.getOptions({ text: 'Student' }))[0].click();
     await accountTypeSelector.close();
+
+    // after setting accountType to 0, more fields appear, and the list of possible
+    // majors is set utilizing the AuthService
     expect(getMajorsSpy).withContext('getMajors called').toHaveBeenCalled();
 
+    // set valid student-specific values in the DOM
     const gpaInput = await loader.getHarness(MatInputHarness.with({ selector: '#gpa' }));
     await gpaInput.setValue(testGpa);
     const majorsSelector = await loader.getHarness(MatSelectHarness.with({ selector: '#Major' }));
@@ -211,6 +224,7 @@ describe('SignupComponent', () => {
   });
 
   it('should route to the home component', () => {
+    // accounType = 0 -> student type -> onSubmit() should route to the student dashboard
     component.signupForm.get('accountType')?.setValue(0);
     component.onSubmit();
     expect(signupSpy.calls.any()).withContext('signup called').toBeTrue();

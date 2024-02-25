@@ -145,6 +145,7 @@ const resetPassword = async (req, res) => {
                 },
             });
 
+            //User could not be found -> return error response
             if (!user) {
                 return res.status(400).json(generateRes(false, 400, "INVALID_EMAIL", {}));
             }
@@ -346,10 +347,9 @@ const sendPasswordResetConfirmation = async (user) => {
         to: user.email,
         subject: 'Reset your password',
         html: `
-        <p>Click the link below to reset your password:</p>
-        <a href="http://${process.env.FRONT_END_IP}/confirm-reset-password/${encodeURIComponent(user.email)}/${user.passwordResetToken}">
-            Reset Password</a>
-        `
+<p>Click the link below to reset your password:</p>
+<a href="http://${process.env.FRONT_END_IP}/confirm-reset-password/${encodeURIComponent(user.email)}/${user.passwordResetToken}">
+    Reset Password</a>`
     };
 
     await transport.sendMail(mailOptions, function (error, info) {

@@ -20,7 +20,7 @@ export class AuthService {
     });
   }
 
-  //Helper method to grab the auth token from local storage
+  // Helper method to grab the auth token from local storage
   getAuthToken(): String | null {
     return localStorage.getItem("jwt-auth-token");
   }
@@ -32,9 +32,12 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`, { headers });
   }
 
-  //This function grabs all available majors from the data. It is in the auth controller because it is a shared route between all accounts
-  //and as such does not belong with solely faculty or students. Unless provided with a unversity (from which majors will be grabbed), it will
-  //call getAccountInfo() first to get the universityLocation associated with the user.
+  // This function grabs all available majors from the data. It is in the auth controller
+  // because it is a shared route between all accounts and as such does not belong with
+  // solely faculty or students. Unless provided with a unversity (from which majors will
+  // be grabbed), it will call getAccountInfo() first to get the universityLocation
+  // associated with the user. Then, it will get the majors list from the back-end using
+  // the given/retrieved information
   async getMajors(university?: string): Promise<Observable<any>> {
     let universityLocation = university;
     if (!universityLocation || universityLocation === '') {
