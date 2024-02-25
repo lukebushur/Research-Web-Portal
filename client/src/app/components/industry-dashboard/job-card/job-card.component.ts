@@ -30,6 +30,19 @@ export class JobCardComponent {
     return dateTimeFormat.format(date);
   }
 
+  tagsString(): string {
+    if (!this.jobData.tags || this.jobData.tags.length < 1) {
+      return 'None';
+    }
+
+    let tagsString = this.jobData.tags[0];
+    for (let i = 1; i < this.jobData.tags.length; i++) {
+      tagsString += ', ' + this.jobData.tags[i];
+    }
+
+    return tagsString;
+  }
+
   deleteJob() {
     this.industryDashboardService.deleteJob(this.jobData._id).subscribe({
       next: (data: any) => {
