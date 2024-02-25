@@ -18,4 +18,15 @@ describe('ForgotPasswordSubmittedComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should display correct HTML elements', () => {
+    const forgotSubmittedElement: HTMLElement = fixture.nativeElement;
+    const title = forgotSubmittedElement.querySelector('h1')!;
+    expect(title.textContent).toEqual('Reset Password Request Submitted');
+    const firstParagraph = forgotSubmittedElement.querySelector('p')!;
+    expect(firstParagraph.textContent).toEqual('A confirmation email has been sent to the provided address.');
+    const anchor: HTMLAnchorElement = forgotSubmittedElement.querySelector('a')!;
+    expect(anchor.textContent).toEqual('login page');
+    expect(anchor.getAttribute('routerLink')).toEqual('/login');
+  });
 });

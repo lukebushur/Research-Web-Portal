@@ -88,6 +88,12 @@ describe('LoginComponent', () => {
     expect(component.passwordErrorMessage()).toBe('Minimum password length: 10');
   });
 
+  it('should display a forgot password link', () => {
+    const loginElement: HTMLElement = fixture.nativeElement;
+    const forgotLink: HTMLAnchorElement = loginElement.querySelector('a')!;
+    expect(forgotLink.getAttribute('routerLink')).toBe('/forgot-password');
+  });
+
   it('should display a disabled submit button', () => {
     const loginElement: HTMLElement = fixture.nativeElement;
     const submitButton = loginElement.querySelector('button')!;

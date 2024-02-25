@@ -129,8 +129,6 @@ export class SignupComponent {
   }
 
   gpaErrorMessage(): string {
-    console.log(this.signupForm.get('GPA')?.errors);
-    
     if (this.signupForm.get('GPA')?.hasError('required')) {
       return 'GPA is a required field'
     }
