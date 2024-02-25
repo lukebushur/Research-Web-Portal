@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CreateJobService {
+export class AddEditJobService {
   private createJobUrl = `${environment.apiUrl}/industry/createJob`
 
   constructor(private http: HttpClient, private authService: AuthService) { }

@@ -1,6 +1,6 @@
 <div class="page-container">
   <h1 class="item-to-center">Create New Job</h1>
-  <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="addEditForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="item-to-center">
       <mat-label>Employer</mat-label>
       <input matInput type="text" formControlName="employer">

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { CreateJobComponent } from './create-job.component';
+import { AddEditJobComponent } from './add-edit-job.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,12 +17,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 class FacultyToolbarStubComponent {}
 
 describe('CreateJobComponent', () => {
-  let component: CreateJobComponent;
-  let fixture: ComponentFixture<CreateJobComponent>;
+  let component: AddEditJobComponent;
+  let fixture: ComponentFixture<AddEditJobComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CreateJobComponent],
+      declarations: [AddEditJobComponent],
       imports: [
         HttpClientTestingModule,
         MatSnackBarModule,
@@ -37,7 +37,7 @@ describe('CreateJobComponent', () => {
         BrowserAnimationsModule,
       ],
     });
-    fixture = TestBed.createComponent(CreateJobComponent);
+    fixture = TestBed.createComponent(AddEditJobComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

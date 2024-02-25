@@ -41,7 +41,7 @@ import { CatergoryFieldComponent } from './components/post_creation/catergory-fi
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
-import { CreateJobComponent } from './components/create-job/create-job.component';
+import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -79,7 +79,7 @@ import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.c
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
-    CreateJobComponent,
+    AddEditJobComponent,
     IndustryToolbarComponent,
     JobCardComponent,
     StudentDashboard,
