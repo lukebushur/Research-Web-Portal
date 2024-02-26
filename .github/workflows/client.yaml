@@ -33,4 +33,4 @@ jobs:
             cd client
             npm install -g @angular/cli
             npm install
-            ng test --watch=false
+            ng test --watch=false --browsers=ChromeHeadless
