@@ -28,6 +28,11 @@ export class IndustryToolbarComponent {
       link: '/industry/assessments',
       icon: 'quiz',
     },
+    {
+      name: 'Create Assessment',
+      link: '/industry/create-assessment',
+      icon: 'library_add',
+    },
   ];
 
   constructor(

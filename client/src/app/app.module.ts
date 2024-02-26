@@ -57,6 +57,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
+import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { AssessmentBrowserComponent } from './components/assessment-browser/asse
     StudentOpportunitesSearchPageComponent,
     ApplyToPostComponent,
     AssessmentBrowserComponent,
+    AddEditAssessmentComponent,
   ],
   imports: [
     BrowserModule,
