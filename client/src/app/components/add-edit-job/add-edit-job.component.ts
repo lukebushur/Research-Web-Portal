@@ -5,7 +5,9 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { AddEditJobService } from 'src/app/controllers/add-edit-job-controller/add-edit-job.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { JobCardData } from '../industry-dashboard/job-card/job-card-data';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-edit-job',
@@ -13,18 +15,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-edit-job.component.css']
 })
 export class AddEditJobComponent {
+  initialJobData: JobCardData;
+
+  isCreateJob: boolean = true;
+
   addEditForm = new FormGroup({
     employer: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
-    isInternship: new FormControl(null, [Validators.required]),
-    isFullTime: new FormControl(null, [Validators.required]),
+    isInternship: new FormControl<boolean | null>(null, [Validators.required]),
+    isFullTime: new FormControl<boolean | null>(null, [Validators.required]),
     description: new FormControl('', [Validators.required]),
     location: new FormControl('', [Validators.required]),
-    reqYearsExp: new FormControl(null, [Validators.required, Validators.pattern(/^\d+$/)]),
+    reqYearsExp: new FormControl<number | null>(null, [Validators.required, Validators.pattern(/^\d+$/)]),
     tags: new FormArray([]),
     timeCommitment: new FormControl(''),
     pay: new FormControl(''),
-    deadline: new FormControl(null),
+    deadline: new FormControl<Date | null>(null),
     range: new FormGroup({
       start: new FormControl<Date | null>(null),
       end: new FormControl<Date | null>(null),
@@ -35,11 +41,50 @@ export class AddEditJobComponent {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location,
+    private addEditJobService: AddEditJobService,
     private announcer: LiveAnnouncer,
-    private createJobService: AddEditJobService,
     private snackBar: MatSnackBar,
-    private router: Router
   ) { }
+
+  ngOnInit(): void {
+    const jobId = this.route.snapshot.paramMap.get('jobId');
+    if (!jobId) {
+      return;
+    }
+
+    this.isCreateJob = false;
+    this.addEditJobService.getJob(jobId).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.initialJobData = JSON.parse(data.success.job);
+          console.log(this.initialJobData);
+
+          this.addEditForm.get('employer')?.setValue(this.initialJobData.employer);
+          this.addEditForm.get('title')?.setValue(this.initialJobData.title);
+          this.addEditForm.get('isInternship')?.setValue(this.initialJobData.isInternship);
+          this.addEditForm.get('isFullTime')?.setValue(this.initialJobData.isFullTime);
+          this.addEditForm.get('description')?.setValue(this.initialJobData.description);
+          this.addEditForm.get('location')?.setValue(this.initialJobData.location);
+          this.addEditForm.get('reqYearsExp')?.setValue(this.initialJobData.reqYearsExp);
+          for (const tag of this.initialJobData.tags ?? []) {
+            this.tags.push(new FormControl(tag));
+          }
+          this.addEditForm.get('timeCommitment')?.setValue(this.initialJobData.timeCommitment ?? null);
+          this.addEditForm.get('pay')?.setValue(this.initialJobData.pay ?? null);
+          const deadline = this.initialJobData.deadline ? new Date(this.initialJobData.deadline) : null;
+          this.addEditForm.get('deadline')?.setValue(deadline);
+          this.addEditForm.get('reqYearsExp')?.setValue(this.initialJobData.reqYearsExp);
+          const startDate = this.initialJobData.startDate ? new Date(this.initialJobData.startDate) : null;
+          this.range.get('start')?.setValue(startDate);
+          const endDate = this.initialJobData.endDate ? new Date(this.initialJobData.endDate) : null;
+          this.range.get('end')?.setValue(endDate);
+        }
+      }
+    });
+  }
 
   get range() {
     return this.addEditForm.get('range') as FormGroup;
@@ -89,7 +134,13 @@ export class AddEditJobComponent {
     }
   }
 
+  cancel() {
+    this.location.back();
+  }
+
   onSubmit() {
+    console.log(this.addEditForm.value);
+
     if (this.addEditForm.invalid) {
       this.snackBar.open('1 or more invalid fields', 'Close', {
         duration: 5000,
@@ -116,23 +167,49 @@ export class AddEditJobComponent {
         endDate: this.range.get('end')?.value,
       },
     };
+    console.log('data', data);
+    
 
-    this.createJobService.createJob(data).subscribe({
+    if (this.isCreateJob) {
+      this.addEditJobService.createJob(data).subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackBar.open('Job successfully created!', 'Close', {
+                  duration: 5000,
+                });
+              }
+            });
+          } else {
+            console.log('The job was not created');
+          }
+        },
+        error: (error: any) => {
+          console.log('Create Job Failed', error);
+        }
+      });
+    }
+
+    this.addEditJobService.editJob({
+      jobId: this.initialJobData._id,
+      ...data,
+    }).subscribe({
       next: (response: any) => {
         if (response.success) {
           this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
             if (navigated) {
-              this.snackBar.open('Job successfully created!', 'Close', {
+              this.snackBar.open('Job successfully updated!', 'Close', {
                 duration: 5000,
               });
             }
           });
         } else {
-          console.log('The job was not created');
+          console.log('The job was not updated.');
         }
       },
       error: (error: any) => {
-        console.log('Create Job Failed', error);
+        console.log('Edit Job Failed', error);
       }
     });
   }

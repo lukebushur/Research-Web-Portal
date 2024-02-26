@@ -26,3 +26,8 @@ button.item-to-center {
 span {
   margin-left: 1em;
 }
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+}

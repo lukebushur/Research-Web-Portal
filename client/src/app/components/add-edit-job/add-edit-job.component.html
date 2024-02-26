@@ -71,6 +71,9 @@
       <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" class="item-to-center">Create</button>
+    <div class="item-to-center buttons-container">
+      <button mat-raised-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">{{isCreateJob ? 'Create' : 'Update' }}</button>
+    </div>
   </form>
 </div>
