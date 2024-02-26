@@ -12,9 +12,16 @@ const router = express.Router();
 // GET - get all the active, draft, and archived jobs from a user
 router.get('/getJobs', verifyToken, industryController.getJobs);
 
+// GET - get a job associated with the user at the specified ID
+router.get('/getJob/:jobId', verifyToken, industryController.getJob);
+
 // POST - create a new job associated with a user
 router.post('/createJob', verifyToken, industryController.createJob);
 
+// PUT - edit an existing job
+router.put('/editJob', verifyToken, industryController.editJob);
+
+// DELETE - delete a job at the specified ID
 router.delete('/deleteJob/:jobId', verifyToken, industryController.deleteJob);
 
 module.exports = router;

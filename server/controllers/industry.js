@@ -36,6 +36,39 @@ const getJobs = async (req, res) => {
 
 }
 
+const getJob = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        const jobId = req.params.jobId;
+        if (!jobId) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+        //check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        const industryData = await IndustryData.findById(user.userType.industryData);
+        if (!industryData) {
+            return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
+        }
+
+        const job = industryData.jobs.active.id(jobId);
+        if (job) {
+            return res.status(200).json(generateRes(true, 200, "JOB_FOUND", { job: JSON.stringify(job) }));
+        }
+
+        return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+};
+
 // Create a job with the data given in the request payload
 const createJob = async (req, res) => {
     try {
@@ -109,6 +142,45 @@ const createJob = async (req, res) => {
     }
 };
 
+const editJob = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        // check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        // check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        const jobId = req.body.jobId;
+        const jobType = req.body.jobType;
+        const jobDetails = req.body.jobDetails;
+
+        // validate schema
+        const { error } = jobSchema.validate(jobDetails);
+        if (error) {
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", error));
+        }
+        if (!(jobType === "active" || jobType === "draft")) {
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                error: 'jobType is not "active" or "draft"',
+            }));
+        }
+
+        const industryData = await IndustryData.findById(user.userType.industryData);
+        const jobToUpdate = industryData.jobs.active.id(jobId);
+        jobToUpdate.set(jobDetails);
+        await industryData.save();
+
+        return res.status(201).json(generateRes(true, 201, "JOB_UPDATED", {}));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+};
+
 const deleteJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -143,6 +215,8 @@ const deleteJob = async (req, res) => {
 
 module.exports = {
     getJobs,
+    getJob,
     createJob,
+    editJob,
     deleteJob,
 };
