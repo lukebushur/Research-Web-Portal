@@ -247,7 +247,7 @@ const getAvailableMajors = async (req, res) => {
         //Get the location query parameter
         const location = req.query.university;
         if (!location) {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { location: location }));
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
 
         majorsRecord = await Majors.findOne({ location: location });
