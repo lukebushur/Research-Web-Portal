@@ -19,6 +19,7 @@ import { StudentDashboard } from './components/student-dashboard/dashboard.compo
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -40,6 +41,7 @@ const routes: Routes = [
       { path: 'dashboard', component: IndustryDashboardComponent },
       { path: "create-job", component: AddEditJobComponent },
       { path: 'edit-job/:jobId', component: AddEditJobComponent },
+      { path: 'assessments', component: AssessmentBrowserComponent },
     ],
   },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty

@@ -23,6 +23,11 @@ export class IndustryToolbarComponent {
       link: '/industry/create-job',
       icon: 'add',      
     },
+    {
+      name: 'Assessments',
+      link: '/industry/assessments',
+      icon: 'quiz',
+    },
   ];
 
   constructor(
