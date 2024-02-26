@@ -113,9 +113,4 @@ describe('ViewApplicationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should create a title', () => {
-
-  });
-
 });

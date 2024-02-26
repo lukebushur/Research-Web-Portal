@@ -56,7 +56,7 @@ const modifyAccount = async (req, res) => {
 
             await user.save(); //Save the student account
             //Check if the updating of applicationRecords was successful, if it was not, the original data was used to reset the account information
-            const success = await updateApplicationRecords(user, req.body, originalData);
+            const success = await updateApplicationRecords(req, user, req.body, originalData);
             if (!success) {
                 return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
             }

@@ -4,6 +4,7 @@ const User = require('../../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
 const { search } = require('../../helpers/dataStructures/searchDataStructures');
+const { retrieveOrCacheUsers } = require('../../helpers/schemaCaching');
 
 /*  This route uses a get request and requires an access token to use. This route should return an array of relevant projects given the search criteria and query string. 
     There is no body as it is a get request however there are url parameters that effect the route. 
@@ -81,7 +82,7 @@ const searchProjects = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         const promises = [
-            User.findOne({ email: decodeAccessToken.email }),
+            retrieveOrCacheUsers(req, decodeAccessToken.email),
             Project.aggregate(pipeline)
         ]
 
@@ -130,7 +131,7 @@ const searchProjects = async (req, res) => {
                 let finalPageNum = Math.floor(projects.length / npp) + 1;
                 projects = projects.slice((npp * (finalPageNum - 1)));
             }
-        } else if(npp) {
+        } else if (npp) {
             projects = projects.slice(0, npp);
         }
 

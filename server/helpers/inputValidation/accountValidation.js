@@ -6,11 +6,11 @@ const Majors = require('../../models/majors');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../generateJSON');
 const { getMajors } = require('./validationHelpers');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../schemaCaching');
 
 const registerMajorValidation = async (req, res, next) => {
     try {
-        //Grab majors
-        const majors = await Majors.findOne({ location: req.body.universityLocation });
+        const majors = await retrieveOrCacheMajors(req, req.body.universityLocation);
         if (!majors && (req.body.accountType == process.env.STUDENT || req.body.accountType == process.env.FACULTY)) { //if there are no majors and the account type is faculty or student there is an error
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid university location." }));
             return;
@@ -47,7 +47,7 @@ const accountModifyMajorValidation = async (req, res, next) => {
         //Grab information about user account information
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-        const userAccount = await User.findOne({ email: decodeAccessToken.email });
+        const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
         //Validate that the GPA is within normal bounds: 
         if (req.body.GPA) {
             if (req.body.GPA > 4 || req.body.gpa < 0) {
@@ -60,8 +60,8 @@ const accountModifyMajorValidation = async (req, res, next) => {
         //Get list of majors corresponding to the user's university
         if (!userAccount.universityLocation) { next(); } //This is a temporary inclusion to ensure that the request can succeed if the user account does not have an universityLocation field 
 
-        let promises = [Majors.findOne({ location: userAccount.universityLocation })]; //First push a promise that will retrieve the majors associated with the user's account
-        if (req.body.universityLocation) { promises.push(Majors.findOne({ location: req.body.universityLocation })); } //then fetch a promise that will retrieve the majors associated with the new university, if it is a field in the request
+        let promises = [ retrieveOrCacheMajors(req, userAccount.universityLocation)]; //First push a promise that will retrieve the majors associated with the user's account
+        if (req.body.universityLocation) { promises.push(retrieveOrCacheMajors(req, req.body.universityLocation)); } //then fetch a promise that will retrieve the majors associated with the new university, if it is a field in the request
 
         let major;
         let newMajors;

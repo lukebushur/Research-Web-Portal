@@ -86,7 +86,7 @@ const researchOpp = new mongoose.Schema({
             type: String,
             required: false,
         },
-        questions: [mongoose.Schema.Types.question],
+        questions: [customObjects.question],
     }]
 })
 
