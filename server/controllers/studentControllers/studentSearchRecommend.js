@@ -126,6 +126,9 @@ const searchProjects = async (req, res) => {
         if (pageNum && npp && pageNum >= 1) { //check that pageNumber and npp exist
             if (projects.length > npp * (pageNum - 1)) { //if so, ensures there is enough projects for teh specified page, i.e. npp = 10 and page equals 2, then it ensures that the length is 11 or higher by checking that the length is longer than 10 * (2 - 1) 
                 projects = projects.slice((npp * (pageNum - 1)), (npp * (pageNum)));
+            } else {
+                let finalPageNum = Math.floor(projects.length / npp) + 1;
+                projects = projects.slice((npp * (finalPageNum - 1)));
             }
         } else if(npp) {
             projects = projects.slice(0, npp);
