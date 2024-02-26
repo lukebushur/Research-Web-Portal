@@ -167,8 +167,6 @@ export class AddEditJobComponent {
         endDate: this.range.get('end')?.value,
       },
     };
-    console.log('data', data);
-    
 
     if (this.isCreateJob) {
       this.addEditJobService.createJob(data).subscribe({
