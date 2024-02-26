@@ -39,7 +39,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: IndustryDashboardComponent },
       { path: "create-job", component: AddEditJobComponent },
-      { path: 'edit-job/:id', component: AddEditJobComponent },
+      { path: 'edit-job/:jobId', component: AddEditJobComponent },
     ],
   },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty

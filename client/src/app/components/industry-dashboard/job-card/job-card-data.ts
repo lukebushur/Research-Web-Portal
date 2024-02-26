@@ -7,11 +7,11 @@ export interface JobCardData {
   description: string;
   location: string;
   reqYearsExp: number;
-  tags: string[] | undefined;
-  timeCommitment: string | undefined;
-  pay: string | undefined;
-  deadline: string | undefined;
-  startDate: string | undefined;
-  endDate: string | undefined;
+  tags?: string[];
+  timeCommitment?: string;
+  pay?: string;
+  deadline?: string;
+  startDate?: string;
+  endDate?: string;
   datePosted: string;
 }
