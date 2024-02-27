@@ -13,6 +13,9 @@
       <mat-error *ngIf="loginForm.get('password')?.invalid">{{ passwordErrorMessage() }}</mat-error>
     </mat-form-field>
     <br>
+    <a routerLink="/forgot-password">Forgot password?</a>
+    <br>
+    <br>
     <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid"
       class="submit-button">Submit</button>
   </form>
