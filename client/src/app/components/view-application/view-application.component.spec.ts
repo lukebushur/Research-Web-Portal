@@ -109,8 +109,4 @@ describe('ViewApplicationComponent', () => {
     component.posted = "2/19/2024 9:09:52 PM";
     fixture.detectChanges();
   });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });

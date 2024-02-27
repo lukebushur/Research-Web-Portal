@@ -91,8 +91,8 @@ const searchProjects = async (req, res) => {
             searchResults = results[1]
         });
 
-        //check if user type is a student
-        if (student.userType.Type != process.env.STUDENT) { return res.status(401).json(generateRes(false, 401, "ACCESS_DENIED", { details: "Invalid account type for this operation." })); }
+        //check if user type is a student or faculty, will probably remove
+        // if (student.userType.Type != process.env.STUDENT || student.userType.Type != process.env.FACULTY) { return res.status(401).json(generateRes(false, 401, "ACCESS_DENIED", { details: "Invalid account type for this operation." })); }
 
         //do the results filtering / decision in this block, that way the ram is freed after it is finished.
         if (searchResults.length > 1) { //if there exists results, do the filtering
@@ -108,7 +108,7 @@ const searchProjects = async (req, res) => {
             //create the search object and search, then sort by score descending
             searchEngine = new search(projects, req.query.query, fields, searchTypes, weights);
             projects = searchEngine.search();
-            projects.sort((a, b) => b.score - a.score);
+            projects.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
             //grab the student's applications
             const applications = await Applications.findOne({ _id: student.userType.studentApplications });
             projects.forEach((element) => element.applied = false); //initally set all projects to applied false

@@ -28,7 +28,7 @@ export class ViewApplicationComponent {
     this.route.params.subscribe(params => {
       this.projectID = params['projectID'];
       this.applicantionID = params['applicationID'];
-    })
+    });
   }
 
   //This init makes a request to the server to get the data about a specific applicant, it then modifies the dates to the local time
@@ -85,12 +85,12 @@ export class ViewApplicationComponent {
 
   getChoice(answer: any, index: number) {
     let index1 = answer.answers.findIndex((element: string) => element == answer.choices[index]);
-    if(index1 !== -1) { return true; }
+    if (index1 !== -1) { return true; }
     return false;
   }
 
   isSelectedOption(i: number, j: number) {
-    if(this.answersArray[i][j].answer)
+    if (this.answersArray[i][j].answer)
       return true;
     return false;
   }
