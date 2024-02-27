@@ -253,7 +253,7 @@ const getAvailableMajors = async (req, res) => {
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         if (user) {
             majorsRecord = await retrieveOrCacheMajors(req, user.universityLocation);
-
+        }
         if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
 
         return res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
