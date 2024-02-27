@@ -23,6 +23,7 @@ export class ViewApplicationComponent {
   posted: String;
   deadline: String;
   appliedDate: String;
+  temp: SearchOptions = {};
 
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
