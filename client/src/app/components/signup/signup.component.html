@@ -1,35 +1,69 @@
-<div class="centerDivStyles">
-  <h2>Sign Up</h2>
-  <br>
-  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-    <mat-form-field class="form-field">
-      <mat-label> First Name </mat-label>
-      <input matInput type="text" formControlName="name" name="name" required>
-      <mat-error *ngIf="signupForm.get('name')?.invalid">{{ nameErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field class="form-field">
-      <mat-label> Email </mat-label>
-      <input matInput type="email" formControlName="email" name="email" required>
-      <mat-error *ngIf="signupForm.get('email')?.invalid">{{ emailErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field class="form-field">
-      <mat-label> Password </mat-label>
-      <input matInput type="password" formControlName="password" name="password" required>
-      <mat-error *ngIf="signupForm.get('password')?.invalid">{{ passwordErrorMessage() }}</mat-error>
-    </mat-form-field>
+<div class="root-container">
+  <div class="centerDivStyles">
+    <h2>Sign Up</h2>
     <br>
-    <!--[==[
-      Handle the AccountType
-      This will take automatically expand based on the list of account-types in "accountTypes" interface 
-    ]==]-->
-    <mat-form-field class="form-field">
-        <mat-label> Account Type </mat-label>
-        <mat-select placeholder="Select" required formControlName="accountType">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field class="form-field">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" id="name" formControlName="name" name="name" required>
+        <mat-error *ngIf="signupForm.get('name')?.invalid">{{ nameErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" id="email" formControlName="email" name="email" required>
+        <mat-error *ngIf="signupForm.get('email')?.invalid">{{ emailErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" id="password" formControlName="password" name="password" required>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="signupForm.get('password')?.invalid">{{ passwordErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>University</mat-label>
+        <mat-select id="universityLocation" formControlName="universityLocation" (selectionChange)="updateForm()" required>
+          <mat-option *ngFor="let university of universityLocations" [value]="university">{{ university }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="signupForm.get('universityLocation')?.invalid">{{ requiredFieldErrorMessage('universityLocation', 'University') }}</mat-error>
+      </mat-form-field>
+      <br>
+      <!--[==[
+        Handle the AccountType
+        This will take automatically expand based on the list of account-types in "accountTypes" interface 
+      ]==]-->
+      <mat-form-field class="form-field">
+        <mat-label>Account Type</mat-label>
+        <mat-select placeholder="Select" id="accountType" formControlName="accountType" (selectionChange)="updateForm()" required>
+          <mat-option [value]="null">Clear</mat-option>
           <mat-option *ngFor="let option of accountTypes" [value]="option.value">{{ option.text }}</mat-option>
         </mat-select>
-    </mat-form-field>
-    <br>
-    <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid"
-      class="submit-button">Submit</button>
-  </form> 
+        <mat-error *ngIf="signupForm.get('accountType')?.invalid">{{ requiredFieldErrorMessage('accountType', 'Account Type') }}</mat-error>
+      </mat-form-field>
+      <div *ngIf="signupForm.get('accountType')?.value === 0">
+        <div *ngIf="majors.length > 0; else progress_bar">
+          <mat-form-field class="form-field">
+            <mat-label>GPA</mat-label>
+            <input matInput type="text" id="gpa" formControlName="GPA" name="GPA" required>
+            <mat-error *ngIf="signupForm.get('GPA')?.invalid">{{ gpaErrorMessage() }}</mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field">
+            <mat-label>Majors</mat-label>
+            <mat-select id="Major" formControlName="Major" multiple>
+              <mat-option *ngFor="let major of majors" [value]="major">{{ major }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="signupForm.get('Major')?.invalid">{{ requiredFieldErrorMessage('Major', 'Majors') }}</mat-error>
+          </mat-form-field>
+        </div>
+        <ng-template #progress_bar>
+          <mat-progress-bar mode="determinate"></mat-progress-bar>
+        </ng-template>
+      </div>
+      <br>
+      <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid"
+        class="submit-button">Submit</button>
+    </form>
+  </div>
 </div>

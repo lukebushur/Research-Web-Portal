@@ -238,25 +238,23 @@ const confirmEmailToken = async (req, res) => {
     }
 }
 
-/*  This function gets the list of available majors from a university. It requires an access token and can be used by any account type,
-    student, faculty, or industry, it takes no fields in the request body.
+/*  This function gets the list of available majors from the university given as a 
+    query parameter. It has no other requirements and can be used by any account type, 
+    including student, faculty, and industry. It takes no fields in the request body.
 */
 const getAvailableMajors = async (req, res) => {
     try {
-        //Decode Access Token
-        const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
-        const user = await User.findOne({ email: decodeAccessToken.email });
-        if (user) {
-            majorsRecord = await Majors.findOne({ location: user.universityLocation });
-
-            if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
-
-            return res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
-        } else {
-            return res.status(400).json(generateRes(false, 400, "EMAIL_EXISTS", {}));
+        //Get the location query parameter
+        const location = req.query.university;
+        if (!location) {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
+
+        majorsRecord = await Majors.findOne({ location: location });
+
+        if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
+
+        return res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
