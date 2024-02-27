@@ -37,7 +37,6 @@ export class AppliedStudentTableComponent {
   ngOnInit() {
     this.tableData.AppliedStudentList.subscribe((value) => {
       this.testStudentData = value;
-      console.log(this.testStudentData);
       this.dataSource = new MatTableDataSource(this.testStudentData);
       this.dataSource.sort = this.sort;
     });
