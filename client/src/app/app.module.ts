@@ -56,6 +56,10 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
+import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +90,9 @@ import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.c
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
     ApplyToPostComponent,
+    ForgotPasswordComponent,
+    ConfirmResetPasswordComponent,
+    ForgotPasswordSubmittedComponent,
   ],
   imports: [
     BrowserModule,
@@ -117,6 +124,7 @@ import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.c
     MatSidenavModule,
     MatListModule,
     MatTabsModule,
+    MatProgressBarModule,
   ],
   providers: [
     {

@@ -20,6 +20,7 @@ describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
   let fixture: ComponentFixture<ApplyToPostComponent>;
   let getProjectInfoSpy: jasmine.Spy;
+  // Mock question data
   const testQuestionData: QuestionData[] = [
     {
       question: 'Choose any of the following.',
@@ -39,6 +40,7 @@ describe('ApplyToPostComponent', () => {
       required: true,
     },
   ];
+  // Mock project data
   const testProjectData: ProjectData = {
     professorName: 'Test Professor',
     professorEmail: 'testemail@email.com',
@@ -69,7 +71,8 @@ describe('ApplyToPostComponent', () => {
   let navigateSpy: jasmine.Spy;
   
   beforeEach(() => {
-
+    // Spy object for ApplyToPostService. Captures the provided function calls and returns
+    // predictable mock data instead.
     const applyService = jasmine.createSpyObj('ApplyToPostService', [
       'getProjectInfo',
       'createApplication',
@@ -77,6 +80,8 @@ describe('ApplyToPostComponent', () => {
     getProjectInfoSpy = applyService.getProjectInfo.and.returnValue(of(structuredClone(getProjectInfoResponse)));
     createApplicationSpy = applyService.createApplication.and.returnValue(of(createApplicationResponse));
 
+    // Spy object for Router. Captures the provided function calls and returns
+    // predictable mock data instead.
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
@@ -95,16 +100,18 @@ describe('ApplyToPostComponent', () => {
         BrowserAnimationsModule,
       ],
       providers: [
+        // Use Jasmine spy objects instead of the actual services/classes
         { provide: ApplyToPostService, useValue: applyService },
         { provide: Router, useValue: router },
         {
-          provide: ActivatedRoute, useValue: {
+          provide: ActivatedRoute,
+          useValue: {
             snapshot: {
               queryParamMap: convertToParamMap({
                 profName: testProjectData.professorName,
                 profEmail: testProjectData.professorEmail,
                 oppId: testProjectData.projectID,
-              }),
+              })
             }
           }
         },
@@ -117,6 +124,7 @@ describe('ApplyToPostComponent', () => {
 
   it('should create and initialize project data', () => {
     expect(component).toBeTruthy();
+    // Expect the project to be set correctly after ngOnInit
     expect(component.project).toEqual({
       ...testProjectData,
       questions: testQuestionData.map((question, i) => {
@@ -126,6 +134,7 @@ describe('ApplyToPostComponent', () => {
         };
       }),
     });
+    // Expect the form values to be set correctly after ngOnInit
     expect(component.formQuestions.value).toEqual([
       // Question 1 Answers
       {
@@ -138,20 +147,22 @@ describe('ApplyToPostComponent', () => {
       // Question 3 Answers
       '',
     ]);
-    expect(getProjectInfoSpy).withContext('getProjectInfo() called').toHaveBeenCalledOnceWith({
+    expect(getProjectInfoSpy).withContext('getProjectInfo() called with test data').toHaveBeenCalledOnceWith({
       professorEmail: testProjectData.professorEmail,
       projectID: testProjectData.projectID,
     });
   });
 
   it('getCheckBoxControl() should function correctly', () => {
+    // valid function call
     expect(component.getCheckBoxControl(0, 'item1')!.value).toBeFalse();
+    // invalid index (not a checkbox question)
     expect(component.getCheckBoxControl(1, 'item1')).toBeNull();
+    // invalid value (not a possible choice)
     expect(component.getCheckBoxControl(0, 'none')).toBeUndefined();
   });
 
   it('requireCheckboxesToBeChecked() should function correctly', () => {
-
     const checkboxGroup = new FormGroup({
       'one': new FormControl(false),
       'two': new FormControl(false),
@@ -159,9 +170,11 @@ describe('ApplyToPostComponent', () => {
     });
     const checkboxValidator = component.requireCheckboxesToBeChecked(1);
     let checkboxValidatorResult = checkboxValidator(checkboxGroup); 
+    // should not pass validation, as all checkbox controls are false
     expect(checkboxValidatorResult).toEqual({ requireCheckboxesToBeChecked: true });
     checkboxGroup.get('two')?.setValue(true);
     checkboxValidatorResult = checkboxValidator(checkboxGroup); 
+    // should pass validation, as at least one checkbox control is true
     expect(checkboxValidatorResult).toBeNull();
   });
 
@@ -178,12 +191,15 @@ describe('ApplyToPostComponent', () => {
   });
 
   it('dateToString() should function correctly', () => {
+    // no date given
     expect(component.dateToString(undefined)).toEqual('None');
     const dateStr = component.project.deadline;
+    // with date given
     expect(component.dateToString(dateStr)).toEqual('Mar 17, 2024');
   });
 
   it('submitApp() should function correctly', (done: DoneFn) => {
+    // set applyForm to valid values
     component.formQuestions.at(0).get('item1')!.setValue(true);
     component.formQuestions.at(0).get('item3')!.setValue(true);
     component.formQuestions.at(1).setValue('option2');
