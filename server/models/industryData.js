@@ -56,6 +56,10 @@ const industryDataSchema = new mongoose.Schema({
       default: [],
     },
   },
+  assessments: [{
+    name: String,
+    questions: [mongoose.Schema.Types.question],
+  }],
 });
 
 module.exports = mongoose.model('IndustryData', industryDataSchema);

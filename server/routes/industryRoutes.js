@@ -24,4 +24,7 @@ router.put('/editJob', verifyToken, industryController.editJob);
 // DELETE - delete a job at the specified ID
 router.delete('/deleteJob/:jobId', verifyToken, industryController.deleteJob);
 
+// POST - create a new assessment
+router.post('/createAssessment', verifyToken, industryController.createAssessment);
+
 module.exports = router;
