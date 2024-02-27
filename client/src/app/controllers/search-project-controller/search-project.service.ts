@@ -1,18 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'src/environments/environment';
-
-export interface SearchOptions {
-  query?: string,
-  majors?: string[],
-  GPA?: number,
-  npp?: number,
-  pageNum?: number,
-  posted?: Date,
-  deadline?: Date,
-};
+import { SearchOptions} from 'src/app/_models/searchOptions';
 
 @Injectable({
   providedIn: 'root'

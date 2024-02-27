@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { ActivatedRoute } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
+import { SearchOptions } from 'src/app/_models/searchOptions';
 
 @Component({
   selector: 'app-view-application',
@@ -21,10 +23,12 @@ export class ViewApplicationComponent {
   posted: String;
   deadline: String;
   appliedDate: String;
+  temp: SearchOptions = {};
 
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
-  constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute, private dateConverter: DateConverterService) {
+  constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute, private dateConverter: DateConverterService,
+    private searchService: SearchProjectService) {
     this.route.params.subscribe(params => {
       this.projectID = params['projectID'];
       this.applicantionID = params['applicationID'];
