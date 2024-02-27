@@ -3,6 +3,7 @@ const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
 const Major = require('../../models/majors');
 const { adminMajors } = require('../../helpers/inputValidation/requestValidation');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../../helpers/schemaCaching');
 
 
 /*  This function handles the addition of new major(s) to the database, requires a JWT, should be used with a POST request, and should only
@@ -27,12 +28,12 @@ const addMajors = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
-        let admin = await User.findOne({ email: decodeAccessToken.email });
+        let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const majorsSet = new Set(req.body.majors);
         const majorsArr = [...majorsSet];
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
-            let majorsRecord = await Major.findOne({ location: req.body.location });
+            let majorsRecord = await retrieveOrCacheMajors(req, req.body.location);
             //checks if a major record could be found, if so then adds the majors to the db, otherwise creates a new record.
             if (!majorsRecord) {
                 let majors = new Major({
@@ -77,10 +78,10 @@ const deleteMajors = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
-        let admin = await User.findOne({ email: decodeAccessToken.email });
+        let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
-            let majorsRecord = await Major.findOne({ location: req.body.location });
+            let majorsRecord = await retrieveOrCacheMajors(req, req.body.location);
             //checks if a major record could be found, if so then adds the majors to the db, otherwise creates a new record.
             if (!majorsRecord) {
                 return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND"));
@@ -120,12 +121,12 @@ const replaceMajors = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
-        let admin = await User.findOne({ email: decodeAccessToken.email });
+        let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const majorsSet = new Set(req.body.majors);
         const majorsArr = [...majorsSet];
         //check that the account type is an adminstrator account, other throw a authorized error response
         if (admin.userType.Type == process.env.ADMIN) {
-            let majorsRecord = await Major.findOne({ location: req.body.location });
+            let majorsRecord = await retrieveOrCacheMajors(req, req.body.location);
             //checks if a major record could be found, if so then adds the majors to the db, otherwise creates a new record.
             if (!majorsRecord) {
                 let majors = new Major({

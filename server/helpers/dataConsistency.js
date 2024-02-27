@@ -3,6 +3,7 @@ const Project = require('../models/project');
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../helpers/generateJSON');
+const { retrieveOrCacheApplications } = require('./schemaCaching');
 
 /*  This helper function updates student's information in their associated application record and project record. It takes three parameters, 
     User, the user schema object of the student - modifyFields, an object with the fields that are going to be modified - originalData, an object 
@@ -12,7 +13,7 @@ const generateRes = require('../helpers/generateJSON');
     will have the data updated to match the new student information. If there is an error of any kind, the catch statement will reset the student's information
     and return false, which indicates that an error occurred. Otherwise the method will return true.
 */
-const updateApplicationRecords = async (user, modifyFields, originalData) => {
+const updateApplicationRecords = async (req, user, modifyFields, originalData) => {
     try {
         //These variables store the value of the moifyFields if they exist, otherwise they store the originalData
         const GPA = modifyFields.GPA || originalData.GPA;
@@ -22,7 +23,7 @@ const updateApplicationRecords = async (user, modifyFields, originalData) => {
 
         //Check if the user has any applications, otherwise end the method because there is no need to update non existant data.
         if (!user.userType.studentApplications) { return true; }
-        let applications = await Application.findOne({ _id: user.userType.studentApplications }); //Get application record
+        let applications = await retrieveOrCacheApplications(req, user.userType.studentApplications);//Get application record
         if (!applications) { return false; } //if the application record was unable to be accessed, there is an error
 
         const promises = []; //Promises array
@@ -73,8 +74,8 @@ const updateApplicationRecords = async (user, modifyFields, originalData) => {
     }
 }
 
-const updateQuestions = async() => {
-    
+const updateQuestions = async () => {
+
 }
 
 module.exports = {
