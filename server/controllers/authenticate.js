@@ -250,10 +250,8 @@ const getAvailableMajors = async (req, res) => {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
 
-        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
-        if (user) {
-            majorsRecord = await retrieveOrCacheMajors(req, user.universityLocation);
-        }
+        majorsRecord = await retrieveOrCacheMajors(req, location);
+
         if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
 
         return res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
