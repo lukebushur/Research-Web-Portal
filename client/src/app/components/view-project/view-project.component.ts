@@ -135,7 +135,6 @@ export class ViewProjectComponent {
         this.studentData = dataWrapper;
         this.dataSource = new MatTableDataSource(this.studentData);
         this.dataSource.sort = this.sort;
-        console.log(this.studentData);
       },
       error: (error) => {
         console.error('Error fetching projects', error);
