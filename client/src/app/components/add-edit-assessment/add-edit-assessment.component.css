@@ -1,4 +1,3 @@
-
 .page-container {
   margin: 0px 20%;
   padding: 20px;
@@ -20,57 +19,6 @@ h1 {
 
 .item-to-center {
   margin: auto 12% auto 12%;
-}
-
-h2, h3 {
-  margin-bottom: 20px;
-}
-
-.question-heading {
-  display: flex;
-  justify-content: space-between;
-}
-
-.question-shift {
-  margin-left: 6%;
-}
-
-.required-field {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-h3 {
-  margin-left: 6%;
-}
-
-.choice-entry {
-  display: flex;
-  align-items: center;
-}
-
-.choice-entry > .choice-input {
-  flex-grow: 1;
-}
-
-.choice-shift {
-  margin-left: 12%;
-}
-
-.remove-choice {
-  margin-bottom: 20px;
-  margin-left: 10px;
-}
-
-.add-choice {
-  margin-bottom: 20px;
-}
-
-#add-question {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
 }
 
 .buttons-container {

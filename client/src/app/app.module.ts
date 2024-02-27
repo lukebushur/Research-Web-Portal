@@ -62,6 +62,7 @@ import { ConfirmResetPasswordComponent } from './components/confirm-reset-passwo
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
+import { CreateQuestionsFormComponent } from './components/create-questions-form/create-questions-form.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import { AddEditAssessmentComponent } from './components/add-edit-assessment/add
     ForgotPasswordSubmittedComponent,
     AssessmentBrowserComponent,
     AddEditAssessmentComponent,
+    CreateQuestionsFormComponent,
   ],
   imports: [
     BrowserModule,
