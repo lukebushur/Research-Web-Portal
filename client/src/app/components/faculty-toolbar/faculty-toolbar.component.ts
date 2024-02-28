@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavChoice } from 'src/app/_models/toolbar/navchoice';
 
 @Component({
   selector: 'app-faculty-toolbar',
@@ -10,6 +9,28 @@ import { Router } from '@angular/router';
   styleUrls: ['./faculty-toolbar.component.css']
 })
 export class FacultyToolbarComponent {
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
 
-  constructor(private router: Router) { }
+  navigationChoices: NavChoice[] = [
+    {
+      name: 'Dashboard',
+      link: '/faculty/dashboard',
+      icon: 'dashboard',      
+    },
+  ];
+
+  constructor(
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
+    private media: MediaMatcher
+  ) {
+    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+  }
+
+  ngOnDestroy(): void {
+    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+  }
 }
