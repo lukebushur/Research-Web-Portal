@@ -60,7 +60,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
-import { FacultyViewSpecificProjectComponent } from './components/faculty-view-specific-project/faculty-view-specific-project.component';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 
 @NgModule({
   declarations: [
@@ -94,7 +94,6 @@ import { FacultyViewSpecificProjectComponent } from './components/faculty-view-s
     ForgotPasswordComponent,
     ConfirmResetPasswordComponent,
     ForgotPasswordSubmittedComponent,
-    FacultyViewSpecificProjectComponent,
   ],
   imports: [
     BrowserModule,
@@ -127,6 +126,7 @@ import { FacultyViewSpecificProjectComponent } from './components/faculty-view-s
     MatListModule,
     MatTabsModule,
     MatProgressBarModule,
+    CdkAccordionModule,
   ],
   providers: [
     {

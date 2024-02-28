@@ -183,12 +183,15 @@ const getProject = async (req, res) => {
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
             switch (req.body.projectType) {
                 case "Active":
+                case "active":
                     recordID = user.userType.FacultyProjects.Active;
                     break;
                 case "Archived":
+                case "archived":
                     recordID = user.userType.FacultyProjects.Archived;
                     break;
                 case "Draft":
+                case "draft":
                     recordID = user.userType.FacultyProjects.Draft;
                     break;
                 default:
@@ -339,7 +342,7 @@ const updateProject = async (req, res) => {
                     throw error; //if the projectType is not draft, archived, or active then there is an error
             }
 
-            let project = await retrieveOrCacheProjects(req, recordID); 
+            let project = await retrieveOrCacheProjects(req, recordID);
             if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get and update the project from the project array that has the matching information 

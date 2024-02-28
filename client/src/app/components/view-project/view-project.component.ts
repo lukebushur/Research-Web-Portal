@@ -5,6 +5,7 @@ import { FacultyProjectService } from 'src/app/controllers/faculty-project-contr
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 
 
 //Interface for an entries to the applied student table
@@ -32,8 +33,11 @@ export class ViewProjectComponent {
   projectID: string = ""; //projectID, grabbed from the url parameters and used in requests
   projectType: string = ""; //projectType, grabbed from the url parameter and used in requests
   projectName: string = ""; //Project Name
+  projectData: any = -1; // The object that will store the data of the project from the getProject route, set in the constructor
   studentData: detailedAppliedStudentList[] = []; //This array contains the student data for the table
   dataSource = new MatTableDataSource(this.studentData); //This object is used for the material table data source to allow for the table to work/sort etc
+  posted: String; // The string that holds the date the project was posted on
+  deadline: String; // the string that is the deadline of the project
 
   constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute,
     private dateConverter: DateConverterService, private _liveAnnouncer: LiveAnnouncer,) {
@@ -44,6 +48,9 @@ export class ViewProjectComponent {
       this.facultyService.getProject(this.projectID, this.projectType).subscribe({
         next: (data) => {
           this.projectName = data.success.project.projectName; //Grabs project name from request
+          this.projectData = data.success.project; //stores project data from request into project data variable
+          this.posted = this.dateConverter.convertDate(this.projectData.posted); //get the string for the posted variable
+          this.deadline = this.dateConverter.convertDate(this.projectData.deadline); //get the string for the deadlien variable
         },
         error: (error) => {
           console.error('Error fetching projects', error);
