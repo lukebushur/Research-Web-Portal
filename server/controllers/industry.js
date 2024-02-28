@@ -33,7 +33,6 @@ const getJobs = async (req, res) => {
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
     }
-
 }
 
 const getJob = async (req, res) => {
@@ -102,7 +101,8 @@ const createJob = async (req, res) => {
                     active: [],
                     draft: [],
                     archived: [],
-                }
+                },
+                assessments: [],
             })
             : await IndustryData.findById(user.userType.industryData);
 
@@ -213,6 +213,66 @@ const deleteJob = async (req, res) => {
     }
 };
 
+const getAssessments = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        const industryData = await IndustryData.findById(user.userType.industryData);
+        if (!industryData) {
+            return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
+        }
+
+        const assessments = industryData.assessments;
+
+        return res.status(200).json(generateRes(true, 200, "ASSESSMENTS_FOUND", { assessments: assessments }));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+};
+
+const getAssessment = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        const assessmentId = req.params.assessmentId;
+        if (!assessmentId) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        //check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        //check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        const industryData = await IndustryData.findById(user.userType.industryData);
+        if (!industryData) {
+            return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
+        }
+
+        const assessment = industryData.assessments.find(assessmentId);
+        if (assessment) {
+            return res.status(200).json(generateRes(true, 200, "ASSESSMENT_FOUND", { assessment: assessment }));
+        }
+
+        return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+};
+
 const createAssessment = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -225,8 +285,108 @@ const createAssessment = async (req, res) => {
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
-        
-        
+
+        const assessmentName = req.body.name;
+        const assessmentQuestions = req.body.questions;
+
+        const industryData = (!user.userType.industryData)
+            ? new IndustryData({
+                jobs: {
+                    active: [],
+                    draft: [],
+                    archived: [],
+                },
+                assessments: [],
+            })
+            : await IndustryData.findById(user.userType.industryData);
+
+        industryData.assessments.push({
+            name: assessmentName,
+            questions: assessmentQuestions,
+        });
+
+        await industryData.save();
+
+        if (!user.userType.industryData) {
+            user.userType.industryData = industryData._id;
+            await user.save();
+        }
+
+        return res.status(201).json(generateRes(true, 201, "ASSESSMENT_CREATED", {}));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+};
+
+const editAssessment = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        // check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        // check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+
+        const assessmentId = req.body.assessmentId;
+        const assessmentDetails = req.body.assessmentDetails;
+
+        const result = await IndustryData.updateOne(
+            { _id: user.userType.industryData, 'assessments._id': assessmentId },
+            { $set: assessmentDetails } 
+        );
+        console.log(result);
+        // findById(user.userType.industryData);
+        // const assessmentToUpdate = industryData.assessments.find({ '_id': assessmentId });
+        // assessmentToUpdate.set(assessmentDetails);
+        // await industryData.save();
+
+        return res.status(201).json(generateRes(true, 201, "ASSESSMENT_UPDATED", {}));
+    } catch (error) {
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
+    }
+};
+
+const deleteAssessment = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        const assessmentId = req.params.assessmentId;
+        if (!assessmentId) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        // check if user exists
+        const user = await User.findOne({ email: decodeAccessToken.email });
+
+        // check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        const result = await IndustryData.updateOne(
+            { _id: user.userType.industryData },
+            { $pull: { assessments: { _id: assessmentId }}}
+        );
+        console.log(result);
+
+        // const industryData = await IndustryData.findById(user.userType.industryData);
+        // const numAssessments = industryData.assessments.length;
+        // const result = await industryData.updateOne({}, )
+
+        // const indexToRemove = industryData.assessments.indexOf(assessmentId);
+        // const assessmentRemoved = industryData.assessments.splice(indexToRemove, 1);
+
+        // if (numJobs === jobsWithRemoved.length) {
+        //     return res.status(404).json(generateRes(false, 404, "ASSESSMENT_NOT_FOUND", {}));
+        // }
+        // await industryData.save();
+
+        return res.status(200).json(generateRes(true, 200, 'ASSESSMENT_DELETED', {}));
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
     }
@@ -238,5 +398,10 @@ module.exports = {
     createJob,
     editJob,
     deleteJob,
+
+    getAssessments,
+    getAssessment,
     createAssessment,
+    editAssessment,
+    deleteAssessment,
 };
