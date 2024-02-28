@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
@@ -11,7 +12,11 @@ import { AssessmentsService } from 'src/app/controllers/assessments-controller/a
 export class AssessmentCardComponent {
   @Input() assessmentData: AssessmentData;
 
-  constructor(private router: Router, private assessmentsService: AssessmentsService) { }
+  constructor(
+    private router: Router,
+    private assessmentsService: AssessmentsService,
+    private snackbar: MatSnackBar,
+  ) { }
 
   dateToString(date: Date): string {
     const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
@@ -35,6 +40,20 @@ export class AssessmentCardComponent {
   }
 
   deleteAssessment(): void {
-
+    this.assessmentsService.deleteAssessment(this.assessmentData._id).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.snackbar.open('Assessment successfully deleted!', 'Dismiss', {
+            duration: 5000,
+          });
+        }
+      },
+      error: (data: any) => {
+        console.log('Error', data);
+        this.snackbar.open('Error deleting assessment', 'Dismiss', {
+          duration: 5000,
+        });
+      }
+    });
   }
 }

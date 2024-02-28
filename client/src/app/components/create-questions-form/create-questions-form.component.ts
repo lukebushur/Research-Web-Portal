@@ -14,7 +14,9 @@ interface RequirementOption {
 })
 export class CreateQuestionsFormComponent {
   @Input() questionsGroup: FormGroup;
+
   @Input() questionsData?: QuestionData[];
+  isCreateForm: boolean = true;
 
   reqTypes: RequirementOption[] = [
     {
@@ -39,15 +41,34 @@ export class CreateQuestionsFormComponent {
     if (!this.questionsData) {
       this.addQuestion();
     }
-    // console.log(this.questionsData);
-    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes', changes);
-    
-    console.log('qData', this.questionsData);
-    
+    if (changes['questionsData'].previousValue || !changes['questionsData'].currentValue) {
+      return;
+    }
+    if (!this.isCreateForm) {
+      return;
+    }
+    this.isCreateForm = false;
+    this.questions.clear();
+
+    for (const question of this.questionsData!) {
+      const questionGroup = this.fb.group({
+        question: [question.question, [Validators.required]],
+        requirementType: [question.requirementType, [Validators.required]],
+        required: [question.required, [Validators.required]],
+        choices: (question.choices) 
+          ? this.fb.array(question.choices.map(choice => {
+            return this.fb.control(choice, [Validators.required]);
+          }))
+          : this.fb.array([this.fb.control('', [Validators.required])]),
+      });
+      if (question.requirementType === 'text') {
+        questionGroup.get('choices')?.disable();
+      }
+      this.questions.push(questionGroup);
+    }
   }
 
   get questions() {
@@ -61,8 +82,8 @@ export class CreateQuestionsFormComponent {
 
   addQuestion() {
     const questionGroup = this.fb.group({
-      question: ['', Validators.required],
-      requirementType: ['', Validators.required],
+      question: ['', [Validators.required]],
+      requirementType: ['', [Validators.required]],
       required: [true, [Validators.required]],
       choices: this.fb.array([this.fb.control('', [Validators.required])]),
     })
