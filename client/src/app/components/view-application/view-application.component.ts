@@ -27,8 +27,7 @@ export class ViewApplicationComponent {
 
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
-  constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute, private dateConverter: DateConverterService,
-    private searchService: SearchProjectService) {
+  constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute, private dateConverter: DateConverterService,) {
     this.route.params.subscribe(params => {
       this.projectID = params['projectID'];
       this.applicantionID = params['applicationID'];
