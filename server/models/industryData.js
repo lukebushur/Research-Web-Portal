@@ -57,7 +57,14 @@ const industryDataSchema = new mongoose.Schema({
     },
   },
   assessments: [{
-    name: String,
+    name: {
+      type: String,
+      required: true,
+    },
+    dateCreated: {
+      type: Date,
+      default: Date.now,
+    },
     questions: [mongoose.Schema.Types.question],
   }],
 });

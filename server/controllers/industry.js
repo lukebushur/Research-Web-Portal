@@ -262,9 +262,9 @@ const getAssessment = async (req, res) => {
             return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
         }
 
-        const assessment = industryData.assessments.find(assessmentId);
+        const assessment = industryData.assessments.find(a => a.id === assessmentId);
         if (assessment) {
-            return res.status(200).json(generateRes(true, 200, "ASSESSMENT_FOUND", { assessment: assessment }));
+            return res.status(200).json(generateRes(true, 200, "ASSESSMENT_FOUND", { assessment: JSON.stringify(assessment) }));
         }
 
         return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
