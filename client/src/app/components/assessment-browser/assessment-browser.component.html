@@ -1,1 +1,4 @@
-<p>assessment-browser works!</p>
+<div class="assessments-container">
+  <app-assessment-card *ngFor="let assessment of assessments" [assessmentData]="assessment"></app-assessment-card>
+</div>
+<div class="bottom-portion"></div>
