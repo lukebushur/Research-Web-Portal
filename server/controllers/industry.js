@@ -175,7 +175,7 @@ const editJob = async (req, res) => {
         jobToUpdate.set(jobDetails);
         await industryData.save();
 
-        return res.status(201).json(generateRes(true, 201, "JOB_UPDATED", {}));
+        return res.status(200).json(generateRes(true, 200, "JOB_UPDATED", {}));
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
     }
@@ -335,16 +335,17 @@ const editAssessment = async (req, res) => {
         const assessmentDetails = req.body.assessmentDetails;
 
         const result = await IndustryData.updateOne(
-            { _id: user.userType.industryData, 'assessments._id': assessmentId },
-            { $set: assessmentDetails } 
+            { _id: user.userType.industryData, 'assessments._id': assessmentId},
+            { $set: {
+                'assessments.$.name': assessmentDetails.name,
+                'assessments.$.questions': assessmentDetails.questions,
+            }},
         );
-        console.log(result);
-        // findById(user.userType.industryData);
-        // const assessmentToUpdate = industryData.assessments.find({ '_id': assessmentId });
-        // assessmentToUpdate.set(assessmentDetails);
-        // await industryData.save();
+        if (result.acknowledged) {
+            return res.status(200).json(generateRes(true, 200, "ASSESSMENT_UPDATED", {}));
+        }
 
-        return res.status(201).json(generateRes(true, 201, "ASSESSMENT_UPDATED", {}));
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
     }
@@ -372,21 +373,11 @@ const deleteAssessment = async (req, res) => {
             { _id: user.userType.industryData },
             { $pull: { assessments: { _id: assessmentId }}}
         );
-        console.log(result);
+        if (result.acknowledged) {
+            return res.status(200).json(generateRes(true, 200, 'ASSESSMENT_DELETED', {}));
+        }
 
-        // const industryData = await IndustryData.findById(user.userType.industryData);
-        // const numAssessments = industryData.assessments.length;
-        // const result = await industryData.updateOne({}, )
-
-        // const indexToRemove = industryData.assessments.indexOf(assessmentId);
-        // const assessmentRemoved = industryData.assessments.splice(indexToRemove, 1);
-
-        // if (numJobs === jobsWithRemoved.length) {
-        //     return res.status(404).json(generateRes(false, 404, "ASSESSMENT_NOT_FOUND", {}));
-        // }
-        // await industryData.save();
-
-        return res.status(200).json(generateRes(true, 200, 'ASSESSMENT_DELETED', {}));
+        return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
     } catch (error) {
         return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { error }));
     }
