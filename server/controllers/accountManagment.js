@@ -56,7 +56,7 @@ const modifyAccount = async (req, res) => {
 
             await user.save(); //Save the student account
             //Check if the updating of applicationRecords was successful, if it was not, the original data was used to reset the account information
-            const success = await updateApplicationRecords(user, req.body, originalData);
+            const success = await updateApplicationRecords(req, user, req.body, originalData);
             if (!success) {
                 return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
             }
@@ -75,7 +75,7 @@ const modifyAccount = async (req, res) => {
             if (req.body.universityLocation) {
                 user.universityLocation = req.body.universityLocation;
             }
-            await user.save(); 
+            await user.save();
 
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", { "details": "Invalid account type for this route." }));
@@ -108,7 +108,7 @@ const getAccountInfo = async (req, res) => {
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", { "details": "Invalid account type for this route." }));
         }
-        
+
         return res.status(200).json(generateRes(true, 200, "ACCOUNT_FOUND", { accountData: accountData }));
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -135,7 +135,7 @@ const resetPassword = async (req, res) => {
             const expiresIn = moment().add(10, 'm').toISOString();
 
             //Update user with password token, expiry, and provisional password
-            await User.findOneAndUpdate({ email: req.body.email }, {
+            const user = await User.findOneAndUpdate({ email: req.body.email }, {
                 $set: {
                     'security.passwordReset': {
                         token: passwordResetToken,
@@ -144,6 +144,12 @@ const resetPassword = async (req, res) => {
                     },
                 },
             });
+
+            //User could not be found -> return error response
+            if (!user) {
+                return res.status(400).json(generateRes(false, 400, "INVALID_EMAIL", {}));
+            }
+
             //sends email to the users notifying them
             await sendPasswordResetConfirmation({ email: req.body.email, passwordResetToken: passwordResetToken })
             res.status(200).json(generateRes(true, 200, "PWD_RESET_EMAIL_SENT", {}));
@@ -340,7 +346,10 @@ const sendPasswordResetConfirmation = async (user) => {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: 'Reset your password',
-        text: `Click link to reset your password: http://localhost:9000/reset-password/${user.passwordResetToken}`
+        html: `
+<p>Click the link below to reset your password:</p>
+<a href="http://${process.env.FRONT_END_IP}/confirm-reset-password/${encodeURIComponent(user.email)}/${user.passwordResetToken}">
+    Reset Password</a>`
     };
 
     await transport.sendMail(mailOptions, function (error, info) {

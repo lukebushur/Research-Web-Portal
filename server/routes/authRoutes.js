@@ -26,6 +26,6 @@ router.post('/confirmEmail', verifyToken, authController.confirmEmailToken);
 router.post('/login', authController.login);
 
 //GET Get available Majors
-router.get('/getMajors', verifyToken, authController.getAvailableMajors)
+router.get('/getMajors', authController.getAvailableMajors)
 
 module.exports = router;

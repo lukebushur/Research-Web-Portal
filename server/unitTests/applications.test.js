@@ -252,6 +252,28 @@ describe('GET /api/search/searchProjects', () => {
     });
 });
 
+//Search for projects with page specifications for one result per page
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects with number per page field, and return only one project', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=virtual reality&npp=1').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(1);
+            expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
+            done();
+        });
+    });
+});
+
+//Search for projects with page specifications
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects with number per page field and page number field, and return the least similar project', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=virtual reality&npp=1&pageNum=2').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(1);
+            expect(res.body.success.results[0]).to.have.property('score').to.equal(0);
+            done();
+        });
+    });
+});
+
 describe('GET /api/search/searchProjects', () => {
     it('should search for projects and retrieve two searching by major', (done) => {
         chai.request(server).get('/api/search/searchProjects?query=Computer Science').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
