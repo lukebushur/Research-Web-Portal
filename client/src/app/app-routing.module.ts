@@ -23,6 +23,7 @@ import { PageNotFoundScreenComponent } from './components/page-not-found-screen/
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
+import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'signup', pathMatch: 'full' },
@@ -64,9 +65,9 @@ const routes: Routes = [
   { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
   //this route is used to view the full list of all opportunites available for students
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
-  //this route is used to view the full list of all opportunites available for students
-  {path: "**", component: PageNotFoundScreenComponent},
-  { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
+  { path: 'edit-profile', component: EditProfileScreenComponent},
+  {path: "**", component: PageNotFoundScreenComponent}, //404 route THIS MUST BE LAST IN THIS PAGE
+
 ];
 
 @NgModule({
