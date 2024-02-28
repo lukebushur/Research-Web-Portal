@@ -16,7 +16,6 @@ import { Location } from '@angular/common';
 })
 export class AddEditJobComponent {
   initialJobData: JobCardData;
-
   isCreateJob: boolean = true;
 
   addEditForm = new FormGroup({

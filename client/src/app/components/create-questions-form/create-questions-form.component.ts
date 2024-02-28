@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 
 interface RequirementOption {
   name: string;
@@ -13,6 +14,7 @@ interface RequirementOption {
 })
 export class CreateQuestionsFormComponent {
   @Input() questionsGroup: FormGroup;
+  @Input() questionsData?: QuestionData[];
 
   reqTypes: RequirementOption[] = [
     {
@@ -32,6 +34,21 @@ export class CreateQuestionsFormComponent {
   constructor(
     private fb: FormBuilder,
   ) { }
+
+  ngOnInit(): void {
+    if (!this.questionsData) {
+      this.addQuestion();
+    }
+    // console.log(this.questionsData);
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes', changes);
+    
+    console.log('qData', this.questionsData);
+    
+  }
 
   get questions() {
     return this.questionsGroup.get('questions') as FormArray;

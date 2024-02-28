@@ -51,6 +51,7 @@ const routes: Routes = [
       { path: 'edit-job/:jobId', component: AddEditJobComponent },
       { path: 'assessments', component: AssessmentBrowserComponent },
       { path: 'create-assessment', component: AddEditAssessmentComponent },
+      { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
     ],
   },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
