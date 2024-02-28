@@ -55,6 +55,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -90,6 +91,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     StudentDashboard,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    PageNotFoundScreenComponent,
     ApplyToPostComponent,
     ForgotPasswordComponent,
     ConfirmResetPasswordComponent,

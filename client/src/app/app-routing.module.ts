@@ -19,6 +19,7 @@ import { StudentDashboard } from './components/student-dashboard/dashboard.compo
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
@@ -64,6 +65,7 @@ const routes: Routes = [
   //this route is used to view the full list of all opportunites available for students
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
   //this route is used to view the full list of all opportunites available for students
+  {path: "**", component: PageNotFoundScreenComponent},
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
 ];
 
