@@ -77,7 +77,7 @@ export class LoginComponent {
           if (accountType === environment.industryType) {
             this.router.navigate(['/industry/dashboard']);
           } else {
-            this.router.navigate(['/faculty-dashboard']);
+            this.router.navigate(['/faculty/dashboard']);
           }
         } else {
           console.error('Authentication token not found in the response.');

@@ -112,6 +112,6 @@ describe('LoginComponent', () => {
   it('should route to the faculty dashboard component', () => {
     component.onSubmit();
     expect(loginSpy.calls.any()).withContext('login called').toBe(true);
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/faculty-dashboard']);
+    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/faculty/dashboard']);
   });
 });
