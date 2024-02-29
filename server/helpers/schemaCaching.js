@@ -8,6 +8,7 @@ const User = require('../models/user');
 const Majors = require('../models/majors');
 const Application = require('../models/application');
 const Project = require('../models/project');
+const Industry = require('../models/industryData');
 
 
 const reqFieldName = "cachedObjs"; //name for the field where cached objects will be stored in the req object
@@ -74,7 +75,7 @@ const retrieveOrCacheProjects = async (req, objectid) => {
     if (checkForObj(req, objectid)) {
         tempProject = getObj(req, objectid);
     } else {
-        tempProject = await Project.findOne({ _id: objectid }); //Get application record
+        tempProject = await Project.findById(objectid); //Get application record
         cacheObject(req, objectid, tempProject);
     }
 
@@ -100,14 +101,28 @@ const retrieveOrCacheApplications = async (req, objectid) => {
     if (checkForObj(req, objectid)) {
         tempApplication = getObj(req, objectid);
     } else {
-        tempApplication = await Application.findOne({ _id: objectid }); //Get application record
+        tempApplication = await Application.findById(objectid); //Get application record
         cacheObject(req, objectid, tempApplication);
     }
 
     return tempApplication;
 }
 
+const retrieveOrCacheIndustry = async (req, objectid) => {
+    let tempIndustry;
+
+    if (checkForObj(req, objectid)) {
+        tempIndustry = getObj(req, objectid);
+    } else {
+        tempIndustry = await Industry.findById(objectid); //Get application record
+        cacheObject(req, objectid, tempIndustry);
+    }
+
+    return tempIndustry;
+}
+
 module.exports = {
     retrieveOrCacheMajors, retrieveOrCacheApplications,
-    retrieveOrCacheUsers, retrieveOrCacheProjects
+    retrieveOrCacheUsers, retrieveOrCacheProjects,
+    retrieveOrCacheIndustry
 }
