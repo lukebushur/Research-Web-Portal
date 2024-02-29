@@ -294,6 +294,8 @@ const getApplications = async (req, res) => {
             const applicationList = student.userType.studentApplications;
             //get the project lists for active, archived, and draft projects
             const applications = await retrieveOrCacheApplications(req, applicationList);
+            if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
+
             let recordIDs = []; //array for each projectRecordID
             let opportunityIDs = {}; //dictionary where each key is a projectRecordID and its value is an array with each element being an array of size 2, with the opporutnityID and the index of that application
 
@@ -347,6 +349,35 @@ const getApplications = async (req, res) => {
             });
 
             return res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
+        } else {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+    }
+}
+
+/*  This route grabs a specific application from a student's record. It requires a student access token and should be used with a post request
+    This route takes one field in the http body which is applicationID. This is a string that is the object id of the application object in the 
+    array of applications that will be fetched from the db
+*/
+const getApplication = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+        if (student.userType.Type === parseInt(process.env.STUDENT)) {
+            const applicationList = student.userType.studentApplications;
+            //get the project lists for active, archived, and draft projects
+            const applications = await retrieveOrCacheApplications(req, applicationList);
+            if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
+
+            const application = applications.applications.find((x) => x.id === req.body.applicationID);
+            if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: application } }); }
+            else { return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {})); }
         } else {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
@@ -521,5 +552,5 @@ module.exports = {
     createApplication, deleteApplication,
     getApplications, getTopRecentApplications,
     demoGetStudentInfo, updateApplication,
-    getProjectData
+    getProjectData, getApplication
 };

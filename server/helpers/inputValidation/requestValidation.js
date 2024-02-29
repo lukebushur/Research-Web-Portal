@@ -16,6 +16,8 @@ const registerSchema = Joi.object({
     "Major": Joi.array().items(Joi.string()),
     "universityLocation": Joi.string().min(2).max(86),
 });
+//schema for validating new password for password reseting 
+const resetPasswordSchema = Joi.string().min(10).max(255).required();
 //This schema is used to validate login http bodies
 const loginSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
@@ -113,5 +115,5 @@ module.exports = {
     deleteProjectSchema, appDecision,
     applicationSchema, adminMajors,
     studentAccountModification, facultyAccountModification,
-    jobSchema,
+    jobSchema, resetPasswordSchema
 }
