@@ -341,10 +341,15 @@ const getApplications = async (req, res) => {
                             projectName: postItem.projects[projIndex].projectName,
                             posted: postItem.projects[projIndex].posted,
                             description: postItem.projects[projIndex].description,
-                            professorEmail: postItem.professorEmail
+                            professorEmail: postItem.professorEmail,
+                            appliedDate: applications.applications[appIndex].appliedDate,
+                            deadline: postItem.projects[projIndex].deadline,
+                            GPAREQ: postItem.projects[projIndex].GPA,
+                            projectSponsor: postItem.professorName,
+                            applicationID: applications.applications[appIndex]._id,
                         }
                         returnArray.push(newObj);
-                    })
+                    });
                 }
             });
 
