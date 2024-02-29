@@ -199,7 +199,7 @@ export class SignupComponent {
           } else if (accountType === environment.studentType) {
             this.router.navigate(['/student-dashboard']);
           } else {
-            this.router.navigate(['/faculty-dashboard']);
+            this.router.navigate(['/faculty/dashboard']);
           }
         } else {
           console.error('Authentication token not found in the response.');
