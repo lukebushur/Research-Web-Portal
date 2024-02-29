@@ -122,6 +122,7 @@ const createJob = async (req, res) => {
             startDate: req.body.jobDetails.startDate,
             endDate: req.body.jobDetails.endDate,
             datePosted: new Date(),
+            questions: req.body.jobDetails.questions,
         };
 
         if (jobType === "active") {
@@ -304,7 +305,6 @@ const createAssessment = async (req, res) => {
             name: assessmentName,
             questions: assessmentQuestions,
         });
-
         await industryData.save();
 
         if (!user.userType.industryData) {
