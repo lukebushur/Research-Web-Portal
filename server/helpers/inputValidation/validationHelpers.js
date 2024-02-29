@@ -2,6 +2,7 @@ const generateRes = require('../generateJSON');
 const Application = require('../../models/application');
 const Project = require('../../models/project');
 const User = require('../../models/user');
+const { retrieveOrCacheApplications, retrieveOrCacheProjects, retrieveOrCacheUsers } = require('../schemaCaching');
 
 /*  This helper function is used to get the faculty project from the database records. As future use cases are added, this function should be modified to 
     grab the project using information from the new requests 
@@ -19,7 +20,7 @@ const getProject = async (req, res, student) => {
         }
 
         //This sequence of network operations are unavoidable as each relies on a previous operation to complete successfully
-        const applications = await Application.findOne({ _id: student.userType.studentApplications }); //Get Application record from student information
+        const applications = await retrieveOrCacheApplications(req, student.userType.studentApplications); //Get Application record from student information
         if (!applications) {
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid applicationID." }));
             return;
@@ -27,7 +28,7 @@ const getProject = async (req, res, student) => {
         const application = applications.applications.find(y => y.id === req.body.applicationID); //Get specific application
         projectID = application.opportunityId; //get the projectID from the application
 
-        const projects = await Project.findOne({ _id: application.opportunityRecordId }); //Get project records
+        const projects = await retrieveOrCacheProjects(req, application.opportunityRecordId); //Get project records
         if (!projects) { //If the project record doesn't exist, there is an error with the request
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "The project the application is associated with no longer exists." }));
             return;
@@ -37,12 +38,12 @@ const getProject = async (req, res, student) => {
         return project;
     } else if (professorEmail) { //Otherwise the projectID exists and the professorEmail field exists.
 
-        const faculty = await User.findOne({ email: professorEmail.professorEmail }); //Get faculty account record
+        const faculty = await retrieveOrCacheUsers(req, professorEmail.professorEmail); //Get faculty account record
         if (!faculty) {
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid professorEmail address." }));
             return
         }
-        const projects = await Project.findOne({ _id: faculty.userType.FacultyProjects.Active }); //Get the activeProject record because students can only apply to active projects
+        const projects = await retrieveOrCacheProjects(req, faculty.userType.FacultyProjects.Active); //Get the activeProject record because students can only apply to active projects
 
         const project = projects.projects.find(x => x.id === projectID.projectID); //get the specific project because projectID exists
         return project;
@@ -59,7 +60,7 @@ const getMajors = (req, res) => {
     let project = hasField(req.body, "project");
     let major = hasField(req.body, "Major");
 
-    if (!project && !major) { //Currently, only the update and creat project routes need to use the getMajors helper function. They both have a subfield of "project", so if it does not exist an error response is generated
+    if (!project && !major) { //Currently, only the update and create project routes need to use the getMajors helper function. They both have a subfield of "project", so if it does not exist an error response is generated
         res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Missing project or field." }));
         return
     } else if (project && !project.project.majors[0] && !major) { //This checks that the majors field exists, as future logic in the projectValidation will require it. This needs to be last

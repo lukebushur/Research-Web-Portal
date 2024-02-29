@@ -3,6 +3,7 @@ const User = require('../models/user');
 const IndustryData = require('../models/industryData');
 const { jobSchema } = require('../helpers/inputValidation/requestValidation');
 const generateRes = require('../helpers/generateJSON');
+const { retrieveOrCacheUsers, retrieveOrCacheIndustry } = require('../helpers/schemaCaching');
 
 // Get all the jobs associated with an industry user.
 const getJobs = async (req, res) => {
@@ -11,14 +12,14 @@ const getJobs = async (req, res) => {
         const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         //check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        const industryData = await IndustryData.findById(user.userType.industryData);
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
         if (!industryData) {
             return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
         }
@@ -75,7 +76,7 @@ const createJob = async (req, res) => {
         const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         // check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
@@ -104,7 +105,7 @@ const createJob = async (req, res) => {
                 },
                 assessments: [],
             })
-            : await IndustryData.findById(user.userType.industryData);
+            : await retrieveOrCacheIndustry(req, user.userType.industryData);
 
         const newJob = {
             employer: req.body.jobDetails.employer,
@@ -191,14 +192,13 @@ const deleteJob = async (req, res) => {
         }
 
         // check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
-
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        const industryData = await IndustryData.findById(user.userType.industryData);
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
         const numJobs = industryData.jobs.active.length;
         const jobsWithRemoved = industryData.jobs.active.pull({ _id: req.params.jobId });
 

@@ -31,5 +31,7 @@ router.get('/demoGetStudentInfo', verifyToken, applications.demoGetStudentInfo);
 
 router.post('/getProjectInfo', verifyToken, applications.getProjectData);
 
+router.post('/getApplication', verifyToken, applications.getApplication);
+
 
 module.exports = router;

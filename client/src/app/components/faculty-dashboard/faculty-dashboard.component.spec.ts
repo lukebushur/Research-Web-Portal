@@ -4,9 +4,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { Component } from '@angular/core';
 
-@Component({ standalone: true, selector: 'app-faculty-toolbar', template: '' })
-class FacultyToolbarStubComponent {}
-
 @Component({ standalone: true, selector: 'app-research-project-card', template: '' })
 class ResearchProjectCardStubComponent {}
 
@@ -25,7 +22,6 @@ describe('FacultyDashboardComponent', () => {
       declarations: [FacultyDashboardComponent],
       imports: [
         HttpClientTestingModule,
-        FacultyToolbarStubComponent,
         ResearchProjectCardStubComponent,
         AppliedStudentTableStubComponent,
         SpinnerSubComponent,

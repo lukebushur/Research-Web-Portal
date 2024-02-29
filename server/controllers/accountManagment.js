@@ -2,11 +2,12 @@ const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../helpers/generateJSON');
 const { updateApplicationRecords } = require('../helpers/dataConsistency');
-const { studentAccountModification, facultyAccountModification, emailSchema } = require('../helpers/inputValidation/requestValidation');
+const { studentAccountModification, facultyAccountModification, emailSchema, resetPasswordSchema } = require('../helpers/inputValidation/requestValidation');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const moment = require('moment');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../helpers/schemaCaching');
 
 
 /*  This controller handles the modification of accounts and is currently incomplete as it will be modified as the faculty account schema is 
@@ -22,7 +23,7 @@ const modifyAccount = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab account info
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         if (user.userType.Type === parseInt(process.env.STUDENT)) { //check if account is student
             //Validate the http request body for a student request
@@ -56,7 +57,7 @@ const modifyAccount = async (req, res) => {
 
             await user.save(); //Save the student account
             //Check if the updating of applicationRecords was successful, if it was not, the original data was used to reset the account information
-            const success = await updateApplicationRecords(user, req.body, originalData);
+            const success = await updateApplicationRecords(req, user, req.body, originalData);
             if (!success) {
                 return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
             }
@@ -92,7 +93,7 @@ const getAccountInfo = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         let accountData = {};
         accountData.email = user.email;
         accountData.name = user.name;
@@ -125,39 +126,29 @@ const getAccountInfo = async (req, res) => {
 */
 const resetPassword = async (req, res) => {
     try {
-        if (req.body.provisionalPassword.length >= 6 && req.body.provisionalPassword.length <= 255) {
-            //Hash Password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(req.body.provisionalPassword, salt);
+        //Generate Password Reset Token and expiresIn - 10 minutes
+        const passwordResetToken = uuidv4();
+        const expiresIn = moment().add(10, 'm').toISOString();
 
-            //Generate Password Reset Token and expiresIn - 10 minutes
-            const passwordResetToken = uuidv4();
-            const expiresIn = moment().add(10, 'm').toISOString();
-
-            //Update user with password token, expiry, and provisional password
-            const user = await User.findOneAndUpdate({ email: req.body.email }, {
-                $set: {
-                    'security.passwordReset': {
-                        token: passwordResetToken,
-                        provisionalPassword: hashedPassword,
-                        expiry: expiresIn
-                    },
+        //Update user with password token, expiry, and provisional password
+        const user = await User.findOneAndUpdate({ email: req.body.email }, {
+            $set: {
+                'security.passwordReset': {
+                    token: passwordResetToken,
+                    expiry: expiresIn
                 },
-            });
+            },
+        });
 
-            //User could not be found -> return error response
-            if (!user) {
-                return res.status(400).json(generateRes(false, 400, "INVALID_EMAIL", {}));
-            }
-
-            //sends email to the users notifying them
-            await sendPasswordResetConfirmation({ email: req.body.email, passwordResetToken: passwordResetToken })
-            res.status(200).json(generateRes(true, 200, "PWD_RESET_EMAIL_SENT", {}));
-            return;
-        } else {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
-            return;
+        //User could not be found -> return error response
+        if (!user) {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
         }
+
+        //sends email to the users notifying them
+        await sendPasswordResetConfirmation({ email: req.body.email, passwordResetToken: passwordResetToken })
+        res.status(200).json(generateRes(true, 200, "PWD_RESET_EMAIL_SENT", {}));
+        return;
     } catch (error) {
         res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
         return;
@@ -177,12 +168,26 @@ const resetPasswordConfirm = async (req, res) => {
 
         //check if passwordResetToken matches the token in the DB
         if (user.security.passwordReset.token === req.body.passwordResetToken) {
+            const { error } = resetPasswordSchema.validate(req.body.provisionalPassword);
+            if (error) {
+                await User.updateOne({ email: req.body.email }, {
+                    $set: {
+                        'security.passwordReset.token': null,
+                        'security.passwordReset.provisionalPassword': null,
+                        'security.passwordReset.expiry': null,
+                    },
+                });
+                return res.status(401).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid provisional password." }));
+            }
 
+            //Hash Password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(req.body.provisionalPassword, salt);
             //check if password reset token expired
             if (new Date().getTime() <= new Date(user.security.passwordReset.expiry).getTime()) {
                 await User.updateOne({ email: req.body.email }, {
                     $set: { //resets the password reset fields, and sets the password to the new password
-                        'password': user.security.passwordReset.provisionalPassword,
+                        'password': hashedPassword,
                         'security.passwordReset.token': null,
                         'security.passwordReset.provisionalPassword': null,
                         'security.passwordReset.expiry': null,
@@ -226,10 +231,10 @@ const changeEmailConfirm = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //get user from email in the access token
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if email exists 
-        const existingEmail = await User.findOne({ email: user.security.changeEmail.provisionalEmail });
+        const existingEmail = await retrieveOrCacheUsers(req, user.security.changeEmail.provisionalEmail);
 
         if (!existingEmail) {//if the email doesn't already exist sends error response 
             if (user.security.changeEmail.token === req.body.changeEmailToken) { //check that changeEmailToken is correct

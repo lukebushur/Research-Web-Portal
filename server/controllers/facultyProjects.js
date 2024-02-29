@@ -4,6 +4,7 @@ const User = require('../models/user');
 const JWT = require('jsonwebtoken');
 const { projectSchema, deleteProjectSchema, appDecision } = require('../helpers/inputValidation/requestValidation');
 const generateRes = require('../helpers/generateJSON');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjects } = require('../helpers/schemaCaching');
 
 /*  This function handles the faculty project creation, should only be used as a POST request, and requires and access token
     This funciton takes information required for creating a faculty project, creates an active project in the DB, and updates the 
@@ -21,7 +22,7 @@ const createProject = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
@@ -109,7 +110,7 @@ const deleteProject = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
@@ -137,7 +138,7 @@ const deleteProject = async (req, res) => {
             }
 
             //gets the project record, otherwise sends error response 
-            let project = await Project.findById(recordID);
+            let project = await retrieveOrCacheProjects(req, recordID);
             if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else {
                 //If there is no error, get the number of projects from the projects array and then remove an the selected project from the array
@@ -173,7 +174,7 @@ const getProject = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
@@ -182,19 +183,22 @@ const getProject = async (req, res) => {
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
             switch (req.body.projectType) {
                 case "Active":
+                case "active":
                     recordID = user.userType.FacultyProjects.Active;
                     break;
                 case "Archived":
+                case "archived":
                     recordID = user.userType.FacultyProjects.Archived;
                     break;
                 case "Draft":
+                case "draft":
                     recordID = user.userType.FacultyProjects.Draft;
                     break;
                 default:
                     throw error; //if the projectType is not draft, archived, or active then there is an error
             }
 
-            let projectRecord = await Project.findById(recordID);
+            let projectRecord = await retrieveOrCacheProjects(req, recordID);
             if (!projectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get and update the project from the project array that has the matching information 
@@ -237,7 +241,7 @@ const getProjects = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
@@ -249,9 +253,9 @@ const getProjects = async (req, res) => {
             let draftProjects;
 
             const promises = [
-                Project.findById(projectsList.Archived),
-                Project.findById(projectsList.Active),
-                Project.findById(projectsList.Draft),
+                retrieveOrCacheProjects(req, projectsList.Archived),
+                retrieveOrCacheProjects(req, projectsList.Active),
+                retrieveOrCacheProjects(req, projectsList.Draft),
             ];
 
             await Promise.all(promises).then(results => {
@@ -308,7 +312,7 @@ const updateProject = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
@@ -338,7 +342,7 @@ const updateProject = async (req, res) => {
                     throw error; //if the projectType is not draft, archived, or active then there is an error
             }
 
-            let project = await Project.findById(recordID);
+            let project = await retrieveOrCacheProjects(req, recordID);
             if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get and update the project from the project array that has the matching information 
@@ -382,7 +386,7 @@ const archiveProject = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
@@ -394,7 +398,7 @@ const archiveProject = async (req, res) => {
             }
 
             const userId = user._id; //Grabs the active projects from the user specified by the access token and then checks to see if the list exists
-            let project = await Project.findById(user.userType.FacultyProjects.Active);
+            let project = await retrieveOrCacheProjects(req, user.userType.FacultyProjects.Active);
             if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
 
             const archProject = project._doc.projects.find(x => x.id === req.body.projectID); //Grabs the specified project from the array from the Record
@@ -482,7 +486,7 @@ const applicationDecision = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const faculty = await User.findOne({ email: decodeAccessToken.email });
+        const faculty = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (faculty.userType.Type == process.env.FACULTY) {
@@ -494,13 +498,13 @@ const applicationDecision = async (req, res) => {
                 }));
             }
             //get the projectlist from the faculty account
-            let project = await Project.findOne({ _id: faculty.userType.FacultyProjects.Active });
+            let project = await retrieveOrCacheProjects(req, faculty.userType.FacultyProjects.Active);
             if (!project) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             //get the index of the project for the projects array and the application index in the specified project's application array
             const projIndex = project.projects.findIndex(y => y.id === req.body.projectID);
             const projAppIndex = project.projects[projIndex].applications.findIndex(x => x.application.toString() === req.body.applicationID);
             //get the application list from the application id
-            let application = await Application.findOne({ _id: project.projects[projIndex].applications[projAppIndex].applicationRecordID });
+            let application = await retrieveOrCacheApplications(req, project.projects[projIndex].applications[projAppIndex].applicationRecordID);
             if (!application) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
             //get the application index from the application record
             const appIndex = application.applications.findIndex(x => x.id === req.body.applicationID);
@@ -536,9 +540,14 @@ const getAllActiveProjects = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+        /*
+            if (user.userType.Type != process.env.FACULTY) {
+                return res.status(400).json(generateRes(false, 400, "UNAUTHORIZED", {details: "Invalid account type for this route"}));
+            }
+        */
 
-        //get the project lists for active, archived, and draft projects
+        //get the project lists for active, archived, and draft projects,
         let activeProjects = await Project.find({ type: "Active" });
 
         let data = [];
@@ -584,7 +593,7 @@ const fetchApplicant = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
@@ -593,12 +602,12 @@ const fetchApplicant = async (req, res) => {
 
             let activeProjects;
 
-            activeProjects = await Project.findById(projectsList.Active);
+            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active);
 
             //This block of code grabs the specified project from the projects record, then grabs the applicant index from the array of applicants and sets the applicant variable
             let applicant, project, applicantIndex;
             if (activeProjects) {
-                project = activeProjects.projects.find((element) => element.id = req.body.projectID);
+                project = activeProjects.projects.find((element) => element.id.toString() == req.body.projectID);
                 applicantIndex = project.applications.findIndex((element) => element.application.toString() === req.body.applicationID);
                 if (applicantIndex == -1) { return res.status(404).json(generateRes(false, 404, "APPLICANT_NOT_FOUND")); }
                 else { applicant = project.applications[applicantIndex]; }
@@ -606,7 +615,7 @@ const fetchApplicant = async (req, res) => {
 
             //This block of code then grabs teh specified applicantion record from the applicant's record in the project database
             //It then sets up the applicantData object to be sent back in the request
-            let applicantRecord = await Application.findById(applicant.applicationRecordID);
+            let applicantRecord = await retrieveOrCacheApplications(req, applicant.applicationRecordID);
             let applicantData;
             if (applicantRecord) {
                 const application = applicantRecord.applications.find((element) => element.id = applicant.application);
@@ -662,7 +671,7 @@ const fetchAllApplicants = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
@@ -671,7 +680,7 @@ const fetchAllApplicants = async (req, res) => {
 
             let activeProjects;
 
-            activeProjects = await Project.findById(projectsList.Active);
+            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active);
 
             let theApplicants = {}; //object to store the array of applicants
             if (activeProjects) {
@@ -707,7 +716,7 @@ const fetchApplicantsFromProject = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
@@ -715,7 +724,7 @@ const fetchApplicantsFromProject = async (req, res) => {
             //get the project lists for active, archived, and draft projects
 
             let activeProjects, project;
-            activeProjects = await Project.findById(projectsList.Active);
+            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active);
 
             let theApplicants = []; //An array for the applicants
             if (activeProjects) {

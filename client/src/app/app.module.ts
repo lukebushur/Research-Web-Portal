@@ -4,12 +4,10 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
-import { HeaderBarComponent } from './components/header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,11 +53,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 import { CreateQuestionsFormComponent } from './components/create-questions-form/create-questions-form.component';
@@ -68,10 +68,8 @@ import { AssessmentCardComponent } from './components/assessment-browser/assessm
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     SignupComponent,
     ConfirmEmailComponent,
-    HeaderBarComponent,
     FacultyDashboardComponent,
     ResearchProjectCardComponent,
     LoginComponent,
@@ -93,6 +91,7 @@ import { AssessmentCardComponent } from './components/assessment-browser/assessm
     StudentDashboard,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    PageNotFoundScreenComponent,
     ApplyToPostComponent,
     ForgotPasswordComponent,
     ConfirmResetPasswordComponent,
@@ -133,6 +132,7 @@ import { AssessmentCardComponent } from './components/assessment-browser/assessm
     MatListModule,
     MatTabsModule,
     MatProgressBarModule,
+    CdkAccordionModule,
   ],
   providers: [
     {

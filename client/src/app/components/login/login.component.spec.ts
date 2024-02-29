@@ -109,9 +109,9 @@ describe('LoginComponent', () => {
     expect(submitButton.disabled).toBe(false);
   });
 
-  it('should route to the faculty dashboard component', () => {
+  it('should route to the student dashboard component', () => {
     component.onSubmit();
     expect(loginSpy.calls.any()).withContext('login called').toBe(true);
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/faculty-dashboard']);
+    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student-dashboard']);
   });
 });
