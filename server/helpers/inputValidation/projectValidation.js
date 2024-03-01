@@ -8,6 +8,7 @@ const Majors = require('../../models/majors')
 const JWT = require('jsonwebtoken');
 const generateRes = require('../generateJSON');
 const { getProject, getMajors, getDecision } = require('./validationHelpers');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../schemaCaching');
 
 const questionsWithChoices = ["radio button", "check box"]; //This is a const array of potential options for question types that have multiple provided answers
 const statusChoices = ["Hold", "Accept", "Reject"]; //This is a const array for the options in updated an application decision
@@ -25,7 +26,7 @@ const applicationValidation = async (req, res, next) => {
         //First grab the student information, it will be needed to verify the student's GPA, and potentially to get the applications in the getProject method
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-        const student = await User.findOne({ email: decodeAccessToken.email }); //Get student record
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email); //Get student record
 
         const project = await getProject(req, res, student);
         if (!project) { return; } //If the project is not found, then a response has already been generated, so the function should end
@@ -76,7 +77,7 @@ const applicationValidation = async (req, res, next) => {
         next();
 
     } catch (error) {
-        res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { "details": "Error in validating requirements." }));
+        res.status(500).json(generateRes(false, 500, "INPUT_ERROR", { "details": "Error in validating requirements." }));
         return;
     }
 }
@@ -89,10 +90,10 @@ const projectMajorValidation = async (req, res, next) => {
         //Grab information about user account information
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-        const userAccount = await User.findOne({ email: decodeAccessToken.email });
+        const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         //Get list of majors corresponding to the user's university
         if (!userAccount.universityLocation) { next(); } //This is a temporary inclusion to ensure that the request can succeed if the user account does not have an universityLocation field 
-        const majors = await Majors.findOne({ location: userAccount.universityLocation });
+        const majors = await retrieveOrCacheMajors(req, userAccount.universityLocation);
         if (!majors) {
             res.status(500).json(generateRes(false, 500, "SERVER_ERROR", { details: "No major list found corresponding to user university location." }));
             return;

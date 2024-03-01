@@ -4,6 +4,7 @@ const User = require('../../models/user');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../../helpers/generateJSON');
 const { applicationSchema } = require('../../helpers/inputValidation/requestValidation');
+const { retrieveOrCacheUsers, retrieveOrCacheProjects, retrieveOrCacheApplications } = require('../../helpers/schemaCaching');
 
 /*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
@@ -31,8 +32,8 @@ const createApplication = async (req, res) => {
         let faculty;
         //promise to make both user requests at the same time
         const promises = [
-            User.findOne({ email: decodeAccessToken.email }),
-            User.findOne({ email: req.body.professorEmail })
+            retrieveOrCacheUsers(req, decodeAccessToken.email),
+            retrieveOrCacheUsers(req, req.body.professorEmail)
         ];
 
         await Promise.all(promises).then(results => {
@@ -43,7 +44,7 @@ const createApplication = async (req, res) => {
         if (student && student.userType.Type == process.env.STUDENT) {
 
             const activeProjectID = faculty.userType.FacultyProjects.Active; //activeProjectID is the id of the activeProjects record for the faculty accounts
-            const activeProjects = await Project.findOne(_id = activeProjectID); //grabs the array of active projects from the project record
+            const activeProjects = await retrieveOrCacheProjects(req, activeProjectID); //grabs the array of active projects from the project record
             if (!activeProjects) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})) }
 
             const existingProject = activeProjects._doc.projects.find(x => x.id === req.body.projectID); //Grabs the specified project from the array by the projectID in the request
@@ -128,10 +129,10 @@ const createApplication = async (req, res) => {
                         applications: newApplication,
                     }
                 });
-                //Because the ID in the db doesn't exist until it is in the db, retrieve the updated document and then
-                //get the newApplication object into newApp
+                //Because the ID in the db doesn't exist until it is in the db, retrieve the updated document and then get the newApplication object into newApp
+                //DO NOT USE retrieveOrCacheApplication here as it is necessary to refetch the data
                 const doc = await Application.findOne({ _id: applicationRecord });
-                const newApp = doc._doc.applications.find(y => y.opportunityId.toString() == existingProject.id);
+                const newApp = doc._doc.applications.find(y => y.opportunityId == existingProject.id);
                 //update the project with a new application
                 console.log(student.GPA + student.Major);
                 await Project.updateOne({ _id: activeProjectID, "projects": { "$elemMatch": { "_id": existingProject._id } } }, {
@@ -181,11 +182,11 @@ const updateApplication = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        let student = await User.findOne({ email: decodeAccessToken.email });
+        let student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         if (student && student.userType.Type === parseInt(process.env.STUDENT)) {
             //fetch application list from db, then check if it exists
-            let applications = await Application.findOne({ _id: student.userType.studentApplications });
+            let applications = await retrieveOrCacheApplications(req, student.userType.studentApplications);
             if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})) }
 
             applications = await Application.updateOne({ _id: student.userType.studentApplications, "applications": { "$elemMatch": { "_id": req.body.applicationID } } }, {
@@ -221,7 +222,7 @@ const deleteApplication = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //get the student and store applicationID in local variable
-        const student = await User.findOne({ email: decodeAccessToken.email });
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const applicationID = req.body.applicationID;
         //check if user type is student
         if (student.userType.Type === parseInt(process.env.STUDENT)) {
@@ -237,12 +238,12 @@ const deleteApplication = async (req, res) => {
             const recordID = student.userType.studentApplications;
 
             //gets the application record, otherwise sends error response 
-            let applications = await Application.findById(recordID);
+            let applications = await retrieveOrCacheApplications(req, recordID);
             if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})) }
             else {
                 //get the specific application object to get the project object id and then fetch that project
                 const selectedApp = applications._doc.applications.find(y => y.id === applicationID);
-                const project = await Project.findOne({ _id: selectedApp.opportunityRecordId });
+                const project = await retrieveOrCacheProjects(req, selectedApp.opportunityRecordId);
                 //get the specific project index that application is for and then get the index of the respective application object in that project's application array
                 const projectIndex = project._doc.projects.findIndex(y => y.id === selectedApp.opportunityId.toString());
                 const selectedProjectAppID = project._doc.projects[projectIndex].applications.find(y => y.application.toString() === applicationID);
@@ -287,12 +288,14 @@ const getApplications = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const student = await User.findOne({ email: decodeAccessToken.email });
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         if (student.userType.Type === parseInt(process.env.STUDENT)) {
             const applicationList = student.userType.studentApplications;
             //get the project lists for active, archived, and draft projects
-            const applications = await Application.findById(applicationList);
+            const applications = await retrieveOrCacheApplications(req, applicationList);
+            if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
+
             let recordIDs = []; //array for each projectRecordID
             let opportunityIDs = {}; //dictionary where each key is a projectRecordID and its value is an array with each element being an array of size 2, with the opporutnityID and the index of that application
 
@@ -318,7 +321,7 @@ const getApplications = async (req, res) => {
             //Get the even elements and intialize a return array
             const evenElements = [...recordIDs].filter((element, index) => index % 2 === 0);
             let returnArray = [];
-            //get the project records that are in the array of record ids
+            //get the project records that are in the array of record ids, uses a more specific db request to get multiple projects so it should not use the retrieveOrCacheProjects
             const posts = await Project.find({ _id: { $in: evenElements } });
             /*  For each projectrecord in the posts array, check if the opporunityIDs object has a field for that specified projectRecord 
                 Then for each of the array elements in the corresponding value, get the application from the index in the value array and the projectIndex from the 
@@ -354,6 +357,35 @@ const getApplications = async (req, res) => {
     }
 }
 
+/*  This route grabs a specific application from a student's record. It requires a student access token and should be used with a post request
+    This route takes one field in the http body which is applicationID. This is a string that is the object id of the application object in the 
+    array of applications that will be fetched from the db
+*/
+const getApplication = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+        if (student.userType.Type === parseInt(process.env.STUDENT)) {
+            const applicationList = student.userType.studentApplications;
+            //get the project lists for active, archived, and draft projects
+            const applications = await retrieveOrCacheApplications(req, applicationList);
+            if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
+
+            const application = applications.applications.find((x) => x.id === req.body.applicationID);
+            if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: application } }); }
+            else { return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {})); }
+        } else {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+        }
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+    }
+}
+
 const getTopRecentApplications = async (req, res) => {
     try {
         const numApplications = req.params.num || 3;
@@ -362,12 +394,12 @@ const getTopRecentApplications = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const student = await User.findOne({ email: decodeAccessToken.email });
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         if (student.userType.Type == parseInt(process.env.STUDENT)) {
             const applicationList = student.userType.studentApplications;
             //get the project lists for active, archived, and draft projects
-            const applications = await Application.findById(applicationList);
+            const applications = await retrieveOrCacheApplications(req, applicationList);
 
             // sort according to most recent
             const sortedApplications = applications.applications.toSorted((a, b) => {
@@ -394,7 +426,7 @@ const getTopRecentApplications = async (req, res) => {
                 opportunitySet.add(recordId);
             }
 
-            // find the professors associated with the top applications
+            // find the professors associated with the top applications, uses a specific db request for multiple projects so shoudln't use retrieveOrCacheProjects
             const professors = await Project.find({ _id: { $in: opportunitySet.values().toArray() } });
 
             // compile relevent information about the top applications in an array
@@ -431,7 +463,7 @@ const demoGetStudentInfo = async (req, res) => {
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const student = await User.findOne({ email: decodeAccessToken.email });
+        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
         if (student.userType.Type === parseInt(process.env.STUDENT)) {
 
@@ -461,13 +493,13 @@ const demoGetStudentInfo = async (req, res) => {
 const getProjectData = async (req, res) => {
     try {
         //ensure that the body contains the necessary fields
-        if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(400, "INPUT_ERROR", {})); }
+        if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         const promises = [ //promises to grab both accounts
-            User.findOne({ email: decodeAccessToken.email }),
-            User.findOne({ email: req.body.professorEmail })]
+            retrieveOrCacheUsers(req, decodeAccessToken.email),
+            retrieveOrCacheUsers(req, req.body.professorEmail)]
 
         let student;
         let faculty;
@@ -483,7 +515,7 @@ const getProjectData = async (req, res) => {
 
             let recordID = faculty.userType.FacultyProjects.Active;; //recordID will be taken from the user's record depending on the projectType field in the request
 
-            let projectRecord = await Project.findById(recordID); //get the active project record
+            let projectRecord = await retrieveOrCacheProjects(req, recordID); //get the active project record
             if (!projectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get the project that matches the projectID
@@ -502,7 +534,7 @@ const getProjectData = async (req, res) => {
                         majors: project.majors,
                         GPA: project.GPA,
                         responsibilities: project.responsibilities
-                    } 
+                    }
                     return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
                 }
                 else
@@ -520,5 +552,5 @@ module.exports = {
     createApplication, deleteApplication,
     getApplications, getTopRecentApplications,
     demoGetStudentInfo, updateApplication,
-    getProjectData
+    getProjectData, getApplication
 };
