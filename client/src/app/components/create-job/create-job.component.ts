@@ -117,8 +117,6 @@ export class CreateJobComponent {
       },
     };
 
-    console.log(data);
-
     this.createJobService.createJob(data).subscribe({
       next: (response: any) => {
         if (response.success) {
