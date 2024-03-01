@@ -91,6 +91,8 @@ export class ResearchProjectCardComponent implements OnInit {
     });
   }
 
+  
+
   // Define a method to get the project data based on the project type
   getProjectsByType(type: string, data: any): any[] {
     switch (type) {

@@ -12,6 +12,7 @@ import { FacultyProjectService } from 'src/app/controllers/faculty-project-contr
 export class FacultyApplicationListComponent {
   projectId: string = "";
   projects: any[] = [];
+  currentProject: any = {};
 
   constructor (private tableData: TableDataSharingService, private route: ActivatedRoute, private facultyProjectService: FacultyProjectService,
     private dateConverter: DateConverterService) {

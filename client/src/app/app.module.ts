@@ -61,6 +61,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -87,8 +88,14 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     JobCardComponent,
     StudentDashboard,
     ViewProjectComponent,
+    FacultyApplicationListComponent,
     StudentOpportunitesSearchPageComponent,
     ApplyToPostComponent,
+    ForgotPasswordComponent,
+    ConfirmEmailComponent,
+    ConfirmResetPasswordComponent,
+    PageNotFoundScreenComponent,
+    ForgotPasswordSubmittedComponent
   ],
   imports: [
     BrowserModule,
@@ -122,6 +129,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
+    MatSliderModule
   ],
   providers: [
     {
