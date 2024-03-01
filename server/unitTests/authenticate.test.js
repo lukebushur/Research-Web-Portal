@@ -15,7 +15,7 @@ const randomPass = Math.random().toString(36).substring(0).repeat(2);
 const randomName = Math.random().toString(36).substring(2);
 const randomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
 const changeRandomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
-
+const newPassword = randomPass.substring(2, 9).repeat(2);
 
 before(function (done) { //This waits for the connection to the DB to be set up before running the tests
     setTimeout(done, 4000);
@@ -145,7 +145,7 @@ describe('POST /api/accountManagement/resetPassword', () => {
     it('should return a success response', (done) => {
         chai.request(server)
             .post('/api/accountManagement/resetPassword')
-            .send({ "email": randomEmail, "provisionalPassword": randomPass.substring(2, 9).repeat(2) })
+            .send({ "email": randomEmail })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -160,12 +160,33 @@ describe('POST /api/accountManagement/confirmResetPassword', () => {
     it('should return a successful reset password response', (done) => {
         chai.request(server)
             .post('/api/accountManagement/confirmResetPassword')
-            .send({ "passwordResetToken": PWD_reset_token, "email": randomEmail })
+            .send({ "passwordResetToken": PWD_reset_token, "provisionalPassword": newPassword, "email": randomEmail })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('PWD_RESET_SUCCESS');
+                done();
+            });
+    });
+});
+//login unit test to ensure that the password was successfully reset
+describe('POST /api/login', () => {
+    it('should return a login success response', (done) => {
+        chai.request(server)
+            .post('/api/login')
+            .send({ "email": randomEmail, "password": newPassword })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('LOGIN_SUCCESS');
+
+                expect(res.body.success).to.have.property('accessToken');
+                expect(res.body.success).to.have.property('refreshToken');
+
+                access_token = res.body.success.accessToken; //Store access and refresh tokens
+                refresh_token = res.body.success.refreshToken;
                 done();
             });
     });

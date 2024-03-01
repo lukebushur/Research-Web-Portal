@@ -4,9 +4,9 @@ const { registerSchema, loginSchema, emailSchema } = require('../helpers/inputVa
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
-const moment = require('moment');
 const generateRes = require('../helpers/generateJSON');
-const Majors = require('../models/majors');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../helpers/schemaCaching');
+
 
 /*  This function handles the login funciton, should only be used with a POST request
     This funciton takes the login credentials and returns an accesstoken and refresh token
@@ -24,7 +24,7 @@ const login = async (req, res) => {
             }));
             return;
         } else {
-            const user = await User.findOne({ email: req.body.email });
+            const user = await retrieveOrCacheUsers(req, req.body.email);
 
             //check that there exists a user with that email, otherwise sends an error response
             if (user) {
@@ -169,8 +169,8 @@ const token = async (req, res) => {
 
         try { // Gets the email from the refresh token and validates the refreshtoken against the database
             const decodeRefreshToken = JWT.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN);
-            const user = await User.findOne({ email: decodeRefreshToken.email });
-            const existingTokens = await user.security.tokens;
+            const user = await retrieveOrCacheUsers(req, decodeRefreshToken.email);
+            const existingTokens = user.security.tokens;
 
             //checking if refresh token is in document
             if (existingTokens.some(token => token.refreshToken === refreshToken)) {
@@ -211,7 +211,7 @@ const confirmEmailToken = async (req, res) => {
             const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
             //check if user exists
-            const user = await User.findOne({ email: decodeAccessToken.email });
+            const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
             //check if email is already confirmed
             if (!user.emailConfirmed) {
@@ -238,25 +238,23 @@ const confirmEmailToken = async (req, res) => {
     }
 }
 
-/*  This function gets the list of available majors from a university. It requires an access token and can be used by any account type,
-    student, faculty, or industry, it takes no fields in the request body.
+/*  This function gets the list of available majors from the university given as a 
+    query parameter. It has no other requirements and can be used by any account type, 
+    including student, faculty, and industry. It takes no fields in the request body.
 */
 const getAvailableMajors = async (req, res) => {
     try {
-        //Decode Access Token
-        const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
-        const user = await User.findOne({ email: decodeAccessToken.email });
-        if (user) {
-            majorsRecord = await Majors.findOne({ location: user.universityLocation });
-
-            if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
-
-            return res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
-        } else {
-            return res.status(400).json(generateRes(false, 400, "EMAIL_EXISTS", {}));
+        //Get the location query parameter
+        const location = req.query.university;
+        if (!location) {
+            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
+
+        majorsRecord = await retrieveOrCacheMajors(req, location);
+
+        if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
+
+        return res.status(200).json(generateRes(true, 200, "MAJORS_FOUND", { "majors": majorsRecord.majors }));
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }

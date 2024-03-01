@@ -23,7 +23,8 @@ export class EmailService {
       .subscribe(
         (response: any) => {
           console.log('Email confirmation successful!', response);
-          this.router.navigate(['/home']);
+          // TODO: Update this to the correct route
+          // this.router.navigate(['/home']);
         },
         (error: any) => {
           console.error('Confirmation failed.', error);

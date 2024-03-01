@@ -252,6 +252,28 @@ describe('GET /api/search/searchProjects', () => {
     });
 });
 
+//Search for projects with page specifications for one result per page
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects with number per page field, and return only one project', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=virtual reality&npp=1').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(1);
+            expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
+            done();
+        });
+    });
+});
+
+//Search for projects with page specifications
+describe('GET /api/search/searchProjects', () => {
+    it('should search for projects with number per page field and page number field, and return the least similar project', (done) => {
+        chai.request(server).get('/api/search/searchProjects?query=virtual reality&npp=1&pageNum=2').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+            expect(res.body.success.results).to.have.length(1);
+            expect(res.body.success.results[0]).to.have.property('score').to.equal(0);
+            done();
+        });
+    });
+});
+
 describe('GET /api/search/searchProjects', () => {
     it('should search for projects and retrieve two searching by major', (done) => {
         chai.request(server).get('/api/search/searchProjects?query=Computer Science').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
@@ -394,6 +416,31 @@ describe('POST /api/applications/createApplication', () => {
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('APPLICATION_CREATED');
+                done();
+            })
+    })
+});
+
+//Unit test for getting a singular applicatiom's information
+describe('POST /api/applications/getApplication', () => {
+    it('Should return the data from a singular application', (done) => {
+        chai.request(server)
+            .post('/api/applications/getApplication')
+            .set({ "Authorization": `Bearer ${student_access_token}` })
+            .send({ "applicationID": applicationID })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('APPLICATION_FOUND');
+                expect(res.body.success.application).to.have.property('questions').to.have.length(3);
+                expect(res.body.success.application).to.have.property('opportunityRecordId');
+                expect(res.body.success.application).to.have.property('opportunityId');
+                expect(res.body.success.application).to.have.property('status');
+                expect(res.body.success.application).to.have.property('appliedDate');
+                expect(res.body.success.application).to.have.property('lastModified');
+                expect(res.body.success.application).to.have.property('lastUpdated');
+                expect(res.body.success.application).to.have.property('_id');
                 done();
             })
     })
