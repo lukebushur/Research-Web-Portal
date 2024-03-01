@@ -1,5 +1,5 @@
 .page-container {
-  margin: 0px 20%;
+  margin: 0px 18%;
   padding: 20px;
   height: max-content;
   background-color: white;
@@ -19,11 +19,39 @@ h1.item-to-center {
   margin-top: 1em;
 }
 
+.first-field {
+  margin-top: 1em;
+}
+
+.block {
+  display: block;
+  margin-bottom: 10px;
+}
+
 span {
   margin-left: 1em;
 }
 
-.buttons-container {
+.radio-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.questions-operations {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+.buttons-container {
+  display: flex;
+}
+
+.first-button {
+  margin-right: 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
 }
