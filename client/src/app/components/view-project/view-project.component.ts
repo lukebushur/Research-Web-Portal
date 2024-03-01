@@ -38,9 +38,12 @@ export class ViewProjectComponent {
   posted: String; // The string that holds the date the project was posted on
   deadline: String; // the string that is the deadline of the project
   
+  minGPA: number = 2;
+  maxGPA: number = 4;
 
   @Input() SearchMajor = "";
   @Input() SearchName = "";
+  @Input() SearchEmail = "";
 
   constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute,
     private dateConverter: DateConverterService, private _liveAnnouncer: LiveAnnouncer,) {
@@ -138,8 +141,11 @@ export class ViewProjectComponent {
     this.filteredData = this.studentData.filter((student) => {
       let PassesNameSearch = false;
       let PassesMajorSearch = false;
+      let PassesGPACheck = false;
+      let PassesEmailCheck = false;
       if (this.SearchName.length == 0) PassesNameSearch = true;
       if (this.SearchMajor.length == 0) PassesMajorSearch = true;
+      if (this.SearchEmail.length == 0) PassesEmailCheck = true;
 
       // TODO
       // Improve string comparisons
@@ -149,8 +155,12 @@ export class ViewProjectComponent {
           if (this.SearchMajor.length > 0 && major.toLowerCase().indexOf(this.SearchMajor.toLowerCase()) !== -1) PassesMajorSearch = true;
         })
       }
+      if (this.SearchEmail.length > 0 && student.email.toLowerCase().indexOf(this.SearchEmail.toLowerCase()) !== -1) PassesEmailCheck = true;
+      
 
-      return PassesMajorSearch && PassesNameSearch
+      if (this.minGPA <= student.GPA && student.GPA <= this.maxGPA) PassesGPACheck = true;
+
+      return PassesMajorSearch && PassesNameSearch && PassesGPACheck
     })
     this.dataSource = new MatTableDataSource(this.filteredData);
   }
