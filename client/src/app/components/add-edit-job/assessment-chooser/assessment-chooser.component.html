@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Choose an Assessment</h1>
+<div mat-dialog-content>
+  <mat-progress-bar mode="indeterminate" *ngIf="!assessments; else dropdown"></mat-progress-bar>
+  <ng-template #dropdown>
+    <mat-form-field>
+      <mat-label>Assessment</mat-label>
+      <mat-select [formControl]="assessmentControl">
+        <mat-option *ngFor="let assessment of assessments" [value]="assessment.questions">{{ assessment.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-template>
+</div>
+<div mat-dialog-actions class="buttons-container">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="assessmentControl.value">Submit</button>
+</div>
