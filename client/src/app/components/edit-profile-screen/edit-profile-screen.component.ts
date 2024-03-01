@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { ProfileServiceService } from 'src/app/controllers/profile-controller/profile-service.service';
 
 @Component({
   selector: 'app-edit-profile-screen',
@@ -9,7 +10,9 @@ import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
   styleUrls: ['./edit-profile-screen.component.css']
 })
 export class EditProfileScreenComponent {
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router,
+    private authService: AuthService,
+    private profileService: ProfileServiceService,) { }
 
   // Set up the variables for the universityLocation dropdown 
   universityLocations: string[] = [
@@ -103,6 +106,13 @@ export class EditProfileScreenComponent {
   }
 
   onSubmit() {
-  
+    this.profileService.submitProfileChanges(this.editProfileForm.value).subscribe({
+      next: (data: any) => {
+        console.log('Profile Updated Successfully');
+      },
+      error: (data: any) => {
+        console.error('Profile change request failed', data);
+      }
+    });
   }
 }
