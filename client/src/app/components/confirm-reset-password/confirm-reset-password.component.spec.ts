@@ -6,10 +6,21 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
 
 describe('ConfirmResetPasswordComponent', () => {
   let component: ConfirmResetPasswordComponent;
   let fixture: ComponentFixture<ConfirmResetPasswordComponent>;
+  let loader: HarnessLoader;
+
   const routeParams = {
     email: 'testemail@email.com',
     id: '123',
@@ -36,7 +47,16 @@ describe('ConfirmResetPasswordComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ConfirmResetPasswordComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
+      imports: [
+        HttpClientTestingModule,
+        MatFormFieldModule,
+        MatSnackBarModule,
+        MatIconModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+      ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
         { provide: LoginService, useValue: loginService },
@@ -45,18 +65,45 @@ describe('ConfirmResetPasswordComponent', () => {
       ],
     });
     fixture = TestBed.createComponent(ConfirmResetPasswordComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create with route parameters and redirect', () => {
-    // ngOnInit will have already been called by now, which incorporates the whole
-    // functionality of the component
+  it('should create with route parameters', () => {
     expect(component).toBeTruthy();
-    expect(confirmResetPasswordSpy).withContext('confirmResetPassword called').toHaveBeenCalledOnceWith({
+  });
+
+  it('should display a disabled submit button', async () => {
+    const submitButton = await loader.getHarness(MatButtonHarness.with({ text: 'Submit' }));
+    expect(await submitButton.isDisabled()).toBeTrue();
+  });
+
+  it('should display an enabled submit button', async () => {
+    const testPassword = 'goodPassword';
+
+    // set email and password fields to valid values
+    const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#provisionalPassword' }));
+    await emailInput.setValue(testPassword);
+
+    const submitButton = await loader.getHarness(MatButtonHarness.with({ text: 'Submit' }));
+    expect(await submitButton.isDisabled()).toBeFalse();
+  });
+
+  it('onSubmit() should function correctly', async () => {
+    const data = {
       email: routeParams.email,
       passwordResetToken: routeParams.id,
-    });
+      provisionalPassword: 'goodPassword',
+    };
+
+    // set form to valid values
+    const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#provisionalPassword' }));
+    await emailInput.setValue(data.provisionalPassword);
+    component.onSubmit();
+    fixture.detectChanges();
+
+    expect(confirmResetPasswordSpy).withContext('confirmResetPassword called').toHaveBeenCalledOnceWith(data);
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/login']);
   });
 });

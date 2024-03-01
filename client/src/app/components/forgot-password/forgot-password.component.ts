@@ -19,15 +19,7 @@ export class ForgotPasswordComponent {
       Validators.minLength(6),
       Validators.maxLength(254),
     ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(10),
-      Validators.maxLength(255),
-    ]),
   });
-
-  // Whether the password should be hidden or shown
-  hide: boolean = true;
 
   constructor(
     private router: Router,
@@ -49,33 +41,17 @@ export class ForgotPasswordComponent {
     return this.forgotForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
 
-  // Error message for password based on validators
-  passwordErrorMessage(): string {
-    if (this.forgotForm.get('password')?.hasError('required')) {
-      return 'You must enter an password.';
-    }
-    if (this.forgotForm.get('password')?.hasError('minlength')) {
-      return 'Minimum password length: 10';
-    }
-    if (this.forgotForm.get('password')?.hasError('maxlength')) {
-      return 'Maximum password length: 255';
-    }
-    return '';
-  }
-
   onSubmit() {
-    const forgotData = {
-      email: this.forgotForm.value.email,
-      provisionalPassword: this.forgotForm.value.password,
-    };
-
-    this.loginService.forgotPassword(forgotData).subscribe({
+    const email = this.forgotForm.value.email!;
+    
+    this.loginService.forgotPassword(email).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.router.navigate(['/forgot-password-submitted']);
         }
       },
       error: (error) => {
+        console.log('Error', error);
         this.snackbar.open('Request password reset failed.', 'Dismiss');
       },
     });
