@@ -64,6 +64,8 @@ import { AssessmentBrowserComponent } from './components/assessment-browser/asse
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 import { CreateQuestionsFormComponent } from './components/create-questions-form/create-questions-form.component';
 import { AssessmentCardComponent } from './components/assessment-browser/assessment-card/assessment-card.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { AssessmentChooserComponent } from './components/add-edit-job/assessment-chooser/assessment-chooser.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +102,7 @@ import { AssessmentCardComponent } from './components/assessment-browser/assessm
     AddEditAssessmentComponent,
     CreateQuestionsFormComponent,
     AssessmentCardComponent,
+    AssessmentChooserComponent,
   ],
   imports: [
     BrowserModule,
@@ -133,6 +136,7 @@ import { AssessmentCardComponent } from './components/assessment-browser/assessm
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
+    MatStepperModule,
   ],
   providers: [
     {
