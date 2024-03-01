@@ -4,12 +4,10 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
-import { HeaderBarComponent } from './components/header-bar/header-bar.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -67,10 +65,8 @@ import { EditProfileScreenComponent } from './components/edit-profile-screen/edi
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     SignupComponent,
     ConfirmEmailComponent,
-    HeaderBarComponent,
     FacultyDashboardComponent,
     ResearchProjectCardComponent,
     LoginComponent,

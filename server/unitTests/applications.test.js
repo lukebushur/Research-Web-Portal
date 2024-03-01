@@ -421,6 +421,31 @@ describe('POST /api/applications/createApplication', () => {
     })
 });
 
+//Unit test for getting a singular applicatiom's information
+describe('POST /api/applications/getApplication', () => {
+    it('Should return the data from a singular application', (done) => {
+        chai.request(server)
+            .post('/api/applications/getApplication')
+            .set({ "Authorization": `Bearer ${student_access_token}` })
+            .send({ "applicationID": applicationID })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal('APPLICATION_FOUND');
+                expect(res.body.success.application).to.have.property('questions').to.have.length(3);
+                expect(res.body.success.application).to.have.property('opportunityRecordId');
+                expect(res.body.success.application).to.have.property('opportunityId');
+                expect(res.body.success.application).to.have.property('status');
+                expect(res.body.success.application).to.have.property('appliedDate');
+                expect(res.body.success.application).to.have.property('lastModified');
+                expect(res.body.success.application).to.have.property('lastUpdated');
+                expect(res.body.success.application).to.have.property('_id');
+                done();
+            })
+    })
+});
+
 //Unit test for creating an application with the second student
 describe('POST /api/applications/createApplication', () => {
     after(async () => { //grabs the project record ID and application id

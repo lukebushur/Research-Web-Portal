@@ -178,7 +178,7 @@ export class PostProjectComponent implements AfterViewInit {
 
     this.postCreationService.createPost(this.getSubmissionData("Active")) //make the request to create the project
       .subscribe((response: any) => {
-        this.router.navigate(['/faculty-dashboard']);
+        this.router.navigate(['/faculty/dashboard']);
       }, (error: any) => {
         console.error('Registration failed.', error);
       });
@@ -189,7 +189,7 @@ export class PostProjectComponent implements AfterViewInit {
     data.projectID = this.projectID;
     this.facultyProjectService.updateProject(data) //make the request to create the project
       .subscribe((response: any) => {
-        this.router.navigate(['/faculty-dashboard']);
+        this.router.navigate(['/faculty/dashboard']);
       }, (error: any) => {
         console.error('Registration failed.', error);
       });
@@ -198,7 +198,7 @@ export class PostProjectComponent implements AfterViewInit {
   createDraft() {
     this.postCreationService.createPost(this.getSubmissionData("Draft")) //make the request to create the project
       .subscribe((response: any) => {
-        this.router.navigate(['/faculty-dashboard']);
+        this.router.navigate(['/faculty/dashboard']);
       }, (error: any) => {
         console.error('Registration failed.', error);
       });

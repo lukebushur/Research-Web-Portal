@@ -9,9 +9,6 @@ import { JobCardData } from './job-card/job-card-data';
 import { of } from 'rxjs';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
 
-@Component({ standalone: true, selector: 'app-faculty-toolbar', template: '' })
-class FacultyToolbarStubComponent {}
-
 @Component({ standalone: true, selector: 'app-job-card', template: '' })
 class JobCardStubComponent { @Input() jobData: JobCardData }
 
@@ -69,7 +66,6 @@ intellectually stimulating environment, apply now!`,
       declarations: [IndustryDashboardComponent],
       imports: [
         HttpClientTestingModule,
-        FacultyToolbarStubComponent,
         JobCardStubComponent,
         MatTabsModule,
         BrowserAnimationsModule,
