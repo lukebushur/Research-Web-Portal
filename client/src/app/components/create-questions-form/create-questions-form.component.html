@@ -1,5 +1,5 @@
 <div [formGroup]="questionsGroup">
-  <div class="item-to-center" formArrayName="questions">
+  <div formArrayName="questions">
     <div *ngFor="let question of questions.controls; let i=index" [formGroupName]="i">
       <div class="question-heading">
         <h2 class="bold">Question {{ i + 1 }}:</h2>
