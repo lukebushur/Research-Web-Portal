@@ -1,98 +1,71 @@
 <main>    
-  <mat-sidenav-container>
-    <!--Sidenav-->
-    <mat-sidenav mode="push" [(opened)]="opened">
-      <mat-list-item>        
-        <img class ="icon" src="../../../assets/photos/dashboard-24.png" (click)="goToDash()" /><a class="navTitle" (click)="goToDash()">Dashboard</a>
-        <br/>       
-      </mat-list-item>
-      <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/research-24.png" /><a class="navTitle">Research</a>
-        <br/>
-      </mat-list-item>
-      <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/steve-jobs-24.png" /><a class="navTitle">Jobs</a>
-        <br/>
-      </mat-list-item>
-      <mat-list-item>
-        <img class ="icon" src="../../../assets/photos/applications-24.png" /><a class="navTitle">Applications</a>
-      </mat-list-item>
-    </mat-sidenav>
-    <!--End Sidenav-->
+  <!--Filter panel-->
+  <div id = "left-panel">
 
-    <!--Begin page content-->
-    <mat-sidenav-content> 
-      <!--Filter panel-->
-      <div id = "left-panel">
+    <div class="filter-comps">
+      <h1>Filter</h1>
+      <mat-checkbox class="major">Major</mat-checkbox>         
+    
+      <!--Major selection-->
+      <div id="major-selectction">
+        <mat-checkbox class="major-select">Computer Science</mat-checkbox> 
+        <br>
+        <mat-checkbox class="major-select">Math</mat-checkbox>
+        <br>
+        <mat-checkbox class="major-select">Biology</mat-checkbox>     
+        <br>      
 
-        <!--Nav button opener--> 
-        <button id = "navButton" mat-button (click)="opened = !opened">
-          <img src="../../../assets/photos/burger-menu-24.png" />
-        </button>
-
-        <div class="filter-comps">
-          <h1>Filter</h1>
-          <mat-checkbox class="major">Major</mat-checkbox>         
-        
-          <!--Major selection-->
-          <div id="major-selectction">
-            <mat-checkbox class="major-select">Computer Science</mat-checkbox> 
-            <br>
-            <mat-checkbox class="major-select">Math</mat-checkbox>
-            <br>
-            <mat-checkbox class="major-select">Biology</mat-checkbox>     
-            <br>       
-          </div>
-
-          <!--Category selection-->
-          <div id="category">
-            <mat-checkbox class="major">Category</mat-checkbox>
-          </div>
-
-          <!--GPA selection-->
-          <div id="gpa">
-            <mat-checkbox class="major">GPA</mat-checkbox>
-            <mat-slider min="0.0" max="4.0" step="0.01" showTickMarks discrete [displayWith]="formatLabel" id="gpa-slider">
-              <input matSliderStartThumb>
-              <input matSliderEndThumb>
-            </mat-slider>
-          </div>
-
-
-        </div>
       </div>
-      <br><br>
+<!-- 
+      <mat-form-field>
+        <mat-label>Majors</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let major of majorList" [value]="major">{{major}}</mat-option>
+        </mat-select>
+      </mat-form-field> -->
 
-      <!-- <div *ngFor="let question of questions">
-        <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
-      </div> -->
 
-      <br><br>
-
-      <!--Main panel-->
-      <div id="main-panel">
-        <!--Search bar-->
-        <form class="searchbar">
-          <mat-form-field>
-            <input type="text" matInput placeholder="Search">
-            <button>Search</button>
-          </mat-form-field>
-        </form>
-
-        <!--Results section-->
-
-        <div class="Titles" *ngFor="let opp of oppName">
-          <div class="opp">{{opp}}</div>
-        </div>
-        
-        <!--Need to have a component to represent each opportunity-->
+      <!--Category selection-->
+      <div id="category">
+        <mat-checkbox class="major">Category</mat-checkbox>
       </div>
 
-    </mat-sidenav-content>  
-  </mat-sidenav-container>
+      <!--GPA selection-->
+      <div id="gpa">
+        <mat-checkbox class="major">GPA</mat-checkbox>
+        <mat-slider min="0.0" max="4.0" step="0.01" showTickMarks discrete [displayWith]="formatLabel" id="gpa-slider">
+          <input matSliderStartThumb>
+          <input matSliderEndThumb>
+        </mat-slider>
+      </div>
+
+
+    </div>
+  </div>
+  <br><br>
+
+  <!-- <div *ngFor="let question of questions">
+    <app-text-field name="{{question}}" [(ngModel)]="answer"></app-text-field>
+  </div> -->
+
+  <br><br>
+
+  <!--Main panel-->
+  <div id="main-panel">
+    <!--Search bar-->
+    <form class="searchbar">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Search">
+        <button>Search</button>
+      </mat-form-field>
+    </form>
+
+    <!--Results section-->
+
+    <div class="Titles" *ngFor="let opp of oppName">
+      <div class="opp">{{opp}}</div>
+    </div>    
+    
+    <!--Need to have a component to represent each opportunity-->
+  </div>
 </main>
-  
-  
-  
-  <!--<router-outlet></router-outlet>-->
-  

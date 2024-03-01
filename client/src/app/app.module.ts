@@ -56,10 +56,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { JobCardComponent } from './components/industry-dashboard/job-card/job-card.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { StudentSidenavComponent } from './components/student-sidenav/student-sidenav.component';
-import { MatListModule } from '@angular/material/list'; 
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { StudentProjectDetailsComponent } from './components/student-project-details/student-project-details.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +90,7 @@ import { StudentOpportunitesSearchPageComponent } from './components/student-opp
     StudentSidenavComponent,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    StudentProjectDetailsComponent,
   ],
   imports: [
     BrowserModule,

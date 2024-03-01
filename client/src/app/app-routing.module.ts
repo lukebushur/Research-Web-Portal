@@ -29,7 +29,6 @@ const routes: Routes = [
   { path: 'faculty-dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
   { path: "confirm-email/:emailtoken", component: ConfirmEmailComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
-  { path: "apply-to-post", component: ApplyToPostComponent, canActivate: [AuthGuard] },
   { path: "create-post/:projectType/:projectID", component: PostProjectComponent, canActivate: [AuthGuard] },
   { path: "project/applications", component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
   { path: "demoProjects", component: DemoProjectsComponent },
@@ -61,15 +60,18 @@ const routes: Routes = [
         component: ApplyToPostComponent,
       },
       {
-        path: "student-search-opps",
+        path: "research",
         component: StudentSearchOppsComponent,
+      },
+      {
+        path: "project-details",
+        component: StudentProjectDetailsComponent,
       },
     ],
   },
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
   { path: "application/:projectID/:applicationID", component: ViewApplicationComponent },
   { path: "student-dashboard", component: StudentDashboard },
-  { path: "student-search-opps", component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
   //This route is used to view a specific project and its applicants
   { path: "viewProject/:projectType/:projectID", component: ViewProjectComponent },
   //This route is used to view a specific project and its applicants

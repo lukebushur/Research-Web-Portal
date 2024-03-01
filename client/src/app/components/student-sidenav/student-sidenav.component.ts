@@ -25,21 +25,21 @@ export class StudentSidenavComponent {
     {
       name: 'Dashboard',
       link: '/students/dashboard',
-      icon: 'dashboard',      
+      icon: '',      
     },
     {
       name: 'Research',
-      link: '/studetns/research',
+      link: '/students/research',
       icon: '',      
     },
     {
       name: 'Jobs',
-      link: '/research/jobs',
+      link: '/students/jobs',
       icon: '',      
     },
     {
       name: 'Applications',
-      link: '/research/applications',
+      link: '/students/applications',
       icon: '',      
     }
   ];

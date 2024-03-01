@@ -44,11 +44,6 @@ export class ApplyToPostComponent implements OnInit {
     // 
 
   }
-
-  goToDash(){
-    this.router.navigate(['/student-search-opps']);  // define your component where you want to go
-}
-
   
   submitApp(id: any) {
     console.log(this.answer);

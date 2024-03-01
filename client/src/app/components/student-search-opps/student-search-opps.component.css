@@ -24,16 +24,6 @@ label {
 
 }
  
-mat-sidenav-container {
-    height: 100vh;
-}
-
-/* Sidenav styling */
-
-mat-sidenav {
-    width: 200px;
-    background-color: rgb(222, 222, 222);
-}
 
 #navButton {
     background: none;
@@ -59,11 +49,6 @@ mat-sidenav {
     vertical-align: middle;
 }
 
-/*Filter Main content*/
-mat-sidenav-content {
-    height: 100vh;
-    padding: 0%;
-}
 
 /* Filter sidebar styling */
 #left-panel {
@@ -95,13 +80,9 @@ mat-sidenav-content {
 
 /* Main panel styling */
 #main-panel {
-    background-color: red;
-    height: 100%;
+    background-color: white;
+    height: 100vh;
     margin-left: 25%;
-}
-
-.opp {
-    margin: 25%;
 }
 
 /*Search bar*/
@@ -113,6 +94,7 @@ mat-sidenav-content {
 }
 
 .opp {
+    margin: 25%;
     width: 300px;
     position: relative;
     padding-left:25%;
