@@ -25,6 +25,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'faculty-dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
+  { path: 'project/:projects', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
   { path: "confirm-email/:emailtoken", component: ConfirmEmailComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
   { path: "apply-to-post", component: ApplyToPostComponent, canActivate: [AuthGuard] },
