@@ -90,10 +90,4 @@ export class ViewApplicationComponent {
     if (index1 !== -1) { return true; }
     return false;
   }
-
-  isSelectedOption(i: number, j: number) {
-    if (this.answersArray[i][j].answer)
-      return true;
-    return false;
-  }
 }

@@ -380,8 +380,12 @@ const getApplication = async (req, res) => {
             const applications = await retrieveOrCacheApplications(req, applicationList);
             if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
 
-            const application = applications.applications.find((x) => x.id === req.body.applicationID);
-            if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: application } }); }
+            let application = applications.applications.find((x) => x.id === req.body.applicationID);
+            const project = await retrieveOrCacheProjects(req, application.opportunityRecordId);
+            let returnApplication = { ...application._doc };
+
+            returnApplication.professorEmail = project.professorEmail;
+            if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: returnApplication } }); }
             else { return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {})); }
         } else {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));

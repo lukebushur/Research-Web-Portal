@@ -2,9 +2,58 @@
     <p>Title: </p>
     <p>{{applicationData.projectName}}</p>
     <br>
+
+    <div *ngIf="applicationData !== -1 && applicationData !== null">
+        <p>Description: </p>
+        <p>{{projectInfo.description}}</p>
+        <br>
+        <p>Responsibilities: </p>
+        <p>{{projectInfo.responsibilities}}</p>
+        <br>
+        <p>GPA Requirement: </p>
+        <p>{{projectInfo.GPA}}</p>
+        <br>
+        <p>Posted: </p>
+        <p>{{posted}}</p>
+        <br>
+        <p>Deadline: </p>
+        <p>{{deadline}}</p>
+        <br>
+    </div>
+
+    <p *ngIf="applicationData === null">Error loading project related data</p>
     <p>Applied: </p>
     <p>{{appliedDate}}</p>
     <br>
+
+    <div *ngFor="let question of applicationData.questions; index as i">
+        <label id="question-label">Question {{ i + 1 }}:<br> {{ question.question }}</label>
+        <div *ngIf="question.requirementType === 'radio button'">
+            <mat-radio-button *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+                [disabled]="true">{{ choice }}</mat-radio-button>
+        </div>
+        <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+            <mat-checkbox *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+                [disabled]="true">{{ choice }}</mat-checkbox>
+        </div>
+        <div *ngIf="question.requirementType === 'text'">
+            <mat-form-field>
+                <mat-label>Answer</mat-label>
+                <textarea matInput readonly>{{answersArray[i]}}</textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <p>Status: </p>
+    <p *ngIf="applicationData.status === 'Accept' || applicationData.status === 'Reject'"
+        [class.accept-status-text]="applicationData.status === 'Accept'"
+        [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text">
+        {{applicationData.status}}ed</p>
+
+    <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
+        class="accept-button">Modify Application</button>
+    <button mat-raised-button color="warn"
+        (click)="rescindApplication(applicationData.id)">Rescind Application</button>
 </div>
 
 <app-spinner></app-spinner>

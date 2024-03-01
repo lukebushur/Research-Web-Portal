@@ -48,7 +48,7 @@ export class StudentDashboardService {
     return this.http.post(`${this.apiUrl}/applications/getApplication`, data, { headers })
   }
 
-  getProjectInfor(professorEmail: string, projectID: string): Observable<any> {
+  getProjectInfo(professorEmail: string, projectID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
     const data = {
@@ -56,7 +56,7 @@ export class StudentDashboardService {
       "projectID": projectID
     }
 
-    return this.http.post(`${this.apiUrl}/applications/getApplication`, data, { headers })
+    return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data, { headers })
   }
 
   updateApplication(applicationID: string, questions: any): Observable<any> {
@@ -68,5 +68,18 @@ export class StudentDashboardService {
     }
 
     return this.http.put(`${this.apiUrl}/applications/updateApplication`, data, { headers })
+  }
+
+  deleteApplication(applicationID: string): Observable<any> {
+    const headers = this.authService.getHeaders();
+
+    const options = {
+      headers: headers,
+      body: {
+        "applicationID": applicationID,
+      }
+    }
+
+    return this.http.delete(`${this.apiUrl}/applications/deleteApplication`, options);
   }
 }
