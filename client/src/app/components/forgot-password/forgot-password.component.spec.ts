@@ -70,31 +70,25 @@ describe('ForgotPasswordComponent', () => {
 
   it('should display an enabled submit button', async () => {
     const testEmail = 'testemail@email.com';
-    const testPassword = 'goodPassword';
 
     // set email and password fields to valid values
     const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#email' }));
     await emailInput.setValue(testEmail);
-    const passwordInput = await loader.getHarness(MatInputHarness.with({ selector: '#password' }));
-    await passwordInput.setValue(testPassword);
 
     const submitButton = await loader.getHarness(MatButtonHarness.with({ text: 'Submit' }));
     expect(await submitButton.isDisabled()).toBeFalse();
   });
 
-  it('onSubmit() should function correctly', () => {
-    const data = {
-      email: 'testemail@email.com',
-      provisionalPassword: 'betterPassword',
-    };
+  it('onSubmit() should function correctly', async () => {
+    const testEmail = 'testemail@email.com';
 
     // set form to valid values
-    component.forgotForm.get('email')?.setValue(data.email);
-    component.forgotForm.get('password')?.setValue(data.provisionalPassword);
+    const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#email' }));
+    await emailInput.setValue(testEmail);
     component.onSubmit();
     fixture.detectChanges();
 
-    expect(forgotPasswordSpy).withContext('forgotPassword called').toHaveBeenCalledOnceWith(data);
+    expect(forgotPasswordSpy).withContext('forgotPassword called').toHaveBeenCalledOnceWith(testEmail);
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/forgot-password-submitted']);
   });
 });
