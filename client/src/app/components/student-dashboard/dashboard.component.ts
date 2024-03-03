@@ -117,15 +117,6 @@ export class StudentDashboard {
       && ((opportunity.majors.length === 0) || (opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
 
-  // ['project title', 'project sponsor', 'gpa req', 'applied date', 'deadline', 'status']
-  /*
-  status: element.status,
-             appliedDate: this.dateService.convertShortDate(element.appliedDate),
-             deadline: this.dateService.convertShortDate(element.deadline),
-             projectName: element.projectName,
-             GPAREQ: element.GPAREQ,
-             projectSponser: element.projectSponser
-  */
   //This method is used to sort the table whenever the table's sort functionality is clicked.
   sortData(sort: Sort) {
     const data = this.applicationData.slice(); //grabs the data from the student data array
