@@ -37,10 +37,12 @@ export class ViewProjectComponent {
   dataSource = new MatTableDataSource(this.filteredData); //This object is used for the material table data source to allow for the table to work/sort etc
   posted: String; // The string that holds the date the project was posted on
   deadline: String; // the string that is the deadline of the project
-  
+
+  // Min/max GPA for filtering
   minGPA: number = 2;
   maxGPA: number = 4;
 
+  // Search filters
   @Input() SearchMajor = "";
   @Input() SearchName = "";
   @Input() SearchEmail = "";
@@ -137,31 +139,43 @@ export class ViewProjectComponent {
     });
   }
 
+  compareString(baseString: string, compareToString: string) {
+    // If string is empty, return true because we want to ignore the string
+    if (compareToString.length == 0) return true;
+
+    // Compare string if it's similar
+    if (baseString.toLowerCase().indexOf(compareToString.toLowerCase()) !== -1) {
+      return true;
+    }
+
+    return false
+  }
+
   updateTable() {
     this.filteredData = this.studentData.filter((student) => {
-      let PassesNameSearch = false;
-      let PassesMajorSearch = false;
-      let PassesGPACheck = false;
-      let PassesEmailCheck = false;
-      if (this.SearchName.length == 0) PassesNameSearch = true;
-      if (this.SearchMajor.length == 0) PassesMajorSearch = true;
-      if (this.SearchEmail.length == 0) PassesEmailCheck = true;
+      // Compare student name to search filter
+      let PassesNameSearch = this.compareString(student.name, this.SearchName);
+      // Compare GPA to min/max
+      let PassesGPACheck = this.minGPA <= student.GPA && student.GPA <= this.maxGPA;
+      // Like student name, compare email
+      let PassesEmailCheck = this.compareString(student.email, this.SearchEmail);;
 
-      // TODO
-      // Improve string comparisons
-      if (this.SearchName.length > 0 && student.name.toLowerCase().indexOf(this.SearchName.toLowerCase()) !== -1) PassesNameSearch = true;
+      // To skip major search if doesnt exist
+      let PassesMajorSearch = true;
       if (student.majors) {
+        // If majors exist, reset it back
+        PassesMajorSearch = false;
         student.majors.forEach((major: (string)) => {
-          if (this.SearchMajor.length > 0 && major.toLowerCase().indexOf(this.SearchMajor.toLowerCase()) !== -1) PassesMajorSearch = true;
+          if (this.compareString(major, this.SearchMajor)) {
+            PassesMajorSearch = true;
+          }
         })
       }
-      if (this.SearchEmail.length > 0 && student.email.toLowerCase().indexOf(this.SearchEmail.toLowerCase()) !== -1) PassesEmailCheck = true;
-      
 
-      if (this.minGPA <= student.GPA && student.GPA <= this.maxGPA) PassesGPACheck = true;
-
-      return PassesMajorSearch && PassesNameSearch && PassesGPACheck
+      // Only pass this student if they passes all checks
+      return PassesMajorSearch && PassesNameSearch && PassesGPACheck && PassesEmailCheck
     })
+    // Set the new data (update table)
     this.dataSource = new MatTableDataSource(this.filteredData);
   }
 

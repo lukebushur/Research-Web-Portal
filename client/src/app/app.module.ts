@@ -54,7 +54,6 @@ import { ViewProjectComponent } from './components/view-project/view-project.com
 import { MatSelectModule } from '@angular/material/select';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
-import { FacultyApplicationListComponent } from './components/faculty-application-list/faculty-application-list.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -88,7 +87,6 @@ import { MatSliderModule } from '@angular/material/slider';
     JobCardComponent,
     StudentDashboard,
     ViewProjectComponent,
-    FacultyApplicationListComponent,
     StudentOpportunitesSearchPageComponent,
     ApplyToPostComponent,
     ForgotPasswordComponent,

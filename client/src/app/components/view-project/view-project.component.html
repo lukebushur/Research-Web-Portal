@@ -85,20 +85,20 @@
               </mat-form-field>
             </td>
             <td>
-                <mat-form-field class="example-full-width">
-                  <mat-label>Search by Email</mat-label>
-                  <input matInput #input placeholder="email@example.com" [(ngModel)]="SearchEmail">
-                </mat-form-field>
-              </td>
+              <mat-form-field class="example-full-width">
+                <mat-label>Search by Email</mat-label>
+                <input matInput #input placeholder="email@example.com" [(ngModel)]="SearchEmail">
+              </mat-form-field>
+            </td>
             <td>
-                <div class="example-label-container">
-                    <label id="example-name-label" class="example-name-label">GPA Range: </label>
-                    <label class="example-value-label">{{minGPA}} - {{maxGPA}}</label>
-                  </div>
-                <mat-slider min="0" max="4" step="0.1" [showTickMarks]="true" [discrete]="false">
-                    <input value="2" matSliderStartThumb [(ngModel)]="minGPA">
-                    <input value="4" matSliderEndThumb [(ngModel)]="maxGPA">
-                </mat-slider>
+              <div class="example-label-container">
+                <label id="example-name-label" class="example-name-label">GPA Range: </label>
+                <label class="example-value-label">{{minGPA}} - {{maxGPA}}</label>
+              </div>
+              <mat-slider min="0" max="4" step="0.1" [showTickMarks]="true" [discrete]="false">
+                <input value="2" matSliderStartThumb [(ngModel)]="minGPA">
+                <input value="4" matSliderEndThumb [(ngModel)]="maxGPA">
+              </mat-slider>
             </td>
             <td>
               <button mat-raised-button color="primary" (click)="updateTable()" class="accept-button">Search</button>
