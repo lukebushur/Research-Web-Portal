@@ -149,7 +149,7 @@ export class StudentDashboard {
         case 'status':
           return this.compare(a.status, b.status, isAsc);
         default:
-          return 0; 
+          return 0;
       }
     });
   }
