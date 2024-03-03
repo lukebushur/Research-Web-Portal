@@ -10,7 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ResearchProjectCardComponent } from './components/research-project-card/research-project-card.component';
