@@ -542,7 +542,8 @@ const getProjectData = async (req, res) => {
                         categories: project.categories,
                         majors: project.majors,
                         GPA: project.GPA,
-                        responsibilities: project.responsibilities
+                        responsibilities: project.responsibilities,
+                        professorName: projectRecord.professorName
                     }
                     return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
                 }

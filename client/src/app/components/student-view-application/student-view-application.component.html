@@ -1,7 +1,8 @@
 <div *ngIf="applicationData !== -1" id="applicantData">
-    <p>Title: </p>
-    <p>{{applicationData.projectName}}</p>
-    <br>
+    <h1>{{projectInfo.projectName}}</h1>
+    <p>{{projectInfo.professorName}}<p>
+    <p>{{posted}}</p>
+    <!--TODO ADD LOCATION WHEN AVAILABLE-->
 
     <div *ngIf="applicationData !== -1 && applicationData !== null">
         <p>Description: </p>
@@ -12,9 +13,6 @@
         <br>
         <p>GPA Requirement: </p>
         <p>{{projectInfo.GPA}}</p>
-        <br>
-        <p>Posted: </p>
-        <p>{{posted}}</p>
         <br>
         <p>Deadline: </p>
         <p>{{deadline}}</p>
@@ -50,10 +48,9 @@
         [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text">
         {{applicationData.status}}ed</p>
 
-    <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
-        class="accept-button">Modify Application</button>
-    <button mat-raised-button color="warn"
-        (click)="rescindApplication(applicationData.id)">Rescind Application</button>
+    <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary" class="accept-button">Modify
+        Application</button>
+    <button mat-raised-button color="warn" (click)="rescindApplication(applicationData.id)">Rescind Application</button>
 </div>
 
 <app-spinner></app-spinner>
