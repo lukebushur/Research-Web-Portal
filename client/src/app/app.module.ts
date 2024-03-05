@@ -61,6 +61,8 @@ import { ConfirmResetPasswordComponent } from './components/confirm-reset-passwo
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { CommonModule } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -127,6 +129,7 @@ import { StudentViewApplicationComponent } from './components/student-view-appli
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
+    CommonModule
   ],
   providers: [
     {

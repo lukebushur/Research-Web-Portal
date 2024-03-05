@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
+import { SearchOptions } from 'src/app/_models/searchOptions';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort } from '@angular/material/sort';
 
@@ -11,7 +13,8 @@ import { MatSort, Sort } from '@angular/material/sort';
   styleUrls: ['./dashboard.component.css']
 })
 export class StudentDashboard {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService,
+    private searchService: SearchProjectService) { }
 
   ngOnInit() {
     this.getAllOpportunities();
@@ -57,6 +60,23 @@ export class StudentDashboard {
         console.error('Error fetching applications', error);
       },
     });
+
+    let searchOps: SearchOptions = {};
+    this.searchService.searchProjectsMultipleParams(searchOps).subscribe({ 
+      next: (data) => {
+        console.log("This is the empty object:")
+        console.log(searchOps)
+        console.log("Search opportunities with an object parameter: ")
+        console.log(data);
+      }
+    });
+
+    this.searchService.searchProjectsSingleParams("").subscribe({
+      next: (data) => {
+        console.log("Search opportunities with a string parameter: ")
+        console.log(data);
+      }
+    })
   }
 
   getAllOpportunities() {
