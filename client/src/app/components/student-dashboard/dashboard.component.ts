@@ -57,6 +57,7 @@ export class StudentDashboard {
         console.error('Error fetching applications', error);
       },
     });
+  }
 
   getAllOpportunities() {
     this.studentDashboardService.getOpportunities().subscribe({
