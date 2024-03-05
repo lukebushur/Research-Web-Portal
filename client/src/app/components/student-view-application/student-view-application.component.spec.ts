@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { CommonModule } from '@angular/common'; // Import CommonModule
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StudentViewApplicationComponent } from '../student-view-application/student-view-application.component';
@@ -11,6 +12,7 @@ import { Component, NgModule } from '@angular/core';
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent {}
 
+
 describe('StudentViewApplicationComponent', () => {
   let component: StudentViewApplicationComponent;
   let fixture: ComponentFixture<StudentViewApplicationComponent>;
@@ -18,6 +20,7 @@ describe('StudentViewApplicationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [StudentViewApplicationComponent],
+
       imports: [HttpClientTestingModule, RouterModule.forRoot([]), SpinnerSubComponent, CommonModule], // Add CommonModule here
       providers: [
         StudentDashboardService, // Provide StudentDashboardService here
@@ -40,6 +43,5 @@ describe('StudentViewApplicationComponent', () => {
   });
 
   it('should create', () => {
-
   });
 });
