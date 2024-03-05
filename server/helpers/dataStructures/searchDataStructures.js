@@ -28,8 +28,11 @@ class search {
         this.preprocessData(projects, fields, searchTypes, weights);
 
         this.projectData = projects; //The data of the projects, each question, description, title, etc is stored here
-        this.query = this.removePunctuation(query).toLowerCase().split(" ").filter(word => !stopwords.has(word)); //The query that is being searched, it is filtered to remove stopword (the, for, while, inbetween, etc.) and split into a string
-
+        if(query)
+            this.query = this.removePunctuation(query).toLowerCase().split(" ").filter(word => !stopwords.has(word)); //The query that is being searched, it is filtered to remove stopword (the, for, while, inbetween, etc.) and split into a string
+        else
+            this.query = ""
+        
         this.fields = fields; //This is an array of the fields that are being using in the search
         this.searchTypes = searchTypes; //This is an array that specifies the types of search to be performed, either with bm25, or a simple term match algorithm
         this.searchCriteria = {}; //this is a dictionary that holds the arrays of the scores for each field that is used in the search
@@ -174,7 +177,10 @@ class search {
         // Define a regular expression to match punctuation characters
         const punctuationRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
         // Replace punctuation characters with an empty string
-        return str.replace(punctuationRegex, '');
+        if(str)
+            return str.replace(punctuationRegex, '');
+        else 
+            return str;
     }
     //this simple method prepocesses the data for the data structure, it will throw errors if the data provided is unrecoverable, otherwise it will attempt to remedy the data issues
     preprocessData(projects, fields, searchTypes, weights) {

@@ -61,6 +61,9 @@ import { ConfirmResetPasswordComponent } from './components/confirm-reset-passwo
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
+import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { CommonModule } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -94,6 +97,7 @@ import { EditProfileScreenComponent } from './components/edit-profile-screen/edi
     ConfirmResetPasswordComponent,
     ForgotPasswordSubmittedComponent,
     EditProfileScreenComponent,
+    StudentViewApplicationComponent,
   ],
   imports: [
     BrowserModule,
@@ -127,6 +131,7 @@ import { EditProfileScreenComponent } from './components/edit-profile-screen/edi
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
+    CommonModule
   ],
   providers: [
     {

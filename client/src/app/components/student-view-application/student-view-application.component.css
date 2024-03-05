@@ -1,0 +1,17 @@
+.status-text {
+    padding: 0.2em 0.4em;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    max-width: fit-content;
+    border-radius: 5px;
+}
+
+.accept-status-text {
+    color: green;
+    border: 1px solid green;
+}
+
+.reject-status-text {
+    color: red;
+    border: 1px solid red;
+}

@@ -341,10 +341,15 @@ const getApplications = async (req, res) => {
                             projectName: postItem.projects[projIndex].projectName,
                             posted: postItem.projects[projIndex].posted,
                             description: postItem.projects[projIndex].description,
-                            professorEmail: postItem.professorEmail
+                            professorEmail: postItem.professorEmail,
+                            appliedDate: applications.applications[appIndex].appliedDate,
+                            deadline: postItem.projects[projIndex].deadline,
+                            GPAREQ: postItem.projects[projIndex].GPA,
+                            projectSponsor: postItem.professorName,
+                            applicationID: applications.applications[appIndex]._id,
                         }
                         returnArray.push(newObj);
-                    })
+                    });
                 }
             });
 
@@ -375,8 +380,12 @@ const getApplication = async (req, res) => {
             const applications = await retrieveOrCacheApplications(req, applicationList);
             if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})); }
 
-            const application = applications.applications.find((x) => x.id === req.body.applicationID);
-            if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: application } }); }
+            let application = applications.applications.find((x) => x.id === req.body.applicationID);
+            const project = await retrieveOrCacheProjects(req, application.opportunityRecordId);
+            let returnApplication = { ...application._doc };
+
+            returnApplication.professorEmail = project.professorEmail;
+            if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: returnApplication } }); }
             else { return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {})); }
         } else {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
@@ -533,7 +542,8 @@ const getProjectData = async (req, res) => {
                         categories: project.categories,
                         majors: project.majors,
                         GPA: project.GPA,
-                        responsibilities: project.responsibilities
+                        responsibilities: project.responsibilities,
+                        professorName: projectRecord.professorName
                     }
                     return res.status(200).json(generateRes(true, 200, "PROJECT_FOUND", { "project": returnProject }));
                 }

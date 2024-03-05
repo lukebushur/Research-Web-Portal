@@ -24,6 +24,7 @@ import { ConfirmResetPasswordComponent } from './components/confirm-reset-passwo
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
+import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
@@ -55,6 +56,8 @@ const routes: Routes = [
   // This route is used to view the full list of all opportunites available for students
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
+  //This route is to view an applicant from the student's view
+  { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
 
   // INDUSTRY ROUTES
   {
