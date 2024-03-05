@@ -72,16 +72,8 @@ const routes: Routes = [
       },
     ],
   },
-  //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
-  { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
-  { path: 'student-dashboard', component: StudentDashboard },
-  { path: 'student-search-opps', component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
-  //This route is used to view a specific project and its applicants
-  { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
-  //this route is used to view the full list of all opportunites available for students
-  { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
-  { path: 'edit-profile', component: EditProfileScreenComponent},
 
+  { path: 'edit-profile', component: EditProfileScreenComponent},
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
   
