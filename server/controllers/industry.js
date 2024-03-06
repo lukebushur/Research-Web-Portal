@@ -47,13 +47,14 @@ const getJob = async (req, res) => {
         }
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
+
         //check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        const industryData = await IndustryData.findById(user.userType.industryData);
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
         if (!industryData) {
             return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
         }
@@ -149,8 +150,8 @@ const editJob = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        // check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
@@ -172,7 +173,7 @@ const editJob = async (req, res) => {
             }));
         }
 
-        const industryData = await IndustryData.findById(user.userType.industryData);
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
         const jobToUpdate = industryData.jobs.active.id(jobId);
         jobToUpdate.set(jobDetails);
         await industryData.save();
@@ -194,6 +195,7 @@ const deleteJob = async (req, res) => {
 
         // check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
@@ -214,20 +216,22 @@ const deleteJob = async (req, res) => {
     }
 };
 
+// INDUSTRY ASSESSMENT CONTROLERS
+
 const getAssessments = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         //check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        const industryData = await IndustryData.findById(user.userType.industryData);
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
         if (!industryData) {
             return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
         }
@@ -251,14 +255,14 @@ const getAssessment = async (req, res) => {
         }
 
         //check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         //check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        const industryData = await IndustryData.findById(user.userType.industryData);
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
         if (!industryData) {
             return res.status(404).json(generateRes(false, 404, "INDUSTRY_DATA_NOT_FOUND", {}));
         }
@@ -279,8 +283,8 @@ const createAssessment = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        // check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
@@ -299,7 +303,7 @@ const createAssessment = async (req, res) => {
                 },
                 assessments: [],
             })
-            : await IndustryData.findById(user.userType.industryData);
+            : await retrieveOrCacheIndustry(req, user.userType.industryData);
 
         industryData.assessments.push({
             name: assessmentName,
@@ -323,8 +327,8 @@ const editAssessment = async (req, res) => {
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-        // check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
@@ -334,6 +338,8 @@ const editAssessment = async (req, res) => {
         const assessmentId = req.body.assessmentId;
         const assessmentDetails = req.body.assessmentDetails;
 
+        // find the assessment with the provided ID and set its name and questions
+        // to the provided values
         const result = await IndustryData.updateOne(
             { _id: user.userType.industryData, 'assessments._id': assessmentId},
             { $set: {
@@ -361,14 +367,16 @@ const deleteAssessment = async (req, res) => {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
-        // check if user exists
-        const user = await User.findOne({ email: decodeAccessToken.email });
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         // check if user type is industry
         if (user.userType.Type != process.env.INDUSTRY) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
         }
 
+        // find the industryData associated with the user and pull (delete) the
+        // assessment with the provided ID
         const result = await IndustryData.updateOne(
             { _id: user.userType.industryData },
             { $pull: { assessments: { _id: assessmentId }}}
