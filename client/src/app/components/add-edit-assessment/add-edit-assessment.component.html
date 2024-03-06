@@ -1,0 +1,17 @@
+<div class="page-container">
+  <h1 class="bold">{{ isCreateAssessment ? 'Create New Assessment' : 'Edit Assessment' }}</h1>
+  <form [formGroup]="assessmentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="block item-to-center">
+      <mat-label>Assessment Name</mat-label>
+      <input matInput type="text" name="name" formControlName="name">
+    </mat-form-field>
+    <div class="item-to-center">
+      <app-create-questions-form [questionsGroup]="questionsGroup" [questionsData]="initialAssessmentData?.questions ?? undefined"></app-create-questions-form>
+    </div>
+    <div class="item-to-center buttons-container">
+      <button mat-raised-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="assessmentForm.invalid">{{isCreateAssessment ?
+        'Create' : 'Update' }}</button>
+    </div>
+  </form>
+</div>

@@ -168,6 +168,9 @@ describe('DELETE /api/industry/deleteJob', () => {
     });
 });
 
+// TODO: unit tests for getJob, editJob, getAssessments, getAssessment,
+// createAssessment, editAssessment, and deleteAssessment
+
 //Ensure that the records created are deleted 
 after(async () => {
     try {
