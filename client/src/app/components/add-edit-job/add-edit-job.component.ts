@@ -157,6 +157,18 @@ export class AddEditJobComponent {
     const dialogRef = this.dialog.open(AssessmentChooserComponent);
 
     dialogRef.afterClosed().subscribe((questions: QuestionData[]) => {
+      if (!questions) {
+        return;
+      }
+
+      const questionsArray = this.jobQuestions.get('questions') as FormArray;
+      const defaultQuestionForm = questionsArray.length === 1 &&
+        !questionsArray.at(0).get('question')?.value &&
+        !questionsArray.at(0).get('requirementType')?.value
+      if (defaultQuestionForm) {
+        questionsArray.clear();
+      }
+
       for (const question of questions) {
         const questionGroup = new FormGroup({
           question: new FormControl(question.question, [Validators.required]),
@@ -171,7 +183,6 @@ export class AddEditJobComponent {
         if (question.requirementType === 'text') {
           questionGroup.get('choices')?.disable();
         }
-        const questionsArray = this.jobQuestions.get('questions') as FormArray;
         questionsArray.push(questionGroup);
       }
     });
