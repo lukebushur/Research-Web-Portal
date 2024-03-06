@@ -23,7 +23,6 @@ export class ViewApplicationComponent {
   posted: String;
   deadline: String;
   appliedDate: String;
-  temp: SearchOptions = {};
 
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
@@ -89,12 +88,6 @@ export class ViewApplicationComponent {
   getChoice(answer: any, index: number) {
     let index1 = answer.answers.findIndex((element: string) => element == answer.choices[index]);
     if (index1 !== -1) { return true; }
-    return false;
-  }
-
-  isSelectedOption(i: number, j: number) {
-    if (this.answersArray[i][j].answer)
-      return true;
     return false;
   }
 }

@@ -18,8 +18,8 @@ export class LoginService {
   }
 
   // Send request to the back-end to initiate the forgot password process
-  forgotPassword(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/accountManagement/resetPassword`, data);
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/accountManagement/resetPassword`, { email });
   }
 
   // Send request to the back-end to confirm and finish the forgot password process

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
@@ -9,6 +10,21 @@ import { LoginService } from 'src/app/controllers/login-controller/login.service
   styleUrls: ['./confirm-reset-password.component.css']
 })
 export class ConfirmResetPasswordComponent {
+  // Route parameters
+  email: string | null;
+  id: string | null;
+  
+  // Reactive confirm form
+  confirmForm = new FormGroup({
+    provisionalPassword: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(255),
+    ]),
+  });
+
+  // Whether the password should be hidden or shown
+  hide: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -19,22 +35,39 @@ export class ConfirmResetPasswordComponent {
 
   ngOnInit(): void {
     // get route parameters
-    const email = this.route.snapshot.paramMap.get('email');
-    const id = this.route.snapshot.paramMap.get('id');
+    this.email = this.route.snapshot.paramMap.get('email');
+    this.id = this.route.snapshot.paramMap.get('id');
 
     // no route parameters given -> erroneous usage of the route
-    if (!email || !id) {
+    if (!this.email || !this.id) {
       this.router.navigate(['/login']).then((navigated: boolean) => {
         if (navigated) {
           this.snackbar.open('Reset password failed: Invalid credentials', 'Dismiss');
         }
       });
     }
+  }
 
+  // Error message for password based on validators
+  passwordErrorMessage(): string {
+    if (this.confirmForm.get('provisionalPassword')?.hasError('required')) {
+      return 'You must enter an password.';
+    }
+    if (this.confirmForm.get('provisionalPassword')?.hasError('minlength')) {
+      return 'Minimum password length: 10';
+    }
+    if (this.confirmForm.get('provisionalPassword')?.hasError('maxlength')) {
+      return 'Maximum password length: 255';
+    }
+    return '';
+  }
+
+  onSubmit(): void {
     // attempt to confirm the password reset against the back-end
     this.loginService.confirmResetPassword({
-      email: email,
-      passwordResetToken: id,
+      email: this.email,
+      passwordResetToken: this.id,
+      provisionalPassword: this.confirmForm.get('provisionalPassword')?.value,
     }).subscribe({
       next: (data: any) => {
         if (data.success) {
@@ -50,6 +83,7 @@ export class ConfirmResetPasswordComponent {
       error: (data: any) => {
         // on error, the password is not changed, and the user is redirected to
         // the login page
+        console.log('Error', data);
         this.router.navigate(['/login']).then((navigated: boolean) => {
           if (navigated) {
             this.snackbar.open('Reset password failed: Invalid credentials', 'Dismiss');
