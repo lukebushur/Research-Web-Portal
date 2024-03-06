@@ -8,11 +8,22 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatStepperModule } from '@angular/material/stepper';
+import { Component, Input } from '@angular/core';
+import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 
-describe('CreateJobComponent', () => {
+@Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
+class CreateQuestionsFormStubComponent {
+  @Input() questionsGroup: FormGroup;
+  @Input() questionsData?: QuestionData[];
+}
+
+describe('AddEditJobComponent', () => {
   let component: AddEditJobComponent;
   let fixture: ComponentFixture<AddEditJobComponent>;
 
@@ -21,6 +32,7 @@ describe('CreateJobComponent', () => {
       declarations: [AddEditJobComponent],
       imports: [
         HttpClientTestingModule,
+        RouterTestingModule,
         MatSnackBarModule,
         MatFormFieldModule,
         MatRadioModule,
@@ -30,6 +42,9 @@ describe('CreateJobComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
+        MatDialogModule,
+        MatStepperModule,
+        CreateQuestionsFormStubComponent,
       ],
     });
     fixture = TestBed.createComponent(AddEditJobComponent);
