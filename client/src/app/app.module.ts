@@ -61,6 +61,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
+import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { CommonModule } from '@angular/common';
+
 import { StudentProjectDetailsComponent } from './components/student-project-details/student-project-details.component';
 
 @NgModule({
@@ -95,6 +99,8 @@ import { StudentProjectDetailsComponent } from './components/student-project-det
     ForgotPasswordComponent,
     ConfirmResetPasswordComponent,
     ForgotPasswordSubmittedComponent,
+    EditProfileScreenComponent,
+    StudentViewApplicationComponent,
     StudentProjectDetailsComponent,
   ],
   imports: [
@@ -128,6 +134,7 @@ import { StudentProjectDetailsComponent } from './components/student-project-det
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
+    CommonModule
   ],
   providers: [
     {

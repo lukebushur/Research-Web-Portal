@@ -23,7 +23,9 @@ import { PageNotFoundScreenComponent } from './components/page-not-found-screen/
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
+import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
+import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { StudentSidenavComponent } from './components/student-sidenav/student-sidenav.component';
 
 const routes: Routes = [
@@ -56,6 +58,8 @@ const routes: Routes = [
   // This route is used to view the full list of all opportunites available for students
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
+  //This route is to view an applicant from the student's view
+  { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
 
   // INDUSTRY ROUTES
   {
@@ -74,6 +78,7 @@ const routes: Routes = [
     ],
   },
 
+  { path: 'edit-profile', component: EditProfileScreenComponent},
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
   

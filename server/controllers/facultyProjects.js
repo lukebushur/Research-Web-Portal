@@ -728,9 +728,13 @@ const fetchApplicantsFromProject = async (req, res) => {
 
             let theApplicants = []; //An array for the applicants
             if (activeProjects) {
-                project = activeProjects.projects.find(x => x.id == req.body.projectID);
+                project = activeProjects.projects.find(x => x.id.toString() === req.body.projectID);
             } else {
                 return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: "No active project list exists." }));
+            }
+
+            if(!activeProjects) {
+                return res.status(404).json(generateRes(false, 404, "BAD_REQUEST", { details: "Project not found." }));
             }
 
             const applications = project.applications; //grab applications from project
