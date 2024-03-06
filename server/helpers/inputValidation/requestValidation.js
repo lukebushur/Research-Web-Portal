@@ -117,6 +117,8 @@ const jobSchema = Joi.object({
     ),
 });
 
+// TODO: Industry assessments schema
+
 module.exports = {
     registerSchema, loginSchema,
     emailSchema, projectSchema,
