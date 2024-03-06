@@ -42,6 +42,7 @@ if (process.argv[2] === 'unitTests/**/*.js') { noTest = false; }
 
 async function dbConnect() {
     const db_uri = noTest ? process.env.DB_URI + process.env.DB_DEV_COLLECTION : process.env.DB_URI + process.env.DB_UNIT_TEST_COLLECTION;
+    console.log(db_uri);
     await mongoose.connect(db_uri, {
         autoIndex: true,
     }).then(() => {

@@ -1,1 +1,30 @@
-<p>student-project-details works!</p>
+<div *ngIf="responseData !== -1" id="applicantData">
+    <p>Title: </p>
+    <p>{{responseData.projectData.projectName}}</p>
+    <br>
+    <p>Description: </p>
+    <p>{{responseData.projectData.description}}</p>
+    <br>
+    <p>Responsibilities: </p>
+    <p>{{responseData.projectData.responsibilities}}</p>
+    <br>
+
+    <div *ngFor="let question of responseData.applicantData.answers; index as i">
+        <label id="question-label">Question {{ question.questionNum }}:<br> {{ question.question }}</label>
+        <div *ngIf="question.requirementType === 'radio button'">
+            <mat-radio-button *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+                [disabled]="true">{{ choice }}</mat-radio-button>
+        </div>
+        <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+            <mat-checkbox *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+                [disabled]="true">{{ choice }}</mat-checkbox>
+        </div>
+        <div *ngIf="question.requirementType === 'text'">
+            <mat-form-field>
+                <mat-label>Answer</mat-label>
+                <textarea matInput readonly>{{answersArray[i]}}</textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+</div>

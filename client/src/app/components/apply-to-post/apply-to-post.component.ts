@@ -8,7 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {  MatSnackBar  } from '@angular/material/snack-bar';
 
 import { AppRoutingModule } from '../../app-routing.module';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-to-post',
