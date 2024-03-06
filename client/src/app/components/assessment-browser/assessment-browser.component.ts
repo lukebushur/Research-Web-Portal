@@ -31,7 +31,6 @@ export class AssessmentBrowserComponent {
           });
         }
         console.log(this.assessments);
-        
       },
       error: (data: any) => {
         console.log('Get jobs failed.', data.error);

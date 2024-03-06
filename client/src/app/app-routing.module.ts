@@ -61,19 +61,14 @@ const routes: Routes = [
   { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
 
   // INDUSTRY ROUTES
-  {
-    path: 'industry',
-    component: IndustryToolbarComponent,
-    canActivate: [AuthGuard],
-    children: [
+  { path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard], children: [
       { path: 'dashboard', component: IndustryDashboardComponent },
       { path: 'create-job', component: AddEditJobComponent },
       { path: 'edit-job/:jobId', component: AddEditJobComponent },
       { path: 'assessments', component: AssessmentBrowserComponent },
       { path: 'create-assessment', component: AddEditAssessmentComponent },
       { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
-    ],
-  },
+  ]},
 
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },

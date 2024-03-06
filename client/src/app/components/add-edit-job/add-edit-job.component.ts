@@ -194,8 +194,6 @@ export class AddEditJobComponent {
   }
 
   onSubmit() {
-    console.log(this.jobForm.value);
-
     if (this.jobForm.invalid) {
       this.snackBar.open('1 or more invalid fields', 'Close', {
         duration: 5000,
