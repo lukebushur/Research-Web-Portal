@@ -23,7 +23,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
-import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { roleGuard } from './_helpers/auth/role-guard/role.guard';
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
@@ -38,11 +38,11 @@ const routes: Routes = [
   { path: 'confirm-reset-password/:email/:id', component: ConfirmResetPasswordComponent },
 
   // FACULTY ROUTES
-  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard], children: [
-    { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
-    { path: 'create-post/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
+  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], children: [
+    { path: 'dashboard', component: FacultyDashboardComponent },
+    { path: 'create-post/:projectType/:projectID', component: PostProjectComponent },
     // Takes a query parameter indicating the project to get applicants from
-    { path: 'project/applications', component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
+    { path: 'project/applications', component: FacultyDashboardApplyComponent },
     // This route is used to view a specific project and its applicants
     { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
     // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
@@ -55,8 +55,6 @@ const routes: Routes = [
   // This route is used to view the full list of all opportunites available for students
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
-  //This route is to view an applicant from the student's view
-  { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
 
   // INDUSTRY ROUTES
   {
@@ -74,7 +72,14 @@ const routes: Routes = [
       },
     ],
   },
-
+  //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
+  { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
+  { path: 'student-dashboard', component: StudentDashboard },
+  { path: 'student-search-opps', component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
+  //This route is used to view a specific project and its applicants
+  { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
+  //this route is used to view the full list of all opportunites available for students
+  { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
   
