@@ -22,6 +22,7 @@ import { PageNotFoundScreenComponent } from './components/page-not-found-screen/
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
+import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 
@@ -75,6 +76,7 @@ const routes: Routes = [
     ],
   },
 
+  { path: 'edit-profile', component: EditProfileScreenComponent},
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
   
