@@ -38,7 +38,7 @@ const routes: Routes = [
   { path: 'confirm-reset-password/:email/:id', component: ConfirmResetPasswordComponent },
 
   // FACULTY ROUTES
-  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], children: [
+  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'faculty'}, children: [
     { path: 'dashboard', component: FacultyDashboardComponent },
     { path: 'create-post/:projectType/:projectID', component: PostProjectComponent },
     // Takes a query parameter indicating the project to get applicants from
@@ -60,7 +60,8 @@ const routes: Routes = [
   {
     path: 'industry',
     component: IndustryToolbarComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, roleGuard],
+    data: { expectedRole: 'industry'},
     children: [
       {
         path: 'dashboard',
