@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from '@angular/material/input';
+
 
 @Component({
   selector: 'app-student-applications-overview',
