@@ -23,39 +23,6 @@ export class StudentDashboard {
   studentGPA: number = 0;
   studentMajors: string[] = [];
 
-<<<<<<< HEAD
-=======
-  displayedColumns: string[] = ['project title', 'project sponsor', 'gpa req', 'applied date', 'deadline', 'status']; //This array determines the displayedd columns in the table
-  dataSource = new MatTableDataSource(this.applicationData);
-
-  //function for the see all applications button
-  //this will let you view all the things you have applied to
-  getStudentApplications() {
-    this.studentDashboardService.getStudentApplications().subscribe({
-      next: (data) => {
-        this.applications = data.success.applications;
-        this.applications.forEach((element) => {
-          let obj = {
-            status: element.status,
-            appliedDate: this.dateService.convertShortDate(element.appliedDate),
-            deadline: this.dateService.convertShortDate(element.deadline),
-            projectName: element.projectName,
-            GPAREQ: element.GPAREQ,
-            projectSponsor: element.projectSponsor,
-            id: element.applicationID,
-          };
-          this.applicationData.push(obj);
-        });
-        this.dataSource = new MatTableDataSource(this.applicationData); //set up the datasource for the mat table
-        this.dataSource.sort = this.sort;
-      },
-      error: (error) => {
-        console.error('Error fetching applications', error);
-      },
-    });
-  }
-
->>>>>>> 0855b930e18c555df40a8359f424e466044684a8
   getAllOpportunities() {
     this.studentDashboardService.getOpportunities().subscribe({
       next: (data) => {
