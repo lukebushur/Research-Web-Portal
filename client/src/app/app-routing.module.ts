@@ -12,7 +12,7 @@ import { DemoProjectsComponent } from './components/demoProjects/demoProject.com
 import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
-import { CreateJobComponent } from './components/create-job/create-job.component';
+import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
 import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
@@ -22,9 +22,12 @@ import { PageNotFoundScreenComponent } from './components/page-not-found-screen/
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
+import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
+import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
+import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
@@ -62,22 +65,16 @@ const routes: Routes = [
   { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent},
 
   // INDUSTRY ROUTES
-  {
-    path: 'industry',
-    component: IndustryToolbarComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'dashboard',
-        component: IndustryDashboardComponent,
-      },
-      {
-        path: 'create-job',
-        component: CreateJobComponent,
-      },
-    ],
-  },
+  { path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard], children: [
+      { path: 'dashboard', component: IndustryDashboardComponent },
+      { path: 'create-job', component: AddEditJobComponent },
+      { path: 'edit-job/:jobId', component: AddEditJobComponent },
+      { path: 'assessments', component: AssessmentBrowserComponent },
+      { path: 'create-assessment', component: AddEditAssessmentComponent },
+      { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
+  ]},
 
+  { path: 'edit-profile', component: EditProfileScreenComponent},
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
   

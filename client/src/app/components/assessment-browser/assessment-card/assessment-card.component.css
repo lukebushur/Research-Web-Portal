@@ -1,17 +1,10 @@
-.job-card {
+.assessment-card {
   margin: 0px 10px 0px 10px;
-  width: 350px;
+  width: 500px;
 }
 
-.job-title {
+.assessment-name {
   height: 3.5em;
-}
-
-.max-two-lines {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .content-container {
@@ -31,6 +24,13 @@
   display: flex;
   align-items: center;
   height: 2.5em;
+}
+
+.max-two-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .divider {

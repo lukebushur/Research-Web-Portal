@@ -9,10 +9,16 @@ import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { MatCardHarness } from '@angular/material/card/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
 
 describe('JobCardComponent', () => {
   let component: JobCardComponent;
   let fixture: ComponentFixture<JobCardComponent>;
+  let loader: HarnessLoader;
   let testDeleteJobsResponse: Object;
   let deleteJobSpy: jasmine.Spy;
 
@@ -36,12 +42,14 @@ describe('JobCardComponent', () => {
         MatDividerModule,
         MatSnackBarModule,
         BrowserAnimationsModule,
+        MatTooltipModule,
       ],
       providers: [
         { provide: IndustryDashboardService, useValue: industryDashboardService }
       ],
     });
     fixture = TestBed.createComponent(JobCardComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     component.jobData = {
       _id: '1234',
@@ -80,22 +88,20 @@ intellectually stimulating environment, apply now!`,
     expect(component).toBeTruthy();
   });
 
-  it('should create a material card', () => {
-    const cardElement: HTMLElement = fixture.nativeElement;
-    const matCard = cardElement.querySelector('mat-card')!;
-    expect(matCard).toBeTruthy();
+  it('should create a material card', async () => {
+    const card = await loader.getHarnessOrNull(MatCardHarness);
+    expect(card).not.toBeNull();
   });
 
-  it('should create 6 chips in the mat-chip-set', () => {
-    const cardElement: HTMLElement = fixture.nativeElement;
-    const matChips = cardElement.querySelectorAll('mat-chip')!;
-    expect(matChips.length).toEqual(6);
+  it('should create 2 card buttons', async () => {
+    const buttons = await loader.getAllHarnesses(MatButtonHarness);
+    expect(buttons.length).toBe(2);
   });
 
-  it('should create 3 card buttons', () => {
-    const cardElement: HTMLElement = fixture.nativeElement;
-    const buttons = cardElement.querySelectorAll('button')!;
-    expect(buttons.length).toEqual(3);
+  it('should return a proper tagsString', () => {
+    let tagsStrResult = component.tagsString();
+    expect(tagsStrResult).toBe('Quantum Computing, Algorithm Development, ' +
+      'Quantum Information, Python, Qiskit, Research');
   });
 
   it('should return a proper jobTypeString', () => {
@@ -115,4 +121,6 @@ intellectually stimulating environment, apply now!`,
     component.deleteJob();
     expect(deleteJobSpy).toHaveBeenCalledOnceWith(component.jobData._id);
   });
+
+  // TODO: Unit tests for editJob()
 });
