@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-student-view-application',
