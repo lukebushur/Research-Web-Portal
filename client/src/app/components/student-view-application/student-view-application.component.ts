@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 
 @Component({
@@ -20,7 +20,8 @@ export class StudentViewApplicationComponent {
   appliedDate: String;
 
 
-  constructor(private studentService: StudentDashboardService, private route: ActivatedRoute, private dateConverter: DateConverterService,) {
+  constructor(private studentService: StudentDashboardService, private route: ActivatedRoute, private dateConverter: DateConverterService,
+    private router: Router) {
     this.route.params.subscribe(params => {
       this.applicationID = params['applicationID'];
     });
@@ -33,17 +34,19 @@ export class StudentViewApplicationComponent {
           next: (data1) => {
             this.projectInfo = data1.success.project;
             console.log(this.projectInfo);
-            this.deadline = this.dateConverter.convertDate(this.projectInfo.deadline);
-            this.posted = this.dateConverter.convertDate(this.projectInfo.posted);
+            this.deadline = this.dateConverter.convertShortDate(this.projectInfo.deadline);
+            this.posted = this.dateConverter.convertShortDate(this.projectInfo.posted);
           },
           error: (error) => {
             this.projectInfo = null;
+            this.router.navigate(['/studentApplicationOverview'], {
+            });
           }
         })
 
 
         this.applicationData = data.success.application;
-        this.appliedDate = this.dateConverter.convertDate(this.applicationData.appliedDate);
+        this.appliedDate = this.dateConverter.convertShortDate(this.applicationData.appliedDate);
 
         for (let i = 0; i < this.applicationData.questions.length; i++) {
           if (this.applicationData.questions[i].requirementType == "text") {
@@ -62,6 +65,8 @@ export class StudentViewApplicationComponent {
       },
       error: (error) => {
         console.error('Error fetching projects', error);
+        this.router.navigate(['/studentApplicationOverview'], {
+        });
       },
     })
   }
@@ -73,6 +78,14 @@ export class StudentViewApplicationComponent {
   }
 
   rescindApplication(applicationID: string) {
-
+    this.studentService.deleteApplication(applicationID).subscribe({
+      next: (data: any) => {
+        this.router.navigate(['/studentApplicationOverview'], {
+        });
+      },
+      error: (data: any) => {
+        console.log('Error', data);
+      },
+    });
   }
 }

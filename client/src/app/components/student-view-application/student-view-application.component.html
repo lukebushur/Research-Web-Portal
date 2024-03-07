@@ -1,56 +1,76 @@
 <div *ngIf="applicationData !== -1" id="applicantData">
     <h1>{{projectInfo.projectName}}</h1>
-    <p>{{projectInfo.professorName}}<p>
-    <p>{{posted}}</p>
+    <div class="overviewDiv">
+        <div class="infoDiv">
+            <p>{{projectInfo.professorName}} · {{posted}}
+            <p>
+            <p>{{projectInfo.description}}</p>
+        </div>
+        <div class="align-between">
+            <p class="dateCapsule">Applied : {{appliedDate}}</p>
+
+            <div class="align-together">
+                <p>Status: </p>
+                <p *ngIf="applicationData.status === 'Accept' || applicationData.status === 'Reject'"
+                    [class.accept-status-text]="applicationData.status === 'Accept'"
+                    [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text"
+                    style="margin-top: 7px;">
+                    {{applicationData.status}}ed</p>
+            </div>
+        </div>
+    </div>
     <!--TODO ADD LOCATION WHEN AVAILABLE-->
+    <h2>Application Information</h2>
+    <div class="overviewDiv">
+        <div class="infoDiv" *ngIf="applicationData !== -1 && applicationData !== null">
+            <div class="responsibilitiesDiv" *ngIf="projectInfo.responsibilities">
+                <h3>Expected Responsibilities</h3>
+                <p>{{projectInfo.responsibilities}}</p>
+            </div>
+            <br>
+            <p>GPA Requirement: </p>
+            <p>{{projectInfo.GPA}}</p>
+            <br>
+            <p>Deadline: </p>
+            <p>{{deadline}}</p>
+            <br>
+        </div>
 
-    <div *ngIf="applicationData !== -1 && applicationData !== null">
-        <p>Description: </p>
-        <p>{{projectInfo.description}}</p>
+        <p *ngIf="applicationData === null">Error loading project related data</p>
+        <p>Applied: </p>
+        <p>{{appliedDate}}</p>
         <br>
-        <p>Responsibilities: </p>
-        <p>{{projectInfo.responsibilities}}</p>
-        <br>
-        <p>GPA Requirement: </p>
-        <p>{{projectInfo.GPA}}</p>
-        <br>
-        <p>Deadline: </p>
-        <p>{{deadline}}</p>
-        <br>
+
+        <div *ngFor="let question of applicationData.questions; index as i">
+            <label id="question-label">Question {{ i + 1 }}:<br> {{ question.question }}</label>
+            <div *ngIf="question.requirementType === 'radio button'">
+                <mat-radio-button *ngFor="let choice of question.choices; index as j"
+                    [checked]="answersArray[i][j].answer" [disabled]="true">{{ choice }}</mat-radio-button>
+            </div>
+            <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+                <mat-checkbox *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+                    [disabled]="true">{{ choice }}</mat-checkbox>
+            </div>
+            <div *ngIf="question.requirementType === 'text'">
+                <mat-form-field>
+                    <mat-label>Answer</mat-label>
+                    <textarea matInput readonly>{{answersArray[i]}}</textarea>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <p>Status: </p>
+        <p *ngIf="applicationData.status === 'Accept' || applicationData.status === 'Reject'"
+            [class.accept-status-text]="applicationData.status === 'Accept'"
+            [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text">
+            {{applicationData.status}}ed</p>
+
+        <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
+            class="accept-button">Modify
+            Application</button>
+        <button mat-raised-button color="warn" (click)="rescindApplication(applicationData.id)">Rescind
+            Application</button>
     </div>
-
-    <p *ngIf="applicationData === null">Error loading project related data</p>
-    <p>Applied: </p>
-    <p>{{appliedDate}}</p>
-    <br>
-
-    <div *ngFor="let question of applicationData.questions; index as i">
-        <label id="question-label">Question {{ i + 1 }}:<br> {{ question.question }}</label>
-        <div *ngIf="question.requirementType === 'radio button'">
-            <mat-radio-button *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
-                [disabled]="true">{{ choice }}</mat-radio-button>
-        </div>
-        <div *ngIf="question.requirementType === 'check box'" class="radio-group">
-            <mat-checkbox *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
-                [disabled]="true">{{ choice }}</mat-checkbox>
-        </div>
-        <div *ngIf="question.requirementType === 'text'">
-            <mat-form-field>
-                <mat-label>Answer</mat-label>
-                <textarea matInput readonly>{{answersArray[i]}}</textarea>
-            </mat-form-field>
-        </div>
-    </div>
-
-    <p>Status: </p>
-    <p *ngIf="applicationData.status === 'Accept' || applicationData.status === 'Reject'"
-        [class.accept-status-text]="applicationData.status === 'Accept'"
-        [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text">
-        {{applicationData.status}}ed</p>
-
-    <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary" class="accept-button">Modify
-        Application</button>
-    <button mat-raised-button color="warn" (click)="rescindApplication(applicationData.id)">Rescind Application</button>
 </div>
 
 <app-spinner></app-spinner>

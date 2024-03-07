@@ -24,6 +24,7 @@ import { ConfirmResetPasswordComponent } from './components/confirm-reset-passwo
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
@@ -57,6 +58,8 @@ const routes: Routes = [
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
   //This route is to view an applicant from the student's view
   { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
+  //This route is for students to view an overview of their applied projects
+  { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent},
 
   // INDUSTRY ROUTES
   {

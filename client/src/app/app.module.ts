@@ -62,6 +62,7 @@ import { ForgotPasswordSubmittedComponent } from './components/forgot-password-s
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { CommonModule } from '@angular/common';
+import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 
 
 @NgModule({
@@ -96,6 +97,7 @@ import { CommonModule } from '@angular/common';
     ConfirmResetPasswordComponent,
     ForgotPasswordSubmittedComponent,
     StudentViewApplicationComponent,
+    StudentApplicationsOverviewComponent,
   ],
   imports: [
     BrowserModule,
