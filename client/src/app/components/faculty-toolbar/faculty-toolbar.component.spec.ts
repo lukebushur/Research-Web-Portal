@@ -61,7 +61,7 @@ describe('FacultyToolbarComponent', () => {
     const sidenavLoader = await loader.getChildLoader('mat-sidenav');
     const navList = await sidenavLoader.getHarness(MatNavListHarness);
     const navListItem = (await navList.getItems())[0];
-    expect((await navList.getItems()).length).toBe(1);
+    expect((await navList.getItems()).length).toBe(2);
     expect(await navListItem.getFullText()).toContain('');
   });
 

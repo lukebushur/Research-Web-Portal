@@ -1,3 +1,5 @@
+import { QuestionData } from "src/app/_models/apply-to-post/questionData";
+
 export interface JobCardData {
   _id: string;
   employer: string;
@@ -7,11 +9,12 @@ export interface JobCardData {
   description: string;
   location: string;
   reqYearsExp: number;
-  tags: string[] | undefined;
-  timeCommitment: string | undefined;
-  pay: string | undefined;
-  deadline: string | undefined;
-  startDate: string | undefined;
-  endDate: string | undefined;
+  tags?: string[];
+  timeCommitment?: string;
+  pay?: string;
+  deadline?: string;
+  startDate?: string;
+  endDate?: string;
+  questions?: QuestionData[];
   datePosted: string;
 }
