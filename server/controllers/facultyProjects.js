@@ -204,14 +204,18 @@ const getProject = async (req, res) => {
                 //get and update the project from the project array that has the matching information 
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
-                    const deadline = new Date(project.deadline);
-                    const posted = new Date(project.posted);
+                    const deadline = project.deadline
+                        ? (new Date(project.deadline)).toDateString()
+                        : null;
+                    const posted = project.posted
+                        ? (new Date(project.posted)).toDateString()
+                        : null;
                     let returnProject = {
                         projectName: project.projectName,
                         questions: project.questions,
                         description: project.description,
-                        deadline: deadline.toDateString(),
-                        posted: posted.toDateString(),
+                        deadline: deadline,
+                        posted: posted,
                         professorId: userId,
                         categories: project.categories,
                         majors: project.majors,
