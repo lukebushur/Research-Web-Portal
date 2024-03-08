@@ -80,6 +80,22 @@ export class CreateQuestionsFormComponent {
     return questionGroup.get('choices') as FormArray;
   }
 
+  // Error message for fields with only Validators.required
+  requiredArrayFieldErrorMessage(index: number, fieldName: string, displayName: string): string {
+    if (this.questions.at(index).get(fieldName)?.hasError('required')) {
+      return displayName + ' is a required field';
+    }
+    return '';
+  }
+
+  // Error message for a question choice
+  choiceErrorMessage(qindex: number, cindex: number, displayName: string): string {
+    if (this.getQuestionChoices(qindex).at(cindex).hasError('required')) {
+      return displayName + ' is a required field';
+    }
+    return '';
+  }
+
   addQuestion() {
     const questionGroup = this.fb.group({
       question: ['', [Validators.required]],

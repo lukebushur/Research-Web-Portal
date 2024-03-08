@@ -44,7 +44,9 @@ const routes: Routes = [
   // FACULTY ROUTES
   { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard], children: [
     { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
-    { path: 'create-post/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
+    { path: 'create-project', component: PostProjectComponent, canActivate: [AuthGuard] },
+    // Route parameters for type of project and project ID
+    { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
     // Takes a query parameter indicating the project to get applicants from
     { path: 'project/applications', component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
     // This route is used to view a specific project and its applicants
