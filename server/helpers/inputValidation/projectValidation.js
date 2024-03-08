@@ -8,7 +8,8 @@ const Majors = require('../../models/majors')
 const JWT = require('jsonwebtoken');
 const generateRes = require('../generateJSON');
 const { getProject, getMajors, getDecision } = require('./validationHelpers');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../schemaCaching');
+const { retrieveOrCacheMajors, retrieveOrCacheUsers, retrieveOrCacheProjects } = require('../schemaCaching');
+const { activeProjectSchema } = require('./requestValidation');
 
 const questionsWithChoices = ["radio button", "check box"]; //This is a const array of potential options for question types that have multiple provided answers
 const statusChoices = ["Hold", "Accept", "Reject"]; //This is a const array for the options in updated an application decision
@@ -85,34 +86,65 @@ const applicationValidation = async (req, res, next) => {
 /*  This function will validate that a project's conforms to the standards required by the application/database. Currently, it will ensure that
     the project that will be created or updated will only have selected majors that are available for the respective university.
 */
-const projectMajorValidation = async (req, res, next) => {
-    try {
-        //Grab information about user account information
-        const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-        const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email);
-        //Get list of majors corresponding to the user's university
-        if (!userAccount.universityLocation) { next(); } //This is a temporary inclusion to ensure that the request can succeed if the user account does not have an universityLocation field 
-        const majors = await retrieveOrCacheMajors(req, userAccount.universityLocation);
-        if (!majors) {
-            res.status(500).json(generateRes(false, 500, "SERVER_ERROR", { details: "No major list found corresponding to user university location." }));
+const projectValidation = (mode = "create") => {
+    return async (req, res, next) => {
+        try {
+            //Grab information about user account information
+            const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
+            const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+            const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+            let reqMajors, project; //these values will be used to validate the project. reqMajors is the request majors of the project and project should be the actual project
+            //if the project is a draft, then it doesn't need to conform to the major validation requirements yet
+            if (req.body.projectType === "Draft") { next(); return; }
+            //Get list of majors corresponding to the user's university
+            if (mode === "publish") {
+                let draftProjectRecord;
+                const promises = [
+                    retrieveOrCacheProjects(req, userAccount.userType.FacultyProjects.Draft),
+                    retrieveOrCacheProjects(req, userAccount.userType.FacultyProjects.Active), //this is included to reduce the number of needed i/o requests
+                ];
+
+                await Promise.all(promises).then(results => {
+                    draftProjectRecord = results[0];
+                });
+                //if there is not draft project record or draft project, then the request is invalid due to the resource not being locatable
+                if (!draftProjectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECTS_NOT_FOUND", {})); }
+                let selectedProject = draftProjectRecord.projects.find(x => x.id.toString() === req.body.projectID);
+                if (!selectedProject) { return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {})); }
+                reqMajors = selectedProject.majors; //otherwise set the majors so that they can be validated
+                project = selectedProject._doc;
+            }
+
+            const majors = await retrieveOrCacheMajors(req, userAccount.universityLocation);
+            if (!majors) {
+                res.status(500).json(generateRes(false, 500, "SERVER_ERROR", { details: "No major list found corresponding to user university location." }));
+                return;
+            }
+            //if reqMajors already exists, don't resassing it, otherwise make it equal to getMajors
+            reqMajors = reqMajors ? reqMajors : getMajors(req, res);
+            if (!reqMajors && !res.headersSent) { //Checks if there is a majors field found and if the response hasn't be send, if so there has been an input error
+                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "No provided majors" }));
+                return;
+            } else if (!reqMajors) { return } //If reqMajors doesn't exist and the res has been sent, then the response is s already been generated or the request by the helper
+            if (!reqMajors.every(x => majors.majors.includes(x))) {
+                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Provided major do not align with the univeristy's major list." }));
+                return;
+            }
+            //if the project obj doesn't exist, then grab it from the request
+            project = project ? project : req.body.projectDetails.project;
+            const { error } = activeProjectSchema.validate(project);
+            if (error) { //If there is an error validating the project, then 
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                    errors: error.details,
+                    original: error._original
+                }));
+            }
+
+            next();
+        } catch (error) {
+            res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
             return;
         }
-
-        let reqMajors = getMajors(req, res);
-        if (!reqMajors && !res.headersSent) { //Checks if there is a majors field found and if the response hasn't be send, if so there has been an input error
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "No provided majors" }));
-            return;
-        } else if (!reqMajors) { return } //If reqMajors doesn't exist and the res has been sent, then the response is s already been generated or the request by the helper
-        if (!reqMajors.every(x => majors.majors.includes(x))) {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Provided major do not align with the univeristy's major list." }));
-            return;
-        }
-
-        next();
-    } catch (error) {
-        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
-        return;
     }
 }
 
@@ -133,6 +165,6 @@ const decisionValidation = async (req, res, next) => {
 }
 
 module.exports = {
-    applicationValidation, projectMajorValidation,
+    applicationValidation, projectValidation,
     decisionValidation
 }

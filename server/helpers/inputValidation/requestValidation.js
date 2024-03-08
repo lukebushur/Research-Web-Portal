@@ -32,9 +32,9 @@ const deleteProjectSchema = Joi.object({
     "projectID": Joi.string().required().min(24).max(24),
     "projectType": Joi.string().required()
 });
-//This schema validates that the http request to create a project is valid. It should contain a projectName, array of applicable majors 
+//This schema validates that the http request to create a active project is valid. It should contain a projectName, array of applicable majors 
 //and research category, deadline date, questions object, and description. Optional fields are GPA requirement and position responsbilities
-const projectSchema = Joi.object({
+const activeProjectSchema = Joi.object({
     "projectName": Joi.string().required(),
     "GPA": Joi.number(),
     "majors": Joi.array().items(Joi.string()).required(),
@@ -53,7 +53,10 @@ const projectSchema = Joi.object({
             "answers": Joi.array().items(Joi.string()),
         })
     ).required(),
+    "_id": Joi.object(),
+    "applications": Joi.array(),
 });
+
 //This applicationSchema is used to validate both the update application request and create application request
 const applicationSchema = Joi.object({
     "projectID": Joi.string().min(24).max(24),
@@ -121,7 +124,7 @@ const jobSchema = Joi.object({
 
 module.exports = {
     registerSchema, loginSchema,
-    emailSchema, projectSchema,
+    emailSchema, activeProjectSchema,
     deleteProjectSchema, appDecision,
     applicationSchema, adminMajors,
     studentAccountModification, facultyAccountModification,

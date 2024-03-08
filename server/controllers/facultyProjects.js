@@ -2,9 +2,9 @@ const Project = require('../models/project');
 const Application = require('../models/application');
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
-const { projectSchema, deleteProjectSchema, appDecision } = require('../helpers/inputValidation/requestValidation');
+const { activeProjectSchema, deleteProjectSchema, appDecision } = require('../helpers/inputValidation/requestValidation');
 const generateRes = require('../helpers/generateJSON');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjects } = require('../helpers/schemaCaching');
+const { retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjects } = require('../helpers/schemaCaching');
 
 /*  This function handles the faculty project creation, should only be used as a POST request, and requires and access token
     This funciton takes information required for creating a faculty project, creates an active project in the DB, and updates the 
@@ -28,14 +28,6 @@ const createProject = async (req, res) => {
         if (user.userType.Type == process.env.FACULTY) {
             const userId = user._id;
             let projectType = req.body.projectType;
-            //validate schema 
-            const { error } = projectSchema.validate(req.body.projectDetails.project);
-            if (error && projectType == 'Active') {
-                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
-                    errors: error.details,
-                    original: error._original
-                }));
-            }
 
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
@@ -64,9 +56,9 @@ const createProject = async (req, res) => {
                     majors: req.body.projectDetails.project.majors,
                     categories: req.body.projectDetails.project.categories,
                     responsibilities: req.body.projectDetails.project.responsibilities,
+                    projectName: req.body.projectDetails.project.projectName ? req.body.projectDetails.project.projectName : "Temporary Title",
+                    description: req.body.projectDetails.project.description ? req.body.projectDetails.project.description : "Temporary description",
                 }
-                if (!req.body.projectName) { projectObject.projectName = "Temporary Title" }
-                if (!req.body.description) { projectObject.description = "Temporary description" }
             }
 
             //if there is no active mongodb record for this professor's active projects then create a new record
@@ -87,11 +79,11 @@ const createProject = async (req, res) => {
                     $push: { //push new project to the array 
                         projects: projectObject,
                     }
-                })
+                });
             }
             return res.status(200).json(generateRes(true, 200, "PROJECT_CREATED", {}));
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -155,7 +147,7 @@ const deleteProject = async (req, res) => {
             }
 
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -224,7 +216,7 @@ const getProject = async (req, res) => {
                     return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND"));
             }
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -292,7 +284,7 @@ const getProjects = async (req, res) => {
             //This specific response doesn't work with the generateRes method, so the allProjects just gets inserted directly
             return res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", projects: allProjects } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -317,15 +309,6 @@ const updateProject = async (req, res) => {
         //check if user type is faculty
         if (user.userType.Type == process.env.FACULTY) {
             const userId = user._id;
-
-            //validate schema
-            const { error } = projectSchema.validate(req.body.projectDetails.project);
-            if (error) {
-                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
-                    errors: error.details,
-                    original: error._original
-                }));
-            }
 
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
             switch (req.body.projectType) {
@@ -367,7 +350,7 @@ const updateProject = async (req, res) => {
                     return res.status(200).json(generateRes(true, 200, "PROJECT_UPDATED", {}));
             }
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -463,7 +446,7 @@ const archiveProject = async (req, res) => {
                 return res.status(200).json(generateRes(true, 200, "PROJECT_ARCHIVED", {}));
             }
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -527,7 +510,7 @@ const applicationDecision = async (req, res) => {
             return res.status(200).json(generateRes(true, 200, "APPLICATION_STATUS_UPDATED", {}));
 
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -651,7 +634,7 @@ const fetchApplicant = async (req, res) => {
 
             return res.status(200).json({ success: { status: 200, message: "APPLICANT_FOUND", responseData: response } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -697,7 +680,7 @@ const fetchAllApplicants = async (req, res) => {
             //This specific response doesn't work with the generateRes method, will look into solutions
             return res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -733,7 +716,7 @@ const fetchApplicantsFromProject = async (req, res) => {
                 return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: "No active project list exists." }));
             }
 
-            if(!activeProjects) {
+            if (!activeProjects) {
                 return res.status(404).json(generateRes(false, 404, "BAD_REQUEST", { details: "Project not found." }));
             }
 
@@ -769,7 +752,95 @@ const fetchApplicantsFromProject = async (req, res) => {
             //This specific response doesn't work with the generateRes method, will look into solutions
             return res.status(200).json({ success: { status: 200, message: "APPLICANTS_FOUND", applicants: theApplicants } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
+        }
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+    }
+}
+
+const publishProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+        //check if user type is faculty
+        if (user.userType.Type === parseInt(process.env.FACULTY)) {
+            let draftProjectRecord, activeProjectRecord;
+
+            const promises = [
+                retrieveOrCacheProjects(req, user.userType.FacultyProjects.Draft),
+                retrieveOrCacheProjects(req, user.userType.FacultyProjects.Active),
+            ];
+
+            await Promise.all(promises).then(results => {
+                draftProjectRecord = results[0];
+                activeProjectRecord = results[1];
+            });
+
+            if (!draftProjectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECTS_NOT_FOUND", {})); }
+            let selectedProject = draftProjectRecord.projects.find(x => x.id.toString() === req.body.projectID);
+            if (!selectedProject) { return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {})); }
+
+            const projectObject = {
+                projectName: selectedProject.projectName,
+                posted: new Date(),
+                deadline: selectedProject.deadline,
+                description: selectedProject.description,
+                responsibilities: selectedProject.responsibilities,
+                questions: selectedProject.questions || [], //If no questions exist, create empty array which will be used in validation if applications are submitted without questions
+                GPA: selectedProject.GPA,
+                majors: selectedProject.majors,
+                categories: selectedProject.categories,
+            }
+
+            let numProjects = draftProjectRecord.projects.length;
+            let newProjectList = draftProjectRecord.projects.pull(req.body.projectID);
+
+            if (newProjectList.length == numProjects) { //Check that an element was removed, if not send error response
+                return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
+            }
+
+            if (activeProjectRecord) {
+                const promises = [
+                    Project.updateOne({ _id: activeProjectRecord._id }, {
+                        $push: { //push new project to the array 
+                            projects: projectObject,
+                        }
+                    }),
+                    draftProjectRecord.save(),
+                ];
+
+                await Promise.all(promises);
+            } else {
+                let newProjectList = new Project({
+                    type: "Active",
+                    professorEmail: user.email,
+                    professorName: user.name,
+                    projects: [projectObject]
+                });
+
+                const promises = [
+                    newProjectList.save(),
+                    draftProjectRecord.save(),
+                ];
+
+                await Promise.all(promises).then((results) =>{
+                    newProjectList = results[0];
+                });
+
+                var $set = { $set: {} }; //This sets up the $set dynamically so that it can either save to DraftProjects or ActiveProjects
+                $set.$set['userType.FacultyProjects.Active'] = newProjectList._id;
+
+                await User.findOneAndUpdate({ email: user.email }, $set);
+            }
+
+            return res.status(200).json(generateRes(true, 200, "DRAFT_PUBLISHED", {}));
+        } else {
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -803,5 +874,6 @@ module.exports = {
     archiveProject, applicationDecision,
     getAllActiveProjects, fetchAllApplicants,
     fetchApplicant, getProject,
-    fetchApplicantsFromProject
+    fetchApplicantsFromProject,
+    publishProject,
 };

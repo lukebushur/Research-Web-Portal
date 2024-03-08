@@ -63,6 +63,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { CommonModule } from '@angular/common';
+import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 import { CreateQuestionsFormComponent } from './components/create-questions-form/create-questions-form.component';
@@ -103,6 +104,7 @@ import { AssessmentChooserComponent } from './components/add-edit-job/assessment
     ForgotPasswordSubmittedComponent,
     EditProfileScreenComponent,
     StudentViewApplicationComponent,
+    StudentApplicationsOverviewComponent,
     AssessmentBrowserComponent,
     AddEditAssessmentComponent,
     CreateQuestionsFormComponent,
