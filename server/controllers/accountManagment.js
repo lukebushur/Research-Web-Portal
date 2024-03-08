@@ -99,6 +99,7 @@ const getAccountInfo = async (req, res) => {
         accountData.name = user.name;
         accountData.universityLocation = user.universityLocation;
         accountData.emailConfirmed = user.emailConfirmed;
+        accountData.userType = user.userType.Type;
 
         if (user.userType.Type === parseInt(process.env.STUDENT)) {
             accountData.GPA = user.userType.GPA;

@@ -25,6 +25,7 @@ import { ForgotPasswordSubmittedComponent } from './components/forgot-password-s
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 
@@ -62,6 +63,8 @@ const routes: Routes = [
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
   //This route is to view an applicant from the student's view
   { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
+  //This route is for students to view an overview of their applied projects
+  { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent},
 
   // INDUSTRY ROUTES
   { path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard], children: [
