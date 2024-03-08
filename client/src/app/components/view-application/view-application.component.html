@@ -1,55 +1,82 @@
-<div *ngIf="responseData !== -1" id="applicantData">
-    <p>Title: </p>
-    <p>{{responseData.projectData.projectName}}</p>
-    <br>
-    <p>Description: </p>
-    <p>{{responseData.projectData.description}}</p>
-    <br>
-    <p>Responsibilities: </p>
-    <p>{{responseData.projectData.responsibilities}}</p>
-    <br>
-    <p>Posted: </p>
-    <p>{{posted}}</p>
-    <br>
-    <p>Deadline: </p>
-    <p>{{deadline}}</p>
-    <br>
-    <p>Applied: </p>
-    <p>{{appliedDate}}</p>
-    <br>
-    <p>GPA Requirement: </p>
-    <p>{{responseData.projectData.GPA}}</p>
-    <br>
-    <p>GPA: </p>
-    <p>{{responseData.applicantData.GPA}}</p>
-    <br>
+<div *ngIf="responseData !== -1" class="container" id="applicantData">
+  <div class="applicationInfo">
+    <mat-card class="billboard">
+      <mat-card-header>
 
-    <div *ngFor="let question of responseData.applicantData.answers; index as i">
-        <label id="question-label">Question {{ question.questionNum }}:<br> {{ question.question }}</label>
-        <div *ngIf="question.requirementType === 'radio button'">
-            <mat-radio-button *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+        <mat-card-title>{{responseData.projectData.projectName}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider></mat-divider>
+        <br>
+        <mat-card-subtitle>Project Description</mat-card-subtitle>
+        <p>{{responseData.projectData.description}}</p>
+        <br>
+        <mat-divider></mat-divider>
+        <br>
+        <table>
+            <tr class="dates">
+                <td>
+                    <mat-card-subtitle>Posted</mat-card-subtitle>
+                    <p>{{ posted }}</p>
+                </td>
+                <td>
+                    <mat-card-subtitle>Deadline</mat-card-subtitle>
+                    <p>{{ deadline }}</p>
+                </td>
+                <td>
+                    <mat-card-subtitle>Applied on</mat-card-subtitle>
+                    <p>{{ appliedDate }}</p>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <td>
+                    <mat-card-subtitle>GPA Requirement</mat-card-subtitle>
+                    <p>{{ responseData.projectData.GPA }}</p>
+                </td>
+                <td>
+                    <mat-card-subtitle>Applicant GPA</mat-card-subtitle>
+                    <p>{{ responseData.applicantData.GPA }}</p>
+                </td>
+            </tr>
+        </table>
+        
+        <br>
+        <mat-divider></mat-divider>
+        <br>
+      </mat-card-content>
+      <mat-card-content>
+        <div *ngFor="let question of responseData.applicantData.answers; index as i">
+            <label id="question-label">Question {{ i + 1 }}:<br> {{ question.question }}</label>
+            <div *ngIf="question.requirementType === 'radio button'">
+              <mat-radio-button *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
                 [disabled]="true">{{ choice }}</mat-radio-button>
-        </div>
-        <div *ngIf="question.requirementType === 'check box'" class="radio-group">
-            <mat-checkbox *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
+            </div>
+            <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+              <mat-checkbox *ngFor="let choice of question.choices; index as j" [checked]="answersArray[i][j].answer"
                 [disabled]="true">{{ choice }}</mat-checkbox>
-        </div>
-        <div *ngIf="question.requirementType === 'text'">
-            <mat-form-field>
+            </div>
+            <div *ngIf="question.requirementType === 'text'">
+              <mat-form-field style="width: 100%">
                 <mat-label>Answer</mat-label>
-                <textarea matInput readonly>{{answersArray[i]}}</textarea>
-            </mat-form-field>
-        </div>
-    </div>
-    <br>
-    <p>Status: </p>
-    <p *ngIf="responseData.applicantData.status === 'Accept' || responseData.applicantData.status === 'Reject'"
-        [class.accept-status-text]="responseData.applicantData.status === 'Accept'"
-        [class.reject-status-text]="responseData.applicantData.status === 'Reject'" class="status-text">
-        {{responseData.applicantData.status}}ed</p>
-    <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="primary"
-        (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
-        class="accept-button">Accept</button>
-    <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="warn"
-        (click)="applicationDecision(responseData.applicantData.application, projectID, 'Reject')">Reject</button>
+                <textarea matInput readonly style="width: 100%">{{answersArray[i]}}</textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <br>
+          <p>Status: </p>
+          <p *ngIf="responseData.applicantData.status === 'Accept' || responseData.applicantData.status === 'Reject'"
+            [class.accept-status-text]="responseData.applicantData.status === 'Accept'"
+            [class.reject-status-text]="responseData.applicantData.status === 'Reject'" class="status-text">
+            {{responseData.applicantData.status}}ed</p>
+          <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="primary"
+            (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
+            class="accept-button">Accept</button>
+          <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="warn"
+            (click)="applicationDecision(responseData.applicantData.application, projectID, 'Reject')">Reject</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
+
+  

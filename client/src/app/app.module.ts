@@ -10,7 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ConfirmEmailComponent } from './components/confirmemail/email.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ResearchProjectCardComponent } from './components/research-project-card/research-project-card.component';
@@ -60,6 +60,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { CommonModule } from '@angular/common';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -87,11 +90,12 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     StudentDashboard,
     ViewProjectComponent,
     StudentOpportunitesSearchPageComponent,
+    PageNotFoundScreenComponent,
     ApplyToPostComponent,
     ForgotPasswordComponent,
-    ConfirmEmailComponent,
     ConfirmResetPasswordComponent,
     ForgotPasswordSubmittedComponent,
+    StudentViewApplicationComponent,
   ],
   imports: [
     BrowserModule,
@@ -111,6 +115,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     MatDialogModule,
     MatMenuModule,
     MatRadioModule,
+    MatSliderModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatDatepickerModule,
@@ -125,6 +130,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
+    CommonModule
   ],
   providers: [
     {
