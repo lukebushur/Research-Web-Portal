@@ -1,5 +1,8 @@
 <div class="page-container">
-  <h1>{{ isCreateProject ? 'Create Project Post' : 'Update Project Post' }}</h1>
+  <div class="heading">
+    <h1>{{ isCreateProject ? 'Create Project Post' : 'Update Project Post' }}</h1>
+    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+  </div>
   <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
     <mat-stepper class="item-to-center">
       <mat-step formGroupName="details" [stepControl]="details" label="Fill out the project's details">
@@ -78,7 +81,7 @@
           <button mat-raised-button matStepperPrevious type="button">Previous</button>
           <span class="spacer"></span>
           <button mat-raised-button color="primary" *ngIf="isCreateProject" class="first-button" type="button" (click)="onSave()">Save Draft</button>
-          <button mat-raised-button color="primary" *ngIf="!isCreateProject && projectType === 'Draft'" class="first-button" type="button" (click)="convertToActive()">Convert to Active Project</button>
+          <button mat-raised-button color="primary" *ngIf="!isCreateProject && projectType === 'Draft'" class="first-button" type="button" (click)="convertToActive()">Create Active Project</button>
           <button mat-raised-button color="primary" type="submit">{{ isCreateProject ? 'Create Active Project' : 'Update'}}</button>
         </div>
       </mat-step>

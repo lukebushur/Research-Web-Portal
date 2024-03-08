@@ -8,6 +8,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-posts',
@@ -48,6 +49,7 @@ export class PostProjectComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private fb: FormBuilder,
     private announcer: LiveAnnouncer,
     private facultyProjectService: FacultyProjectService,
@@ -185,6 +187,11 @@ export class PostProjectComponent implements OnInit {
     }
   }
 
+  // Navigate to the previous page
+  cancel(): void {
+    this.location.back();
+  }
+
   // Generate data for sending to the server
   getSubmissionData(projType: string): any {
     const data = {
@@ -239,7 +246,7 @@ export class PostProjectComponent implements OnInit {
         if (data.success) {
           this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
             if (navigated) {
-              this.snackbar.open('Project draft successfully created', 'Dismiss', {
+              this.snackbar.open('Project draft successfully created!', 'Dismiss', {
                 duration: 5000,
               });
             }
@@ -260,7 +267,38 @@ export class PostProjectComponent implements OnInit {
       });
       return;
     }
+
+    const updateData = {
+      projectID: this.projectID!,
+      ...this.getSubmissionData('Draft'),
+    };
+
     // TODO: make HTTP request after the backend route is made
+    this.facultyProjectService.updateProject(updateData).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.facultyProjectService.publishDraft(this.projectID!).subscribe({
+            next: (data: any) => {
+              if (data.success) {
+                this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
+                  if (navigated) {
+                    this.snackbar.open('Project successfully published!', 'Dismiss', {
+                      duration: 5000,
+                    });
+                  }
+                });
+              }
+            },
+            error: (data: any) => {
+              console.log('Error publishing draft', data);
+            }
+          });
+        }
+      },
+      error: (data: any) => {
+        console.log('Error saving draft', data);
+      }
+    });
   }
 
   // Make the request to create the project
@@ -270,7 +308,7 @@ export class PostProjectComponent implements OnInit {
         if (data.success) {
           this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
             if (navigated) {
-              this.snackbar.open('Project successfully created', 'Dismiss', {
+              this.snackbar.open('Project successfully created!', 'Dismiss', {
                 duration: 5000,
               });
             }
@@ -292,7 +330,13 @@ export class PostProjectComponent implements OnInit {
     this.facultyProjectService.updateProject(updateData).subscribe({
       next: (data: any) => {
         if (data.success) {
-          this.router.navigate(['/faculty/dashboard']);
+          this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
+            if (navigated) {
+              this.snackbar.open('Project successfully updated!', 'Dismiss', {
+                duration: 5000,
+              });
+            }
+          });
         }
       },
       error: (data: any) => {
@@ -313,6 +357,12 @@ export class PostProjectComponent implements OnInit {
       }
       this.createProject(this.getSubmissionData('Active'));
     } else {
+      if (this.projectForm.invalid && this.projectType === 'Active') {
+        this.snackbar.open('One or more fields are invalid', 'Dismiss', {
+          duration: 5000,
+        });
+        return;
+      }
       this.updateProject(this.getSubmissionData(this.projectType!));
     }
   }
