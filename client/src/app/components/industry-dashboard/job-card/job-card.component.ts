@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { JobCardData } from './job-card-data';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-card',
@@ -11,7 +12,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class JobCardComponent {
   @Input() jobData: JobCardData;
 
-  constructor(private industryDashboardService: IndustryDashboardService, private snackBar: MatSnackBar) { }
+  constructor(
+    private router: Router,
+    private industryDashboardService: IndustryDashboardService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void { }
 
@@ -30,7 +35,24 @@ export class JobCardComponent {
     return dateTimeFormat.format(date);
   }
 
-  deleteJob() {
+  tagsString(): string {
+    if (!this.jobData.tags || this.jobData.tags.length < 1) {
+      return 'None';
+    }
+
+    let tagsString = this.jobData.tags[0];
+    for (let i = 1; i < this.jobData.tags.length; i++) {
+      tagsString += ', ' + this.jobData.tags[i];
+    }
+
+    return tagsString;
+  }
+
+  editJob(): void {
+    this.router.navigate([`/industry/edit-job/${this.jobData._id}`]);
+  }
+
+  deleteJob(): void {
     this.industryDashboardService.deleteJob(this.jobData._id).subscribe({
       next: (data: any) => {
         if (data.success) {

@@ -2,22 +2,30 @@
   <mat-card class="job-card">
     <mat-card-header>
       <mat-card-subtitle>{{ jobTypeString }}</mat-card-subtitle>
-      <mat-card-title>{{ jobData.title }}</mat-card-title>
+      <mat-card-title class="job-title">
+        <div [matTooltip]="jobData.title" class="max-two-lines">{{ jobData.title }}</div>
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p><span>Location: </span>{{ jobData.location }}</p>
-      <p><span>Posted: </span>{{ dateToString(jobData.datePosted) }}</p>
-      <p><span>Deadline: </span>{{ dateToString(jobData.deadline) }}</p>
-      <mat-chip-set class="tags-container">
-        <span>Tags: </span>
-        <mat-chip *ngFor="let tag of jobData.tags" color="primary" highlighted disableRipple>{{ tag }}</mat-chip>
-      </mat-chip-set>
-      <mat-divider></mat-divider>
+      <div class="content-container">
+        <div class="field-title">Posted: </div>
+        <div>{{ dateToString(jobData.datePosted) }}</div>
+        <div class="field-title">Deadline: </div>
+        <div>{{ dateToString(jobData.deadline) }}</div>
+        <div class="field-title">Location: </div>
+        <div class="field-content">
+          <div [matTooltip]="jobData.location" class="max-two-lines">{{ jobData.location }}</div>
+        </div>
+        <div class="field-title">Tags: </div>
+        <div class="field-content">
+          <div [matTooltip]="tagsString()" class="max-two-lines">{{ tagsString() }}</div>
+        </div>
+      </div>
+      <mat-divider class="divider"></mat-divider>
     </mat-card-content>
     <mat-card-actions class="actions-container">
-      <button mat-flat-button color="primary">VIEW</button>
-      <button mat-flat-button color="accent">EDIT</button>
-      <button mat-flat-button color="warn" (click)="deleteJob()">DELETE</button>
+      <button mat-button (click)="editJob()">EDIT</button>
+      <button mat-button color="warn" (click)="deleteJob()">DELETE</button>
     </mat-card-actions>
   </mat-card>
 </div>

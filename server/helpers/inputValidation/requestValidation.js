@@ -110,7 +110,17 @@ const jobSchema = Joi.object({
     deadline: Joi.date().allow(null),
     startDate: Joi.date().allow(null),
     endDate: Joi.date().allow(null),
+    questions: Joi.array().items(
+        Joi.object({
+            question: Joi.string().required(),
+            requirementType: Joi.string().required(),
+            required: Joi.boolean().required(),
+            choices: Joi.array().items(Joi.string()),
+        })
+    ),
 });
+
+// TODO: Industry assessments schema
 
 module.exports = {
     registerSchema, loginSchema,

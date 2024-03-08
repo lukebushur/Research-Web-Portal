@@ -1,0 +1,27 @@
+.page-container {
+  margin: 0px 20%;
+  padding: 20px;
+  height: max-content;
+  background-color: white;
+}
+
+.bold {
+  font-weight: 500;
+}
+
+h1 {
+  margin: 30px 12% 30px 12%;
+}
+
+.block {
+  display: block;
+}
+
+.item-to-center {
+  margin: auto 12% auto 12%;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+}
