@@ -2,6 +2,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, Input, ViewChild } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 
@@ -42,10 +43,12 @@ export class AppliedStudentTableComponent {
       this.allStudentData = value;
       this.updateTable(); // Use any existing search parameters?
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //This method fetches the applicants and then updates the shared applicants data, if it is able to get the projectID from the 
   //table data sharing service, then it grabs the applicants and sets the datasource to the object returned

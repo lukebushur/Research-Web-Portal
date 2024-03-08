@@ -1,0 +1,101 @@
+<div class="page-container">
+  <h1 class="item-to-center">{{ isCreateJob ? 'Create New Job' : 'Edit Job' }}</h1>
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+    <mat-stepper class="item-to-center">
+      <mat-step formGroupName="jobDetails" [stepControl]="jobDetails" label="Fill out the job's details">
+        <mat-form-field class="block first-field">
+          <mat-label>Employer</mat-label>
+          <input matInput type="text" formControlName="employer">
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Job Title</mat-label>
+          <input matInput type="text" formControlName="title">
+        </mat-form-field>
+        <mat-radio-group aria-label="Select a job type" formControlName="isInternship" class="block radio-field">
+          <span>Job Type*:</span>
+          <mat-radio-button [value]="true">Internship</mat-radio-button>
+          <mat-radio-button [value]="false">Job</mat-radio-button>
+        </mat-radio-group>
+        <mat-radio-group aria-label="Select a position type" formControlName="isFullTime" class="block radio-field">
+          <span>Position Type*:</span>
+          <mat-radio-button [value]="true">Full-Time</mat-radio-button>
+          <mat-radio-button [value]="false">Part-Time</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field class="block">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Location</mat-label>
+          <input matInput type="text" formControlName="location">
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Required Years of Experience</mat-label>
+          <input matInput type="text" formControlName="reqYearsExp">
+        </mat-form-field>
+        <mat-form-field class="example-chip-list" class="block">
+          <mat-label>Tags</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Enter tags">
+            <mat-chip-row *ngFor="let tag of tags.controls; let i=index" (removed)="removeTag(i)" [editable]="true"
+              (edited)="editTag(i, $event)" [aria-description]="'press enter to edit ' + tag.value">
+              {{tag.value}}
+              <button matChipRemove [attr.aria-label]="'remove ' + tag.value">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            <input placeholder="New tag..." [matChipInputFor]="chipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="addTag($event)" />
+          </mat-chip-grid>
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Time Commitment</mat-label>
+          <input matInput type="text" formControlName="timeCommitment">
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Pay</mat-label>
+          <input matInput type="text" formControlName="pay">
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Application Deadline</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="deadline">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="block">
+          <mat-label>Job Term</mat-label>
+          <mat-date-range-input [formGroup]="range" [rangePicker]="rangePicker">
+            <input matStartDate placeholder="Start date" formControlName="start">
+            <input matEndDate placeholder="End date" formControlName="end">
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker></mat-date-range-picker>
+        </mat-form-field>
+        <div class="buttons-container">
+          <button mat-raised-button class="first-button" type="button" (click)="cancel()">Cancel</button>
+          <button mat-raised-button matStepperPrevious type="button" disabled>Previous</button>
+          <span class="spacer"></span>
+          <button mat-raised-button color="primary" matStepperNext type="button">Next</button>
+        </div>
+      </mat-step>
+
+      <mat-step formGroupName="questionsGroup" [stepControl]="jobQuestions" optional label="Add a pre-hire assessment">
+        <div class="first-field questions-operations">
+          <button mat-raised-button color="primary" type="button" (click)="openDialog()">Add Questions From Saved Assessment</button>
+          <button mat-raised-button color="warn" type="button" (click)="clearQuestions()">Clear All Questions</button>
+        </div>
+        <div class="first-field">
+          <app-create-questions-form [questionsGroup]="jobQuestions" [questionsData]="initialJobData?.questions ?? undefined"></app-create-questions-form>
+        </div>
+        <div class="buttons-container">
+          <button mat-raised-button class="first-button" type="button" (click)="cancel()">Cancel</button>
+          <button mat-raised-button matStepperPrevious type="button">Previous</button>
+          <span class="spacer"></span>
+          <button mat-raised-button color="primary" type="submit">{{ isCreateJob ? 'Create' : 'Update' }}</button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </form>
+</div>

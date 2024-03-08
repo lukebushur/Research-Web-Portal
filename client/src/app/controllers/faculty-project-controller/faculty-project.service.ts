@@ -73,6 +73,13 @@ export class FacultyProjectService {
     return this.http.put(`${this.apiUrl}/projects/updateProject`, data, { headers });
   }
 
+  publishDraft(projectId: string): Observable<any> {
+    const headers = this.authService.getHeaders();
+    const data = { projectID: projectId };
+
+    return this.http.put(`${this.apiUrl}/projects/publishDraft`, data, { headers });
+  }
+
   demoGetActiveProjects(): Observable<any> {
     const headers = this.authService.getHeaders();
 

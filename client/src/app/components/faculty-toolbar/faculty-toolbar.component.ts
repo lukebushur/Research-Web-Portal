@@ -18,6 +18,11 @@ export class FacultyToolbarComponent {
       link: '/faculty/dashboard',
       icon: 'dashboard',      
     },
+    {
+      name: 'Create Project',
+      link: '/faculty/create-project',
+      icon: 'add',      
+    },
   ];
 
   constructor(

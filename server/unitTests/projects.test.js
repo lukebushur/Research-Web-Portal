@@ -67,7 +67,7 @@ describe('POST /api/projects/createProject', () => {
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
                 "professorEmail": randomEmail,
-                "projectType": "Active",
+                "projectType": "Draft",
                 "projectDetails": {
                     "project": {
                         "projectName": "Bioinformatics Project",
@@ -111,7 +111,7 @@ describe('POST /api/projects/createProject', () => {
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
                 "professorEmail": randomEmail,
-                "projectType": "Active",
+                "projectType": "Draft",
                 "projectDetails": {
                     "project": {
                         "projectName": "Bioinformatics Project 2",
@@ -227,7 +227,6 @@ describe('POST /api/projects/createProject', () => {
 describe('GET /api/projects/getProjects', () => {
     after(async () => { //grabs the project record ID and draft record ID
         let user = await User.findOne({ email: randomEmail });
-        projectRecordID = user.userType.FacultyProjects.Active;
         draftRecordID = user.userType.FacultyProjects.Draft;
     });
 
@@ -256,6 +255,69 @@ describe('GET /api/projects/getProjects', () => {
     });
 });
 
+describe('PUT /api/projects/publishDraft', () => {
+    it('Should return a successful draft publish response', (done) => {
+        chai.request(server)
+            .put('/api/projects/publishDraft')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({ "projectID": projectID })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal("DRAFT_PUBLISHED");
+                done();
+            })
+    });
+})
+
+describe('PUT /api/projects/publishDraft', () => {
+    it('Should return a successful draft publish response', (done) => {
+        chai.request(server)
+            .put('/api/projects/publishDraft')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({ "projectID": projectID2 })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal("DRAFT_PUBLISHED");
+                done();
+            })
+    });
+})
+
+//Get projects unit test, expects a successful get projects response with all the previously created projects
+describe('GET /api/projects/getProjects', () => {
+    after(async () => { //grabs the project record ID and draft record ID
+        let user = await User.findOne({ email: randomEmail });
+        projectRecordID = user.userType.FacultyProjects.Active;
+    });
+
+    it('should return a successful project retrieval response', (done) => {
+        chai.request(server)
+            .get('/api/projects/getProjects')
+            .set({ "Authorization": `Bearer ${access_token}` })
+            .send({})
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success');
+                expect(res.body.success).to.have.property('status').to.equal(200);
+                expect(res.body.success).to.have.property('message').to.equal("PROJECTS_FOUND");
+                expect(res.body.success).to.have.property('projects');
+                expect(res.body.success.projects[0].number).to.equal(1);
+                expect(res.body.success.projects[1].number).to.equal(2);
+                expect(res.body.success.projects[2].number).to.equal(3);
+                expect(res.body.success.projects[3].number).to.equal(4);
+                //store ids of the projects from the retrived projecst
+                projectID = res.body.success.projects[0].id;
+                projectID2 = res.body.success.projects[1].id;
+                done();
+            });
+    });
+});
+
+
 //Unit test for getting a singular project, this unit test grabs a draft project
 describe('POST /api/projects/getProject', () => {
     it('Should return a successful draft project retrieval reponse', (done) => {
@@ -276,7 +338,7 @@ describe('POST /api/projects/getProject', () => {
                 expect(res.body.success.project).to.have.property('questions');
                 done();
             })
-    })
+    });
 });
 
 //Unit test for getting a singular active project, this unit test grabs an active project
@@ -447,7 +509,7 @@ after(async () => {
             Project.deleteOne({ _id: projectRecordID }),
             Project.deleteOne({ _id: draftRecordID }),
             Project.deleteOne({ _id: archiveRecordID }),
-            Majors.deleteOne({ location: "Test University"})
+            Majors.deleteOne({ location: "Test University" })
         ];
 
         await Promise.all(promises);

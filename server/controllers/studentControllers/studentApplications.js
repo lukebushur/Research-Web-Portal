@@ -153,7 +153,7 @@ const createApplication = async (req, res) => {
             }
             return res.status(200).json(generateRes(true, 200, "APPLICATION_CREATED", {}));
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -202,7 +202,7 @@ const updateApplication = async (req, res) => {
                 return res.status(200).json(generateRes(true, 200, "APPLICATION_UPDATED", {}));
 
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -272,7 +272,7 @@ const deleteApplication = async (req, res) => {
             }
 
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -355,7 +355,7 @@ const getApplications = async (req, res) => {
 
             return res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -388,7 +388,7 @@ const getApplication = async (req, res) => {
             if (application) { return res.status(200).json({ success: { status: 200, message: "APPLICATION_FOUND", application: returnApplication } }); }
             else { return res.status(404).json(generateRes(false, 404, "APPLICATION_NOT_FOUND", {})); }
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -459,7 +459,7 @@ const getTopRecentApplications = async (req, res) => {
 
             return res.status(200).json({ success: { status: 200, message: "APPLICATIONS_FOUND", applications: returnArray } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -484,7 +484,7 @@ const demoGetStudentInfo = async (req, res) => {
 
             return res.status(200).json({ success: { status: 200, message: "DATA_FOUND", data } });
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
@@ -551,7 +551,7 @@ const getProjectData = async (req, res) => {
                     return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND"));
             }
         } else {
-            return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", {}));
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
     } catch (error) {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));

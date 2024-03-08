@@ -12,7 +12,7 @@ import { DemoProjectsComponent } from './components/demoProjects/demoProject.com
 import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
-import { CreateJobComponent } from './components/create-job/create-job.component';
+import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
 import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
@@ -22,8 +22,13 @@ import { PageNotFoundScreenComponent } from './components/page-not-found-screen/
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
 import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
+import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
+import { roleGuard } from './_helpers/auth/role-guard/role.guard';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
+import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
+import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
@@ -38,11 +43,13 @@ const routes: Routes = [
   { path: 'confirm-reset-password/:email/:id', component: ConfirmResetPasswordComponent },
 
   // FACULTY ROUTES
-  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard], children: [
+  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'faculty'}, children: [
     { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
-    { path: 'create-post/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
+    { path: 'create-project', component: PostProjectComponent, canActivate: [AuthGuard] },
+    // Route parameters for type of project and project ID
+    { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
     // Takes a query parameter indicating the project to get applicants from
-    { path: 'project/applications', component: FacultyDashboardApplyComponent, canActivate: [AuthGuard] },
+    { path: 'project/applications', component: FacultyDashboardApplyComponent },
     // This route is used to view a specific project and its applicants
     { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
     // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
@@ -55,26 +62,27 @@ const routes: Routes = [
   // This route is used to view the full list of all opportunites available for students
   { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
   { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
+
+  //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
+  { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
+  //This route is used to view a specific project and its applicants
+  { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
   //This route is to view an applicant from the student's view
   { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
+  //This route is for students to view an overview of their applied projects
+  { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent},
 
   // INDUSTRY ROUTES
-  {
-    path: 'industry',
-    component: IndustryToolbarComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'dashboard',
-        component: IndustryDashboardComponent,
-      },
-      {
-        path: 'create-job',
-        component: CreateJobComponent,
-      },
-    ],
-  },
+  { path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'industry'}, children: [
+      { path: 'dashboard', component: IndustryDashboardComponent },
+      { path: 'create-job', component: AddEditJobComponent },
+      { path: 'edit-job/:jobId', component: AddEditJobComponent },
+      { path: 'assessments', component: AssessmentBrowserComponent },
+      { path: 'create-assessment', component: AddEditAssessmentComponent },
+      { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
+  ]},
 
+  { path: 'edit-profile', component: EditProfileScreenComponent},
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
   

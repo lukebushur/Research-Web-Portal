@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const customObjects = require('./customDBObjects/questionObject');
 
 const jobSchema = new mongoose.Schema({
   employer: {
@@ -39,6 +40,7 @@ const jobSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  questions: [customObjects.question],
 });
 
 const industryDataSchema = new mongoose.Schema({
@@ -56,6 +58,17 @@ const industryDataSchema = new mongoose.Schema({
       default: [],
     },
   },
+  assessments: [{
+    name: {
+      type: String,
+      required: true,
+    },
+    dateCreated: {
+      type: Date,
+      default: Date.now,
+    },
+    questions: [customObjects.question],
+  }],
 });
 
 module.exports = mongoose.model('IndustryData', industryDataSchema);
