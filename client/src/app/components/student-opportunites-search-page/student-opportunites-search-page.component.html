@@ -7,30 +7,6 @@
         </mat-form-field>
         <button mat-raised-button (click)="onSearchButtonClick()" style="margin-left: 0.5em">Search</button>
     </div>
-
-    <!-- <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
-        Show Filters for Majors
-        <span class="example-accordion-item-description">
-          Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
-        </span>
-      </div>
-
-     checkboxes for majors
-    <div class="example-accordion-item-body" role="region"
-      [style.display]="questionAccordionItem.expanded ? '' : 'none'" [attr.id]="'question-accordion-body'"
-      [attr.aria-labelledby]="'question-accordion-header'">
-      <div class="majors-list">
-          <cdk-accordion class="example-accordion">
-              <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
-                tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
-                [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
-              <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
-                  {{ major }}
-              </mat-checkbox>
-              </cdk-accordion-item>
-          </cdk-accordion>
-      </div>
-    </div> -->
     
     <mat-accordion class="oppExpansion">
       <mat-expansion-panel (opened)="panelOpenState = true"
@@ -50,31 +26,60 @@
     </mat-accordion>
 
     <!-- filtered opportunities -->
-    <div class="opportunities-list">
+    <div class="opps-container">
         <div *ngFor="let opportunity of filteredOpportunities" class="opportunities-container">
-            <mat-card class="oppCard">
-                <mat-card-title class="opportunity-card-title">
-                    {{ opportunity.title }}
-                  </mat-card-title>
-                  <mat-card-subtitle>{{ opportunity.description }}</mat-card-subtitle>
-                  <mat-card-content>
-                    <table class="projectDetails">
-                      <tr>
-                        <td>Professor name: {{ opportunity.professorName }}</td>
-                        <td>Application email: {{ opportunity.professorEmail }}</td>
-                      </tr>
-                      <tr colspan="2">
-                        <td>Number of Applicants: {{ opportunity.applications?.length ?? 0 }}</td>
-                        <td>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</td>
-                      </tr>
-                    </table>
-                  </mat-card-content>
-                  <mat-divider></mat-divider>
-                  <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
-                    [disabled]="!meetRequirements(opportunity)">{{ meetRequirements(opportunity) ? 'Apply' : 'Cannot Apply'
-                    }}</button>
+            <!-- <mat-card class="opp-card">
+              <mat-card-header>
+                <mat-card-title class="opp-title">
+                  <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="opps-container">
+                  <div class="field-title">Posted: </div>
+                  <div>{{ dateToString(opportunity.posted) }}</div>
+                  <div class="field-title">GPA Requirement: </div>
+                  <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
+                  <div class="field-title">Description: </div>
+                  <div class="field-content">
+                    <div [matTooltip]="opportunity.description" class="max-two-lines">{{ opportunity.description }}</div>
+                  </div>
+                </div>
+                <mat-divider class="divider"></mat-divider>
+              </mat-card-content>
+              <mat-card-actions class="actions-container">
+                <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
+                    [disabled]="!meetRequirements(opportunity)">{{ 'Apply' }}</button>
+                <button mat-button color="warn">VIEW</button>
+              </mat-card-actions>
+            </mat-card> -->
+            <mat-card class="opp-card">
+              <mat-card-header>
+                <mat-card-title class="opp-title">
+                  <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="content-container">
+                  <div class="field-title">Professor: </div>
+                  <div [matTooltip]="opportunity.professorEmail">{{ opportunity.professorName }}</div>
+                  <div class="field-title">Posted: </div>
+                  <div>{{ dateToString(opportunity.posted) }}</div>
+                  <div class="field-title">GPA Requirement: </div>
+                  <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
+                  <div class="field-title">Description: </div>
+                  <div class="field-content">
+                    <div [matTooltip]="opportunity.description" class="max-two-lines">{{ opportunity.description }}</div>
+                  </div>
+                </div>
+                <mat-divider class="divider"></mat-divider>
+              </mat-card-content>
+              <mat-card-actions class="actions-container">
+                <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
+                    [disabled]="!meetRequirements(opportunity)">{{ 'Apply' }}</button>
+                <button mat-button color="warn">View</button>
+              </mat-card-actions>
             </mat-card>
-            
         </div>
     </div>
 </div>

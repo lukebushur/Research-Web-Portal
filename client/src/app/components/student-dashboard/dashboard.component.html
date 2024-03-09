@@ -21,31 +21,38 @@
         <div *ngFor="let major of majors">
           <h2 class="oppCard">{{ major }} Opportunities</h2>
 
-          <div *ngFor="let opportunity of majorOpportunities[major]" class="opportunities-container">
-            <mat-card class="oppCard">
-              <mat-card-title class="opportunity-card-title">
-                {{ opportunity.title }}
-              </mat-card-title>
-              <mat-card-subtitle>{{ opportunity.description }}</mat-card-subtitle>
-              <mat-card-content>
-                <table class="projectDetails">
-                  <tr>
-                    <td>Professor name: {{ opportunity.professorName }}</td>
-                    <td>Application email: {{ opportunity.professorEmail }}</td>
-                  </tr>
-                  <tr colspan="2">
-                    <td>Number of Applicants: {{ opportunity.applications?.length ?? 0 }}</td>
-                    <td>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</td>
-                  </tr>
-                </table>
-              </mat-card-content>
-              <mat-divider></mat-divider>
-              <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
-                [disabled]="!meetRequirements(opportunity)">{{ meetRequirements(opportunity) ? 'Apply' : 'Cannot Apply'
-                }}</button>
-            </mat-card>
-            
+          <div class="opps-container">
+            <div *ngFor="let opportunity of majorOpportunities[major]">
+              <mat-card class="opp-card">
+                <mat-card-header>
+                  <mat-card-title class="opp-title">
+                    <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="content-container">
+                    <div class="field-title">Professor: </div>
+                    <div [matTooltip]="opportunity.professorEmail">{{ opportunity.professorName }}</div>
+                    <div class="field-title">Posted: </div>
+                    <div>{{ dateToString(opportunity.posted) }}</div>
+                    <div class="field-title">GPA Requirement: </div>
+                    <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
+                    <div class="field-title">Description: </div>
+                    <div class="field-content">
+                      <div [matTooltip]="opportunity.description" class="max-two-lines">{{ opportunity.description }}</div>
+                    </div>
+                  </div>
+                  <mat-divider class="divider"></mat-divider>
+                </mat-card-content>
+                <mat-card-actions class="actions-container">
+                  <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
+                      [disabled]="!meetRequirements(opportunity)">{{ 'Apply' }}</button>
+                  <button mat-button color="warn">View</button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
           </div>
+          
         </div>
       </div>
     </div>

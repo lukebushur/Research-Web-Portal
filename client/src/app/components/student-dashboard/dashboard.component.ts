@@ -85,4 +85,13 @@ export class StudentDashboard {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
       && ((opportunity.majors.length === 0) || (opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
+
+  dateToString(dateString: string | undefined): string {
+    if (!dateString) {
+      return 'None';
+    }
+    const date = new Date(dateString);
+    const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
+    return dateTimeFormat.format(date);
+  }
 }
