@@ -7,15 +7,8 @@
       <button mat-raised-button (click)="getStudentApplications()">See all applications</button>
       <button mat-raised-button (click)="searchOpportunities()">Search opportunities</button>
     </div>
-    <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
-      Previous Stuff in this Page
-      <span class="example-accordion-item-description">
-        Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
-      </span>
-    </div>
-    <div class="example-accordion-item-body" role="region"
-      [style.display]="questionAccordionItem.expanded ? '' : 'none'" [attr.id]="'question-accordion-body'"
-      [attr.aria-labelledby]="'question-accordion-header'">
+
+    <div>
       <div class="student-dashboard-page-container">
         <!-- Display opportunities grouped by major -->
         <div *ngFor="let major of majors">
@@ -46,8 +39,8 @@
                 </mat-card-content>
                 <mat-card-actions class="actions-container">
                   <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
-                      [disabled]="!meetRequirements(opportunity)">{{ 'Apply' }}</button>
-                  <button mat-button color="warn">View</button>
+                      [disabled]="!meetRequirements(opportunity)">{{ 'APPLY' }}</button>
+                  <button mat-button color="secondary">VIEW</button>
                 </mat-card-actions>
               </mat-card>
             </div>
