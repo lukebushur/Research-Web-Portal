@@ -32,7 +32,7 @@ import { AddEditAssessmentComponent } from './components/add-edit-assessment/add
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
-  { path: '', redirectTo: 'signup', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signout', component: SignoutComponent },
