@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignoutComponent } from './signout.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('SignoutComponent', () => {
   let component: SignoutComponent;
@@ -8,7 +9,8 @@ describe('SignoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SignoutComponent]
+      declarations: [SignoutComponent],
+      imports: [MatSnackBarModule],
     });
     fixture = TestBed.createComponent(SignoutComponent);
     component = fixture.componentInstance;

@@ -72,6 +72,7 @@ import { AssessmentCardComponent } from './components/assessment-browser/assessm
 import { MatStepperModule } from '@angular/material/stepper';
 import { AssessmentChooserComponent } from './components/add-edit-job/assessment-chooser/assessment-chooser.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -149,6 +150,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CommonModule,
     MatStepperModule,
     MatExpansionModule,
+    MatGridListModule,
   ],
   providers: [
     {
