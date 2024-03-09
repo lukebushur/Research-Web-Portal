@@ -25,6 +25,11 @@ table.projectDetails {
     margin: 0 auto;
 }
 
+.oppExpansion {
+    max-width: 80%;
+    margin: 0.5em auto;
+}
+
 .oppCard {
     padding: 0.5em 0.5em;
 

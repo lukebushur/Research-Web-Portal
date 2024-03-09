@@ -22,6 +22,7 @@ export class StudentOpportunitesSearchPageComponent {
   availableMajors: string[] = [];
   selectedMajors: string[] = [];
   studentGPA: number = 0;
+  panelOpenState: boolean = true;
   studentMajors: string[] = [];
 
   getAllOpportunities() {

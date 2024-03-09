@@ -71,6 +71,7 @@ import { CreateQuestionsFormComponent } from './components/create-questions-form
 import { AssessmentCardComponent } from './components/assessment-browser/assessment-card/assessment-card.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AssessmentChooserComponent } from './components/add-edit-job/assessment-chooser/assessment-chooser.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -147,6 +148,7 @@ import { AssessmentChooserComponent } from './components/add-edit-job/assessment
     CdkAccordionModule,
     CommonModule,
     MatStepperModule,
+    MatExpansionModule,
   ],
   providers: [
     {

@@ -8,6 +8,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 describe('StudentOpportunitesSearchPageComponent', () => {
   let component: StudentOpportunitesSearchPageComponent;
@@ -16,7 +17,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StudentOpportunitesSearchPageComponent],
-      imports: [HttpClientTestingModule, FormsModule, MatFormFieldModule, CdkAccordionModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatPaginatorModule],
+      imports: [HttpClientTestingModule, FormsModule, MatFormFieldModule, CdkAccordionModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatPaginatorModule, MatExpansionModule],
     });
     fixture = TestBed.createComponent(StudentOpportunitesSearchPageComponent);
     component = fixture.componentInstance;

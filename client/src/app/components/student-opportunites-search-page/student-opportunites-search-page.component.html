@@ -8,30 +8,46 @@
         <button mat-raised-button (click)="onSearchButtonClick()" style="margin-left: 0.5em">Search</button>
     </div>
 
-    <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
+    <!-- <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
         Show Filters for Majors
         <span class="example-accordion-item-description">
           Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
         </span>
       </div>
 
-    <!-- checkboxes for majors -->
+     checkboxes for majors
     <div class="example-accordion-item-body" role="region"
       [style.display]="questionAccordionItem.expanded ? '' : 'none'" [attr.id]="'question-accordion-body'"
       [attr.aria-labelledby]="'question-accordion-header'">
-    <div class="majors-list">
-        <cdk-accordion class="example-accordion">
-            <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
-              tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
-              [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
-            <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
-                {{ major }}
-            </mat-checkbox>
-            </cdk-accordion-item>
-        </cdk-accordion>
-    </div>
-    </div>
+      <div class="majors-list">
+          <cdk-accordion class="example-accordion">
+              <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
+                tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
+                [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
+              <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
+                  {{ major }}
+              </mat-checkbox>
+              </cdk-accordion-item>
+          </cdk-accordion>
+      </div>
+    </div> -->
     
+    <mat-accordion class="oppExpansion">
+      <mat-expansion-panel (opened)="panelOpenState = true"
+                           (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Show Filters for Majors
+          </mat-panel-title>
+        </mat-expansion-panel-header> 
+        <div>
+          <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
+            {{ major }}
+          </mat-checkbox>
+        </div>
+        
+      </mat-expansion-panel>
+    </mat-accordion>
 
     <!-- filtered opportunities -->
     <div class="opportunities-list">
