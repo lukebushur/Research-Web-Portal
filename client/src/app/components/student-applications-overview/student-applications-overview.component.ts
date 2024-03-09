@@ -29,7 +29,7 @@ export class StudentApplicationsOverviewComponent {
   majorOpportunities: { [major: string]: any[] } = {};
   majors: string[] = [];
 
-  displayedColumns: string[] = ['project-title', 'project-sponsor', 'gpa-req', 'applied', 'deadline', 'status']; //This array determines the displayedd columns in the table
+  displayedColumns: string[] = ['project-title', 'project-sponsor', 'gpa-req', 'applied', 'deadline', 'status', 'actions']; //This array determines the displayedd columns in the table
   dataSource = new MatTableDataSource(this.applicationData);
 
   //function for the see all applications button
