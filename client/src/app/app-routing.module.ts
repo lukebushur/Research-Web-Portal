@@ -43,18 +43,20 @@ const routes: Routes = [
   { path: 'confirm-reset-password/:email/:id', component: ConfirmResetPasswordComponent },
 
   // FACULTY ROUTES
-  { path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'faculty'}, children: [
-    { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
-    { path: 'create-project', component: PostProjectComponent, canActivate: [AuthGuard] },
-    // Route parameters for type of project and project ID
-    { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
-    // Takes a query parameter indicating the project to get applicants from
-    { path: 'project/applications', component: FacultyDashboardApplyComponent },
-    // This route is used to view a specific project and its applicants
-    { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
-    // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
-    { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
-  ]},
+  {
+    path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'faculty' }, children: [
+      { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
+      { path: 'create-project', component: PostProjectComponent, canActivate: [AuthGuard] },
+      // Route parameters for type of project and project ID
+      { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
+      // Takes a query parameter indicating the project to get applicants from
+      { path: 'project/applications', component: FacultyDashboardApplyComponent },
+      // This route is used to view a specific project and its applicants
+      { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
+      // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
+      { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
+    ]
+  },
 
   // STUDENT ROUTES
   { path: 'student-dashboard', component: StudentDashboard },
@@ -68,24 +70,26 @@ const routes: Routes = [
   //This route is used to view a specific project and its applicants
   { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
   //This route is to view an applicant from the student's view
-  { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent},
+  { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent },
   //This route is for students to view an overview of their applied projects
-  { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent},
+  { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent },
 
   // INDUSTRY ROUTES
-  { path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'industry'}, children: [
+  {
+    path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'industry' }, children: [
       { path: 'dashboard', component: IndustryDashboardComponent },
       { path: 'create-job', component: AddEditJobComponent },
       { path: 'edit-job/:jobId', component: AddEditJobComponent },
       { path: 'assessments', component: AssessmentBrowserComponent },
       { path: 'create-assessment', component: AddEditAssessmentComponent },
       { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
-  ]},
+    ]
+  },
 
-  { path: 'edit-profile', component: EditProfileScreenComponent},
+  { path: 'edit-profile', component: EditProfileScreenComponent },
   // MISC. ROUTES
   { path: 'demoProjects', component: DemoProjectsComponent },
-  
+
   // LAST ROUTE - KEEP THIS ROUTE LAST FOR IT TO WORK
   { path: '**', component: PageNotFoundScreenComponent },
 ];
