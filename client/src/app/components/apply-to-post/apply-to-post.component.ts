@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ProjectData } from '../../_models/apply-to-post/projectData';
 import { QuestionData } from '../../_models/apply-to-post/questionData';
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 
 @Component({
   selector: 'app-to-post',
@@ -16,22 +17,36 @@ export class ApplyToPostComponent implements OnInit {
   //For side-nav opening
   opened = false;
 
-  project: ProjectData;
+  project: any;
   questions: Array<QuestionData>;
 
-  applyForm: FormGroup = new FormGroup({
-    formQuestions: new FormArray([]),
-  });
+
+  applyForm = this.fb.group({
+    details: this.fb.group({}),
+    questionsGroup: this.fb.group({
+      formQuestions: this.fb.array([]),
+    }),
+  })
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private applyService: ApplyToPostService
+    private applyService: ApplyToPostService,
+    private fb: FormBuilder,
+    private dateService: DateConverterService,
   ) { }
 
+  get details() {
+    return this.applyForm.get('details') as FormGroup;
+  }
+
+  get questionsGroup() {
+    return this.applyForm.get('questionsGroup') as FormGroup;
+  }
+
   get formQuestions() {
-    return this.applyForm.get('formQuestions') as FormArray;
+    return this.applyForm.get('questionsGroup.formQuestions') as FormArray;
   }
 
   getCheckBoxControl(index: number, key: string): FormControl | undefined | null {
@@ -74,35 +89,31 @@ export class ApplyToPostComponent implements OnInit {
       projectID: oppId,
     }).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          this.project = {
-            ...response.success.project,
-            professorName: profName,
-            professorEmail: profEmail,
-            projectID: oppId,
-          }
-          this.questions = this.project.questions;
-          for (let i = 0; i < this.questions.length; i++) {
-            this.questions[i].questionNum = i + 1;
-            if (this.questions[i].requirementType === 'check box') {
-              let checkControls = {};
-              for (let choice of this.questions[i].choices!) {
-                checkControls = {
-                  ...checkControls,
-                  [choice]: new FormControl(false)
-                };
-              }
-              const checkGroup = (this.questions[i].required)
-                ? new FormGroup(checkControls, [this.requireCheckboxesToBeChecked(1)])
-                : new FormGroup(checkControls);
-              this.formQuestions.push(checkGroup);
-            } else {
-              const control = (this.questions[i].required)
-                ? new FormControl('', [Validators.required])
-                : new FormControl('');
-              this.formQuestions.push(control);
+        this.project = response.success.project;
+
+        this.questions = this.project.questions;
+
+        for (let i = 0; i < this.questions.length; i++) {
+          this.questions[i].questionNum = i + 1;
+          if (this.questions[i].requirementType === 'check box') {
+            let checkControls = {};
+            for (let choice of this.questions[i].choices!) {
+              checkControls = {
+                ...checkControls,
+                [choice]: new FormControl(false)
+              };
             }
+            const checkGroup = (this.questions[i].required)
+              ? new FormGroup(checkControls, [this.requireCheckboxesToBeChecked(1)])
+              : new FormGroup(checkControls);
+            this.formQuestions.push(checkGroup);
+          } else {
+            const control = (this.questions[i].required)
+              ? new FormControl('', [Validators.required])
+              : new FormControl('');
+            this.formQuestions.push(control);
           }
+
         }
       },
       error: (response: any) => {
@@ -137,18 +148,9 @@ export class ApplyToPostComponent implements OnInit {
     return (Math.round(this.project.GPA * 100) / 100).toFixed(2);
   }
 
-  dateToString(dateString: string | undefined): string {
-    if (!dateString) {
-      return 'None';
-    }
-    const date = new Date(dateString);
-    const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
-      weekday: undefined,
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-    return dateTimeFormat.format(date);
+  dateToString(dateString: string): String {
+    let date = new Date(dateString);
+    return this.dateService.convertShortDate(date);
   }
 
   onSubmit() {
@@ -183,17 +185,15 @@ export class ApplyToPostComponent implements OnInit {
 
     this.applyService.createApplication(data).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          this.router.navigate(['/student-dashboard']).then((navigated: boolean) => {
-            if (navigated) {
-              this.snackBar.open('Application submitted!', 'Close', {
-                duration: 5000,
-              });
-            } else {
-              console.log('Problem navigating');
-            }
-          });
-        }
+        this.router.navigate(['/studentApplicationOverview']).then((navigated: boolean) => {
+          if (navigated) {
+            this.snackBar.open('Application submitted!', 'Close', {
+              duration: 5000,
+            });
+          } else {
+            console.log('Problem navigating');
+          }
+        });
       },
       error: (response: any) => {
         this.snackBar.open('Error submitting application.', 'Close', {
@@ -202,5 +202,9 @@ export class ApplyToPostComponent implements OnInit {
         console.log('Error', response);
       },
     });
+  }
+
+  cancel() {
+    this.router.navigate(['/student-dashboard']);
   }
 }
