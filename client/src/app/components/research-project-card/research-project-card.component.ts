@@ -49,7 +49,6 @@ export class ResearchProjectCardComponent implements OnInit {
       y.status = x.status;
       y.application = x.application;
       y.project = project.id;
-      console.log(y.project);
       applications.push(y);
     });
 
@@ -60,7 +59,7 @@ export class ResearchProjectCardComponent implements OnInit {
   }
 
   redirectToCreateProject() {
-    this.router.navigate(['/faculty/create-post/Active/new']);
+    this.router.navigate(['/faculty/create-project']);
   }
 
   unselectAll() { //This method unselects all of the project cards, is used when switching between active/draft/archived projects
@@ -91,6 +90,8 @@ export class ResearchProjectCardComponent implements OnInit {
       },
     });
   }
+
+  
 
   // Define a method to get the project data based on the project type
   getProjectsByType(type: string, data: any): any[] {
@@ -125,7 +126,7 @@ export class ResearchProjectCardComponent implements OnInit {
   }
 
   buttonUpdateProject(projectID: string, projectType: string): void {
-    this.router.navigate([`/faculty/create-post/${projectType}/${projectID}`]);
+    this.router.navigate([`/faculty/update-project/${projectType}/${projectID}`]);
   }
 
   buttonDeleteProject(projectID: string, projectType: string): void {
@@ -159,6 +160,11 @@ export class ResearchProjectCardComponent implements OnInit {
   }
 
   adjustDates(projects: any[]): void {
-    projects.forEach(x => x.deadline = this.dateConverter.convertDate(x.deadline));
+    // TODO: Seems like not all date fields are being formatted the same
+    projects.forEach(x => {
+      if (x.deadline) {
+        x.deadline = this.dateConverter.convertDate(x.deadline)
+      }
+    });
   }
 }

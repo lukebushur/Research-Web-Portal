@@ -1,0 +1,29 @@
+.page-container {
+    margin: 0px 18%;
+    padding: 30px 12%;
+    height: max-content;
+    background-color: white;
+}
+
+.block {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.heading {
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+.reset-password-button {
+    margin: 0 0 0 auto;
+    display: block;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
