@@ -29,7 +29,9 @@
             <mat-error *ngIf="editProfileForm.get('Major')?.invalid">{{ requiredFieldErrorMessage('Major', 'Majors')
                 }}</mat-error>
         </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" [disabled]="editProfileForm.invalid" class="submit-button">Submit Changes</button>
+        <div class="buttons-container">
+            <button mat-raised-button color="primary" type="submit" [disabled]="editProfileForm.invalid" class="submit-button">Submit Changes</button>
+            <button mat-raised-button color="accent" type="button" (click)="navigateToEmailResetScreen()" class="reset-password-button">Reset Password?</button>
+        </div>
     </form>
-    <button mat-raised-button color="accent" (click)="navigateToEmailResetScreen()" class="reset-password-button">Reset Password?</button>
 </div>
