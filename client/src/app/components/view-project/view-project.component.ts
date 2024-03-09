@@ -125,44 +125,6 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-  //This method is used to sort the table whenever the table's sort functionality is clicked.
-  // sortData(sort: Sort) {
-  //   const data = this.studentData.slice(); //grabs the data from the student data array
-  //   if (!sort.active || sort.direction === '') {
-  //     this.studentData = data;
-  //     return;
-  //   }
-
-  //   this.studentData = data.sort((a, b) => {
-  //     const isAsc = sort.direction === 'asc'; //Checks if the sorting is done ascending if true, otherwise false. This will be used in the compare method
-  //     switch (sort.active) {
-  //       case 'Name':
-  //         return this.compare(a.name, b.name, isAsc);
-  //       case 'GPA':
-  //         return this.compare(a.GPA, b.GPA, isAsc);
-  //       case 'Majors':
-  //         return this.compareArr(a.majors, b.majors, isAsc);
-  //       case 'Email':
-  //         return this.compare(a.email, b.email, isAsc);
-  //       case 'Status':
-  //         return this.compare(a.status, b.status, isAsc);
-  //       default:
-  //         return 0;
-  //     }
-  //   });
-  //   this.updateTable();
-  // }
-  //This method is used as the logic behind the sorting of the table. It takes a date, number, or string for a and b, then isAsc as a boolean.
-  //It will return -1 if a is less than b and the table is ascending and also returns -1 if a is greater than b and the table is not ascending (descending).
-  //otherwise it returns 1. This is used in the above sort method to sort the table
-  // compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
-  //   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  // }
-  // //This method does the same as the method above, but instead checks the first element of an array and only for string. Modify this as need or add more
-  // //compare methods if new or different types are added to the table.
-  // compareArr(a: string[], b: string[], isAsc: boolean) {
-  //   return (a[0] < b[0] ? -1 : 1) * (isAsc ? 1 : -1);
-  // }
 
   //This method makes a request to the server updating the decision then fetches the applicants
   applicationDecision(app: any, decision: string) {
@@ -172,18 +134,6 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
-  // compareString(baseString: string, compareToString: string) {
-  //   // If string is empty, return true because we want to ignore the string
-  //   if (compareToString.length == 0) return true;
-
-  //   // Compare string if it's similar
-  //   if (baseString.toLowerCase().indexOf(compareToString.toLowerCase()) !== -1) {
-  //     return true;
-  //   }
-
-  //   return false
-  // }
 
   updateTable() {
     this.filteredData = this.studentData.filter((student) => {
