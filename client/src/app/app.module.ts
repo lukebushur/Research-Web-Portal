@@ -63,6 +63,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { CommonModule } from '@angular/common';
+import {MatSliderModule} from '@angular/material/slider';
 import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
@@ -70,6 +71,7 @@ import { CreateQuestionsFormComponent } from './components/create-questions-form
 import { AssessmentCardComponent } from './components/assessment-browser/assessment-card/assessment-card.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AssessmentChooserComponent } from './components/add-edit-job/assessment-chooser/assessment-chooser.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -129,6 +131,7 @@ import { AssessmentChooserComponent } from './components/add-edit-job/assessment
     MatDialogModule,
     MatMenuModule,
     MatRadioModule,
+    MatSliderModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatDatepickerModule,
@@ -145,6 +148,7 @@ import { AssessmentChooserComponent } from './components/add-edit-job/assessment
     CdkAccordionModule,
     CommonModule,
     MatStepperModule,
+    MatExpansionModule,
   ],
   providers: [
     {

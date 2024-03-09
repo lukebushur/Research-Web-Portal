@@ -1,5 +1,25 @@
 <div class="table-container">
-  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" [class.mat-elevation-z16]="true">
+  <table class="example-full-width" cellspacing="0">
+    <tr>
+      <td>
+        <mat-form-field class="example-full-width">
+          <mat-label>Search by Name</mat-label>
+          <input matInput #input placeholder="Ex. Sean Tierney" [(ngModel)]="SearchName">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field class="example-full-width">
+          <mat-label>Search by Major</mat-label>
+          <input matInput #input placeholder="Ex. Computer Science, Biology, ..." [(ngModel)]="SearchMajor">
+        </mat-form-field>
+      </td>
+      <td>
+        <button mat-raised-button color="primary" (click)="updateTable()" class="accept-button">Search</button>
+      </td>
+
+    </tr>
+  </table>
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="student-table">
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">

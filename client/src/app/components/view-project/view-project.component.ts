@@ -1,11 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-
 
 //Interface for an entries to the applied student table
 export interface detailedAppliedStudentList {
@@ -34,9 +33,19 @@ export class ViewProjectComponent {
   projectName: string = ""; //Project Name
   projectData: any = -1; // The object that will store the data of the project from the getProject route, set in the constructor
   studentData: detailedAppliedStudentList[] = []; //This array contains the student data for the table
-  dataSource = new MatTableDataSource(this.studentData); //This object is used for the material table data source to allow for the table to work/sort etc
+  filteredData: detailedAppliedStudentList[] = [];
+  dataSource = new MatTableDataSource(this.filteredData); //This object is used for the material table data source to allow for the table to work/sort etc
   posted: String; // The string that holds the date the project was posted on
   deadline: String; // the string that is the deadline of the project
+
+  // Min/max GPA for filtering
+  minGPA: number = 2;
+  maxGPA: number = 4;
+
+  // Search filters
+  @Input() SearchMajor = "";
+  @Input() SearchName = "";
+  @Input() SearchEmail = "";
 
   constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute,
     private dateConverter: DateConverterService, private _liveAnnouncer: LiveAnnouncer,) {
@@ -63,7 +72,8 @@ export class ViewProjectComponent {
             x.project = this.projectID; //add a field to each element of the data
           });
           this.studentData = dataWrapper; //sets the student's data to each the warpper
-          this.dataSource = new MatTableDataSource(this.studentData); //set up the datasource for the mat table
+          // this.dataSource = new MatTableDataSource(this.studentData); //set up the datasource for the mat table
+          this.updateTable();
           this.dataSource.sort = this.sort; //set up the sorting for the table
         },
         error: (error) => {
@@ -106,6 +116,7 @@ export class ViewProjectComponent {
           return 0;
       }
     });
+    this.updateTable();
   }
   //This method is used as the logic behind the sorting of the table. It takes a date, number, or string for a and b, then isAsc as a boolean.
   //It will return -1 if a is less than b and the table is ascending and also returns -1 if a is greater than b and the table is not ascending (descending).
@@ -128,6 +139,45 @@ export class ViewProjectComponent {
     });
   }
 
+  compareString(baseString: string, compareToString: string) {
+    // If string is empty, return true because we want to ignore the string
+    if (compareToString.length == 0) return true;
+
+    // Compare string if it's similar
+    if (baseString.toLowerCase().indexOf(compareToString.toLowerCase()) !== -1) {
+      return true;
+    }
+
+    return false
+  }
+
+  updateTable() {
+    this.filteredData = this.studentData.filter((student) => {
+      // Compare student name to search filter
+      let PassesNameSearch = this.compareString(student.name, this.SearchName);
+      // Compare GPA to min/max
+      let PassesGPACheck = this.minGPA <= student.GPA && student.GPA <= this.maxGPA;
+      // Like student name, compare email
+      let PassesEmailCheck = this.compareString(student.email, this.SearchEmail);;
+
+      // To skip major search if doesnt exist
+      let PassesMajorSearch = true;
+      if (student.majors) {
+        // If majors exist, reset it back
+        PassesMajorSearch = false;
+        student.majors.forEach((major: (string)) => {
+          if (this.compareString(major, this.SearchMajor)) {
+            PassesMajorSearch = true;
+          }
+        })
+      }
+
+      // Only pass this student if they passes all checks
+      return PassesMajorSearch && PassesNameSearch && PassesGPACheck && PassesEmailCheck
+    })
+    // Set the new data (update table)
+    this.dataSource = new MatTableDataSource(this.filteredData);
+  }
 
   //This method fetches the applicants and then updates the shared applicants data, if it is able to get the projectID from the 
   //table data sharing service, then it grabs the applicants and sets the datasource to the object returned
@@ -139,7 +189,8 @@ export class ViewProjectComponent {
           x.project = this.projectID;
         });
         this.studentData = dataWrapper;
-        this.dataSource = new MatTableDataSource(this.studentData);
+        // this.dataSource = new MatTableDataSource(this.studentData);
+        this.updateTable();
         this.dataSource.sort = this.sort;
       },
       error: (error) => {

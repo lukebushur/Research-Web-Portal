@@ -22,6 +22,7 @@ export class StudentOpportunitesSearchPageComponent {
   availableMajors: string[] = [];
   selectedMajors: string[] = [];
   studentGPA: number = 0;
+  panelOpenState: boolean = true;
   studentMajors: string[] = [];
 
   getAllOpportunities() {
@@ -79,6 +80,7 @@ export class StudentOpportunitesSearchPageComponent {
     getMajorsPromise.subscribe({
       next: (data) => {
         this.availableMajors = data.success.majors;
+        this.availableMajors.sort();
       },
       error: (error) => {
         console.error('Error getting available majors.', error);
