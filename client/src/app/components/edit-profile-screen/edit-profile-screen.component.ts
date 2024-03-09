@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
@@ -9,7 +9,7 @@ import { ProfileServiceService } from 'src/app/controllers/profile-controller/pr
   templateUrl: './edit-profile-screen.component.html',
   styleUrls: ['./edit-profile-screen.component.css']
 })
-export class EditProfileScreenComponent {
+export class EditProfileScreenComponent implements OnInit {
   constructor(private router: Router,
     private authService: AuthService,
     private profileService: ProfileServiceService,) { }
@@ -43,6 +43,10 @@ export class EditProfileScreenComponent {
       Validators.required,
     ]),
   })
+
+  ngOnInit(): void {
+    this.updateForm();
+  }
 
   navigateToEmailResetScreen() {
     this.router.navigate(['/forgot-password']);
@@ -106,6 +110,7 @@ export class EditProfileScreenComponent {
   }
 
   onSubmit() {
+    // TODO: fix majors and GPA not changing
     this.profileService.submitProfileChanges(this.editProfileForm.value).subscribe({
       next: (data: any) => {
         console.log('Profile Updated Successfully');
