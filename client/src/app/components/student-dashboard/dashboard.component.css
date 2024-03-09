@@ -51,6 +51,19 @@ table.projectDetails {
     width: 100%;
 }
 
+.projectDetails tr td {
+    padding: 0.5em;
+}
+
+.opportunities-list {
+    align-items: center;
+}
+
+.opportunities-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
 .oppCard {
     padding: 0.5em 0.5em;
 

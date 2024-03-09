@@ -79,6 +79,7 @@ export class StudentOpportunitesSearchPageComponent {
     getMajorsPromise.subscribe({
       next: (data) => {
         this.availableMajors = data.success.majors;
+        this.availableMajors.sort();
       },
       error: (error) => {
         console.error('Error getting available majors.', error);
