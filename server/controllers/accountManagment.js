@@ -46,10 +46,10 @@ const modifyAccount = async (req, res) => {
                 user.name = req.body.name;
             }
             if (req.body.GPA) {
-                user.GPA = req.body.GPA;
+                user.userType.GPA = req.body.GPA;
             }
-            if (req.body.major) {
-                user.Major = req.body.Major;
+            if (req.body.Major) {
+                user.userType.Major = req.body.Major;
             }
             if (req.body.universityLocation) {
                 user.universityLocation = req.body.universityLocation;
@@ -107,6 +107,8 @@ const getAccountInfo = async (req, res) => {
         } else if (user.userType.Type === parseInt(process.env.FACULTY)) {
             //Currently empty as there is no faculty only fields that should be returned by this function as of now, however this else if 
             //statement is still included for future modification the the user record at which point this case will include the new data
+        } else if (user.userType.Type === parseInt(process.env.INDUSTRY)) {
+
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", { "details": "Invalid account type for this route." }));
         }
