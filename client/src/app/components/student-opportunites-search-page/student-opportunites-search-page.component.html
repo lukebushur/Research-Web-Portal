@@ -28,31 +28,6 @@
     <!-- filtered opportunities -->
     <div class="opps-container">
         <div *ngFor="let opportunity of filteredOpportunities" class="opportunities-container">
-            <!-- <mat-card class="opp-card">
-              <mat-card-header>
-                <mat-card-title class="opp-title">
-                  <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="opps-container">
-                  <div class="field-title">Posted: </div>
-                  <div>{{ dateToString(opportunity.posted) }}</div>
-                  <div class="field-title">GPA Requirement: </div>
-                  <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
-                  <div class="field-title">Description: </div>
-                  <div class="field-content">
-                    <div [matTooltip]="opportunity.description" class="max-two-lines">{{ opportunity.description }}</div>
-                  </div>
-                </div>
-                <mat-divider class="divider"></mat-divider>
-              </mat-card-content>
-              <mat-card-actions class="actions-container">
-                <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
-                    [disabled]="!meetRequirements(opportunity)">{{ 'Apply' }}</button>
-                <button mat-button color="warn">VIEW</button>
-              </mat-card-actions>
-            </mat-card> -->
             <mat-card class="opp-card">
               <mat-card-header>
                 <mat-card-title class="opp-title">
