@@ -8,7 +8,7 @@ const User = require('../models/user');
 const Majors = require('../models/majors');
 const Application = require('../models/application');
 const Project = require('../models/project');
-const Industry = require('../models/industryData');
+const IndustryData = require('../models/industryData');
 
 
 const reqFieldName = "cachedObjs"; //name for the field where cached objects will be stored in the req object
@@ -114,7 +114,7 @@ const retrieveOrCacheIndustry = async (req, objectid) => {
     if (checkForObj(req, objectid)) {
         tempIndustry = getObj(req, objectid);
     } else {
-        tempIndustry = await Industry.findById(objectid); //Get application record
+        tempIndustry = await IndustryData.findById(objectid); //Get industry data record
         cacheObject(req, objectid, tempIndustry);
     }
 

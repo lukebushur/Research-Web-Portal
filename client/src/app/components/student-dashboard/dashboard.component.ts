@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'student-dashboard',
@@ -8,32 +11,17 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
   styleUrls: ['./dashboard.component.css']
 })
 export class StudentDashboard {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService) {}
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }
 
   ngOnInit() {
     this.getAllOpportunities();
     this.getStudentInfo();
   }
-  applications: any[] = [];
-  opportunities: any[] = [];
+ 
   majorOpportunities: { [major: string]: any[] } = {};
   majors: string[] = [];
   studentGPA: number = 0;
   studentMajors: string[] = [];
-
-  //function for the see all applications button
-  //this will let you view all the things you have applied to
-  getStudentApplications() {
-    this.studentDashboardService.getStudentApplications().subscribe({
-      next: (data) => {
-        this.applications = data.success.applications;
-        console.log(this.applications);
-      },
-      error: (error) => {
-        console.error('Error fetching applications', error);
-      },
-    });
-  }
 
   getAllOpportunities() {
     this.studentDashboardService.getOpportunities().subscribe({
@@ -59,17 +47,24 @@ export class StudentDashboard {
       }
     });
   }
+  
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], { queryParams: {
-      profName: opportunity.professorName,
-      profEmail: opportunity.professorEmail,
-      oppId: opportunity.projectID,
-    }});
+    this.router.navigate(['/apply-to-post'], {
+      queryParams: {
+        profName: opportunity.professorName,
+        profEmail: opportunity.professorEmail,
+        oppId: opportunity.projectID,
+      }
+    });
   }
 
   searchOpportunities() {
     this.router.navigate(['/student-opportunities']);
+  }
+
+  getStudentApplications() {
+    this.router.navigate(['/studentApplicationOverview']);
   }
 
   getStudentInfo(): void {

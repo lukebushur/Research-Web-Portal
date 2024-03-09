@@ -6,6 +6,27 @@
     border-radius: 5px;
 }
 
+.billboard {
+    max-width: 80%;
+    padding: 0.2em;
+}
+
+.applicationInfo {
+    margin: 0 auto;
+    display: flex;
+  justify-content: center;
+  padding: 0.5em;
+}
+
+table {
+    text-align: center;
+    width: 100%;
+}
+
+.dates {
+    padding: 0.5em 0.4em;
+}
+
 .accept-status-text {
     color: green;
     border: 1px solid green;

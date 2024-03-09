@@ -1,28 +1,55 @@
-<div class="student-dashboard-page-container">
+<cdk-accordion class="example-accordion">
+  <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
+    tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
+    [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
     <div class="student-ongoing-applications">
       <h1>Ongoing applications</h1>
       <button mat-raised-button (click)="getStudentApplications()">See all applications</button>
       <button mat-raised-button (click)="searchOpportunities()">Search opportunities</button>
     </div>
-  
-    <!-- Display opportunities grouped by major -->
-    <div *ngFor="let major of majors">
-      <h2>{{ major }} Opportunities</h2>
-  
-      <div *ngFor="let opportunity of majorOpportunities[major]" class="opportunities-container">
-        <mat-card>
-          <mat-card-title class="opportunity-card-title">
-            {{ opportunity.title }}
-          </mat-card-title>
-        </mat-card>
-        <mat-card-content>
-          <p>Professor name: {{ opportunity.professorName }}</p>
-          <p>Application email: {{ opportunity.professorEmail }}</p>
-          <p> Number of Applicants: {{ opportunity.applications?.length ?? 0 }}</p>
-          <p> GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</p>
-        </mat-card-content>
-        <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
-          [disabled]="!meetRequirements(opportunity)">{{ meetRequirements(opportunity) ? 'Apply' : 'Cannot Apply' }}</button>
+    <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
+      Previous Stuff in this Page
+      <span class="example-accordion-item-description">
+        Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
+      </span>
+    </div>
+    <div class="example-accordion-item-body" role="region"
+      [style.display]="questionAccordionItem.expanded ? '' : 'none'" [attr.id]="'question-accordion-body'"
+      [attr.aria-labelledby]="'question-accordion-header'">
+      <div class="student-dashboard-page-container">
+        <!-- Display opportunities grouped by major -->
+        <div *ngFor="let major of majors">
+          <h2 class="oppCard">{{ major }} Opportunities</h2>
+
+          <div *ngFor="let opportunity of majorOpportunities[major]" class="opportunities-container">
+            <mat-card class="oppCard">
+              <mat-card-title class="opportunity-card-title">
+                {{ opportunity.title }}
+              </mat-card-title>
+              <mat-card-subtitle>{{ opportunity.description }}</mat-card-subtitle>
+              <mat-card-content>
+                <table class="projectDetails">
+                  <tr>
+                    <td>Professor name: {{ opportunity.professorName }}</td>
+                    <td>Application email: {{ opportunity.professorEmail }}</td>
+                  </tr>
+                  <tr colspan="2">
+                    <td>Number of Applicants: {{ opportunity.applications?.length ?? 0 }}</td>
+                    <td>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</td>
+                  </tr>
+                </table>
+              </mat-card-content>
+              <mat-divider></mat-divider>
+              <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
+                [disabled]="!meetRequirements(opportunity)">{{ meetRequirements(opportunity) ? 'Apply' : 'Cannot Apply'
+                }}</button>
+            </mat-card>
+            
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </cdk-accordion-item>
+</cdk-accordion>
+
+<app-spinner></app-spinner>

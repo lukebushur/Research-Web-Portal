@@ -1,7 +1,8 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 
@@ -9,7 +10,7 @@ import { FacultyProjectService } from '../../controllers/faculty-project-control
 export interface AppliedStudentList {
   name: string;
   gpa: number;
-  degree: string;
+  major: [string];
   email: string;
   project: string;
   application: string;
@@ -26,9 +27,12 @@ export interface AppliedStudentList {
 export class AppliedStudentTableComponent {
   displayedColumns: string[] = ['name', 'gpa', 'degree', 'email', 'buttons']; //This array determines the displayedd columns in the table
   testStudentData: any[] = []; //This array contains the student data for the table
+  allStudentData: any[] = [];
   dataSource = new MatTableDataSource(this.testStudentData); //This object is used for the material table data source to allow for the table to work/sort etc
-  
-  
+
+  @Input() SearchMajor = "";
+  @Input() SearchName = "";
+
   constructor(private _liveAnnouncer: LiveAnnouncer, private tableData: TableDataSharingService,
     private facultyProjectService: FacultyProjectService,) {
   }
@@ -36,13 +40,15 @@ export class AppliedStudentTableComponent {
   //This init method grabs the values for the appliedStudentList, then sets up the data for the material UI table
   ngOnInit() {
     this.tableData.AppliedStudentList.subscribe((value) => {
-      this.testStudentData = value;
-      this.dataSource = new MatTableDataSource(this.testStudentData);
+      this.allStudentData = value;
+      this.updateTable(); // Use any existing search parameters?
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //This method fetches the applicants and then updates the shared applicants data, if it is able to get the projectID from the 
   //table data sharing service, then it grabs the applicants and sets the datasource to the object returned
@@ -57,6 +63,27 @@ export class AppliedStudentTableComponent {
         },
       });
     }
+  }
+
+  updateTable() {
+    this.testStudentData = this.allStudentData.filter((student) => {
+      let PassesNameSearch = false;
+      let PassesMajorSearch = false;
+      if (this.SearchName.length == 0) PassesNameSearch = true;
+      if (this.SearchMajor.length == 0) PassesMajorSearch = true;
+
+      // TODO
+      // Improve string comparisons
+      if (this.SearchName.length > 0 && student.name.toLowerCase().indexOf(this.SearchName.toLowerCase()) !== -1) PassesNameSearch = true;
+      if (student.major) {
+        student.major.forEach((major: (string)) => {
+          if (this.SearchMajor.length > 0 && major.toLowerCase().indexOf(this.SearchMajor.toLowerCase()) !== -1) PassesMajorSearch = true;
+        })
+      }
+
+      return PassesMajorSearch && PassesNameSearch
+    })
+    this.dataSource = new MatTableDataSource(this.testStudentData);
   }
 
   //This method makes a request to the server updating the decision then fetches the applicants
