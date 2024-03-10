@@ -9,7 +9,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   return authService.getAccountInfo().pipe(
-    tap(accountInfo => console.log(accountInfo)),
+    // tap(accountInfo => console.log(accountInfo)),
     map(accountInfo => {
       const userType = accountInfo.success.accountData.userType;
       if(userType === 1 && route.data['expectedRole'] === 'faculty') {
