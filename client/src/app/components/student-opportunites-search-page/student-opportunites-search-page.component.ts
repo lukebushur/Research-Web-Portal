@@ -39,7 +39,7 @@ export class StudentOpportunitesSearchPageComponent {
   }
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
