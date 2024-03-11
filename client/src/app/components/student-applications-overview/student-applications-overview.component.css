@@ -110,11 +110,6 @@
     margin-top: 2.5%;
 }
 
-.title {
-    font-size: 4vw;
-    margin-bottom: 3%;
-}
-
 #table-container {
     overflow-y: auto;
     max-height: 33vw;

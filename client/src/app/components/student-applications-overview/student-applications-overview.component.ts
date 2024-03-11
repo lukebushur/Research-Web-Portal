@@ -37,6 +37,10 @@ export class StudentApplicationsOverviewComponent {
   getStudentApplications() {
     this.studentDashboardService.getStudentApplications().subscribe({
       next: (data) => {
+        this.applications = [];
+        this.applicationData = [];
+        this.dataSource = new MatTableDataSource(this.applicationData);
+
         this.applications = data.success.applications;
         this.applications.forEach((element) => {
           let obj = {

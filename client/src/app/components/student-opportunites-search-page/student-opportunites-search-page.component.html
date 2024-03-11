@@ -1,14 +1,14 @@
 <div class="student-opportunites-search-page-container">
-    <div class="header" style="padding: 0.5em 0.5em;">
-        <h1>Opportunites Search</h1>
-        <!-- Search input for opportunities -->
-        <mat-form-field>
-            <input matInput type="text" placeholder="Search..." [(ngModel)]="searchQuery" (keypress)="onSearchKeyPress($event)">
-        </mat-form-field>
-        <button mat-raised-button (click)="onSearchButtonClick()" style="margin-left: 0.5em">Search</button>
-    </div>
+  <div class="header" style="padding: 0.5em 0.5em;">
+    <h1>Opportunites Search</h1>
+    <!-- Search input for opportunities -->
+    <mat-form-field>
+      <input matInput type="text" placeholder="Search..." [(ngModel)]="searchQuery">
+    </mat-form-field>
+    <button mat-raised-button (click)="onSearchButtonClick()" style="margin-left: 0.5em">Search</button>
+  </div>
 
-    <!-- <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
+  <!-- <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
         Show Filters for Majors
         <span class="example-accordion-item-description">
           Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
@@ -31,50 +31,120 @@
           </cdk-accordion>
       </div>
     </div> -->
-    
-    <mat-accordion class="oppExpansion">
-      <mat-expansion-panel (opened)="panelOpenState = true"
-                           (closed)="panelOpenState = false">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Show Filters for Majors
-          </mat-panel-title>
-        </mat-expansion-panel-header> 
-        <div>
-          <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
-            {{ major }}
-          </mat-checkbox>
-        </div>
-        
-      </mat-expansion-panel>
-    </mat-accordion>
 
-    <!-- filtered opportunities -->
-    <div class="opportunities-list">
-        <div *ngFor="let opportunity of filteredOpportunities" class="opportunities-container">
-            <mat-card class="oppCard">
-                <mat-card-title class="opportunity-card-title">
-                    {{ opportunity.title }}
-                  </mat-card-title>
-                  <mat-card-subtitle>{{ opportunity.description }}</mat-card-subtitle>
-                  <mat-card-content>
-                    <table class="projectDetails">
-                      <tr>
-                        <td>Professor name: {{ opportunity.professorName }}</td>
-                        <td>Application email: {{ opportunity.professorEmail }}</td>
-                      </tr>
-                      <tr colspan="2">
-                        <td>Number of Applicants: {{ opportunity.applications?.length ?? 0 }}</td>
-                        <td>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</td>
-                      </tr>
-                    </table>
-                  </mat-card-content>
-                  <mat-divider></mat-divider>
-                  <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
-                    [disabled]="!meetRequirements(opportunity)">{{ meetRequirements(opportunity) ? 'Apply' : 'Cannot Apply'
-                    }}</button>
-            </mat-card>
-            
-        </div>
+  <mat-accordion class="oppExpansion">
+    <mat-expansion-panel (opened)="searchfilters = true" (closed)="searchfilters = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Search Filters
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-form-field type="majors" class="example-chip-list" required>
+        <mat-label>Majors</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Enter majors">
+          <mat-chip-row *ngFor="let major of majors; let i = index"
+            [ngStyle]="{'background-color': isEven(i) ? '#CFB991' : '#999' }" (removed)="remove(major)"
+            [editable]="true" (edited)="edit(major, $event)">
+            {{ major }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input placeholder="Add major or leave blank for all" [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event)" />
+        </mat-chip-grid>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Posted on or after</mat-label>
+        <input matInput [matDatepicker]="picker1" placeholder="Choose a date" name="posted" [(ngModel)]="posted">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Deadline on or after</mat-label>
+        <input matInput [matDatepicker]="picker2" placeholder="Choose a date" name="deadline" [(ngModel)]="deadline">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+
+      <form #numberForm="ngForm">
+        <mat-form-field>
+          <input matInput type="number" placeholder="Enter a GPA between 0 and 4" name="GPA" [(ngModel)]="GPA" min="0"
+            max="4">
+        </mat-form-field>
+      </form>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-accordion class="oppExpansion">
+    <mat-expansion-panel (opened)="resultFilters = true" (closed)="resultFilters = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Result Filters
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div>
+        <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)" [checked]="getSelectedStatus(major)">
+          {{ major }}
+        </mat-checkbox>
+      </div>
+
+      <mat-label>GPA</mat-label>
+      <mat-slider min="0" max="4" step="0.1" [discrete]="false" (input)="onSliderChange($event)">
+        <input value="2" matSliderStartThumb [(ngModel)]="minGPA">
+        <span>Min GPA: {{ minGPA }}</span>
+        <input value="4" matSliderEndThumb [(ngModel)]="maxGPA">
+        <span>Max GPA: {{ maxGPA }}</span>
+      </mat-slider>
+
+      <mat-form-field>
+        <mat-label>Filter Results</mat-label>
+        <input matInput [(ngModel)]="resultFilterString" (ngModelChange)="onTextInputChange()">
+      </mat-form-field>
+
+      <button mat-button color="primary" (click)="resetFilters()">Reset Filters</button>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- filtered opportunities -->
+  <div class="opportunities-list">
+    <div *ngFor="let opportunity of opportunities" class="opportunities-container">
+      <mat-card class="oppCard">
+        <mat-card-title class="opportunity-card-title">
+          {{ opportunity.projectName }}
+        </mat-card-title>
+        <mat-card-subtitle>{{ opportunity.description }}</mat-card-subtitle>
+        <mat-card-content>
+          <table class="projectDetails">
+            <tr>
+              <td>Professor name: {{ opportunity.professorName }}</td>
+              <td>Application email: {{ opportunity.professorEmail }}</td>
+            </tr>
+            <tr colspan="2">
+              <td>Applicable Majors: {{ opportunity.majors.join(', ')}}</td>
+              <td>GPA Requirement: {{ opportunity.GPA ? opportunity.GPA : "No Minimum GPA Requirement" }}</td>
+            </tr>
+          </table>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <button mat-raised-button color="primary" (click)="applyToOpportunity(opportunity)"
+          [disabled]="!meetRequirements(opportunity) || opportunity.applied">{{ meetRequirements(opportunity) && !opportunity.applied ? 'Apply' : 'Cannot Apply'}} 
+          {{opportunity.applied ? 'Already Applied' : ''}}</button>
+      </mat-card>
     </div>
+    <div id="page-selector" *ngIf="allOpportunities">
+      <button mat-raised-button color="primary" [disabled]="!hasPrevPage()" class="activeButton"
+        (click)="prevPage()">Previous Page</button>
+      <p id="pageNum" *ngIf="pageNum != 0">Page: {{pageNum}}</p>
+      <button mat-raised-button color="primary" [disabled]="!hasNextPage()" class="activeButton"
+        (click)="nextPage()">Next Page</button>
+    </div>
+  </div>
 </div>
