@@ -17,7 +17,7 @@ export class StudentDashboard {
     this.getAllOpportunities();
     this.getStudentInfo();
   }
- 
+
   majorOpportunities: { [major: string]: any[] } = {};
   majors: string[] = [];
   studentGPA: number = 0;
@@ -50,7 +50,7 @@ export class StudentDashboard {
   
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
@@ -60,11 +60,17 @@ export class StudentDashboard {
   }
 
   searchOpportunities() {
-    this.router.navigate(['/student-opportunities']);
+    this.router.navigate(['/student/search-projects']);
   }
 
   getStudentApplications() {
-    this.router.navigate(['/studentApplicationOverview']);
+    this.router.navigate(['/student/applications-overview']);
+  }
+
+  viewProject(project: any) {
+    // btoa -> Converts the email to Base64
+    // Navigate the student to the view-project page
+    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
   }
 
   getStudentInfo(): void {
@@ -72,7 +78,7 @@ export class StudentDashboard {
       next: (data: any) => {
         if (data.success) {
           this.studentGPA = data.success.accountData.GPA;
-          this.studentMajors = data.success.accountData.Major;
+          this.studentMajors = data.success.accountData.Major || [];
         }
       },
       error: (data: any) => {
@@ -83,6 +89,18 @@ export class StudentDashboard {
 
   meetRequirements(opportunity: any): boolean {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
-      && ((opportunity.majors.length === 0) || (opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
+      && ((opportunity.majors.length === 0) || 
+        // Sometimes the Majors object comes back empty, so for testing reasons we should skip
+        // This step if there are no majors currently
+        (this.studentMajors.length > 0 && opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
+  }
+
+  dateToString(dateString: string | undefined): string {
+    if (!dateString) {
+      return 'None';
+    }
+    const date = new Date(dateString);
+    const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
+    return dateTimeFormat.format(date);
   }
 }

@@ -45,7 +45,7 @@
         <mat-divider></mat-divider>
         <br>
       </mat-card-content>
-      <mat-card-content>
+      <mat-card-content class="application">
         <div *ngFor="let question of responseData.applicantData.answers; index as i">
             <label id="question-label">Question {{ i + 1 }}:<br> {{ question.question }}</label>
             <div *ngIf="question.requirementType === 'radio button'">
@@ -63,12 +63,12 @@
               </mat-form-field>
             </div>
           </div>
-          <br>
-          <p>Status: </p>
-          <p *ngIf="responseData.applicantData.status === 'Accept' || responseData.applicantData.status === 'Reject'"
+          <p>Status: <span
             [class.accept-status-text]="responseData.applicantData.status === 'Accept'"
-            [class.reject-status-text]="responseData.applicantData.status === 'Reject'" class="status-text">
-            {{responseData.applicantData.status}}ed</p>
+            [class.reject-status-text]="responseData.applicantData.status === 'Reject'" 
+            [class.pending-status-text]="responseData.applicantData.status === 'Pending'" class="status-text">
+            {{applicationStatus}}</span></p>
+          
           <button *ngIf="responseData.applicantData.status === 'Pending'" mat-raised-button color="primary"
             (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
             class="accept-button">Accept</button>

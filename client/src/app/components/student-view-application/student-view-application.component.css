@@ -63,7 +63,7 @@ h2 {
 }
 
 .dateCapsule {
-    background-color: grey;
+    background-color: lightgray;
     margin-left: 0.1em;
     padding: 0.5em 1.2em;
     font-size: 1em;
@@ -95,10 +95,6 @@ mat-card-content>p {
 .questions {
     align-items: center;
     padding: 10px;
-}
-
-.content-card {
-    background-color: #eee;
 }
 
 .content-card>* {

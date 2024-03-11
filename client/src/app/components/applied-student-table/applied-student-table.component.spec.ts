@@ -3,11 +3,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { AppliedStudentTableComponent } from './applied-student-table.component';
 import { MatTableModule } from '@angular/material/table';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
-import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 describe('AppliedStudentTableComponent', () => {
   let component: AppliedStudentTableComponent;
@@ -16,7 +14,7 @@ describe('AppliedStudentTableComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AppliedStudentTableComponent],
-      imports: [HttpClientTestingModule, MatTableModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatPaginatorModule],
+      imports: [HttpClientTestingModule, MatTableModule, MatPaginatorModule, BrowserAnimationsModule, MatFormFieldModule, MatInputModule],
     });
     fixture = TestBed.createComponent(AppliedStudentTableComponent);
     component = fixture.componentInstance;

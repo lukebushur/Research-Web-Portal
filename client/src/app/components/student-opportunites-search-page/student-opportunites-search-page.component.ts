@@ -39,7 +39,7 @@ export class StudentOpportunitesSearchPageComponent {
   }
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
@@ -88,6 +88,12 @@ export class StudentOpportunitesSearchPageComponent {
     });
   }
 
+  viewProject(project: any) {
+    // btoa -> Converts the email to Base64
+    // Navigate the student to the view-project page
+    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
+  }
+
   onCheckboxChange(major: string, isChecked: boolean) {
     // Update the selectedMajors array based on checkbox changes
     if (isChecked) {
@@ -114,6 +120,15 @@ export class StudentOpportunitesSearchPageComponent {
         console.log('Error', data);
       },
     });
+  }
+
+  dateToString(dateString: string | undefined): string {
+    if (!dateString) {
+      return 'None';
+    }
+    const date = new Date(dateString);
+    const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
+    return dateTimeFormat.format(date);
   }
 
   meetRequirements(opportunity: any): boolean {

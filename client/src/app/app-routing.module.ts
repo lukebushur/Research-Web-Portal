@@ -29,10 +29,11 @@ import { StudentViewApplicationComponent } from './components/student-view-appli
 import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
+import { StudentToolbarComponent } from './components/student-toolbar/student-toolbar.component';
 
 const routes: Routes = [
   // AUTHENTICATION ROUTES
-  { path: '', redirectTo: 'signup', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signout', component: SignoutComponent },
@@ -52,27 +53,30 @@ const routes: Routes = [
       // Takes a query parameter indicating the project to get applicants from
       { path: 'project/applications', component: FacultyDashboardApplyComponent },
       // This route is used to view a specific project and its applicants
-      { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
+      { path: 'view-project/:projectType/:projectID', component: ViewProjectComponent },
       // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
       { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
     ]
   },
 
   // STUDENT ROUTES
-  { path: 'student-dashboard', component: StudentDashboard },
-  { path: 'student-search-opps', component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
-  // This route is used to view the full list of all opportunites available for students
-  { path: 'student-opportunities', component: StudentOpportunitesSearchPageComponent },
-  { path: 'apply-to-post', component: ApplyToPostComponent, canActivate: [AuthGuard] },
-
-  //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
-  { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
-  //This route is used to view a specific project and its applicants
-  { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
-  //This route is to view an applicant from the student's view
-  { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent },
-  //This route is for students to view an overview of their applied projects
-  { path: 'studentApplicationOverview', component: StudentApplicationsOverviewComponent },
+  {
+    path: 'student', component: StudentToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'student' }, children: [
+      { path: 'dashboard', component: StudentDashboard },
+      // This route is used to view the full list of all opportunites available for students
+      { path: 'search-projects', component: StudentOpportunitesSearchPageComponent },
+      // Takes 3 query parameters - professor name, professor email, and project ID
+      { path: 'apply-to-project', component: ApplyToPostComponent, canActivate: [AuthGuard] },
+      //This route is to view an applicant from the student's view
+      { path: 'view-application/:applicationID', component: StudentViewApplicationComponent },
+      //This route is for students to view an overview of their applied projects
+      { path: 'applications-overview', component: StudentApplicationsOverviewComponent },
+      //This route is for the students to view an existing project
+      { path: 'view-project/:projectEmail/:projectID', component: ViewProjectComponent, canActivate: [AuthGuard]}
+      // Duplicate, less developed component - should probably be deleted
+      // { path: 'student-search-opps', component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
+    ],
+  },
 
   // INDUSTRY ROUTES
   {

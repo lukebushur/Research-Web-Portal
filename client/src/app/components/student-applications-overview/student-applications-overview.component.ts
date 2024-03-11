@@ -29,7 +29,7 @@ export class StudentApplicationsOverviewComponent {
   majorOpportunities: { [major: string]: any[] } = {};
   majors: string[] = [];
 
-  displayedColumns: string[] = ['project-title', 'project-sponsor', 'gpa-req', 'applied', 'deadline', 'status']; //This array determines the displayedd columns in the table
+  displayedColumns: string[] = ['project-title', 'project-sponsor', 'gpa-req', 'applied', 'deadline', 'status', 'actions']; //This array determines the displayedd columns in the table
   dataSource = new MatTableDataSource(this.applicationData);
 
   //function for the see all applications button
@@ -62,7 +62,7 @@ export class StudentApplicationsOverviewComponent {
   }
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
@@ -127,11 +127,11 @@ export class StudentApplicationsOverviewComponent {
   }
 
   modifyApplication(applicationID: string) {
-    this.router.navigate(['/apply-to-post'], {
-      queryParams: {
-        applicationID: applicationID,
-      }
-    });
+    // this.router.navigate(['/student/apply-to-project'], {
+    //   queryParams: {
+    //     applicationID: applicationID,
+    //   }
+    // });
   }
 
   applyFilter(event: Event) {
