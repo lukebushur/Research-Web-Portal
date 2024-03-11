@@ -24,6 +24,8 @@ export class ViewApplicationComponent {
   deadline: String;
   appliedDate: String;
 
+  applicationStatus = "Pending";
+
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
   constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute, private dateConverter: DateConverterService,) {
@@ -42,6 +44,8 @@ export class ViewApplicationComponent {
         this.deadline = this.dateConverter.convertDate(this.responseData.projectData.deadline);
         this.appliedDate = this.dateConverter.convertDate(this.responseData.applicantData.appliedDate);
         this.answersArray = [];
+
+        this.applicationStatus = this.responseData.applicantData.status == 'Accept' ? "Accepted" : (this.responseData.applicantData.status == "Reject" ? "Rejected" : "Pending")
 
         for (let i = 0; i < this.responseData.applicantData.answers.length; i++) {
           if (this.responseData.applicantData.answers[i].requirementType == "text") {

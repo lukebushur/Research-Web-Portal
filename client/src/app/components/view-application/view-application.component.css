@@ -23,6 +23,10 @@ table {
     width: 100%;
 }
 
+.application > * {
+    padding: 0.5em;
+}
+
 .dates {
     padding: 0.5em 0.4em;
 }
@@ -35,4 +39,9 @@ table {
 .reject-status-text {
     color: red;
     border: 1px solid red;
+}
+
+.pending-status-text {
+    color: gray;
+    border: 1px solid gray;
 }

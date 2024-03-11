@@ -66,7 +66,7 @@ export class StudentApplicationsOverviewComponent {
   }
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
@@ -131,11 +131,11 @@ export class StudentApplicationsOverviewComponent {
   }
 
   modifyApplication(applicationID: string) {
-    this.router.navigate(['/apply-to-post'], {
-      queryParams: {
-        applicationID: applicationID,
-      }
-    });
+    // this.router.navigate(['/student/apply-to-project'], {
+    //   queryParams: {
+    //     applicationID: applicationID,
+    //   }
+    // });
   }
 
   applyFilter(event: Event) {

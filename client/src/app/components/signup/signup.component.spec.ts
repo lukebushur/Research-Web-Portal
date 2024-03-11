@@ -228,6 +228,6 @@ describe('SignupComponent', () => {
     component.signupForm.get('accountType')?.setValue(0);
     component.onSubmit();
     expect(signupSpy.calls.any()).withContext('signup called').toBeTrue();
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student-dashboard']);
+    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
   });
 });

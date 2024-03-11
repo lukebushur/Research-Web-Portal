@@ -17,6 +17,9 @@ export class ApplyToPostComponent implements OnInit {
   //For side-nav opening
   opened = false;
 
+  professorEmail: string;
+  projectId: string;
+
   project: any;
   questions: Array<QuestionData>;
 
@@ -81,12 +84,12 @@ export class ApplyToPostComponent implements OnInit {
 
   ngOnInit() {
     const profName = this.route.snapshot.queryParamMap.get('profName')!;
-    const profEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
-    const oppId = this.route.snapshot.queryParamMap.get('oppId')!;
+    this.professorEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
+    this.projectId = this.route.snapshot.queryParamMap.get('oppId')!;
 
     this.applyService.getProjectInfo({
-      professorEmail: profEmail,
-      projectID: oppId,
+      professorEmail: this.professorEmail,
+      projectID: this.projectId,
     }).subscribe({
       next: (response: any) => {
         this.project = response.success.project;
@@ -155,8 +158,8 @@ export class ApplyToPostComponent implements OnInit {
 
   onSubmit() {
     const data: ApplyRequestData = {
-      projectID: this.project.projectID,
-      professorEmail: this.project.professorEmail,
+      projectID: this.projectId,
+      professorEmail: this.professorEmail,
       questions: [],
     };
     for (let i = 0; i < this.questions.length; i++) {
@@ -185,7 +188,7 @@ export class ApplyToPostComponent implements OnInit {
 
     this.applyService.createApplication(data).subscribe({
       next: (response: any) => {
-        this.router.navigate(['/studentApplicationOverview']).then((navigated: boolean) => {
+        this.router.navigate(['/student/applications-overview']).then((navigated: boolean) => {
           if (navigated) {
             this.snackBar.open('Application submitted!', 'Close', {
               duration: 5000,
@@ -205,6 +208,6 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/student-dashboard']);
+    this.router.navigate(['/student/dashboard']);
   }
 }
