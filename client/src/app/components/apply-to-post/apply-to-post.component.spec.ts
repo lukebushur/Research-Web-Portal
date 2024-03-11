@@ -236,7 +236,7 @@ describe('ApplyToPostComponent', () => {
   //       },
   //     ],
   //   });
-  //   expect(navigateSpy).withContext('navigate() called').toHaveBeenCalledOnceWith(['/student-dashboard']);
+  //   expect(navigateSpy).withContext('navigate() called').toHaveBeenCalledOnceWith(['/student/dashboard']);
   //   done();
   // });
 

@@ -50,10 +50,12 @@
                 </mat-card-header>
                 <mat-card-content>
                     <mat-card class="content-card">
-                        <p>GPA Requirement: {{projectInfo.GPA}}</p>
-                        <p>Application Deadline: {{deadline}}</p>
-                        <p>Applicable Majors: {{projectInfo.majors.join(', ')}}</p>
-                        <p>Project Categories: {{projectInfo.categories.join(', ')}} </p>
+                        <p>GPA Requirement: {{ projectInfo.GPA }}</p>
+                        <p>Application Deadline: {{ deadline }}</p>
+                        <p *ngIf="projectInfo.majors">Applicable Majors: {{ projectInfo.majors.length > 1 ?
+                            projectInfo.majors.join(', ') : 'None' }}</p>
+                        <p *ngIf="projectInfo.categories">Project Categories: {{ projectInfo.categories.length > 0 ?
+                            projectInfo.categories.join(', ') : 'None'}} </p>
                     </mat-card>
                 </mat-card-content>
             </div>
@@ -61,23 +63,28 @@
             <mat-card-header>
                 <mat-card-title>Application Questions</mat-card-title>
             </mat-card-header>
-            <mat-card-content>
+            <mat-card-content *ngIf="questions">
                 <mat-card class="content-card">
-                    <div *ngFor="let question of applicationData.questions; index as i" class="questions">
+                    <div *ngFor="let question of questions; index as i" class="questions">
                         <label id="question-label">Question {{ i + 1 }}: {{ question.question }}</label>
                         <div *ngIf="question.requirementType === 'radio button'">
-                            <mat-radio-button *ngFor="let choice of question.choices; index as j"
-                                [checked]="answersArray[i][j].answer" [disabled]="true">{{ choice }}</mat-radio-button>
+                            <mat-radio-group [value]="question.answers![0]" disabled>
+                                <mat-radio-button *ngFor="let choice of question.choices; index as j"
+                                    [value]="choice">{{
+                                    choice }}</mat-radio-button>
+                            </mat-radio-group>
                         </div>
                         <div *ngIf="question.requirementType === 'check box'" class="radio-group">
-                            <mat-checkbox *ngFor="let choice of question.choices; index as j"
-                                [checked]="answersArray[i][j].answer" [disabled]="true">{{ choice }}</mat-checkbox>
+                            <section>
+                                <mat-checkbox *ngFor="let choice of question.choices; index as j"
+                                    [checked]="question.answers?.includes(choice)" disabled>{{ choice }}</mat-checkbox>
+                            </section>
                         </div>
                         <div *ngIf="question.requirementType === 'text'">
                             <div class="text-response">
                                 <mat-form-field>
                                     <mat-label>Answer</mat-label>
-                                    <textarea matInput readonly>{{answersArray[i]}}</textarea>
+                                    <textarea matInput disabled>{{ question.answers![0] }}</textarea>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -88,7 +95,7 @@
                 <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
                     class="accept-button">Modify
                     Application</button>
-                <button mat-raised-button color="warn" (click)="rescindApplication(applicationData.id)">Rescind
+                <button mat-raised-button color="warn" (click)="rescindApplication(applicationData._id)">Rescind
                     Application</button>
             </mat-card-actions>
         </mat-card>

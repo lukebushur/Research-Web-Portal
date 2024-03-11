@@ -3,6 +3,7 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
+import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 
 @Component({
   selector: 'app-student-view-application',
@@ -15,6 +16,8 @@ export class StudentViewApplicationComponent {
   applicationData: any = -1;
   projectInfo: any = -1;
   answersArray: any[] = [];
+
+  questions: QuestionData[];
 
   posted: String;
   deadline: String;
@@ -34,20 +37,19 @@ export class StudentViewApplicationComponent {
         this.studentService.getProjectInfo(data.success.application.professorEmail, data.success.application.opportunityId).subscribe({
           next: (data1) => {
             this.projectInfo = data1.success.project;
-            console.log(this.projectInfo);
             this.deadline = this.dateConverter.convertShortDate(this.projectInfo.deadline);
             this.posted = this.dateConverter.convertShortDate(this.projectInfo.posted);
           },
           error: (error) => {
             this.projectInfo = null;
-            this.router.navigate(['/studentApplicationOverview'], {
+            this.router.navigate(['/student/applications-overview'], {
             });
           }
         })
 
-
         this.applicationData = data.success.application;
         this.appliedDate = this.dateConverter.convertShortDate(this.applicationData.appliedDate);
+        this.questions = this.applicationData.questions;
 
         for (let i = 0; i < this.applicationData.questions.length; i++) {
           if (this.applicationData.questions[i].requirementType == "text") {
@@ -66,7 +68,7 @@ export class StudentViewApplicationComponent {
       },
       error: (error) => {
         console.error('Error fetching projects', error);
-        this.router.navigate(['/studentApplicationOverview'], {
+        this.router.navigate(['/student/applications-overview'], {
         });
       },
     })
@@ -81,7 +83,7 @@ export class StudentViewApplicationComponent {
   rescindApplication(applicationID: string) {
     this.studentService.deleteApplication(applicationID).subscribe({
       next: (data: any) => {
-        this.router.navigate(['/studentApplicationOverview'], {
+        this.router.navigate(['/student/applications-overview'], {
         });
       },
       error: (data: any) => {

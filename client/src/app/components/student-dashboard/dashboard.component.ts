@@ -17,7 +17,7 @@ export class StudentDashboard {
     this.getAllOpportunities();
     this.getStudentInfo();
   }
- 
+
   majorOpportunities: { [major: string]: any[] } = {};
   majors: string[] = [];
   studentGPA: number = 0;
@@ -50,7 +50,7 @@ export class StudentDashboard {
   
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
@@ -60,11 +60,11 @@ export class StudentDashboard {
   }
 
   searchOpportunities() {
-    this.router.navigate(['/student-opportunities']);
+    this.router.navigate(['/student/search-projects']);
   }
 
   getStudentApplications() {
-    this.router.navigate(['/studentApplicationOverview']);
+    this.router.navigate(['/student/applications-overview']);
   }
 
   getStudentInfo(): void {
