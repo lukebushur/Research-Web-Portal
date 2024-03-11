@@ -43,7 +43,6 @@ export class AuthService {
     if (!universityLocation || universityLocation === '') {
       const accountInfo$ = this.getAccountInfo();
       const result = await firstValueFrom(accountInfo$);
-      console.log(result);
       universityLocation = result.success.accountData.universityLocation;
     }
 

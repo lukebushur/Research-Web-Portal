@@ -71,7 +71,8 @@ const routes: Routes = [
       { path: 'view-application/:applicationID', component: StudentViewApplicationComponent },
       //This route is for students to view an overview of their applied projects
       { path: 'applications-overview', component: StudentApplicationsOverviewComponent },
-
+      //This route is for the students to view an existing project
+      { path: 'view-project/:projectEmail/:projectID', component: ViewProjectComponent, canActivate: [AuthGuard]}
       // Duplicate, less developed component - should probably be deleted
       // { path: 'student-search-opps', component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
     ],

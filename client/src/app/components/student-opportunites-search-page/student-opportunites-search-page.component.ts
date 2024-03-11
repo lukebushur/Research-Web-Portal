@@ -88,6 +88,12 @@ export class StudentOpportunitesSearchPageComponent {
     });
   }
 
+  viewProject(project: any) {
+    // btoa -> Converts the email to Base64
+    // Navigate the student to the view-project page
+    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
+  }
+
   onCheckboxChange(major: string, isChecked: boolean) {
     // Update the selectedMajors array based on checkbox changes
     if (isChecked) {
