@@ -83,3 +83,7 @@ mat-slider {
   color: red;
   border: 1px solid red;
 }
+
+.align-end {
+  float: right;
+}

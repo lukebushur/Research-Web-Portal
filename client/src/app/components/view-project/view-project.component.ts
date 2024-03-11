@@ -6,6 +6,10 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { Observable, firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Location } from '@angular/common';
 
 //Interface for an entries to the applied student table
 export interface DetailedAppliedStudentList {
@@ -46,8 +50,10 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
 
   // Student related information
   // We need to store the professors email
-  isStudent: boolean = false;
+  isStudent: boolean = true;
   professorEmail: string = "";
+
+  accountType: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,22 +62,30 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
     private studentService: StudentDashboardService,
     private dateConverter: DateConverterService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authService: AuthService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       let projectFetchInformation;
       this.projectID = params['projectID'];
 
       // We're going to assume project-type means they're coming from
       // Faculty dashboard
-      if ("projectType" in params) {
+      const accountInfo = this.authService.getAccountInfo();
+      const authResponse = await firstValueFrom(accountInfo);
+      this.accountType = authResponse?.success?.accountData?.userType;
+
+      this.isStudent = this.accountType == environment.studentType
+      
+      if (!this.isStudent) {
         this.projectType = params['projectType'];
         projectFetchInformation = this.facultyService.getProject(this.projectID, this.projectType)
       } else {
         // Now we're going to assume this is just the student dashboard viewing a project
         this.projectType = "active";
-        this.isStudent = true;
+        // Convert from Base64 so it looks prettier in the URL
         this.professorEmail = atob(params['projectEmail'] || "");
         projectFetchInformation = this.studentService.getProjectInfo(this.professorEmail, this.projectID)
       }
@@ -90,6 +104,8 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
       });
       //Get application data from database
       if (!this.isStudent) {
+        // Student doesn't have authorization from server to view this data
+        // So we're going to skip it if they are a student!
         this.facultyService.detailedFetchApplicants(this.projectID).subscribe({
           next: (data) => {
             let dataWrapper = data.success.applicants.map((applicant: any )=> {
@@ -106,7 +122,6 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
               x.project = this.projectID; //add a field to each element of the data
             });
             this.studentData = dataWrapper; //sets the student's data to each the warpper
-            console.log(dataWrapper);
             
             // this.dataSource = new MatTableDataSource(this.studentData); //set up the datasource for the mat table
             this.updateTable();
@@ -126,6 +141,21 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
 
   formatGPA(): string {
     return (Math.round(this.projectData.GPA * 100) / 100).toFixed(2);
+  }
+
+  back() {
+    // Send the user back!
+    this.location.back();
+  }
+
+  apply() {
+    this.navRouter.navigate(['/student/apply-to-project'], {
+      queryParams: {
+        profName: this.projectData.projectName,
+        profEmail: this.professorEmail,
+        oppId: this.projectID,
+      }
+    });
   }
 
   displayRequirementType(reqType: string): string {
