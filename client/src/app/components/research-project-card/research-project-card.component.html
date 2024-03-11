@@ -13,7 +13,7 @@
     <mat-card *ngIf="project.projectType === currentProjectType" class="project-card" [id]="'p'+project.number"
       [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
       (click)="regenerateTableData(project, project.number)">
-      <mat-card-title class="project-card-title"><a href="/faculty/viewProject/{{project.projectType}}/{{project.id}}">
+      <mat-card-title class="project-card-title"><a href="/faculty/view-project/{{project.projectType}}/{{project.id}}">
           {{ project.projectName }}
         </a>
       </mat-card-title>

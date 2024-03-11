@@ -1,38 +1,35 @@
-<cdk-accordion class="example-accordion">
-  <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
-    tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
-    [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
-    <div class="student-ongoing-applications">
-      <h1>Ongoing applications</h1>
-      <button mat-raised-button (click)="getStudentApplications()">See all applications</button>
-      <button mat-raised-button (click)="searchOpportunities()">Search opportunities</button>
-    </div>
+<div class="root-container">
+  <div class="student-ongoing-applications">
+    <h1>Ongoing applications</h1>
+    <button mat-raised-button (click)="getStudentApplications()">See all applications</button>
+    <button mat-raised-button color="primary" (click)="searchOpportunities()">Search opportunities</button>
+  </div>
 
-    <div>
-      <div class="student-dashboard-page-container">
-        <!-- Display opportunities grouped by major -->
-        <div *ngFor="let major of majors">
-          <h2 class="oppCard">{{ major }} Opportunities</h2>
+  <div>
+    <div class="student-dashboard-page-container">
+      <!-- Display opportunities grouped by major -->
+      <div *ngFor="let major of majors">
+        <h2 class="oppCard">{{ major }} Opportunities</h2>
 
-          <div class="opps-container">
-            <div *ngFor="let opportunity of majorOpportunities[major]">
-              <mat-card class="opp-card">
-                <mat-card-header>
-                  <mat-card-title class="opp-title">
-                    <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
-                  </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  <div class="content-container">
-                    <div class="field-title">Professor: </div>
-                    <div [matTooltip]="opportunity.professorEmail">{{ opportunity.professorName }}</div>
-                    <div class="field-title">Posted: </div>
-                    <div>{{ dateToString(opportunity.posted) }}</div>
-                    <div class="field-title">GPA Requirement: </div>
-                    <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
-                    <div class="field-title">Description: </div>
-                    <div class="field-content">
-                      <div [matTooltip]="opportunity.description" class="max-two-lines">{{ opportunity.description }}</div>
+        <div class="opps-container">
+          <div *ngFor="let opportunity of majorOpportunities[major]">
+            <mat-card class="opp-card">
+              <mat-card-header>
+                <mat-card-title class="opp-title">
+                  <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="content-container">
+                  <div class="field-title">Professor: </div>
+                  <div [matTooltip]="opportunity.professorEmail">{{ opportunity.professorName }}</div>
+                  <div class="field-title">Posted: </div>
+                  <div>{{ dateToString(opportunity.posted) }}</div>
+                  <div class="field-title">GPA Requirement: </div>
+                  <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
+                  <div class="field-title">Description: </div>
+                  <div class="field-content">
+                    <div [matTooltip]="opportunity.description" class="max-two-lines">{{ opportunity.description }}
                     </div>
                   </div>
                   <mat-divider class="divider"></mat-divider>
@@ -45,11 +42,10 @@
               </mat-card>
             </div>
           </div>
-          
         </div>
+
       </div>
     </div>
-  </cdk-accordion-item>
-</cdk-accordion>
-
+  </div>
+</div>
 <app-spinner></app-spinner>
