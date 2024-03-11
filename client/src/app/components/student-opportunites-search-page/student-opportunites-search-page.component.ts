@@ -9,6 +9,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-student-opportunites-search-page',
@@ -35,8 +36,7 @@ export class StudentOpportunitesSearchPageComponent {
   majors: string[] = []; //array for the mat chip to store the majors entered by users
   allOpportunities: any[] = [];
 
-  minGPA: number = 0;
-  maxGPA: number = 4;
+  filterGPA: number = 0;
   resultFilterString: string = "";
   allUnChecked: boolean = true;
 
@@ -138,7 +138,7 @@ export class StudentOpportunitesSearchPageComponent {
     });
 
     this.filteredOpportunities = this.filteredOpportunities.filter(opportunity => {
-      return opportunity.GPA > this.minGPA && opportunity.GPA < this.maxGPA;
+      return opportunity.GPA > this.filterGPA;
     });
 
     this.filteredOpportunities = this.filteredOpportunities.filter(opportunity => {
@@ -207,10 +207,10 @@ export class StudentOpportunitesSearchPageComponent {
     // Navigate the student to the view-project page
     this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
   }
-
-  onCheckboxChange(major: string, isChecked: boolean) {
-    // Update the selectedMajors array based on checkbox changes
-    if (isChecked) {
+  
+  onCheckboxChange(event: MatSelectChange) {
+    const major = event.source.value;
+    if (event.source.selected) {
       this.selectedMajors.push(major);
     } else {
       const index = this.selectedMajors.indexOf(major);
@@ -295,14 +295,13 @@ export class StudentOpportunitesSearchPageComponent {
     this.filterOpportunities();
   }
 
-  onSliderChange(event: any) {
+  onSliderChange() {
     this.filterOpportunities();
   }
 
   resetFilters() {
     this.filteredOpportunities = this.allOpportunities;
-    this.maxGPA = 4;
-    this.minGPA = 0;
+    this.filterGPA = 0;
     this.resultFilterString = "";
     this.allUnChecked = true;
     this.selectedMajors = [];
