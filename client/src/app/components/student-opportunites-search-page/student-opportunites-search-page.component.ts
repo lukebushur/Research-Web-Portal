@@ -88,6 +88,10 @@ export class StudentOpportunitesSearchPageComponent {
     });
   }
 
+  viewProject(project: any) {
+    this.router.navigate([`/viewProject/${btoa(project.professorEmail)}/${project.projectID}`]);
+  }
+
   onCheckboxChange(major: string, isChecked: boolean) {
     // Update the selectedMajors array based on checkbox changes
     if (isChecked) {

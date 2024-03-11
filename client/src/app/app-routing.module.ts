@@ -68,7 +68,9 @@ const routes: Routes = [
   //This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
   { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
   //This route is used to view a specific project and its applicants
-  { path: 'viewProject/:projectType/:projectID', component: ViewProjectComponent },
+  // This needs to be updated to only look at ACTIVE projects
+  // Will talk with Sean over this
+  { path: 'viewProject/:projectEmail/:projectID', component: ViewProjectComponent },
   //This route is to view an applicant from the student's view
   { path: 'studentViewApplication/:applicationID', component: StudentViewApplicationComponent },
   //This route is for students to view an overview of their applied projects

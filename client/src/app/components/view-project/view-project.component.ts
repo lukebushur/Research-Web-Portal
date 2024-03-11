@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 
 //Interface for an entries to the applied student table
 export interface DetailedAppliedStudentList {
@@ -43,58 +44,79 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
   minGPA: number = 2;
   maxGPA: number = 4;
 
+  // Student related information
+  // We need to store the professors email
+  isStudent: boolean = false;
+  professorEmail: string = "";
+
   constructor(
     private route: ActivatedRoute,
+    private navRouter: Router,
     private facultyService: FacultyProjectService,
+    private studentService: StudentDashboardService,
     private dateConverter: DateConverterService,
     private _liveAnnouncer: LiveAnnouncer,
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.projectType = params['projectType'];
-      this.projectID = params['projectID']; //grab projectID from url parameter
+      let projectFetchInformation;
+      this.projectID = params['projectID'];
+
+      // We're going to assume project-type means they're coming from
+      // Faculty dashboard
+      if ("projectType" in params) {
+        this.projectType = params['projectType'];
+        projectFetchInformation = this.facultyService.getProject(this.projectID, this.projectType)
+      } else {
+        // Now we're going to assume this is just the student dashboard viewing a project
+        this.projectType = "active";
+        this.isStudent = true;
+        this.professorEmail = atob(params['projectEmail'] || "");
+        projectFetchInformation = this.studentService.getProjectInfo(this.professorEmail, this.projectID)
+      }
+       //grab projectID from url parameter
       //Get project data from database, this only grabs the project name currently, but if more information is need it will exist in the data variable below
-      this.facultyService.getProject(this.projectID, this.projectType).subscribe({
+      projectFetchInformation.subscribe({
         next: (data) => {
           this.projectName = data.success.project.projectName; //Grabs project name from request
           this.projectData = data.success.project; //stores project data from request into project data variable
           this.posted = this.dateConverter.convertDate(this.projectData.posted); //get the string for the posted variable
           this.deadline = this.dateConverter.convertDate(this.projectData.deadline); //get the string for the deadlien variable
-          console.log(this.projectData);
-          
         },
         error: (error) => {
           console.error('Error fetching projects', error);
         },
       });
       //Get application data from database
-      this.facultyService.detailedFetchApplicants(this.projectID).subscribe({
-        next: (data) => {
-          let dataWrapper = data.success.applicants.map((applicant: any )=> {
-            let majorsStr = applicant.majors[0];
-            for (let i = 1; i < applicant.majors.length; i++) {
-              majorsStr += ', ' + applicant.majors[i];
-            }
-            return {
-              ...applicant,
-              majors: majorsStr,
-            };
-          }); //data wrapper to hold a subset of the request's response information
-          dataWrapper.forEach((x: { project: string; }) => {
-            x.project = this.projectID; //add a field to each element of the data
-          });
-          this.studentData = dataWrapper; //sets the student's data to each the warpper
-          console.log(dataWrapper);
-          
-          // this.dataSource = new MatTableDataSource(this.studentData); //set up the datasource for the mat table
-          this.updateTable();
-          this.dataSource.sort = this.sort; //set up the sorting for the table
-        },
-        error: (error) => {
-          console.error('Error fetching projects', error);
-        }
-      })
+      if (!this.isStudent) {
+        this.facultyService.detailedFetchApplicants(this.projectID).subscribe({
+          next: (data) => {
+            let dataWrapper = data.success.applicants.map((applicant: any )=> {
+              let majorsStr = applicant.majors[0];
+              for (let i = 1; i < applicant.majors.length; i++) {
+                majorsStr += ', ' + applicant.majors[i];
+              }
+              return {
+                ...applicant,
+                majors: majorsStr,
+              };
+            }); //data wrapper to hold a subset of the request's response information
+            dataWrapper.forEach((x: { project: string; }) => {
+              x.project = this.projectID; //add a field to each element of the data
+            });
+            this.studentData = dataWrapper; //sets the student's data to each the warpper
+            console.log(dataWrapper);
+            
+            // this.dataSource = new MatTableDataSource(this.studentData); //set up the datasource for the mat table
+            this.updateTable();
+            this.dataSource.sort = this.sort; //set up the sorting for the table
+          },
+          error: (error) => {
+            console.error('Error fetching projects', error);
+          }
+        })
+      }
     });
   }
 

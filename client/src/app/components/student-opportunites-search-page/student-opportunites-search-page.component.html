@@ -52,7 +52,7 @@
               <mat-card-actions class="actions-container">
                 <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
                     [disabled]="!meetRequirements(opportunity)">{{ 'APPLY' }}</button>
-                <button mat-button color="secondary">VIEW</button>
+                <button mat-button color="secondary" (click)="viewProject(opportunity)">VIEW</button>
               </mat-card-actions>
             </mat-card>
         </div>

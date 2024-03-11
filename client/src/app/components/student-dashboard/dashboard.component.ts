@@ -67,12 +67,16 @@ export class StudentDashboard {
     this.router.navigate(['/studentApplicationOverview']);
   }
 
+  viewProject(project: any) {
+    this.router.navigate([`/viewProject/${btoa(project.professorEmail)}/${project.projectID}`]);
+  }
+
   getStudentInfo(): void {
     this.studentDashboardService.getStudentInfo().subscribe({
       next: (data: any) => {
         if (data.success) {
           this.studentGPA = data.success.accountData.GPA;
-          this.studentMajors = data.success.accountData.Major;
+          this.studentMajors = data.success.accountData.Major || [];
         }
       },
       error: (data: any) => {
@@ -83,7 +87,10 @@ export class StudentDashboard {
 
   meetRequirements(opportunity: any): boolean {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
-      && ((opportunity.majors.length === 0) || (opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
+      && ((opportunity.majors.length === 0) || 
+        // Sometimes the Majors object comes back empty, so for testing reasons we should skip
+        // This step if there are no majors currently
+        (this.studentMajors.length > 0 && opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
 
   dateToString(dateString: string | undefined): string {
