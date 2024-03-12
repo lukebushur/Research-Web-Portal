@@ -14,9 +14,11 @@
         <h2>Description:</h2>
         <p>{{ projectData.description }}</p>
         <br>
-        <h2>Responsibilities:</h2>
-        <p>{{ projectData.responsibilities }}</p>
-        <br>
+        <div *ngIf="projectData.responsibilities">
+          <h2>Responsibilities:</h2>
+          <p>{{ projectData.responsibilities }}</p>
+          <br>
+        </div>
         <h2>Posted:</h2>
         <p>{{ posted }}</p>
         <br>
