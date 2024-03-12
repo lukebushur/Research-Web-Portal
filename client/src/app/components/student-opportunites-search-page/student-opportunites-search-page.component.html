@@ -126,7 +126,9 @@
           </mat-form-field>
         </div>
       </div>
-      <button mat-raised-button color="primary" (click)="resetFilters()">Reset Filters</button>
+      <div id="resetButton">
+        <button mat-raised-button color="primary" (click)="resetFilters()">Reset Filters</button>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 
@@ -167,3 +169,4 @@
     </div>
   </div>
 </div>
+<app-spinner></app-spinner>
