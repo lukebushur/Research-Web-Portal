@@ -221,11 +221,11 @@ def generateRandomApplications(student, projectParent, randomProject):
       clone['answer'] = ""
       if question['requirementType'] == "text":
          # text
-         clone['answer'] = fake.paragraph()
+         clone['answers'] = [fake.paragraph()]
       elif question['requirementType'] == "radio button":
-         clone['answer'] = random.choice(clone['choices'])
+         clone['answers'] = [random.choice(clone['choices'])]
       elif  question['requirementType'] == "check box":
-         clone['answer'] = [random.choice(clone['choices'])]
+         clone['answers'] = [random.choice(clone['choices'])]
       clonedApp['questions'].append(clone)
    
    return clonedApp
