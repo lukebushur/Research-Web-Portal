@@ -77,6 +77,7 @@ export class ViewApplicationComponent {
         this.facultyService.fetchApplicant(this.projectID, this.applicantionID).subscribe({ //make request to server to receive updated information
           next: (response) => {
             this.responseData = response.success.responseData;
+            this.applicationStatus = this.responseData.applicantData.status == 'Accept' ? "Accepted" : (this.responseData.applicantData.status == "Reject" ? "Rejected" : "Pending")
           },
           error: (error) => {
             console.error('Error fetching applicant', error);

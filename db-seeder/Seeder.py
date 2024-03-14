@@ -47,7 +47,7 @@ def generateUserObject():
 
    # generate a random token for email reset?
    emailToken = str(uuid.uuid4())
-   password = bcrypt.hashpw(bytes(name.replace(" ", ""), encoding='utf8'), bcrypt.gensalt(10)).decode('ascii')
+   password = bcrypt.hashpw(bytes(os.getenv("DefaultPassword"), encoding='utf8'), bcrypt.gensalt(10)).decode('ascii')
    Major = [],
    
    UserObject = {
@@ -115,6 +115,8 @@ def generateRandomProjects(facultyUser):
       "professorId": facultyUser['_id'],
       "_id": ObjectId(),
    }
+
+   fake.unique.clear()
 
    for i in range(random.randint(4, 8)):
       questionType = random.randint(1, 3)
@@ -205,8 +207,8 @@ def generateRandomApplications(student, projectParent, randomProject):
    clonedApp = {
       # RecordId is the "Active" project
       # Id is the project id itself
-      "OpportunityRecordId": projectParent['_id'],
-      "OpportunityId": randomProject['_id'],
+      "opportunityRecordId": projectParent['_id'],
+      "opportunityId": randomProject['_id'],
       "_id": ObjectId(),
       "appliedDate": datetime.now(),
       "lastModified": datetime.now(),
@@ -218,7 +220,6 @@ def generateRandomApplications(student, projectParent, randomProject):
       clone = {}
       for entry in question:
          clone[str(entry)] = question[entry]
-      clone['answer'] = ""
       if question['requirementType'] == "text":
          # text
          clone['answers'] = [fake.paragraph()]
