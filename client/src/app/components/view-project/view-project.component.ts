@@ -95,8 +95,8 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
         next: (data) => {
           this.projectName = data.success.project.projectName; //Grabs project name from request
           this.projectData = data.success.project; //stores project data from request into project data variable
-          this.posted = this.dateConverter.convertDate(this.projectData.posted); //get the string for the posted variable
-          this.deadline = this.dateConverter.convertDate(this.projectData.deadline); //get the string for the deadlien variable
+          this.posted = this.dateConverter.convertShortDate(this.projectData.posted); //get the string for the posted variable
+          this.deadline = this.dateConverter.convertShortDate(this.projectData.deadline); //get the string for the deadlien variable
         },
         error: (error) => {
           console.error('Error fetching projects', error);
