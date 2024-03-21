@@ -123,6 +123,8 @@ def generateRandomProjects(facultyUser):
 
    fake.unique.clear()
 
+   fake.unique.clear()
+
    for i in range(random.randint(4, 8)):
       questionType = random.randint(1, 3)
       questionObject = {
