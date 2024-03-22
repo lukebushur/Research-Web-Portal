@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ConfirmEmailComponent } from './components/confirmemail/email.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,18 +26,13 @@ import { AppliedStudentTableComponent } from './components/applied-student-table
 import { MatSortModule } from '@angular/material/sort';
 import { PostProjectComponent } from './components/post_creation/posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
-import { DemoProjectsComponent } from './components/demoProjects/demoProject.component';
 import { SpinnerComponent } from './components/spinner/spinner.component'
 import { LoadingInterceptor } from './loading.interceptor';
 import { TableDataSharingService } from './_helpers/table-data-sharing/table-data-sharing.service';
-import { AutoSignUpComponent } from './components/auto-sign-up-component/auto-sign-up-component.component';
 import { SignoutComponent } from './components/signout/signout.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CatergoryFieldComponent } from './components/post_creation/catergory-field/catergory-field.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
-import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
 import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -63,7 +57,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { CommonModule } from '@angular/common';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
 import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
 import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
@@ -78,22 +72,16 @@ import { MatGridListModule } from '@angular/material/grid-list';
   declarations: [
     AppComponent,
     SignupComponent,
-    ConfirmEmailComponent,
     FacultyDashboardComponent,
     ResearchProjectCardComponent,
     LoginComponent,
     FacultyToolbarComponent,
     AppliedStudentTableComponent,
     PostProjectComponent,
-    FacultyDashboardApplyComponent,
-    DemoProjectsComponent,
     SpinnerComponent,
-    AutoSignUpComponent,
     SignoutComponent,
-    CatergoryFieldComponent,
     ViewApplicationComponent,
     IndustryDashboardComponent,
-    CustomQuestionComponent,
     AddEditJobComponent,
     IndustryToolbarComponent,
     JobCardComponent,

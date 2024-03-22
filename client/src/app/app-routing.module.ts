@@ -1,21 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SignupComponent } from './components/signup/signup.component';
-import { ConfirmEmailComponent } from './components/confirmemail/email.component';
+import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { AuthGuard } from './_helpers/auth/auth-guard/auth.guard';
 import { LoginComponent } from './components/login/login.component';
 import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
 import { PostProjectComponent } from './components/post_creation/posts.component';
-import { FacultyDashboardApplyComponent } from './components/faculty-accept/accept.component';
-import { DemoProjectsComponent } from './components/demoProjects/demoProject.component';
 import { SignoutComponent } from './components/signout/signout.component';
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
 import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
-import { StudentSearchOppsComponent } from './components/student-search-opps/student-search-opps.component';
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
 import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
@@ -50,8 +47,6 @@ const routes: Routes = [
       { path: 'create-project', component: PostProjectComponent, canActivate: [AuthGuard] },
       // Route parameters for type of project and project ID
       { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
-      // Takes a query parameter indicating the project to get applicants from
-      { path: 'project/applications', component: FacultyDashboardApplyComponent },
       // This route is used to view a specific project and its applicants
       { path: 'view-project/:projectType/:projectID', component: ViewProjectComponent },
       // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
@@ -73,8 +68,6 @@ const routes: Routes = [
       { path: 'applications-overview', component: StudentApplicationsOverviewComponent },
       //This route is for the students to view an existing project
       { path: 'view-project/:projectEmail/:projectID', component: ViewProjectComponent, canActivate: [AuthGuard]}
-      // Duplicate, less developed component - should probably be deleted
-      // { path: 'student-search-opps', component: StudentSearchOppsComponent, canActivate: [AuthGuard] },
     ],
   },
 
@@ -92,7 +85,7 @@ const routes: Routes = [
 
   { path: 'edit-profile', component: EditProfileScreenComponent },
   // MISC. ROUTES
-  { path: 'demoProjects', component: DemoProjectsComponent },
+  // { path: 'demoProjects', component: DemoProjectsComponent },
 
   // LAST ROUTE - KEEP THIS ROUTE LAST FOR IT TO WORK
   { path: '**', component: PageNotFoundScreenComponent },
