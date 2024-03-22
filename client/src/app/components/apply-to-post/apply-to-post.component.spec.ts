@@ -7,7 +7,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { ProjectData } from 'src/app/_models/apply-to-post/projectData';
 import { of, throwError } from 'rxjs';
+<<<<<<< HEAD
 import { MatCardModule } from '@angular/material/card';
+=======
+>>>>>>> 40e4c7f (apply to post unit test)
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
