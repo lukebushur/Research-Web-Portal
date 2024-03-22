@@ -11,6 +11,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // Import MatNativeDa
+import { Component } from '@angular/core';
+
+@Component({ standalone: true, selector: 'app-spinner', template: '' })
+class SpinnerSubComponent {}
 
 describe('StudentOpportunitesSearchPageComponent', () => {
   let component: StudentOpportunitesSearchPageComponent;
@@ -21,7 +25,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
       declarations: [StudentOpportunitesSearchPageComponent],
       imports: [HttpClientTestingModule, FormsModule, MatFormFieldModule, CdkAccordionModule, FormsModule, 
         MatInputModule, BrowserAnimationsModule, MatPaginatorModule, MatExpansionModule, MatChipsModule,
-        MatDatepickerModule, MatNativeDateModule],
+        MatDatepickerModule, MatNativeDateModule, SpinnerSubComponent],
     });
     fixture = TestBed.createComponent(StudentOpportunitesSearchPageComponent);
     component = fixture.componentInstance;

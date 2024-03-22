@@ -21,6 +21,13 @@
   width: 17.5%;
 }
 
+#resetButton {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
 table.projectDetails {
   text-align: center;
   width: 100%;

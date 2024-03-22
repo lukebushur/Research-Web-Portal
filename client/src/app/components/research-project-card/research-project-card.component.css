@@ -1,6 +1,7 @@
 .project-card-container {
   display: inline-flex;
   flex-wrap: nowrap;
+  min-width: 20%;
   /* Prevent cards from wrapping to the next line */
 }
 

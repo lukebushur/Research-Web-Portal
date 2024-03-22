@@ -75,3 +75,8 @@
     background: transparent;
     /* Background color of the scrollbar corner */
 }
+
+#filterDiv > mat-form-field {
+    width : 24%;
+    position: sticky;
+}
