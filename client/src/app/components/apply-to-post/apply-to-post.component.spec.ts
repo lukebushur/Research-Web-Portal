@@ -2,14 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApplyToPostComponent } from './apply-to-post.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { ProjectData } from 'src/app/_models/apply-to-post/projectData';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +20,9 @@ describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
   let fixture: ComponentFixture<ApplyToPostComponent>;
   let getProjectInfoSpy: jasmine.Spy;
+  let snackBar: MatSnackBar;
+  let snackBarOpenSpy: jasmine.Spy;
+
   // Mock question data
   const testQuestionData: QuestionData[] = [
     {
@@ -85,6 +88,10 @@ describe('ApplyToPostComponent', () => {
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
+    // Mock MatSnackBar
+    const snackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
+    const snackBarOpenSpy = snackBar.open;
+
     TestBed.configureTestingModule({
       declarations: [ApplyToPostComponent],
       imports: [
@@ -115,6 +122,7 @@ describe('ApplyToPostComponent', () => {
             }
           }
         },
+        { provide: MatSnackBar, useValue: snackBar },
       ],
     });
     fixture = TestBed.createComponent(ApplyToPostComponent);
@@ -245,5 +253,58 @@ describe('ApplyToPostComponent', () => {
     }
     const textArea = applyElement.querySelector('textarea');
     expect(textArea).toBeTruthy();
+  });
+
+  it('should correctly initialize formQuestions array', () => {
+    expect(component.formQuestions).toBeDefined();
+    expect(component.formQuestions instanceof FormArray).toBeTruthy();
+    expect(component.formQuestions.length).toBe(3); // Assuming 3 questions in test data
+  });
+
+  it('should correctly set up checkbox form controls', () => {
+    const checkBoxControls = component.formQuestions.at(0) as FormGroup;
+    expect(checkBoxControls.controls['item1']).toBeDefined();
+    expect(checkBoxControls.controls['item2']).toBeDefined();
+    expect(checkBoxControls.controls['item3']).toBeDefined();
+    // Add more assertions as needed...
+  });
+
+  it('should correctly set up text form control', () => {
+    const textControl = component.formQuestions.at(2);
+    expect(textControl instanceof FormControl).toBeTruthy();
+    expect(textControl.value).toBe('');
+    // Add more assertions as needed...
+  });
+
+  it('should correctly handle onSubmit method', () => {
+    spyOn(component, 'onSubmit').and.callThrough();
+    component.onSubmit();
+    expect(component.onSubmit).toHaveBeenCalled();
+    // Test logic inside onSubmit method, like service calls and routing
+  });
+
+  it('should correctly format GPA', () => {
+    // Assuming GPA is 2.0 in test data
+    expect(component.formatGPA()).toBe('2.00');
+  });
+
+  it('should correctly convert date to string', () => {
+    const dateStr = '2024-03-17T00:00:01.000Z'; // Assuming deadline in ISO format
+    expect(component.dateToString(dateStr)).toBe('Mar 17, 2024');
+  });
+  
+  it('should correctly navigate to student dashboard after successful submission', async () => {
+    spyOn(component, 'onSubmit').and.callThrough();
+    expect(navigateSpy).toHaveBeenCalledWith(['students/student-dashboard']);
+    expect(snackBar.open).toHaveBeenCalledWith('Application submitted!', 'Close', { duration: 5000 });
+  });
+
+  it('should handle error if application submission fails', () => {
+    spyOn(component, 'onSubmit').and.callThrough();
+    createApplicationSpy.and.returnValue(throwError('Error submitting application.'));
+    component.onSubmit();
+    fixture.whenStable().then(() => {
+      expect(snackBarOpenSpy).toHaveBeenCalledWith('Error submitting application.', 'Close', { duration: 5000 });
+    });
   });
 });

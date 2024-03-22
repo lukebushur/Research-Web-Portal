@@ -143,7 +143,7 @@ export class ApplyToPostComponent implements OnInit {
     if (!dateString) {
       return 'None';
     }
-    const date = new Date(dateString);
+    const date = new Date(dateString.replace(/-/g, '\/').replace(/T.+/, ''));
     const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
       weekday: undefined,
       year: 'numeric',
