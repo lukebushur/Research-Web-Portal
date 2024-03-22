@@ -1,3 +1,137 @@
 .header {
-    background-color: #CFB991;
+  background-color: #CFB991;
+}
+
+.header > * {
+  margin-left: 2.5%;
+}
+
+.searchBar {
+  width: 66%;
+}
+
+.searchBar > mat-form-field {
+  margin-top: 1%;
+  width: 33%;
+}
+
+#searchButton {
+  margin-left: 4%; 
+  height: 4em;
+  width: 17.5%;
+}
+
+#resetButton {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+table.projectDetails {
+  text-align: center;
+  width: 100%;
+}
+
+.projectDetails tr td {
+  padding: 0.5em;
+}
+
+.opportunities-container {
+  width: 80%;
+  padding: 0.5em;
+  margin: 0 auto;
+}
+
+.oppExpansion {
+  max-width: 80%;
+  margin: 0.5em auto;
+}
+
+.content-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px 10px;
+  align-items: center;
+  justify-content: start;
+}
+
+.opp-card {
+  margin: 0px 10px 0px 10px;
+  width: 350px;
+}
+
+.opp-title {
+  height: 3.5em;
+}
+
+.max-two-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.field-title {
+  margin: auto 0px;
+  font-weight: 500;
+}
+
+.field-content {
+  display: flex;
+  align-items: center;
+  height: 3.5em;
+}
+
+.opps-container {
+  display: grid;
+  grid-template-columns: repeat(3, 350px);
+  grid-gap: 1em;
+  margin: 20px;
+}
+
+.searchFilterDiv {
+  width: 20%;
+  margin-right: 2%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.filterMainDiv {
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.searchFilterDiv>mat-form-field {
+  width: 100%;
+}
+
+.resultFilterDiv>* {
+  width: 100%;
+}
+
+.resultFilterDiv {
+  width: 25%;
+  margin-right: 2%;
+}
+
+#page-selector {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+#page-selector>p {
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 7.5%;
+}
+
+#page-selector>button {
+  width: 20%;
 }

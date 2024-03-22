@@ -1,0 +1,44 @@
+<div [formGroup]="questionsGroup">
+  <div formArrayName="questions">
+    <div *ngFor="let question of questions.controls; let i=index" [formGroupName]="i">
+      <div class="question-heading">
+        <h2 class="bold">Question {{ i + 1 }}:</h2>
+        <button mat-stroked-button color="warn" type="button" (click)="removeQuestion(i)">Remove Question</button>
+      </div>
+      <mat-form-field class="block question-shift">
+        <mat-label>Question</mat-label>
+        <input matInput type="text" formControlName="question">
+        <mat-error *ngIf="questions.at(i).get('question')?.invalid">{{ requiredArrayFieldErrorMessage(i, 'question', 'Question') }}</mat-error>
+      </mat-form-field>
+      <mat-radio-group class="question-shift required-field" aria-label="Select an answer" formControlName="required">
+        <label>Is this a required question?*</label>
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+      <mat-form-field class="block question-shift">
+        <mat-label>Question Type</mat-label>
+        <mat-select formControlName="requirementType" (selectionChange)="updateQuestion(i)">
+          <mat-option *ngFor="let reqType of reqTypes" [value]="reqType.value">{{ reqType.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="questions.at(i).get('requirementType')?.invalid">{{ requiredArrayFieldErrorMessage(i, 'requirementType', 'Question Type') }}</mat-error>
+      </mat-form-field>
+      <div *ngIf="getQuestionChoices(i).enabled" formArrayName="choices">
+        <h3 class="bold">Choices:</h3>
+        <div class="choice-entry" *ngFor="let choice of getQuestionChoices(i).controls; let j=index">
+          <mat-form-field class="choice-input choice-shift">
+            <mat-label>Choice {{ j + 1 }}</mat-label>
+            <input matInput type="text" [formControlName]="j">
+            <mat-error *ngIf="getQuestionChoices(i).at(j).invalid">{{ choiceErrorMessage(i, j, 'Choice ' + (j + 1)) }}</mat-error>
+          </mat-form-field>
+          <button mat-stroked-button class="remove-choice" color="warn" type="button"
+            (click)="removeChoice(i, j)">Remove</button>
+        </div>
+        <button mat-stroked-button class="choice-shift add-choice" type="button" (click)="addChoice(i)">Add
+          Choice</button>
+      </div>
+    </div>
+  </div>
+  <div id="add-question">
+    <button mat-raised-button color="primary" type="button" (click)="addQuestion()">Add Question</button>
+  </div>
+</div>

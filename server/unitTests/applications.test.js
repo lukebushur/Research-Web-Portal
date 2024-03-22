@@ -500,7 +500,7 @@ describe('POST /api/accountManagement/updateAccount', () => {
             .send({
                 "name": "Jeremy Jengas Junior",
                 "GPA": 4,
-                "Major": ["Frogs"]
+                "Major": ["Frogs", "Computer Science"]
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);

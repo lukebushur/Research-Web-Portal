@@ -47,7 +47,7 @@ def generateUserObject():
 
    # generate a random token for email reset?
    emailToken = str(uuid.uuid4())
-   password = bcrypt.hashpw(bytes(name.replace(" ", ""), encoding='utf8'), bcrypt.gensalt(10)).decode('ascii')
+   password = bcrypt.hashpw(bytes(os.getenv("DefaultPassword"), encoding='utf8'), bcrypt.gensalt(10)).decode('ascii')
    Major = [],
    
    UserObject = {
@@ -115,6 +115,8 @@ def generateRandomProjects(facultyUser):
       "professorId": facultyUser['_id'],
       "_id": ObjectId(),
    }
+
+   fake.unique.clear()
 
    for i in range(random.randint(4, 8)):
       questionType = random.randint(1, 3)
@@ -205,8 +207,8 @@ def generateRandomApplications(student, projectParent, randomProject):
    clonedApp = {
       # RecordId is the "Active" project
       # Id is the project id itself
-      "OpportunityRecordId": projectParent['_id'],
-      "OpportunityId": randomProject['_id'],
+      "opportunityRecordId": projectParent['_id'],
+      "opportunityId": randomProject['_id'],
       "_id": ObjectId(),
       "appliedDate": datetime.now(),
       "lastModified": datetime.now(),
@@ -218,12 +220,13 @@ def generateRandomApplications(student, projectParent, randomProject):
       clone = {}
       for entry in question:
          clone[str(entry)] = question[entry]
-      clone['answer'] = ""
       if question['requirementType'] == "text":
          # text
-         clone['answer'] = fake.paragraph()
-      elif question['requirementType'] == "radio button" or question['requirementType'] == "check box":
-         clone['answer'] = random.choice(clone['choices'])
+         clone['answers'] = [fake.paragraph()]
+      elif question['requirementType'] == "radio button":
+         clone['answers'] = [random.choice(clone['choices'])]
+      elif  question['requirementType'] == "check box":
+         clone['answers'] = [random.choice(clone['choices'])]
       clonedApp['questions'].append(clone)
    
    return clonedApp
@@ -278,7 +281,7 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
          # Get the base application now
          appForStudentList = generateRandomApplications(randomUser, randomProjectTop, randomProject)
          appForProjectList = {
-            "applicationRecordId": "", # This needs to be set to the ID after the parent "apps" has been inserted
+            "applicationRecordID": "", # This needs to be set to the ID after the parent "apps" has been inserted
             "application": appForStudentList['_id'],
             "status": "Pending",
             "name": randomUser['name'],
@@ -301,7 +304,7 @@ def generateStudentApplications(destroy, howManyStudentsShouldApply, HowManyPerS
       # Now we set the applicationRecordId to the created apps for the faculty project
       # This references the students Application "manager"
       for project in projectAppReferences: 
-         project['applicationRecordId'] = insertedId
+         project['applicationRecordID'] = insertedId
       
       # Now we insert the application manager to the user 
       users.update_one({"_id": randomUser['_id']}, {"$set": {"userType.studentApplications": ObjectId(insertedId)}})

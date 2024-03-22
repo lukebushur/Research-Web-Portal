@@ -1,6 +1,7 @@
 .project-card-container {
   display: inline-flex;
   flex-wrap: nowrap;
+  min-width: 20%;
   /* Prevent cards from wrapping to the next line */
 }
 
@@ -76,8 +77,9 @@
 .faculty-project-selection-column {
   margin-left: 20px;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .project-selection-button {
-  margin-right: 10px;
+  margin-right: 20px;
 }

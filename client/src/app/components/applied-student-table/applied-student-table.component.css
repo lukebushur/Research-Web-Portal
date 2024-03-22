@@ -2,12 +2,6 @@
     margin-top: 20px;
 }
 
-.table-container {
-    overflow-y: auto;
-    max-height: 400px;
-    /* Adjust the max-height as needed */
-}
-
 .accept-button {
     margin-right: 1em;
 }
@@ -28,4 +22,61 @@
 .reject-status-text {
     color: red;
     border: 1px solid red;
+}
+
+.table-container {
+    overflow-y: auto;
+    max-height: 33vw;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    /* Adjust the max-height as needed */
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+/* Scrollbar Track */
+::-webkit-scrollbar {
+    width: 8px;
+    /* Width of the scrollbar */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #bda274;
+    /* Color when hovered */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #c3aa7e;
+    /* Color of the scrollbar handle */
+    border-radius: 4px;
+    /* Rounded corners */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    /* Color of the scrollbar track */
+}
+
+/* Handle on active state */
+::-webkit-scrollbar-thumb:active {
+    background: #b29362
+        /* Color when active/pressed */
+}
+
+/* Corner */
+::-webkit-scrollbar-corner {
+    background: transparent;
+    /* Background color of the scrollbar corner */
+}
+
+#filterDiv > mat-form-field {
+    width : 24%;
+    position: sticky;
 }

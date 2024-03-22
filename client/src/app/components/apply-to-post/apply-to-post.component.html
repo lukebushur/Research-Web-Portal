@@ -1,65 +1,82 @@
-<main>
-  <mat-sidenav-container>
-    <mat-sidenav mode="push" [opened]="opened">
-      <mat-list-item>
-        <img class="icon" src="../../../assets/photos/dashboard-24.png" /><a class="navTitle">Dashboard</a>
-        <br />
-      </mat-list-item>
-      <mat-list-item>
-        <img class="icon" src="../../../assets/photos/research-24.png" /><a class="navTitle">Research</a>
-        <br />
-      </mat-list-item>
-      <mat-list-item>
-        <img class="icon" src="../../../assets/photos/steve-jobs-24.png" /><a class="navTitle">Jobs</a>
-        <br />
-      </mat-list-item>
-      <mat-list-item>
-        <img class="icon" src="../../../assets/photos/applications-24.png" /><a class="navTitle">Applications</a>
-      </mat-list-item>
-    </mat-sidenav>
+<div class="page-container">
+  <div class="heading">
+    <h1 *ngIf="project">{{ project.projectName }}</h1>
+    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+  </div>
 
-    <mat-sidenav-content>
-      <button id="navButton" mat-button (click)="opened = !opened">
-        <img src="../../../assets/photos/burger-menu-24.png" />
-      </button>
-      <ng-container *ngIf="project">
-        <h1>{{ project.projectName }}</h1>
-        <p>{{ project.professorName }}, {{ project.professorEmail }}</p>
-        <p>Description: {{ project.description }}</p>
-        <p>Responsibilities: {{ project.responsibilities ? project.responsibilities : 'None' }}</p>
-        <p>Majors: {{ majorsString() }}</p>
-        <p>Categories: {{ categoriesString() }}</p>
-        <p>Minimum GPA: {{ formatGPA() }}</p>
-        <p>Date Posted: {{ dateToString(project.posted)}}</p>
-        <p>Deadline: {{ dateToString(project.deadline)}}</p>
-        <br>
-        <div>
-          <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
-            <div formArrayName="formQuestions">
-              <div *ngFor="let question of questions; index as i">
-                <label id="question-label">Question {{ question.questionNum }}: {{ question.question }}</label>
-                <div *ngIf="question.requirementType === 'radio button'">
-                  <mat-radio-group aria-labelledby="question-label" [formControlName]="i" class="radio-group">
-                    <mat-radio-button *ngFor="let choice of question.choices" [value]="choice">{{ choice
-                      }}</mat-radio-button>
-                  </mat-radio-group>
-                </div>
-                <div *ngIf="question.requirementType === 'check box'" class="radio-group">
-                  <mat-checkbox *ngFor="let choice of question.choices"
-                    [formControl]="getCheckBoxControl(i, choice)!">{{ choice }}</mat-checkbox>
-                </div>
-                <div *ngIf="question.requirementType === 'text'">
-                  <mat-form-field>
-                    <mat-label>Answer</mat-label>
-                    <textarea matInput [formControlName]="i"></textarea>
-                  </mat-form-field>
-                </div>
+  <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
+    <mat-stepper class="item-to-center">
+      <mat-step formGroupName="details" [stepControl]="details" label="Project Details">
+        <div class="remove-matcard-margin" *ngIf="project">
+          <mat-card>
+            <div class="infoDiv">
+              <div class="descriptionDiv">
+                <mat-card-header>
+                  <mat-card-title>Description</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-card class="content-card">
+                    <p>{{project.description}}</p>
+                  </mat-card>
+                </mat-card-content>
               </div>
+
+              <div class="responsibilitiesDiv" *ngIf="project.responsibilities">
+                <mat-card-header>
+                  <mat-card-title>Expected Responsibilities</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-card class="content-card">
+                    <p>{{project.responsibilities}}</p>
+                  </mat-card>
+                </mat-card-content>
+              </div>
+              <mat-card-header>
+                <mat-card-title>Project Requirements & Information</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-card class="content-card">
+                  <p>Applicable Majors: {{project.majors.join(', ')}}</p>
+                  <p *ngIf="project.categories.length > 0">Project Categories: {{project.categories.join(', ')}} </p>
+                  <p>GPA Requirement: {{project.GPA}}</p>
+                  <p>Deadline: {{ dateToString(project.deadline)}}</p>
+                  <p>Date Posted: {{ dateToString(project.posted)}}</p>
+                </mat-card>
+              </mat-card-content>
             </div>
-            <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button>
-          </form>
+          </mat-card>
         </div>
-      </ng-container>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</main>
+      </mat-step>
+
+      <mat-step formGroupName="questionsGroup" [stepControl]="questionsGroup" label="Application Questions">
+        <div formArrayName="formQuestions">
+          <div *ngFor="let question of questions; index as i">
+            <label id="question-label" [class.required]="question.required" style="display: inline-block;">
+              Question {{ question.questionNum }}: {{ question.question }}
+              <p class="red" *ngIf="question.required" style="display: inline;">*</p>
+            </label>
+            <div *ngIf="question.requirementType === 'radio button'">
+              <mat-radio-group aria-labelledby="question-label" [formControlName]="i" class="radio-group">
+                <mat-radio-button *ngFor="let choice of question.choices" [value]="choice">{{ choice
+                  }}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div *ngIf="question.requirementType === 'check box'" class="radio-group">
+              <mat-checkbox *ngFor="let choice of question.choices" [formControl]="getCheckBoxControl(i, choice)!">{{
+                choice
+                }}</mat-checkbox>
+            </div>
+            <div *ngIf="question.requirementType === 'text'" class="text-box">
+              <mat-form-field>
+                <mat-label>Answer</mat-label>
+                <textarea matInput [formControlName]="i"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button>
+      </mat-step>
+    </mat-stepper>
+  </form>
+</div>
+<app-spinner></app-spinner>

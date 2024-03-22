@@ -4,12 +4,28 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PostProjectComponent } from './posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent {}
+
+@Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
+class CreateQuestionsFormStubComponent {
+  @Input() questionsGroup: FormGroup;
+  @Input() questionsData?: QuestionData[];
+}
 
 describe('PostProjectComponent', () => {
   let component: PostProjectComponent;
@@ -20,11 +36,21 @@ describe('PostProjectComponent', () => {
       declarations: [PostProjectComponent],
       imports: [
         SpinnerSubComponent,
+        CreateQuestionsFormStubComponent,
         HttpClientTestingModule,
+        RouterTestingModule,
         MatDialogModule,
         MatRadioModule,
-        FormsModule,
-        RouterTestingModule,
+        MatSnackBarModule,
+        MatStepperModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatChipsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
       ],
     });
     fixture = TestBed.createComponent(PostProjectComponent);

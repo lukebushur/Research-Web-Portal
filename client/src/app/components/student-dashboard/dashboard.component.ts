@@ -16,48 +16,12 @@ export class StudentDashboard {
   ngOnInit() {
     this.getAllOpportunities();
     this.getStudentInfo();
-    this.getStudentApplications();
   }
 
-  @ViewChild(MatSort) sort: MatSort;
-
-  applications: any[] = [];
-  applicationData: any[] = [];
-  opportunities: any[] = [];
   majorOpportunities: { [major: string]: any[] } = {};
   majors: string[] = [];
   studentGPA: number = 0;
   studentMajors: string[] = [];
-
-  displayedColumns: string[] = ['project title', 'project sponsor', 'gpa req', 'applied date', 'deadline', 'status']; //This array determines the displayedd columns in the table
-  dataSource = new MatTableDataSource(this.applicationData);
-
-  //function for the see all applications button
-  //this will let you view all the things you have applied to
-  getStudentApplications() {
-    this.studentDashboardService.getStudentApplications().subscribe({
-      next: (data) => {
-        this.applications = data.success.applications;
-        this.applications.forEach((element) => {
-          let obj = {
-            status: element.status,
-            appliedDate: this.dateService.convertShortDate(element.appliedDate),
-            deadline: this.dateService.convertShortDate(element.deadline),
-            projectName: element.projectName,
-            GPAREQ: element.GPAREQ,
-            projectSponsor: element.projectSponsor,
-            id: element.applicationID,
-          };
-          this.applicationData.push(obj);
-        });
-        this.dataSource = new MatTableDataSource(this.applicationData); //set up the datasource for the mat table
-        this.dataSource.sort = this.sort;
-      },
-      error: (error) => {
-        console.error('Error fetching applications', error);
-      },
-    });
-  }
 
   getAllOpportunities() {
     this.studentDashboardService.getOpportunities().subscribe({
@@ -83,9 +47,10 @@ export class StudentDashboard {
       }
     });
   }
+  
 
   applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/apply-to-post'], {
+    this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
@@ -95,7 +60,17 @@ export class StudentDashboard {
   }
 
   searchOpportunities() {
-    this.router.navigate(['/student-opportunities']);
+    this.router.navigate(['/student/search-projects']);
+  }
+
+  getStudentApplications() {
+    this.router.navigate(['/student/applications-overview']);
+  }
+
+  viewProject(project: any) {
+    // btoa -> Converts the email to Base64
+    // Navigate the student to the view-project page
+    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
   }
 
   getStudentInfo(): void {
@@ -103,7 +78,7 @@ export class StudentDashboard {
       next: (data: any) => {
         if (data.success) {
           this.studentGPA = data.success.accountData.GPA;
-          this.studentMajors = data.success.accountData.Major;
+          this.studentMajors = data.success.accountData.Major || [];
         }
       },
       error: (data: any) => {
@@ -114,49 +89,18 @@ export class StudentDashboard {
 
   meetRequirements(opportunity: any): boolean {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
-      && ((opportunity.majors.length === 0) || (opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
+      && ((opportunity.majors.length === 0) || 
+        // Sometimes the Majors object comes back empty, so for testing reasons we should skip
+        // This step if there are no majors currently
+        (this.studentMajors.length > 0 && opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
 
-  //This method is used to sort the table whenever the table's sort functionality is clicked.
-  sortData(sort: Sort) {
-    const data = this.applicationData.slice(); //grabs the data from the student data array
-    if (!sort.active || sort.direction === '') {
-      this.applicationData = data;
-      return;
+  dateToString(dateString: string | undefined): string {
+    if (!dateString) {
+      return 'None';
     }
-
-    this.applicationData = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc'; //Checks if the sorting is done ascending if true, otherwise false. This will be used in the compare method
-      console.log(sort.active);
-      switch (sort.active) {
-        case 'project title':
-          return this.compare(a.projectName, b.projectName, isAsc); // Use projectName instead of name
-        case 'project sponsor':
-          return this.compare(a.projectSponsor, b.projectSponsor, isAsc); // Use projectSponsor instead of GPA
-        case 'deadline':
-          return this.compareDate(a.deadline, b.deadline, isAsc);
-        case 'applied date':
-          return this.compareDate(a.appliedDate, b.appliedDate, isAsc);
-        case 'status':
-          return this.compare(a.status, b.status, isAsc);
-        default:
-          return 0;
-      }
-    });
+    const date = new Date(dateString);
+    const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
+    return dateTimeFormat.format(date);
   }
-  //This method is used as the logic behind the sorting of the table. It takes a date, number, or string for a and b, then isAsc as a boolean.
-  //It will return -1 if a is less than b and the table is ascending and also returns -1 if a is greater than b and the table is not ascending (descending).
-  //otherwise it returns 1. This is used in the above sort method to sort the table
-  compare(a: number | String | Date, b: number | String | Date, isAsc: boolean) {
-    console.log(a);
-    console.log((a < b ? -1 : 1));
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }
-
-  compareDate(a: string, b: string, isAsc: boolean) {
-    let dateA = new Date(a);
-    let dateB = new Date(b);
-    return (dateA < dateB ? -1 : 1) * (isAsc ? 1 : -1);
-  }
-
 }

@@ -6,6 +6,36 @@
     border-radius: 5px;
 }
 
+.container {
+    width: 100%;
+}
+
+.billboard {
+    max-width: 100%;
+    padding: 0.2em;
+    width: 55%;
+}
+
+.applicationInfo {
+    margin: 0 auto;
+    display: flex;
+  justify-content: center;
+  padding: 0.5em;
+}
+
+table {
+    text-align: center;
+    width: 100%;
+}
+
+.application > * {
+    padding: 0.5em;
+}
+
+.dates {
+    padding: 0.5em 0.4em;
+}
+
 .accept-status-text {
     color: green;
     border: 1px solid green;
@@ -14,4 +44,9 @@
 .reject-status-text {
     color: red;
     border: 1px solid red;
+}
+
+.pending-status-text {
+    color: gray;
+    border: 1px solid gray;
 }

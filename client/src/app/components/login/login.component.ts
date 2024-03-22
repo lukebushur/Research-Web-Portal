@@ -77,7 +77,7 @@ export class LoginComponent {
           if (accountType === environment.industryType) {
             this.router.navigate(['/industry/dashboard']);
           } else if(accountType === environment.studentType) {
-            this.router.navigate(['/student-dashboard']);
+            this.router.navigate(['/student/dashboard']);
           } else {
             this.router.navigate(['/faculty/dashboard']);
           }

@@ -39,7 +39,7 @@ import { CatergoryFieldComponent } from './components/post_creation/catergory-fi
 import { ViewApplicationComponent } from './components/view-application/view-application.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
 import { CustomQuestionComponent } from './components/post_creation/custom-question/custom-question.component';
-import { CreateJobComponent } from './components/create-job/create-job.component';
+import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
 import { StudentDashboard } from './components/student-dashboard/dashboard.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -64,8 +64,16 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
 import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
 import { CommonModule } from '@angular/common';
-
-import { StudentProjectDetailsComponent } from './components/student-project-details/student-project-details.component';
+import {MatSliderModule} from '@angular/material/slider';
+import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
+import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
+import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
+import { CreateQuestionsFormComponent } from './components/create-questions-form/create-questions-form.component';
+import { AssessmentCardComponent } from './components/assessment-browser/assessment-card/assessment-card.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { AssessmentChooserComponent } from './components/add-edit-job/assessment-chooser/assessment-chooser.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -87,7 +95,7 @@ import { StudentProjectDetailsComponent } from './components/student-project-det
     ViewApplicationComponent,
     IndustryDashboardComponent,
     CustomQuestionComponent,
-    CreateJobComponent,
+    AddEditJobComponent,
     IndustryToolbarComponent,
     JobCardComponent,
     StudentDashboard,
@@ -101,7 +109,12 @@ import { StudentProjectDetailsComponent } from './components/student-project-det
     ForgotPasswordSubmittedComponent,
     EditProfileScreenComponent,
     StudentViewApplicationComponent,
-    StudentProjectDetailsComponent,
+    StudentApplicationsOverviewComponent,
+    AssessmentBrowserComponent,
+    AddEditAssessmentComponent,
+    CreateQuestionsFormComponent,
+    AssessmentCardComponent,
+    AssessmentChooserComponent,
   ],
   imports: [
     BrowserModule,
@@ -121,6 +134,7 @@ import { StudentProjectDetailsComponent } from './components/student-project-det
     MatDialogModule,
     MatMenuModule,
     MatRadioModule,
+    MatSliderModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatDatepickerModule,
@@ -134,7 +148,10 @@ import { StudentProjectDetailsComponent } from './components/student-project-det
     MatTabsModule,
     MatProgressBarModule,
     CdkAccordionModule,
-    CommonModule
+    CommonModule,
+    MatStepperModule,
+    MatExpansionModule,
+    MatGridListModule,
   ],
   providers: [
     {

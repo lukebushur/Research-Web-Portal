@@ -1,5 +1,12 @@
+<div id="filterDiv" class="table-container">
+  <mat-form-field class="filter">
+    <mat-label>Filter Table</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Matthew Im">
+  </mat-form-field>
+</div>
 <div class="table-container">
-  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="student-table">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    [class.mat-elevation-z16]="true">
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
@@ -20,7 +27,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by degree">
         Degree
       </th>
-      <td mat-cell *matCellDef="let student"> {{student.major}} </td>
+      <td mat-cell *matCellDef="let student">{{student.major.join(', ')}}</td>
     </ng-container>
 
     <ng-container matColumnDef="email">
@@ -46,7 +53,9 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+    class="mat-paginator-sticky"></mat-paginator>
 </div>

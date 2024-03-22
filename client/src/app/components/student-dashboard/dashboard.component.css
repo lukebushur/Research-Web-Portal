@@ -1,47 +1,96 @@
+.root-container {
+  margin: 20px;
+}
+
+h1, h2 {
+  font-weight: 500;
+}
+
 .student-ongoing-applications {
-    background-color: #CFB991;
+  display: flex;
+  margin-bottom: 20px;
 }
 
-.example-accordion {
-    display: block;
+.student-ongoing-applications>* {
+  margin-right: 30px;
 }
 
-.example-accordion-item {
-    display: block;
-    border: solid 1px #ccc;
+table.projectDetails {
+  text-align: center;
+  width: 100%;
 }
 
-.example-accordion-item+.example-accordion-item {
-    border-top: none;
+.projectDetails tr td {
+  padding: 0.5em;
 }
 
-.example-accordion-item-header {
-    display: flex;
-    align-content: center;
-    justify-content: space-between;
+.opportunities-list {
+  align-items: center;
+  margin: 0.5em;
 }
 
-.example-accordion-item-description {
-    font-size: 0.85em;
-    color: #999;
+.opportunities-container {
+  width: 400px;
+  margin: 0.5em;
 }
 
-.example-accordion-item-header,
-.example-accordion-item-body {
-    padding: 16px;
+.oppCard {
+  padding: 0.5em 0.5em;
+  width: 500px;
 }
 
-.example-accordion-item-header:hover {
-    cursor: pointer;
-    background-color: #eee;
+table.projectDetails {
+  text-align: center;
+  width: 100%;
 }
 
-.example-accordion-item:first-child {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+.projectDetails tr td {
+  padding: 0.5em;
 }
 
-.example-accordion-item:last-child {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+.content-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px 10px;
+  align-items: center;
+  justify-content: start;
+}
+
+.opp-card {
+  margin: 0px 10px 0px 10px;
+  width: 350px;
+}
+
+.opp-title {
+  height: 3.5em;
+}
+
+.max-two-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.field-title {
+  margin: auto 0px;
+  font-weight: 500;
+}
+
+.field-content {
+  display: flex;
+  align-items: center;
+  height: 3.5em;
+}
+
+.opps-container {
+  display: grid;
+  grid-template-columns: repeat(3,350px);
+  grid-gap: 1em;
+  margin: 20px;
+}
+
+.actions-container > button {
+  margin-right: 3%;
+  margin-left: 2%;
 }
