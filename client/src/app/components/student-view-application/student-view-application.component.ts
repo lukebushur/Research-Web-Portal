@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { WebSocketService } from 'src/app/controllers/web-socket-controller/web-socket.service';
 
 @Component({
   selector: 'app-student-view-application',
@@ -24,7 +25,7 @@ export class StudentViewApplicationComponent {
   appliedDate: String;
 
 
-  constructor(private studentService: StudentDashboardService, private route: ActivatedRoute, private dateConverter: DateConverterService,
+  constructor(private studentService: StudentDashboardService, private websocketService: WebSocketService, private route: ActivatedRoute, private dateConverter: DateConverterService,
     private router: Router) {
     this.route.params.subscribe(params => {
       this.applicationID = params['applicationID'];
@@ -72,6 +73,8 @@ export class StudentViewApplicationComponent {
         });
       },
     })
+
+    this.websocketService.connect();
   }
 
   getChoice(answer: any, index: number) {
