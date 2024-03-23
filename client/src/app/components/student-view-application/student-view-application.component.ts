@@ -25,7 +25,7 @@ export class StudentViewApplicationComponent {
   appliedDate: String;
 
 
-  constructor(private studentService: StudentDashboardService, private websocketService: WebSocketService, private route: ActivatedRoute, private dateConverter: DateConverterService,
+  constructor(private studentService: StudentDashboardService, private route: ActivatedRoute, private dateConverter: DateConverterService,
     private router: Router) {
     this.route.params.subscribe(params => {
       this.applicationID = params['applicationID'];
@@ -73,8 +73,6 @@ export class StudentViewApplicationComponent {
         });
       },
     })
-
-    this.websocketService.connect();
   }
 
   getChoice(answer: any, index: number) {

@@ -7,10 +7,10 @@ import { io, Socket } from 'socket.io-client';
   providedIn: 'root'
 })
 export class WebSocketService {
-  private apiUrl = environment.apiUrl;
-  private socket = io(this.apiUrl);
+  private socketUrl = environment.socketURL;
+  private socket: Socket;
 
   connect() {
-    this.socket.emit('connection');
+    this.socket = io(this.socketUrl);
   }
 }

@@ -6,6 +6,7 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { WebSocketService } from 'src/app/controllers/web-socket-controller/web-socket.service';
 
 
 @Component({
@@ -14,10 +15,11 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./student-applications-overview.component.css']
 })
 export class StudentApplicationsOverviewComponent {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService,private webSocketService: WebSocketService) { }
 
   ngOnInit() {
     this.getStudentApplications();
+    this.webSocketService.connect();
   }
 
   @ViewChild(MatSort) sort: MatSort;
