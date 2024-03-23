@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { Server } = require('socket.io');
+const io = new Server(server);
 const cors = require('cors')
 const generateRes = require('./helpers/generateJSON');
 
@@ -45,13 +49,20 @@ async function dbConnect() {
     await mongoose.connect(db_uri, {
         autoIndex: true,
     }).then(() => {
-        app.listen(port, () => {
+        server.listen(port, () => {
             console.log('Listening on port ' + port);
         })
     }).catch((err) => {
         console.log(err);
     });
 }
+
+io.on('connection', (socket) => {
+    console.log('CONNECTED LMAO');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
 
 dbConnect();
 
