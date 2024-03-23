@@ -5,7 +5,6 @@ const server = http.createServer(app);
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
-const io = new Server(server);
 const cors = require('cors')
 const generateRes = require('./helpers/generateJSON');
 
@@ -15,6 +14,13 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 require('dotenv').config();
+
+// Initialize Socket.IO configuration
+const io = new Server(server, {
+    cors: {
+        origin: `http://${process.env.FRONT_END_IP}`
+    }
+});
 
 //routes
 const authRoutes = require('./routes/authRoutes');
@@ -57,10 +63,11 @@ async function dbConnect() {
     });
 }
 
+// Socket.IO Handling
 io.on('connection', (socket) => {
-    console.log('CONNECTED LMAO');
+    console.log('user connected!');
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log('user disconnected!');
     });
 });
 
