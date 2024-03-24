@@ -39,6 +39,6 @@ describe('StudentOpportunitesSearchPageComponent', () => {
   });
 
   it('should create', () => {
-    expect(component)
+    expect(component).toBeTruthy();
   });
 });

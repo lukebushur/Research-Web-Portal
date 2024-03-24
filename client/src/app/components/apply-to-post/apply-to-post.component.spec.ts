@@ -130,8 +130,8 @@ describe('ApplyToPostComponent', () => {
     fixture.detectChanges();
   });
 
-  it('placeholder', () => {
-
+  it('should create', () => {
+    expect(component).toBeTruthy();
   })
 
   // it('should create and initialize project data', () => {
