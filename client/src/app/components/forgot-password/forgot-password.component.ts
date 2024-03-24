@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     NgIf,
     MatButtonModule,
+    MatSnackBarModule,
   ]
 })
 export class ForgotPasswordComponent {

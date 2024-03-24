@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SignoutService } from 'src/app/controllers/signout-controller/signout.service';
 
@@ -7,7 +7,8 @@ import { SignoutService } from 'src/app/controllers/signout-controller/signout.s
   selector: 'app-signout',
   templateUrl: './signout.component.html',
   styleUrls: ['./signout.component.css'],
-  standalone: true
+  standalone: true,
+  imports: [MatSnackBarModule],
 })
 export class SignoutComponent implements OnInit {
 

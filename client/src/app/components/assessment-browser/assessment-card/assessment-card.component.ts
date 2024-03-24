@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
@@ -18,6 +18,7 @@ import { MatCardModule } from '@angular/material/card';
     NgFor,
     MatDividerModule,
     MatButtonModule,
+    MatSnackBarModule,
   ]
 })
 export class AssessmentCardComponent {

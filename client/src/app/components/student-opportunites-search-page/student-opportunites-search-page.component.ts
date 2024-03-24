@@ -6,13 +6,13 @@ import { SearchOptions } from 'src/app/_models/searchOptions';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { FormControl, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-import { MatOptionModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { NgFor, NgStyle, NgIf } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -35,6 +35,7 @@ import { MatInputModule } from '@angular/material/input';
     NgStyle,
     MatIconModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     MatSelectModule,
     MatOptionModule,
     MatCardModule,

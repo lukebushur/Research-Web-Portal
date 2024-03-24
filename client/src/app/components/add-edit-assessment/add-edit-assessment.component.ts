@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     CreateQuestionsFormComponent,
     MatButtonModule,
+    MatSnackBarModule,
   ]
 })
 export class AddEditAssessmentComponent {

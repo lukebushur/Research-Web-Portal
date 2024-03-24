@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
-import { ProjectData } from '../../_models/apply-to-post/projectData';
 import { QuestionData } from '../../_models/apply-to-post/questionData';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatInputModule } from '@angular/material/input';
@@ -35,6 +34,7 @@ import { NgIf, NgFor } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     SpinnerComponent,
+    MatSnackBarModule,
   ],
 })
 export class ApplyToPostComponent implements OnInit {

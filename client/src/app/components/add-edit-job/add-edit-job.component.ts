@@ -4,11 +4,11 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { AddEditJobService } from 'src/app/controllers/add-edit-job-controller/add-edit-job.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobCardData } from '../industry-dashboard/job-card/job-card-data';
 import { Location, NgFor } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AssessmentChooserComponent } from './assessment-chooser/assessment-chooser.component';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 import { CreateQuestionsFormComponent } from '../create-questions-form/create-questions-form.component';
@@ -19,6 +19,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-add-edit-job',
@@ -36,8 +37,11 @@ import { MatStepperModule } from '@angular/material/stepper';
     NgFor,
     MatIconModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     MatButtonModule,
     CreateQuestionsFormComponent,
+    MatSnackBarModule,
+    MatDialogModule,
   ]
 })
 export class AddEditJobComponent {

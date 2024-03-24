@@ -7,13 +7,13 @@ import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location, NgIf, NgFor } from '@angular/common';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { CreateQuestionsFormComponent } from '../create-questions-form/create-questions-form.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
-import { MatOptionModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,8 +39,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatChipsModule,
     MatIconModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     CreateQuestionsFormComponent,
     SpinnerComponent,
+    MatSnackBarModule,
   ]
 })
 export class PostProjectComponent implements OnInit {

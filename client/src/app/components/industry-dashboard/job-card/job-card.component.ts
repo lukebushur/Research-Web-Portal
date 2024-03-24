@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { JobCardData } from './job-card-data';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -18,6 +18,7 @@ import { MatCardModule } from '@angular/material/card';
     MatTooltipModule,
     MatDividerModule,
     MatButtonModule,
+    MatSnackBarModule,
   ]
 })
 export class JobCardComponent {

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +27,7 @@ import { NgIf, NgFor } from '@angular/common';
     NgFor,
     MatOptionModule,
     MatButtonModule,
+    MatSnackBarModule,
   ]
 })
 export class AssessmentChooserComponent {
