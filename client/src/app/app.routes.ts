@@ -1,34 +1,33 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { SignupComponent } from './components/signup/signup.component';
-import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
-import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
-import { AuthGuard } from './_helpers/auth/auth-guard/auth.guard';
-import { LoginComponent } from './components/login/login.component';
-import { ApplyToPostComponent } from './components/apply-to-post/apply-to-post.component';
-import { PostProjectComponent } from './components/post_creation/posts.component';
-import { SignoutComponent } from './components/signout/signout.component';
-import { ViewApplicationComponent } from './components/view-application/view-application.component';
-import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
-import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
-import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
-import { StudentDashboard } from './components/student-dashboard/dashboard.component';
-import { ViewProjectComponent } from './components/view-project/view-project.component';
-import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
-import { PageNotFoundScreenComponent } from './components/page-not-found-screen/page-not-found-screen.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { ConfirmResetPasswordComponent } from './components/confirm-reset-password/confirm-reset-password.component';
-import { ForgotPasswordSubmittedComponent } from './components/forgot-password-submitted/forgot-password-submitted.component';
-import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
-import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
-import { roleGuard } from './_helpers/auth/role-guard/role.guard';
-import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
-import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
-import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
-import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
-import { StudentToolbarComponent } from './components/student-toolbar/student-toolbar.component';
+import { Routes } from "@angular/router";
+import { AuthGuard } from "./_helpers/auth/auth-guard/auth.guard";
+import { roleGuard } from "./_helpers/auth/role-guard/role.guard";
+import { AddEditAssessmentComponent } from "./components/add-edit-assessment/add-edit-assessment.component";
+import { AddEditJobComponent } from "./components/add-edit-job/add-edit-job.component";
+import { ApplyToPostComponent } from "./components/apply-to-post/apply-to-post.component";
+import { AssessmentBrowserComponent } from "./components/assessment-browser/assessment-browser.component";
+import { ConfirmEmailComponent } from "./components/confirm-email/confirm-email.component";
+import { ConfirmResetPasswordComponent } from "./components/confirm-reset-password/confirm-reset-password.component";
+import { EditProfileScreenComponent } from "./components/edit-profile-screen/edit-profile-screen.component";
+import { FacultyDashboardComponent } from "./components/faculty-dashboard/faculty-dashboard.component";
+import { FacultyToolbarComponent } from "./components/faculty-toolbar/faculty-toolbar.component";
+import { ForgotPasswordSubmittedComponent } from "./components/forgot-password-submitted/forgot-password-submitted.component";
+import { ForgotPasswordComponent } from "./components/forgot-password/forgot-password.component";
+import { IndustryDashboardComponent } from "./components/industry-dashboard/industry-dashboard.component";
+import { IndustryToolbarComponent } from "./components/industry-toolbar/industry-toolbar.component";
+import { LoginComponent } from "./components/login/login.component";
+import { PageNotFoundScreenComponent } from "./components/page-not-found-screen/page-not-found-screen.component";
+import { PostProjectComponent } from "./components/post_creation/posts.component";
+import { SignoutComponent } from "./components/signout/signout.component";
+import { SignupComponent } from "./components/signup/signup.component";
+import { StudentApplicationsOverviewComponent } from "./components/student-applications-overview/student-applications-overview.component";
+import { StudentDashboard } from "./components/student-dashboard/dashboard.component";
+import { StudentOpportunitesSearchPageComponent } from "./components/student-opportunites-search-page/student-opportunites-search-page.component";
+import { StudentToolbarComponent } from "./components/student-toolbar/student-toolbar.component";
+import { StudentViewApplicationComponent } from "./components/student-view-application/student-view-application.component";
+import { ViewApplicationComponent } from "./components/view-application/view-application.component";
+import { ViewProjectComponent } from "./components/view-project/view-project.component";
 
-const routes: Routes = [
+const routeConfig: Routes = [
   // AUTHENTICATION ROUTES
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'signup', component: SignupComponent },
@@ -91,8 +90,4 @@ const routes: Routes = [
   { path: '**', component: PageNotFoundScreenComponent },
 ];
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
+export default routeConfig;
