@@ -18,10 +18,21 @@ describe('StudentOpportunitesSearchPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StudentOpportunitesSearchPageComponent],
-      imports: [HttpClientTestingModule, FormsModule, MatFormFieldModule, CdkAccordionModule, FormsModule, 
-        MatInputModule, BrowserAnimationsModule, MatPaginatorModule, MatExpansionModule, MatChipsModule,
-        MatDatepickerModule, MatNativeDateModule],
+      imports: [
+        HttpClientTestingModule,
+        FormsModule,
+        MatFormFieldModule,
+        CdkAccordionModule,
+        FormsModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        MatPaginatorModule,
+        MatExpansionModule,
+        MatChipsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        StudentOpportunitesSearchPageComponent,
+      ],
     });
     fixture = TestBed.createComponent(StudentOpportunitesSearchPageComponent);
     component = fixture.componentInstance;

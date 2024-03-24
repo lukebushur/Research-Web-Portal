@@ -23,7 +23,6 @@ describe('FacultyToolbarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FacultyToolbarComponent],
       imports: [
         RouterTestingModule,
         MatToolbarModule,
@@ -32,6 +31,7 @@ describe('FacultyToolbarComponent', () => {
         MatSidenavModule,
         MatListModule,
         BrowserAnimationsModule,
+        FacultyToolbarComponent,
       ],
     });
     fixture = TestBed.createComponent(FacultyToolbarComponent);

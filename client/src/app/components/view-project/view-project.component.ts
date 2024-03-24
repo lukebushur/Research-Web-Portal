@@ -2,14 +2,24 @@ import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
 import { Observable, firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgFor } from '@angular/common';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 //Interface for an entries to the applied student table
 export interface DetailedAppliedStudentList {
@@ -25,7 +35,24 @@ export interface DetailedAppliedStudentList {
 @Component({
   selector: 'app-view-project',
   templateUrl: './view-project.component.html',
-  styleUrls: ['./view-project.component.css']
+  styleUrls: ['./view-project.component.css'],
+  standalone: true,
+  imports: [
+    NgIf,
+    MatExpansionModule,
+    MatIconModule,
+    NgFor,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatSliderModule,
+    MatTableModule,
+    MatSortModule,
+    MatButtonModule,
+    SpinnerComponent,
+  ]
 })
 
 export class ViewProjectComponent implements OnInit, AfterViewInit {
@@ -78,7 +105,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
       this.accountType = authResponse?.success?.accountData?.userType;
 
       this.isStudent = this.accountType == environment.studentType
-      
+
       if (!this.isStudent) {
         this.projectType = params['projectType'];
         projectFetchInformation = this.facultyService.getProject(this.projectID, this.projectType)
@@ -89,7 +116,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
         this.professorEmail = atob(params['projectEmail'] || "");
         projectFetchInformation = this.studentService.getProjectInfo(this.professorEmail, this.projectID)
       }
-       //grab projectID from url parameter
+      //grab projectID from url parameter
       //Get project data from database, this only grabs the project name currently, but if more information is need it will exist in the data variable below
       projectFetchInformation.subscribe({
         next: (data) => {
@@ -108,7 +135,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
         // So we're going to skip it if they are a student!
         this.facultyService.detailedFetchApplicants(this.projectID).subscribe({
           next: (data) => {
-            let dataWrapper = data.success.applicants.map((applicant: any )=> {
+            let dataWrapper = data.success.applicants.map((applicant: any) => {
               let majorsStr = applicant.majors[0];
               for (let i = 1; i < applicant.majors.length; i++) {
                 majorsStr += ', ' + applicant.majors[i];
@@ -122,7 +149,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
               x.project = this.projectID; //add a field to each element of the data
             });
             this.studentData = dataWrapper; //sets the student's data to each the warpper
-            
+
             // this.dataSource = new MatTableDataSource(this.studentData); //set up the datasource for the mat table
             this.updateTable();
             this.dataSource.sort = this.sort; //set up the sorting for the table

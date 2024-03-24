@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 @Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
 class CreateQuestionsFormStubComponent {
@@ -33,7 +33,6 @@ describe('PostProjectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PostProjectComponent],
       imports: [
         SpinnerSubComponent,
         CreateQuestionsFormStubComponent,
@@ -51,6 +50,7 @@ describe('PostProjectComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
+        PostProjectComponent,
       ],
     });
     fixture = TestBed.createComponent(PostProjectComponent);

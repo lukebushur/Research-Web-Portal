@@ -6,7 +6,8 @@ import { SignoutService } from 'src/app/controllers/signout-controller/signout.s
 @Component({
   selector: 'app-signout',
   templateUrl: './signout.component.html',
-  styleUrls: ['./signout.component.css']
+  styleUrls: ['./signout.component.css'],
+  standalone: true
 })
 export class SignoutComponent implements OnInit {
 

@@ -12,10 +12,9 @@ describe('PageNotFoundScreenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PageNotFoundScreenComponent],
       imports: [RouterTestingModule.withRoutes([
-        {path: "**", component: PageNotFoundScreenComponent},
-      ])],
+        { path: "**", component: PageNotFoundScreenComponent },
+      ]), PageNotFoundScreenComponent],
     });
     fixture = TestBed.createComponent(PageNotFoundScreenComponent);
     component = fixture.componentInstance;

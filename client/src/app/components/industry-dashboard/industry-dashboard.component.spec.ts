@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { IndustryDashboardComponent } from './industry-dashboard.component';
 import { Component, Input } from '@angular/core';
@@ -63,12 +63,12 @@ intellectually stimulating environment, apply now!`,
     getJobsSpy = industryDashboardService.getJobs.and.returnValue(of(testGetJobsResponse));
 
     TestBed.configureTestingModule({
-      declarations: [IndustryDashboardComponent],
       imports: [
         HttpClientTestingModule,
         JobCardStubComponent,
         MatTabsModule,
         BrowserAnimationsModule,
+        IndustryDashboardComponent,
       ],
       providers: [
         { provide: IndustryDashboardService, useValue: industryDashboardService },

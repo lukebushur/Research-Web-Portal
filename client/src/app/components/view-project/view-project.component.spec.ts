@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('ViewProjectComponent', () => {
   let component: ViewProjectComponent;
@@ -15,12 +15,12 @@ describe('ViewProjectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewProjectComponent],
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
         SpinnerSubComponent,
         MatTableModule,
+        ViewProjectComponent,
       ],
     });
     fixture = TestBed.createComponent(ViewProjectComponent);

@@ -37,7 +37,6 @@ describe('LoginComponent', () => {
     navigateSpy = router.navigate;
 
     TestBed.configureTestingModule({
-      declarations: [LoginComponent],
       imports: [
         SpinnerSubComponent,
         HttpClientTestingModule,
@@ -45,6 +44,7 @@ describe('LoginComponent', () => {
         MatInputModule,
         MatFormFieldModule,
         BrowserAnimationsModule,
+        LoginComponent,
       ],
       // Use the spies defined in this test instead of the actual services
       providers: [

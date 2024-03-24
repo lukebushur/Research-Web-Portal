@@ -1,13 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
 import { ProfileServiceService } from 'src/app/controllers/profile-controller/profile-service.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { NgIf, NgFor } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-edit-profile-screen',
   templateUrl: './edit-profile-screen.component.html',
-  styleUrls: ['./edit-profile-screen.component.css']
+  styleUrls: ['./edit-profile-screen.component.css'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    MatSelectModule,
+    NgFor,
+    MatOptionModule,
+    MatButtonModule,
+  ]
 })
 export class EditProfileScreenComponent implements OnInit {
   constructor(private router: Router,
@@ -90,7 +108,7 @@ export class EditProfileScreenComponent implements OnInit {
   }
 
   async updateForm(): Promise<void> {
-    if(!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.editProfileForm.get('universityLocation')?.value) {
+    if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.editProfileForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.editProfileForm.get('universityLocation')?.value;
       const getMajorsPromise = await this.authService.getMajors(this.prevSelectedUniversity ?? undefined);

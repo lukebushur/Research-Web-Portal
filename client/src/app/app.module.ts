@@ -69,8 +69,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent],
+  imports: [
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
     SignupComponent,
     FacultyDashboardComponent,
     ResearchProjectCardComponent,
@@ -102,48 +105,11 @@ import { MatGridListModule } from '@angular/material/grid-list';
     AssessmentCardComponent,
     AssessmentChooserComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTableModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatCardModule,
-    MatSortModule,
-    MatDialogModule,
-    MatMenuModule,
-    MatRadioModule,
-    MatSliderModule,
-    MatTooltipModule,
-    MatCheckboxModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatSelectModule,
-    MatPaginatorModule,
-    MatChipsModule,
-    MatSnackBarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatTabsModule,
-    MatProgressBarModule,
-    CdkAccordionModule,
-    CommonModule,
-    MatStepperModule,
-    MatExpansionModule,
-    MatGridListModule,
-  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true
-    }, TableDataSharingService
+    },
+    TableDataSharingService
   ],
   bootstrap: [AppComponent]
 })

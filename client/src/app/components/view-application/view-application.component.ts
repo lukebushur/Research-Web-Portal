@@ -4,11 +4,31 @@ import { ActivatedRoute } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
 import { SearchOptions } from 'src/app/_models/searchOptions';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-view-application',
   templateUrl: './view-application.component.html',
-  styleUrls: ['./view-application.component.css']
+  styleUrls: ['./view-application.component.css'],
+  standalone: true,
+  imports: [
+    NgIf,
+    MatCardModule,
+    MatDividerModule,
+    NgFor,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ]
 })
 
 //This component is for faculty to view information about a specific applicant for a project

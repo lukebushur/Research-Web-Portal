@@ -29,7 +29,6 @@ describe('AddEditJobComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AddEditJobComponent],
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
@@ -45,6 +44,7 @@ describe('AddEditJobComponent', () => {
         MatDialogModule,
         MatStepperModule,
         CreateQuestionsFormStubComponent,
+        AddEditJobComponent,
       ],
     });
     fixture = TestBed.createComponent(AddEditJobComponent);

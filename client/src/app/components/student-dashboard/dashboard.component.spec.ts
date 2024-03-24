@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('StudentDashboard', () => {
   let component: StudentDashboard;
@@ -14,9 +14,13 @@ describe('StudentDashboard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StudentDashboard],
-      imports: [HttpClientTestingModule, CdkAccordionModule,
-        SpinnerSubComponent, MatTableModule],
+      imports: [
+        HttpClientTestingModule,
+        CdkAccordionModule,
+        SpinnerSubComponent,
+        MatTableModule,
+        StudentDashboard,
+      ],
     });
     fixture = TestBed.createComponent(StudentDashboard);
     component = fixture.componentInstance;

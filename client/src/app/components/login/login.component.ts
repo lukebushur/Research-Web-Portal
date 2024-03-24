@@ -1,16 +1,32 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatButtonModule } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    RouterLink,
+    MatButtonModule,
+    SpinnerComponent,
+  ]
 })
 export class LoginComponent {
-  
+
   // Reactive login form
   loginForm = new FormGroup({
     email: new FormControl('', [
@@ -76,7 +92,7 @@ export class LoginComponent {
           // Navigate based on the account type
           if (accountType === environment.industryType) {
             this.router.navigate(['/industry/dashboard']);
-          } else if(accountType === environment.studentType) {
+          } else if (accountType === environment.studentType) {
             this.router.navigate(['/student/dashboard']);
           } else {
             this.router.navigate(['/faculty/dashboard']);

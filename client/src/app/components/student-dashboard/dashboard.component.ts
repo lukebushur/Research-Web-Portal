@@ -4,11 +4,26 @@ import { Router } from '@angular/router';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort } from '@angular/material/sort';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { NgFor } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'student-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    NgFor,
+    MatCardModule,
+    MatTooltipModule,
+    MatDividerModule,
+    SpinnerComponent,
+  ]
 })
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }
@@ -47,7 +62,7 @@ export class StudentDashboard {
       }
     });
   }
-  
+
 
   applyToOpportunity(opportunity: any): void {
     this.router.navigate(['/student/apply-to-project'], {
@@ -89,7 +104,7 @@ export class StudentDashboard {
 
   meetRequirements(opportunity: any): boolean {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
-      && ((opportunity.majors.length === 0) || 
+      && ((opportunity.majors.length === 0) ||
         // Sometimes the Majors object comes back empty, so for testing reasons we should skip
         // This step if there are no majors currently
         (this.studentMajors.length > 0 && opportunity.majors.some((major: string) => this.studentMajors.includes(major))));

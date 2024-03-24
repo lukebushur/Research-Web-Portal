@@ -19,12 +19,12 @@ describe('AssessmentCardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AssessmentCardComponent],
       imports: [
         HttpClientTestingModule,
         MatSnackBarModule,
         MatCardModule,
         MatDividerModule,
+        AssessmentCardComponent,
       ],
     });
     fixture = TestBed.createComponent(AssessmentCardComponent);

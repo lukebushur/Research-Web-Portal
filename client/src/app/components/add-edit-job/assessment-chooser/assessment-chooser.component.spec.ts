@@ -12,12 +12,12 @@ describe('AssessmentChooserComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AssessmentChooserComponent],
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
         MatSnackBarModule,
         MatProgressBarModule,
+        AssessmentChooserComponent,
       ],
       providers: [
         { provide: MatDialogRef, useValue: {} },

@@ -22,8 +22,8 @@ describe('EditProfileScreenComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
-      ],
-      declarations: [EditProfileScreenComponent]
+        EditProfileScreenComponent,
+      ]
     });
     fixture = TestBed.createComponent(EditProfileScreenComponent);
     component = fixture.componentInstance;

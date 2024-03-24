@@ -3,17 +3,21 @@ import { Router } from '@angular/router';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
 import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
+import { AssessmentCardComponent } from './assessment-card/assessment-card.component';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-assessment-browser',
   templateUrl: './assessment-browser.component.html',
-  styleUrls: ['./assessment-browser.component.css']
+  styleUrls: ['./assessment-browser.component.css'],
+  standalone: true,
+  imports: [NgFor, AssessmentCardComponent]
 })
 export class AssessmentBrowserComponent {
   timeInterval: Subscription;
 
   assessments: AssessmentData[];
-  
+
   constructor(private router: Router, private assessmentsService: AssessmentsService) { }
 
   ngOnInit(): void {

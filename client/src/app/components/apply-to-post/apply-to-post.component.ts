@@ -2,16 +2,40 @@ import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ProjectData } from '../../_models/apply-to-post/projectData';
 import { QuestionData } from '../../_models/apply-to-post/questionData';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatButtonModule } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-to-post',
   templateUrl: './apply-to-post.component.html',
   styleUrls: ['./apply-to-post.component.css'],
+  standalone: true,
+  imports: [
+    NgIf,
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatStepperModule,
+    MatCardModule,
+    NgFor,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    SpinnerComponent,
+  ],
 })
 export class ApplyToPostComponent implements OnInit {
   //For side-nav opening

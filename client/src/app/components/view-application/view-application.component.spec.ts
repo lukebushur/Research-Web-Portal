@@ -10,8 +10,11 @@ describe('ViewApplicationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewApplicationComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule,],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        ViewApplicationComponent,
+      ],
     });
     fixture = TestBed.createComponent(ViewApplicationComponent);
     component = fixture.componentInstance;

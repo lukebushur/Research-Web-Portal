@@ -23,7 +23,6 @@ describe('AddEditAssessmentComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AddEditAssessmentComponent],
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
@@ -33,6 +32,7 @@ describe('AddEditAssessmentComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
+        AddEditAssessmentComponent,
       ],
     });
     fixture = TestBed.createComponent(AddEditAssessmentComponent);

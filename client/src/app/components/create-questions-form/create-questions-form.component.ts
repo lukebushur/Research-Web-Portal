@@ -1,6 +1,13 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { NgFor, NgIf } from '@angular/common';
 
 interface RequirementOption {
   name: string;
@@ -10,7 +17,20 @@ interface RequirementOption {
 @Component({
   selector: 'app-create-questions-form',
   templateUrl: './create-questions-form.component.html',
-  styleUrls: ['./create-questions-form.component.css']
+  styleUrls: ['./create-questions-form.component.css'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    MatRadioModule,
+    MatSelectModule,
+    MatOptionModule,
+  ]
 })
 export class CreateQuestionsFormComponent {
   @Input() questionsGroup: FormGroup;
@@ -58,7 +78,7 @@ export class CreateQuestionsFormComponent {
         question: [question.question, [Validators.required]],
         requirementType: [question.requirementType, [Validators.required]],
         required: [question.required, [Validators.required]],
-        choices: (question.choices) 
+        choices: (question.choices)
           ? this.fb.array(question.choices.map(choice => {
             return this.fb.control(choice, [Validators.required]);
           }))

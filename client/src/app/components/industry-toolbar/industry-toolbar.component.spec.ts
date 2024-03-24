@@ -23,7 +23,6 @@ describe('IndustryToolbarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [IndustryToolbarComponent],
       imports: [
         MatToolbarModule,
         MatIconModule,
@@ -32,6 +31,7 @@ describe('IndustryToolbarComponent', () => {
         MatListModule,
         RouterTestingModule,
         BrowserAnimationsModule,
+        IndustryToolbarComponent,
       ],
     });
     fixture = TestBed.createComponent(IndustryToolbarComponent);

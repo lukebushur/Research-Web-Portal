@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('StudentViewApplicationComponent', () => {
   let component: StudentViewApplicationComponent;
@@ -17,14 +17,14 @@ describe('StudentViewApplicationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StudentViewApplicationComponent],
       imports: [
         SpinnerSubComponent,
         HttpClientTestingModule,
         RouterTestingModule,
-      ], // Add CommonModule here
+        StudentViewApplicationComponent,
+      ],
       providers: [
-        StudentDashboardService, // Provide StudentDashboardService here
+        StudentDashboardService,
         {
           provide: DateConverterService,
           useValue: {}
