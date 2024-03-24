@@ -8,6 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JobCardData } from './job-card/job-card-data';
 import { of } from 'rxjs';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 @Component({ standalone: true, selector: 'app-job-card', template: '' })
 class JobCardStubComponent { @Input() jobData: JobCardData }
@@ -15,6 +17,7 @@ class JobCardStubComponent { @Input() jobData: JobCardData }
 describe('IndustryDashboardComponent', () => {
   let component: IndustryDashboardComponent;
   let fixture: ComponentFixture<IndustryDashboardComponent>;
+  let loader: HarnessLoader;
   let testGetJobsResponse: Object;
   let getJobsSpy: jasmine.Spy;
 
@@ -75,6 +78,7 @@ intellectually stimulating environment, apply now!`,
       ],
     });
     fixture = TestBed.createComponent(IndustryDashboardComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ForgotPasswordSubmittedComponent } from './forgot-password-submitted.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ForgotPasswordSubmittedComponent', () => {
   let component: ForgotPasswordSubmittedComponent;
@@ -8,7 +9,7 @@ describe('ForgotPasswordSubmittedComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ForgotPasswordSubmittedComponent]
+      imports: [ForgotPasswordSubmittedComponent, RouterTestingModule]
     });
     fixture = TestBed.createComponent(ForgotPasswordSubmittedComponent);
     component = fixture.componentInstance;

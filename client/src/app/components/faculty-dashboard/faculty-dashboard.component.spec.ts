@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { Component } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({ standalone: true, selector: 'app-research-project-card', template: '' })
 class ResearchProjectCardStubComponent { }
@@ -21,6 +22,7 @@ describe('FacultyDashboardComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        BrowserAnimationsModule,
         ResearchProjectCardStubComponent,
         AppliedStudentTableStubComponent,
         SpinnerSubComponent,
