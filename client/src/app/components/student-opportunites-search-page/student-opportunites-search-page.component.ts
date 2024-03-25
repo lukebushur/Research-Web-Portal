@@ -18,6 +18,7 @@ import { NgStyle } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-student-opportunites-search-page',
@@ -38,7 +39,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatOptionModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    SpinnerComponent
   ]
 })
 export class StudentOpportunitesSearchPageComponent {
