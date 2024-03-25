@@ -1,11 +1,10 @@
 import { Component, OnInit, } from '@angular/core';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service'
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -15,10 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     MatButtonModule,
-    NgFor,
-    NgIf,
     MatCardModule,
-    DatePipe,
+    DatePipe
   ],
 })
 export class ResearchProjectCardComponent implements OnInit {

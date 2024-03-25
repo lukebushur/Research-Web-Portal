@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
@@ -7,9 +7,9 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Location, NgIf, NgFor } from '@angular/common';
+import { Location } from '@angular/common';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
@@ -38,10 +38,8 @@ export interface DetailedAppliedStudentList {
   styleUrls: ['./view-project.component.css'],
   standalone: true,
   imports: [
-    NgIf,
     MatExpansionModule,
     MatIconModule,
-    NgFor,
     MatRadioModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -51,7 +49,7 @@ export interface DetailedAppliedStudentList {
     MatTableModule,
     MatSortModule,
     MatButtonModule,
-    SpinnerComponent,
+    SpinnerComponent
   ]
 })
 

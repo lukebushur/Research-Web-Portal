@@ -14,7 +14,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-to-post',
@@ -22,19 +21,17 @@ import { NgIf, NgFor } from '@angular/common';
   styleUrls: ['./apply-to-post.component.css'],
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
     MatStepperModule,
     MatCardModule,
-    NgFor,
     MatRadioModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     SpinnerComponent,
-    MatSnackBarModule,
+    MatSnackBarModule
   ],
 })
 export class ApplyToPostComponent implements OnInit {

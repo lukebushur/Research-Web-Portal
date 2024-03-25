@@ -14,7 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { NgFor, NgStyle, NgIf } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +31,6 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatExpansionModule,
     MatChipsModule,
-    NgFor,
     NgStyle,
     MatIconModule,
     MatDatepickerModule,
@@ -39,8 +38,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatOptionModule,
     MatCardModule,
-    MatDividerModule,
-    NgIf,
+    MatDividerModule
   ]
 })
 export class StudentOpportunitesSearchPageComponent {

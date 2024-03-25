@@ -7,7 +7,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { NgFor, NgIf } from '@angular/common';
 
 interface RequirementOption {
   name: string;
@@ -22,14 +21,12 @@ interface RequirementOption {
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     MatRadioModule,
     MatSelectModule,
-    MatOptionModule,
+    MatOptionModule
   ]
 })
 export class CreateQuestionsFormComponent {

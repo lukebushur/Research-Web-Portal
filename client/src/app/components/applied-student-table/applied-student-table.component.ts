@@ -6,7 +6,6 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -31,9 +30,8 @@ export interface AppliedStudentList {
     MatInputModule,
     MatTableModule,
     MatSortModule,
-    NgIf,
     MatButtonModule,
-    MatPaginatorModule,
+    MatPaginatorModule
   ],
 })
 

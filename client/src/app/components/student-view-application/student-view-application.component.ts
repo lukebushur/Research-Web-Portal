@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-student-view-application',
@@ -18,15 +17,13 @@ import { NgIf, NgFor } from '@angular/common';
   styleUrls: ['./student-view-application.component.css'],
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
-    NgFor,
     MatRadioModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    SpinnerComponent,
+    SpinnerComponent
   ]
 })
 export class StudentViewApplicationComponent {

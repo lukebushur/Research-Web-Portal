@@ -1,14 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
-import { MatSort, Sort } from '@angular/material/sort';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
-import { NgFor } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -18,12 +15,11 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     MatButtonModule,
-    NgFor,
     MatCardModule,
     MatTooltipModule,
     MatDividerModule,
-    SpinnerComponent,
-  ]
+    SpinnerComponent
+]
 })
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }

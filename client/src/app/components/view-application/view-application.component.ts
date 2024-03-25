@@ -9,7 +9,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-view-application',
@@ -17,15 +16,13 @@ import { NgIf, NgFor } from '@angular/common';
   styleUrls: ['./view-application.component.css'],
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatDividerModule,
-    NgFor,
     MatRadioModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    MatButtonModule
   ]
 })
 

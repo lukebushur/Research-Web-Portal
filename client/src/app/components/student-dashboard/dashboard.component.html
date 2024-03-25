@@ -8,11 +8,12 @@
   <div>
     <div class="student-dashboard-page-container">
       <!-- Display opportunities grouped by major -->
-      <div *ngFor="let major of majors">
+      @for (major of majors; track major) {
+      <div>
         <h2 class="oppCard">{{ major }} Opportunities</h2>
-
         <div class="opps-container">
-          <div *ngFor="let opportunity of majorOpportunities[major]">
+          @for (opportunity of majorOpportunities[major]; track opportunity) {
+          <div>
             <mat-card class="opp-card">
               <mat-card-header>
                 <mat-card-title class="opp-title">
@@ -34,17 +35,18 @@
                   </div>
                   <mat-divider class="divider"></mat-divider>
                 </div>
-                </mat-card-content>
-                <mat-card-actions class="actions-container">
-                  <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
-                      [disabled]="!meetRequirements(opportunity)">{{ 'APPLY' }}</button>
-                  <button mat-button color="secondary" (click)="viewProject(opportunity)">VIEW</button>
-                </mat-card-actions>
-              </mat-card>
+              </mat-card-content>
+              <mat-card-actions class="actions-container">
+                <button mat-button color="primary" (click)="applyToOpportunity(opportunity)"
+                  [disabled]="!meetRequirements(opportunity)">{{ 'APPLY' }}</button>
+                <button mat-button color="secondary" (click)="viewProject(opportunity)">VIEW</button>
+              </mat-card-actions>
+            </mat-card>
           </div>
+          }
         </div>
-
       </div>
+      }
     </div>
   </div>
 </div>

@@ -7,7 +7,7 @@ import { AddEditJobService } from 'src/app/controllers/add-edit-job-controller/a
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobCardData } from '../industry-dashboard/job-card/job-card-data';
-import { Location, NgFor } from '@angular/common';
+import { Location } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AssessmentChooserComponent } from './assessment-chooser/assessment-chooser.component';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
@@ -34,14 +34,13 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatInputModule,
     MatRadioModule,
     MatChipsModule,
-    NgFor,
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
     CreateQuestionsFormComponent,
     MatSnackBarModule,
-    MatDialogModule,
+    MatDialogModule
   ]
 })
 export class AddEditJobComponent {

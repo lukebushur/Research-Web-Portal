@@ -6,7 +6,6 @@ import { ProfileServiceService } from 'src/app/controllers/profile-controller/pr
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { NgIf, NgFor } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -20,11 +19,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     MatSelectModule,
-    NgFor,
     MatOptionModule,
-    MatButtonModule,
+    MatButtonModule
   ]
 })
 export class EditProfileScreenComponent implements OnInit {

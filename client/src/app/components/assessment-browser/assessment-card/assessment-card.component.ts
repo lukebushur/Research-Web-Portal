@@ -5,7 +5,6 @@ import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { NgFor } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -15,10 +14,9 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [
     MatCardModule,
-    NgFor,
     MatDividerModule,
     MatButtonModule,
-    MatSnackBarModule,
+    MatSnackBarModule
   ]
 })
 export class AssessmentCardComponent {

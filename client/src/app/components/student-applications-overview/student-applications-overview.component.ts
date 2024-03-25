@@ -8,7 +8,6 @@ import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 
@@ -22,10 +21,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     MatTableModule,
     MatSortModule,
-    NgIf,
     MatButtonModule,
     MatPaginatorModule,
-    SpinnerComponent,
+    SpinnerComponent
   ]
 })
 export class StudentApplicationsOverviewComponent {

@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
-import { NgIf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -21,8 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    NgIf,
-    MatSnackBarModule,
+    MatSnackBarModule
   ]
 })
 export class ConfirmResetPasswordComponent {

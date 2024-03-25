@@ -5,7 +5,6 @@ import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { environment } from 'src/environments/environment';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -19,10 +18,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     RouterLink,
     MatButtonModule,
-    SpinnerComponent,
+    SpinnerComponent
   ]
 })
 export class LoginComponent {

@@ -4,7 +4,6 @@ import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard
 import { JobCardData } from './job-card/job-card-data';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
 import { JobCardComponent } from './job-card/job-card.component';
-import { NgFor } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
@@ -12,7 +11,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   templateUrl: './industry-dashboard.component.html',
   styleUrls: ['./industry-dashboard.component.css'],
   standalone: true,
-  imports: [MatTabsModule, NgFor, JobCardComponent]
+  imports: [MatTabsModule, JobCardComponent]
 })
 export class IndustryDashboardComponent {
   timeInterval: Subscription;

@@ -1,16 +1,20 @@
 <div class="page-container">
   <div class="heading">
-    <h1 *ngIf="project">{{ project.projectName }}</h1>
+    @if (project) {
+    <h1>{{ project.projectName }}</h1>
+    }
     <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
   </div>
 
   <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
     <mat-stepper class="item-to-center">
       <mat-step formGroupName="details" [stepControl]="details" label="Project Details">
-        <div class="remove-matcard-margin" *ngIf="project">
+        @if (project) {
+        <div class="remove-matcard-margin">
           <mat-card>
             <div class="infoDiv">
-              <div class="responsibilitiesDiv" *ngIf="project.responsibilities">
+              @if (project.responsibilities) {
+              <div class="responsibilitiesDiv">
                 <mat-card-header>
                   <mat-card-title>Expected Responsibilities</mat-card-title>
                 </mat-card-header>
@@ -20,6 +24,7 @@
                   </mat-card>
                 </mat-card-content>
               </div>
+              }
               <mat-card-header>
                 <mat-card-title>Project Requirements & Information</mat-card-title>
               </mat-card-header>
@@ -35,33 +40,48 @@
             </div>
           </mat-card>
         </div>
+        }
       </mat-step>
 
       <mat-step formGroupName="questionsGroup" [stepControl]="questionsGroup" label="Application Questions">
         <div formArrayName="formQuestions">
-          <div *ngFor="let question of questions; index as i">
+          @for (question of questions; track question; let i = $index) {
+          <div>
             <label id="question-label" [class.required]="question.required" style="display: inline-block;">
               Question {{ question.questionNum }}: {{ question.question }}
-              <p class="red" *ngIf="question.required" style="display: inline;">*</p>
+              @if (question.required) {
+              <p class="red" style="display: inline;">*</p>
+              }
             </label>
-            <div *ngIf="question.requirementType === 'radio button'">
+            @if (question.requirementType === 'radio button') {
+            <div>
               <mat-radio-group aria-labelledby="question-label" [formControlName]="i" class="radio-group">
-                <mat-radio-button *ngFor="let choice of question.choices" [value]="choice">{{ choice
+                @for (choice of question.choices; track choice) {
+                <mat-radio-button [value]="choice">{{ choice
                   }}</mat-radio-button>
+                }
               </mat-radio-group>
             </div>
-            <div *ngIf="question.requirementType === 'check box'" class="radio-group">
-              <mat-checkbox *ngFor="let choice of question.choices" [formControl]="getCheckBoxControl(i, choice)!">{{
+            }
+            @if (question.requirementType === 'check box') {
+            <div class="radio-group">
+              @for (choice of question.choices; track choice) {
+              <mat-checkbox [formControl]="getCheckBoxControl(i, choice)!">{{
                 choice
                 }}</mat-checkbox>
+              }
             </div>
-            <div *ngIf="question.requirementType === 'text'">
+            }
+            @if (question.requirementType === 'text') {
+            <div>
               <mat-form-field>
                 <mat-label>Answer</mat-label>
                 <textarea matInput [formControlName]="i"></textarea>
               </mat-form-field>
             </div>
+            }
           </div>
+          }
         </div>
         <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button>
       </mat-step>

@@ -41,14 +41,19 @@
         Status
       </th>
       <td mat-cell *matCellDef="let student">
-        <p *ngIf="student.status === 'Accept' || student.status === 'Reject'"
-          [class.accept-status-text]="student.status === 'Accept'"
+        @if (student.status === 'Accept' || student.status === 'Reject') {
+        <p [class.accept-status-text]="student.status === 'Accept'"
           [class.reject-status-text]="student.status === 'Reject'" class="status-text">{{student.status}}ed</p>
+        }
         <!-- <p *ngIf="student.status === 'Rejected'" [style.background-color]="'red'">{{student.status}}</p> -->
-        <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
-          (click)="applicationDecision(student.application, 'Accept')" class="accept-button">Accept</button>
-        <button *ngIf="student.status === 'Pending'" mat-raised-button color="warn"
+        @if (student.status === 'Pending') {
+        <button mat-raised-button color="primary" (click)="applicationDecision(student.application, 'Accept')"
+          class="accept-button">Accept</button>
+        }
+        @if (student.status === 'Pending') {
+        <button mat-raised-button color="warn"
           (click)="applicationDecision(student.application, 'Reject')">Reject</button>
+        }
       </td>
     </ng-container>
 

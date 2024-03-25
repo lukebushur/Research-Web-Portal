@@ -9,7 +9,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-assessment-chooser',
@@ -18,16 +17,14 @@ import { NgIf, NgFor } from '@angular/common';
   standalone: true,
   imports: [
     MatDialogModule,
-    NgIf,
     MatProgressBarModule,
     MatFormFieldModule,
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
     MatOptionModule,
     MatButtonModule,
-    MatSnackBarModule,
+    MatSnackBarModule
   ]
 })
 export class AssessmentChooserComponent {
