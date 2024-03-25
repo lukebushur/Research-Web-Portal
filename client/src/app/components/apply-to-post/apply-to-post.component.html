@@ -14,6 +14,17 @@
           <mat-card>
             <div class="infoDiv">
               @if (project.responsibilities) {
+              <div class="descriptionDiv">
+                <mat-card-header>
+                  <mat-card-title>Description</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-card class="content-card">
+                    <p>{{project.description}}</p>
+                  </mat-card>
+                </mat-card-content>
+              </div>
+
               <div class="responsibilitiesDiv">
                 <mat-card-header>
                   <mat-card-title>Expected Responsibilities</mat-card-title>
@@ -31,7 +42,9 @@
               <mat-card-content>
                 <mat-card class="content-card">
                   <p>Applicable Majors: {{project.majors.join(', ')}}</p>
+                  @if (project.categories.length > 0) {
                   <p>Project Categories: {{project.categories.join(', ')}} </p>
+                  }
                   <p>GPA Requirement: {{project.GPA}}</p>
                   <p>Deadline: {{ dateToString(project.deadline)}}</p>
                   <p>Date Posted: {{ dateToString(project.posted)}}</p>
@@ -73,7 +86,7 @@
             </div>
             }
             @if (question.requirementType === 'text') {
-            <div>
+            <div class="text-box">
               <mat-form-field>
                 <mat-label>Answer</mat-label>
                 <textarea matInput [formControlName]="i"></textarea>

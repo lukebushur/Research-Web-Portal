@@ -20,6 +20,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 //Interface for an entries to the applied student table
 export interface DetailedAppliedStudentList {
@@ -49,7 +50,8 @@ export interface DetailedAppliedStudentList {
     MatTableModule,
     MatSortModule,
     MatButtonModule,
-    SpinnerComponent
+    SpinnerComponent,
+    MatCardModule
   ]
 })
 
@@ -120,8 +122,8 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
         next: (data) => {
           this.projectName = data.success.project.projectName; //Grabs project name from request
           this.projectData = data.success.project; //stores project data from request into project data variable
-          this.posted = this.dateConverter.convertDate(this.projectData.posted); //get the string for the posted variable
-          this.deadline = this.dateConverter.convertDate(this.projectData.deadline); //get the string for the deadlien variable
+          this.posted = this.dateConverter.convertShortDate(this.projectData.posted); //get the string for the posted variable
+          this.deadline = this.dateConverter.convertShortDate(this.projectData.deadline); //get the string for the deadlien variable
         },
         error: (error) => {
           console.error('Error fetching projects', error);

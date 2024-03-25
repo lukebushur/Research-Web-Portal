@@ -170,9 +170,11 @@ export class ResearchProjectCardComponent implements OnInit {
   adjustDates(projects: any[]): void {
     // TODO: Seems like not all date fields are being formatted the same
     projects.forEach(x => {
+      console.log(projects)
       if (x.deadline) {
-        x.deadline = this.dateConverter.convertDate(x.deadline)
+        x.deadline = this.dateConverter.convertShortDate(x.deadline)
       }
+      x.posted =  this.dateConverter.convertShortDate(x.posted)
     });
   }
 }

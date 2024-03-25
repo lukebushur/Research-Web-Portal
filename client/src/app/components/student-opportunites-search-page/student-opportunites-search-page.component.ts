@@ -85,7 +85,7 @@ export class StudentOpportunitesSearchPageComponent {
     searchOpts.posted = this.posted ? this.posted : undefined;
     searchOpts.GPA = this.GPA ? this.GPA : undefined;
     searchOpts.majors = this.majors ? this.majors : undefined;
-    searchOpts.query = this.query ? this.query : undefined;
+    searchOpts.query = this.searchQuery ? this.searchQuery : undefined;
 
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {

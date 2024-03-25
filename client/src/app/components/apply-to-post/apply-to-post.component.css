@@ -44,6 +44,7 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-top: 1%;
 }
 
 .page-container {
@@ -141,6 +142,11 @@ h1 {
     align-items: center;
 }
 
+.text-box > mat-form-field {
+    width: 100%;
+    margin-top: 1%;
+}
+
 .dateCapsule {
     background-color: grey;
     margin-left: 0.1em;
@@ -206,4 +212,8 @@ mat-card-actions > * {
 
 ::ng-deep .mat-mdc-text-field-wrapper {
     background-color: #fff !important;
+}
+
+#question-label {
+    padding-top: 2%;
 }

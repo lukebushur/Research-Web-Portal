@@ -129,7 +129,9 @@ checkboxes for majors
           </mat-form-field>
         </div>
       </div>
-      <button mat-raised-button color="primary" (click)="resetFilters()">Reset Filters</button>
+      <div id="resetButton">
+        <button mat-raised-button color="primary" (click)="resetFilters()">Reset Filters</button>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 
@@ -176,3 +178,4 @@ checkboxes for majors
     }
   </div>
 </div>
+<app-spinner></app-spinner>
