@@ -106,7 +106,6 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
               this.facultyAnswers[x] = "";
             }
           }
-
           this.posted = this.dateConverter.convertShortDate(this.projectData.posted); //get the string for the posted variable
           this.deadline = this.dateConverter.convertShortDate(this.projectData.deadline); //get the string for the deadlien variable
         },
