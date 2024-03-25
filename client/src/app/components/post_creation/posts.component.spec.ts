@@ -5,7 +5,6 @@ import { PostProjectComponent } from './posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Component, Input } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -17,6 +16,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -37,7 +37,6 @@ describe('PostProjectComponent', () => {
         SpinnerSubComponent,
         CreateQuestionsFormStubComponent,
         HttpClientTestingModule,
-        RouterTestingModule,
         MatDialogModule,
         MatRadioModule,
         MatSnackBarModule,
@@ -52,6 +51,7 @@ describe('PostProjectComponent', () => {
         BrowserAnimationsModule,
         PostProjectComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(PostProjectComponent);
     component = fixture.componentInstance;

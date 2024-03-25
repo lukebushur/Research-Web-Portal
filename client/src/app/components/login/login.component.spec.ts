@@ -8,9 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -36,7 +35,6 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SpinnerSubComponent,
-        RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
         MatInputModule,
@@ -46,6 +44,7 @@ describe('LoginComponent', () => {
       ],
       // Use the spies defined in this test instead of the actual services
       providers: [
+        provideRouter([]),
         { provide: LoginService, useValue: loginService },
       ],
     });

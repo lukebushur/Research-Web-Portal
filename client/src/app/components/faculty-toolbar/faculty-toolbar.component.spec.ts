@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { MatToolbarHarness } from '@angular/material/toolbar/testing';
@@ -15,6 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatListModule } from '@angular/material/list';
+import { provideRouter } from '@angular/router';
 
 describe('FacultyToolbarComponent', () => {
   let component: FacultyToolbarComponent;
@@ -24,7 +24,6 @@ describe('FacultyToolbarComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatToolbarModule,
         MatIconModule,
         MatMenuModule,
@@ -33,6 +32,7 @@ describe('FacultyToolbarComponent', () => {
         BrowserAnimationsModule,
         FacultyToolbarComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(FacultyToolbarComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);

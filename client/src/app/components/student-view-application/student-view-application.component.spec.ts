@@ -6,7 +6,7 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
 import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { Component } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -20,10 +20,10 @@ describe('StudentViewApplicationComponent', () => {
       imports: [
         SpinnerSubComponent,
         HttpClientTestingModule,
-        RouterTestingModule,
         StudentViewApplicationComponent,
       ],
       providers: [
+        provideRouter([]),
         StudentDashboardService,
         {
           provide: DateConverterService,

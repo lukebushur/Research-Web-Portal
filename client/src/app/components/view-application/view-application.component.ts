@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { ActivatedRoute } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
-import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
-import { SearchOptions } from 'src/app/_models/searchOptions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';

@@ -11,11 +11,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { Component, Input } from '@angular/core';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { provideRouter } from '@angular/router';
 
 @Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
 class CreateQuestionsFormStubComponent {
@@ -31,7 +31,6 @@ describe('AddEditJobComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule,
         MatSnackBarModule,
         MatFormFieldModule,
         MatRadioModule,
@@ -46,6 +45,7 @@ describe('AddEditJobComponent', () => {
         CreateQuestionsFormStubComponent,
         AddEditJobComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(AddEditJobComponent);
     component = fixture.componentInstance;

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddEditAssessmentComponent } from './add-edit-assessment.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +9,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 @Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
 class CreateQuestionsFormStubComponent {
@@ -25,7 +25,6 @@ describe('AddEditAssessmentComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule,
         MatSnackBarModule,
         MatFormFieldModule,
         CreateQuestionsFormStubComponent,
@@ -34,6 +33,7 @@ describe('AddEditAssessmentComponent', () => {
         BrowserAnimationsModule,
         AddEditAssessmentComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(AddEditAssessmentComponent);
     component = fixture.componentInstance;

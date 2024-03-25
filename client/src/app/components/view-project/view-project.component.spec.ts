@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewProjectComponent } from './view-project.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { provideRouter } from '@angular/router';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -17,11 +17,11 @@ describe('ViewProjectComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule,
         SpinnerSubComponent,
         MatTableModule,
         ViewProjectComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(ViewProjectComponent);
     component = fixture.componentInstance;
