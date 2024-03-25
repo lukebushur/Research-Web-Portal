@@ -82,9 +82,8 @@ const routeConfig: Routes = [
     ]
   },
 
+  // ALL USER ROUTES
   { path: 'edit-profile', component: EditProfileScreenComponent },
-  // MISC. ROUTES
-  // { path: 'demoProjects', component: DemoProjectsComponent },
 
   // LAST ROUTE - KEEP THIS ROUTE LAST FOR IT TO WORK
   { path: '**', component: PageNotFoundScreenComponent },
