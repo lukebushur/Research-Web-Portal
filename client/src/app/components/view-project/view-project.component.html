@@ -15,7 +15,7 @@
               <h1>{{ projectData.projectName }}</h1>
             </mat-card-title>
           </mat-card-header>
-          <mat-card-content class="information"> 
+          <mat-card-content class="information">
             <h2>Description:</h2>
             <p>{{ projectData.description }}</p>
             <div *ngIf="projectData.responsibilities">
@@ -72,6 +72,59 @@
     </mat-expansion-panel>
 
     <div *ngIf="!isStudent">
+      <mat-expansion-panel #filterQuestionsPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Filter Applicants By Questions</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ applicantExpPanel.expanded ? 'close' : 'open' }}
+            <mat-icon>filter_list</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="carousel-container">
+          <mat-card class="content-card">
+            <mat-card-header>
+              <mat-card-title>
+                <h2>{{projectData.questions[currentQuestionIndex].question}} :</h2>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="currentQuestionType === 'radio button' || currentQuestionType === 'check box'"
+                class="choices-container">
+                <h3>Choices:</h3>
+                <div *ngFor="let choice of projectData.questions[currentQuestionIndex].choices" colspan="1" rowspan="1"
+                  class="choice-value">
+                  <mat-radio-button *ngIf="currentQuestionType === 'radio button'"
+                    [checked]="facultyAnswers[currentQuestionIndex] === choice" [value]="choice"
+                    (change)="updateChoiceAnswer($event)">
+                    {{ choice }}</mat-radio-button>
+                  <mat-checkbox *ngIf="currentQuestionType === 'check box'"
+                    [checked]="facultyAnswers[currentQuestionIndex].includes(choice)"
+                    (change)="updateChoiceAnswer($event)" [value]="choice">{{ choice }}</mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="currentQuestionType === 'text'">
+                <mat-form-field appearance="outline" class="filter-field">
+                  <mat-label>Filter</mat-label>
+                  <input matInput (keyup)="updateTextAnswer($event)"
+                    placeholder="Filter by question answer">
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="centerButtons">
+          <button mat-icon-button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+          </button>
+          <button mat-raised-button color="primary" (click)="resetAnswers()">
+            Reset Answers
+          </button>
+          <button mat-icon-button (click)="nextQuestion()" [disabled]="currentQuestionIndex === questions.length - 1">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </button>
+        </div>
+      </mat-expansion-panel>
+
       <mat-expansion-panel #applicantExpPanel expanded>
         <mat-expansion-panel-header>
           <mat-panel-title>Applicant Data</mat-panel-title>
@@ -95,7 +148,7 @@
               <label>{{ minGPA }} - {{ maxGPA }}</label>
             </div>
             <mat-slider min="0" max="4" step="0.1" on>
-              <input value="2" matSliderStartThumb [(ngModel)]="minGPA" (dragEnd)="updateTable()">
+              <input value="0" matSliderStartThumb [(ngModel)]="minGPA" (dragEnd)="updateTable()">
               <input value="4" matSliderEndThumb [(ngModel)]="maxGPA" (dragEnd)="updateTable()">
             </mat-slider>
           </div>
@@ -108,7 +161,9 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
               Name
             </th>
-            <td mat-cell *matCellDef="let student">{{ student.name }}</td>
+            <td mat-cell *matCellDef="let student">
+              <a href="/faculty/application/{{student.project}}/{{student.application}}">{{ student.name }} </a>
+            </td>
           </ng-container>
 
           <!-- Email Column -->
