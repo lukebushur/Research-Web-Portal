@@ -40,6 +40,10 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/accountManagement', accountManagment);
 app.use('/api/search', searchRoutes);
 
+app.get('/', function (req, res) {
+    res.status(200).json(generateRes(true, 200, "HEALTH_CHECK_PASSED", {}));
+});
+
 //This is the 404 Route. THIS MUST REMAIN LAST IT CATCHES ALL OTHER REQUESTS 
 app.use('*', function (req, res) {
     res.status(404).json(generateRes(false, 404, "ROUTE_NOT_FOUND", {}));
