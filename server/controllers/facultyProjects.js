@@ -605,7 +605,7 @@ const fetchApplicant = async (req, res) => {
             let applicantRecord = await retrieveOrCacheApplications(req, applicant.applicationRecordID);
             let applicantData;
             if (applicantRecord) {
-                const application = applicantRecord.applications.find((element) => element.id = applicant.application);
+                const application = applicantRecord.applications.find((element) => element.id == applicant.application.toString());
                 applicantData = {
                     status: applicant.status,
                     name: applicant.name,
