@@ -1,105 +1,125 @@
-<div *ngIf="applicationData !== -1" id="applicantData">
-    <h1>{{projectInfo.projectName}}</h1>
-
-    <div class="overviewDiv">
-        <mat-card>
-            <mat-card-content>
-                <div class="infoDiv">
-                    <p>Professor Name · {{projectInfo.professorName}}
-                    <p>
-                    <p>Created · {{posted}} </p>
-                </div>
-
-                <p id="description">{{projectInfo.description}}</p>
-
-                <div class="align-between">
-                    <p class="dateCapsule">Applied : {{appliedDate}}</p>
-
-                    <div class="align-together">
-                        <p>Status: </p>
-                        <p *ngIf="applicationData.status === 'Accept' || applicationData.status === 'Reject'"
-                            [class.accept-status-text]="applicationData.status === 'Accept'"
-                            [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text"
-                            style="margin-top: 7px;">
-                            {{applicationData.status}}ed</p>
-                        <p *ngIf="applicationData.status === 'Pending'" [class.pending-status-text]="true"
-                            class="status-text" style="margin-top: 7px;">
-                            {{applicationData.status}}</p>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <!--TODO ADD LOCATION WHEN AVAILABLE-->
-    <h2>Application Information</h2>
-    <div class="overviewDiv">
-        <mat-card>
-            <div class="infoDiv" *ngIf="applicationData !== -1 && applicationData !== null">
-                <div class="responsibilitiesDiv" *ngIf="projectInfo.responsibilities">
-                    <mat-card-header>
-                        <mat-card-title>Expected Responsibilities</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <mat-card class="content-card">
-                            <p>{{projectInfo.responsibilities}}</p>
-                        </mat-card>
-                    </mat-card-content>
-                </div>
-                <mat-card-header>
-                    <mat-card-title>Project Requirements & Information</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <mat-card class="content-card">
-                        <p>GPA Requirement: {{ projectInfo.GPA }}</p>
-                        <p>Application Deadline: {{ deadline }}</p>
-                        <p *ngIf="projectInfo.majors">Applicable Majors: {{ projectInfo.majors.length > 1 ?
-                            projectInfo.majors.join(', ') : 'None' }}</p>
-                        <p *ngIf="projectInfo.categories">Project Categories: {{ projectInfo.categories.length > 0 ?
-                            projectInfo.categories.join(', ') : 'None'}} </p>
-                    </mat-card>
-                </mat-card-content>
+@if (applicationData !== -1) {
+<div id="applicantData">
+  <h1>{{projectInfo.projectName}}</h1>
+  <div class="overviewDiv">
+    <mat-card>
+      <mat-card-content>
+        <div class="infoDiv">
+          <p>Professor Name · {{projectInfo.professorName}}
+          <p>
+          <p>Created · {{posted}} </p>
+        </div>
+        <p id="description">{{projectInfo.description}}</p>
+        <div class="align-between">
+          <p class="dateCapsule">Applied : {{appliedDate}}</p>
+          <div class="align-together">
+            <p>Status: </p>
+            @if (applicationData.status === 'Accept' || applicationData.status === 'Reject') {
+            <p [class.accept-status-text]="applicationData.status === 'Accept'"
+              [class.reject-status-text]="applicationData.status === 'Reject'" class="status-text"
+              style="margin-top: 7px;">
+              {{applicationData.status}}ed</p>
+            }
+            @if (applicationData.status === 'Pending') {
+            <p [class.pending-status-text]="true" class="status-text" style="margin-top: 7px;">
+              {{applicationData.status}}</p>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!--TODO ADD LOCATION WHEN AVAILABLE-->
+  <h2>Application Information</h2>
+  <div class="overviewDiv">
+    <mat-card>
+      @if (applicationData !== -1 && applicationData !== null) {
+      <div class="infoDiv">
+        @if (projectInfo.responsibilities) {
+        <div class="responsibilitiesDiv">
+          <mat-card-header>
+            <mat-card-title>Expected Responsibilities</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-card class="content-card">
+              <p>{{projectInfo.responsibilities}}</p>
+            </mat-card>
+          </mat-card-content>
+        </div>
+        }
+        <mat-card-header>
+          <mat-card-title>Project Requirements & Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-card class="content-card">
+            <p>GPA Requirement: {{ projectInfo.GPA }}</p>
+            <p>Application Deadline: {{ deadline }}</p>
+            @if (projectInfo.majors) {
+            <p>Applicable Majors: {{ projectInfo.majors.length > 1 ?
+              projectInfo.majors.join(', ') : 'None' }}</p>
+            }
+            @if (projectInfo.categories) {
+            <p>Project Categories: {{ projectInfo.categories.length > 0 ?
+              projectInfo.categories.join(', ') : 'None'}} </p>
+            }
+          </mat-card>
+        </mat-card-content>
+      </div>
+      }
+      <mat-card-header>
+        <mat-card-title>Application Questions</mat-card-title>
+      </mat-card-header>
+      @if (questions) {
+      <mat-card-content>
+        <mat-card class="content-card">
+          @for (question of questions; track question; let i = $index) {
+          <div class="questions">
+            <label id="question-label">Question {{ i + 1 }}: {{ question.question }}</label>
+            @if (question.requirementType === 'radio button') {
+            <div>
+              <mat-radio-group [value]="question.answers![0]" disabled>
+                @for (choice of question.choices; track choice; let j = $index) {
+                <mat-radio-button [value]="choice">{{
+                  choice }}</mat-radio-button>
+                }
+              </mat-radio-group>
             </div>
-
-            <mat-card-header>
-                <mat-card-title>Application Questions</mat-card-title>
-            </mat-card-header>
-            <mat-card-content *ngIf="questions">
-                <mat-card class="content-card">
-                    <div *ngFor="let question of questions; index as i" class="questions">
-                        <label id="question-label">Question {{ i + 1 }}: {{ question.question }}</label>
-                        <div *ngIf="question.requirementType === 'radio button'">
-                            <mat-radio-group [value]="question.answers![0]" disabled>
-                                <mat-radio-button *ngFor="let choice of question.choices; index as j"
-                                    [value]="choice">{{
-                                    choice }}</mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                        <div *ngIf="question.requirementType === 'check box'" class="radio-group">
-                            <section>
-                                <mat-checkbox *ngFor="let choice of question.choices; index as j"
-                                    [checked]="question.answers?.includes(choice)" disabled>{{ choice }}</mat-checkbox>
-                            </section>
-                        </div>
-                        <div *ngIf="question.requirementType === 'text'">
-                            <div class="text-response">
-                                <mat-form-field>
-                                    <mat-label>Answer</mat-label>
-                                    <textarea matInput disabled>{{ question.answers![0] }}</textarea>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card>
-            </mat-card-content>
-            <mat-card-actions class="buttons-container">
-                <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
-                    class="accept-button">Modify
-                    Application</button>
-                <button mat-raised-button color="warn" (click)="rescindApplication(applicationData._id)">Rescind
-                    Application</button>
-            </mat-card-actions>
+            }
+            @if (question.requirementType === 'check box') {
+            <div class="radio-group">
+              <section>
+                @for (choice of question.choices; track choice; let j = $index) {
+                <mat-checkbox [checked]="question.answers?.includes(choice)" disabled>{{ choice }}</mat-checkbox>
+                }
+              </section>
+            </div>
+            }
+            @if (question.requirementType === 'text') {
+            <div>
+              <div class="text-response">
+                <mat-form-field>
+                  <mat-label>Answer</mat-label>
+                  <textarea matInput disabled>{{ question.answers![0] }}</textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            }
+          </div>
+          }
         </mat-card>
-    </div>
+      </mat-card-content>
+      }
+      <mat-card-actions class="buttons-container">
+        @if (applicationData.status === 'Pending') {
+        <button mat-raised-button color="primary" class="accept-button">Modify
+          Application</button>
+        }
+        <button mat-raised-button color="warn" (click)="rescindApplication(applicationData._id)">Rescind
+          Application</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
+}
 
 <app-spinner></app-spinner>

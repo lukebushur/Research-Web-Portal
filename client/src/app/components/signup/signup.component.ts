@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 interface AccountType {
   value: number;
@@ -13,7 +20,19 @@ interface AccountType {
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.css'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatProgressBarModule
+  ]
 })
 export class SignupComponent {
 
@@ -28,7 +47,7 @@ export class SignupComponent {
   // is selected twice in a row by the same user, there is no need to get the majors
   // list from the back-end again
   prevSelectedUniversity: string | undefined | null;
-  
+
   // Set up the variables for the account type dropdown 
   accountTypes: AccountType[] = [
     { value: 0, text: 'Student' },

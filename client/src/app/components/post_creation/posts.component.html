@@ -9,38 +9,50 @@
         <mat-form-field class="block first-field">
           <mat-label>Project Name</mat-label>
           <input matInput formControlName="projectName" type="text" name="projectName">
-          <mat-error *ngIf="details.get('projectName')?.invalid">{{ requiredFieldErrorMessage('projectName', 'Project Name') }}</mat-error>
+          @if (details.get('projectName')?.invalid) {
+          <mat-error>{{ requiredFieldErrorMessage('projectName', 'Project Name') }}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Description</mat-label>
           <input matInput formControlName="description" type="text" name="description">
-          <mat-error *ngIf="details.get('description')?.invalid">{{ requiredFieldErrorMessage('description', 'Description') }}</mat-error>
+          @if (details.get('description')?.invalid) {
+          <mat-error>{{ requiredFieldErrorMessage('description', 'Description') }}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Required Majors</mat-label>
           <mat-select formControlName="majors" multiple>
-            <mat-option *ngFor="let major of majorsList" [value]="major">{{ major }}</mat-option>
+            @for (major of majorsList; track major) {
+            <mat-option [value]="major">{{ major }}</mat-option>
+            }
           </mat-select>
-          <mat-error *ngIf="details.get('majors')?.invalid">{{ requiredFieldErrorMessage('majors', 'Majors') }}</mat-error>
+          @if (details.get('majors')?.invalid) {
+          <mat-error>{{ requiredFieldErrorMessage('majors', 'Majors') }}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Categories</mat-label>
           <mat-chip-grid #chipGrid aria-label="Enter categories" required>
-            <mat-chip-row *ngFor="let category of categories.controls; let i=index" (removed)="removeCategory(i)" [editable]="true"
-              (edited)="editCategory(i, $event)" [aria-description]="'press enter to edit ' + category.value">
+            @for (category of categories.controls; track category; let i = $index) {
+            <mat-chip-row (removed)="removeCategory(i)" [editable]="true" (edited)="editCategory(i, $event)"
+              [aria-description]="'press enter to edit ' + category.value">
               {{ category.value }}
               <button matChipRemove [attr.aria-label]="'remove ' + category.value">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
+            }
             <input placeholder="New category..." [matChipInputFor]="chipGrid"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
               (matChipInputTokenEnd)="addCategory($event)" (blur)="categories.markAsTouched()">
           </mat-chip-grid>
-          <mat-hint *ngIf="categories.invalid">There must be at least 1 category</mat-hint>
+          @if (categories.invalid) {
+          <mat-hint>There must be at least 1 category</mat-hint>
+          }
         </mat-form-field>
 
         <mat-form-field class="block">
@@ -50,8 +62,10 @@
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <!-- I have tried for hours to get Material form validation working correctly for this field,
-          but nothing has worked. This at least lets the user know that it is required. -->
-          <mat-error *ngIf="details.get('deadline')?.invalid">{{ requiredFieldErrorMessage('deadline', 'Deadline') }}</mat-error>
+            but nothing has worked. This at least lets the user know that it is required. -->
+          @if (details.get('deadline')?.invalid) {
+          <mat-error>{{ requiredFieldErrorMessage('deadline', 'Deadline') }}</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field class="block">
@@ -62,7 +76,9 @@
         <mat-form-field class="block">
           <mat-label>Minimum Required GPA</mat-label>
           <input matInput formControlName="GPA" type="text" name="GPA">
-          <mat-error *ngIf="details.get('GPA')?.invalid">{{ gpaErrorMessage() }}</mat-error>
+          @if (details.get('GPA')?.invalid) {
+          <mat-error>{{ gpaErrorMessage() }}</mat-error>
+          }
         </mat-form-field>
 
         <div class="buttons-container">
@@ -74,34 +90,42 @@
 
       <mat-step formGroupName="questionsGroup" [stepControl]="questionsGroup" label="Add questions to ask applicants">
         <div class="first-field">
-          <app-create-questions-form [questionsGroup]="questionsGroup" [questionsData]="initialProjectData?.questions ?? undefined"></app-create-questions-form>
+          <app-create-questions-form [questionsGroup]="questionsGroup"
+            [questionsData]="initialProjectData?.questions ?? undefined"></app-create-questions-form>
         </div>
 
         <div class="buttons-container">
           <button mat-raised-button matStepperPrevious type="button">Previous</button>
           <span class="spacer"></span>
-          <button mat-raised-button color="primary" *ngIf="isCreateProject" class="first-button" type="button" (click)="onSave()">Save Draft</button>
-          <button mat-raised-button color="primary" *ngIf="!isCreateProject && projectType === 'Draft'" class="first-button" type="button" (click)="convertToActive()">Create Active Project</button>
-          <button mat-raised-button color="primary" type="submit">{{ isCreateProject ? 'Create Active Project' : 'Update'}}</button>
+          @if (isCreateProject) {
+          <button mat-raised-button color="primary" class="first-button" type="button" (click)="onSave()">Save
+            Draft</button>
+          }
+          @if (!isCreateProject && projectType === 'Draft') {
+          <button mat-raised-button color="primary" class="first-button" type="button"
+            (click)="convertToActive()">Create Active Project</button>
+          }
+          <button mat-raised-button color="primary" type="submit">{{ isCreateProject ? 'Create Active Project' :
+            'Update'}}</button>
         </div>
       </mat-step>
     </mat-stepper>
 
-  <!-- Old form's way to allow the user to choose how they create their project posting -->
-  <!-- <mat-radio-group [(ngModel)]="requirementsType" name="requirementSelection">
-    <mat-radio-button [value]="0">Requirements through the website</mat-radio-button> <br>
-    <mat-radio-button [value]="1">Requirements through a file</mat-radio-button> <br>
-    <mat-radio-button [value]="2">Requirements through the website and a file</mat-radio-button> <br>
-  </mat-radio-group> -->
+    <!-- Old form's way to allow the user to choose how they create their project posting -->
+    <!-- <mat-radio-group [(ngModel)]="requirementsType" name="requirementSelection">
+      <mat-radio-button [value]="0">Requirements through the website</mat-radio-button> <br>
+      <mat-radio-button [value]="1">Requirements through a file</mat-radio-button> <br>
+      <mat-radio-button [value]="2">Requirements through the website and a file</mat-radio-button> <br>
+    </mat-radio-group> -->
 
-  <!-- Old form's way to allow the user to upload an image -->
-  <!-- <div id="fileReqs" *ngIf="requirementsType == 1">
+    <!-- Old form's way to allow the user to upload an image -->
+    <!-- <div id="fileReqs" *ngIf="requirementsType == 1">
     <label>Upload requirements file</label>
     <input type="file" accept=".doc,.docx,application/msword,.pdf,.txt">
     <p>Warning: Using a file with all requirements will prevent you from using advanced searching / filtering on
       applicants. Consider using a combination of file requirements and website requirements if you require advanced
-      searching / filtering.</p>
+    searching / filtering.</p>
   </div> -->
   </form>
   <app-spinner></app-spinner>
-</div>  
+</div>

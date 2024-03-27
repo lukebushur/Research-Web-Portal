@@ -9,8 +9,7 @@ describe('AssessmentBrowserComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AssessmentBrowserComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, AssessmentBrowserComponent],
     });
     fixture = TestBed.createComponent(AssessmentBrowserComponent);
     component = fixture.componentInstance;

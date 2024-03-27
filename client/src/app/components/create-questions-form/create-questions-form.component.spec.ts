@@ -17,7 +17,6 @@ describe('CreateQuestionsFormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CreateQuestionsFormComponent],
       imports: [
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -25,6 +24,7 @@ describe('CreateQuestionsFormComponent', () => {
         MatSelectModule,
         MatInputModule,
         BrowserAnimationsModule,
+        CreateQuestionsFormComponent,
       ],
     });
     fixture = TestBed.createComponent(CreateQuestionsFormComponent);

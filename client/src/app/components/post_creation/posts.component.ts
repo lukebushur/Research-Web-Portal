@@ -2,18 +2,46 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostCreationService } from 'src/app/controllers/post-creation-controller/post-creation.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service'
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { CreateQuestionsFormComponent } from '../create-questions-form/create-questions-form.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.css']
+  styleUrls: ['./posts.component.css'],
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatChipsModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    CreateQuestionsFormComponent,
+    SpinnerComponent,
+    MatSnackBarModule
+  ]
 })
 export class PostProjectComponent implements OnInit {
   projectID: string | null; // project ID from route parameter (null if create project)
@@ -203,7 +231,7 @@ export class PostProjectComponent implements OnInit {
         },
       },
     };
-    
+
     // Remove falsy fields
     for (const [key, value] of Object.entries(data.projectDetails.project)) {
       if (!value) {

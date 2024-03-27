@@ -19,7 +19,7 @@ import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
 import { Component } from '@angular/core';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
@@ -74,7 +74,7 @@ describe('ApplyToPostComponent', () => {
     }
   };
   let navigateSpy: jasmine.Spy;
-  
+
   beforeEach(() => {
     // Spy object for ApplyToPostService. Captures the provided function calls and returns
     // predictable mock data instead.
@@ -91,7 +91,6 @@ describe('ApplyToPostComponent', () => {
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
-      declarations: [ApplyToPostComponent],
       imports: [
         FormsModule,
         MatCardModule,
@@ -105,7 +104,8 @@ describe('ApplyToPostComponent', () => {
         MatSidenavModule,
         MatListModule,
         BrowserAnimationsModule,
-        MatStepperModule
+        MatStepperModule,
+        ApplyToPostComponent
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
@@ -130,8 +130,8 @@ describe('ApplyToPostComponent', () => {
     fixture.detectChanges();
   });
 
-  it('placeholder', () => {
-
+  it('should create', () => {
+    expect(component).toBeTruthy();
   })
 
   // it('should create and initialize project data', () => {
@@ -217,7 +217,7 @@ describe('ApplyToPostComponent', () => {
   //   component.formQuestions.at(2).setValue('Some test details.');
   //   component.onSubmit();
   //   fixture.detectChanges();
-    
+
   //   expect(createApplicationSpy).withContext('createApplication() called').toHaveBeenCalledOnceWith({
   //     projectID: testProjectData.projectID,
   //     professorEmail: testProjectData.professorEmail,

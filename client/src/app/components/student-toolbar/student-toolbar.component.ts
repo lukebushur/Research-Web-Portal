@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, RouterModule } from '@angular/router';
 import { NavChoice } from 'src/app/_models/toolbar/navchoice';
@@ -14,14 +14,13 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-student-toolbar',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
     MatSidenavModule,
-    MatListModule,
+    MatListModule
   ],
   templateUrl: './student-toolbar.component.html',
   styleUrls: ['./student-toolbar.component.css']

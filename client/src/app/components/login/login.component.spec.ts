@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { LoginService } from 'src/app/controllers/login-controller/login.service';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
@@ -24,7 +24,7 @@ describe('LoginComponent', () => {
     }
   };
   let loginSpy: jasmine.Spy;
-  let navigateSpy: jasmine.Spy;
+  let router: Router;
 
   beforeEach(() => {
     // Create a spy to 'replace' the call to loginService's login function.
@@ -32,12 +32,7 @@ describe('LoginComponent', () => {
     const loginService = jasmine.createSpyObj('LoginService', ['login']);
     loginSpy = loginService.login.and.returnValue(of(testLoginResponse));
 
-    // Create a spy to 'replace' the call to Router's navigate function.
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate;
-
     TestBed.configureTestingModule({
-      declarations: [LoginComponent],
       imports: [
         SpinnerSubComponent,
         HttpClientTestingModule,
@@ -45,15 +40,17 @@ describe('LoginComponent', () => {
         MatInputModule,
         MatFormFieldModule,
         BrowserAnimationsModule,
+        LoginComponent,
       ],
       // Use the spies defined in this test instead of the actual services
       providers: [
+        provideRouter([]),
         { provide: LoginService, useValue: loginService },
-        { provide: Router, useValue: router },
       ],
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -106,12 +103,13 @@ describe('LoginComponent', () => {
 
     const loginElement: HTMLElement = fixture.nativeElement;
     const submitButton = loginElement.querySelector('button')!;
-    expect(submitButton.disabled).toBe(false);
+    expect(submitButton.disabled).toBeFalse();
   });
 
   it('should route to the student dashboard component', () => {
+    const navigateSpy = spyOn(router, 'navigate');
     component.onSubmit();
-    expect(loginSpy.calls.any()).withContext('login called').toBe(true);
+    expect(loginSpy.calls.any()).withContext('login called').toBeTrue();
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
   });
 });

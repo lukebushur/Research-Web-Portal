@@ -36,13 +36,15 @@
         <mat-form-field class="example-chip-list" class="block">
           <mat-label>Tags</mat-label>
           <mat-chip-grid #chipGrid aria-label="Enter tags">
-            <mat-chip-row *ngFor="let tag of tags.controls; let i=index" (removed)="removeTag(i)" [editable]="true"
-              (edited)="editTag(i, $event)" [aria-description]="'press enter to edit ' + tag.value">
+            @for (tag of tags.controls; track tag; let i = $index) {
+            <mat-chip-row (removed)="removeTag(i)" [editable]="true" (edited)="editTag(i, $event)"
+              [aria-description]="'press enter to edit ' + tag.value">
               {{tag.value}}
               <button matChipRemove [attr.aria-label]="'remove ' + tag.value">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
+            }
             <input placeholder="New tag..." [matChipInputFor]="chipGrid"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
               (matChipInputTokenEnd)="addTag($event)" />
@@ -83,11 +85,13 @@
 
       <mat-step formGroupName="questionsGroup" [stepControl]="jobQuestions" optional label="Add a pre-hire assessment">
         <div class="first-field questions-operations">
-          <button mat-raised-button color="primary" type="button" (click)="openDialog()">Add Questions From Saved Assessment</button>
+          <button mat-raised-button color="primary" type="button" (click)="openDialog()">Add Questions From Saved
+            Assessment</button>
           <button mat-raised-button color="warn" type="button" (click)="clearQuestions()">Clear All Questions</button>
         </div>
         <div class="first-field">
-          <app-create-questions-form [questionsGroup]="jobQuestions" [questionsData]="initialJobData?.questions ?? undefined"></app-create-questions-form>
+          <app-create-questions-form [questionsGroup]="jobQuestions"
+            [questionsData]="initialJobData?.questions ?? undefined"></app-create-questions-form>
         </div>
         <div class="buttons-container">
           <button mat-raised-button class="first-button" type="button" (click)="cancel()">Cancel</button>

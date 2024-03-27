@@ -3,15 +3,16 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { Component } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({ standalone: true, selector: 'app-research-project-card', template: '' })
-class ResearchProjectCardStubComponent {}
+class ResearchProjectCardStubComponent { }
 
 @Component({ standalone: true, selector: 'app-applied-student-table', template: '' })
-class AppliedStudentTableStubComponent {}
+class AppliedStudentTableStubComponent { }
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('FacultyDashboardComponent', () => {
   let component: FacultyDashboardComponent;
@@ -19,12 +20,13 @@ describe('FacultyDashboardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FacultyDashboardComponent],
       imports: [
         HttpClientTestingModule,
+        BrowserAnimationsModule,
         ResearchProjectCardStubComponent,
         AppliedStudentTableStubComponent,
         SpinnerSubComponent,
+        FacultyDashboardComponent,
       ],
     });
     fixture = TestBed.createComponent(FacultyDashboardComponent);

@@ -22,16 +22,28 @@ describe('StudentOpportunitesSearchPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StudentOpportunitesSearchPageComponent],
-      imports: [HttpClientTestingModule, FormsModule, MatFormFieldModule, CdkAccordionModule, FormsModule, 
-        MatInputModule, BrowserAnimationsModule, MatPaginatorModule, MatExpansionModule, MatChipsModule,
-        MatDatepickerModule, MatNativeDateModule, SpinnerSubComponent],
+      imports: [
+        HttpClientTestingModule,
+        FormsModule,
+        MatFormFieldModule,
+        CdkAccordionModule,
+        FormsModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        MatPaginatorModule,
+        MatExpansionModule,
+        MatChipsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        StudentOpportunitesSearchPageComponent,
+        SpinnerSubComponent
+      ],
     });
     fixture = TestBed.createComponent(StudentOpportunitesSearchPageComponent);
     component = fixture.componentInstance;
   });
 
   it('should create', () => {
-    expect(component)
+    expect(component).toBeTruthy();
   });
 });

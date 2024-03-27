@@ -1,6 +1,7 @@
 <div [formGroup]="questionsGroup">
   <div formArrayName="questions">
-    <div *ngFor="let question of questions.controls; let i=index" [formGroupName]="i">
+    @for (question of questions.controls; track question; let i = $index) {
+    <div [formGroupName]="i">
       <div class="question-heading">
         <h2 class="bold">Question {{ i + 1 }}:</h2>
         <button mat-stroked-button color="warn" type="button" (click)="removeQuestion(i)">Remove Question</button>
@@ -8,7 +9,9 @@
       <mat-form-field class="block question-shift">
         <mat-label>Question</mat-label>
         <input matInput type="text" formControlName="question">
-        <mat-error *ngIf="questions.at(i).get('question')?.invalid">{{ requiredArrayFieldErrorMessage(i, 'question', 'Question') }}</mat-error>
+        @if (questions.at(i).get('question')?.invalid) {
+        <mat-error>{{ requiredArrayFieldErrorMessage(i, 'question', 'Question') }}</mat-error>
+        }
       </mat-form-field>
       <mat-radio-group class="question-shift required-field" aria-label="Select an answer" formControlName="required">
         <label>Is this a required question?*</label>
@@ -18,25 +21,36 @@
       <mat-form-field class="block question-shift">
         <mat-label>Question Type</mat-label>
         <mat-select formControlName="requirementType" (selectionChange)="updateQuestion(i)">
-          <mat-option *ngFor="let reqType of reqTypes" [value]="reqType.value">{{ reqType.name }}</mat-option>
+          @for (reqType of reqTypes; track reqType) {
+          <mat-option [value]="reqType.value">{{ reqType.name }}</mat-option>
+          }
         </mat-select>
-        <mat-error *ngIf="questions.at(i).get('requirementType')?.invalid">{{ requiredArrayFieldErrorMessage(i, 'requirementType', 'Question Type') }}</mat-error>
+        @if (questions.at(i).get('requirementType')?.invalid) {
+        <mat-error>{{ requiredArrayFieldErrorMessage(i, 'requirementType', 'Question Type') }}</mat-error>
+        }
       </mat-form-field>
-      <div *ngIf="getQuestionChoices(i).enabled" formArrayName="choices">
+      @if (getQuestionChoices(i).enabled) {
+      <div formArrayName="choices">
         <h3 class="bold">Choices:</h3>
-        <div class="choice-entry" *ngFor="let choice of getQuestionChoices(i).controls; let j=index">
+        @for (choice of getQuestionChoices(i).controls; track choice; let j = $index) {
+        <div class="choice-entry">
           <mat-form-field class="choice-input choice-shift">
             <mat-label>Choice {{ j + 1 }}</mat-label>
             <input matInput type="text" [formControlName]="j">
-            <mat-error *ngIf="getQuestionChoices(i).at(j).invalid">{{ choiceErrorMessage(i, j, 'Choice ' + (j + 1)) }}</mat-error>
+            @if (getQuestionChoices(i).at(j).invalid) {
+            <mat-error>{{ choiceErrorMessage(i, j, 'Choice ' + (j + 1)) }}</mat-error>
+            }
           </mat-form-field>
           <button mat-stroked-button class="remove-choice" color="warn" type="button"
             (click)="removeChoice(i, j)">Remove</button>
         </div>
+        }
         <button mat-stroked-button class="choice-shift add-choice" type="button" (click)="addChoice(i)">Add
           Choice</button>
       </div>
+      }
     </div>
+    }
   </div>
   <div id="add-question">
     <button mat-raised-button color="primary" type="button" (click)="addQuestion()">Add Question</button>
