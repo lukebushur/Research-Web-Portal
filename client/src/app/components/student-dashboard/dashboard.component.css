@@ -89,3 +89,8 @@ table.projectDetails {
   grid-gap: 1em;
   margin: 20px;
 }
+
+.actions-container > button {
+  margin-right: 3%;
+  margin-left: 2%;
+}
