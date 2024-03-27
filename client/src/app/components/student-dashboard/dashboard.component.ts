@@ -50,8 +50,8 @@ export class StudentDashboard {
           });
         });
 
-        console.log(this.majorOpportunities);
-        console.log(this.majors);
+        // console.log(this.majorOpportunities);
+        // console.log(this.majors);
       },
       error: (error) => {
         console.error('Error getting opportunities', error);
