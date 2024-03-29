@@ -16,14 +16,18 @@ const reqFieldName = "cachedObjs"; //name for the field where cached objects wil
 //a subfield of the reqFieldName field by their objectids. This should not modify the object parameter, only store it
 const cacheObject = (req, objectid, object) => {
     let id;
+    if (!req[reqFieldName]) { req[reqFieldName] = {} } //This is to ensure req[reqFieldName] is not undefined
     if (typeof objectid !== "string" && objectid) {
         id = objectid.toString();
+        if (!id || typeof id !== "string") { return false; } //if the id was not able to be converted to string or does not exist, then return false;
+        let newObj = req[reqFieldName]; //grab the current object that stored the cached objs
+        newObj[id] = object; //add the new object by its id
+        req[reqFieldName] = newObj; //assign current object to the update object
+    } else {
+        let newObj = req[reqFieldName]; //grab the current object that stored the cached objs
+        newObj[objectid] = object; //add the new object by its id
+        req[reqFieldName] = newObj; //assign current object to the update object
     }
-    if (!id || typeof id !== "string") { return false; } //if the id was not able to be converted to string or does not exist, then return false;
-    if (!req[reqFieldName]) { req[reqFieldName] = {} } //This is to ensure req[reqFieldName] is not undefined
-    let newObj = req[reqFieldName]; //grab the current object that stored the cached objs
-    newObj[id] = object; //add the new object by its id
-    req[reqFieldName] = newObj; //assign current object to the update object
 
     return true; //return true, as it has been modified
 }

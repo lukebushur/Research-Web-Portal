@@ -11,24 +11,12 @@ h1 {
   margin: 10px auto;
 }
 
-h2 {
-  margin-bottom: 10px;
-}
-
 h1, h2, h3 {
   font-weight: 500;
 }
 
-.single-question-container {
-  margin-left: 6%;
-}
-
 .single-question-container p {
   margin-bottom: 10px;
-}
-
-.choice-value {
-  margin-left: 6%;
 }
 
 .filter-controls-container {
@@ -86,4 +74,29 @@ mat-slider {
 
 .align-end {
   float: right;
+}
+
+.mat-expansion-panel {
+  background-color: #eee;
+}
+
+.content-card {
+  margin-bottom: 3%;
+}
+
+.content-card > * {
+  margin-top: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.information > h2 {
+  margin-bottom: 1%;
+  margin-top: 1%;
+}
+
+.centerButtons {
+  display: flex;
+  justify-content: space-between;
+
 }

@@ -1,9 +1,10 @@
-<div class="table-container">
+<div id="filterDiv" class="table-container">
   <mat-form-field class="filter">
     <mat-label>Filter Table</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Matthew Im">
   </mat-form-field>
-
+</div>
+<div class="table-container">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     [class.mat-elevation-z16]="true">
 
