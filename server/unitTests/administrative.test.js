@@ -25,32 +25,28 @@ before(function (done) {
 });
 
 //Basic register request for the faculty, should return a success response
-describe('POST /api/register', () => {
+describe('POST /api/login', () => {
     after(async () => { //grabs the project record ID and draft record ID
-        let user = await User.findOne({ email: randomEmail });
+        let user = await User.findOne({ email: process.env.UNITTESTEMAIL });
         majorsLocation = user.universityLocation;
     });
 
-    it('should return a registration success response', (done) => {
+    it('should return a login success response', (done) => {
         chai.request(server)
-            .post('/api/register')
+            .post('/api/login')
             .send({
-                "email": randomEmail, "name": randomName, "password": randomPass,
-                "accountType": process.env.ADMIN, "universityLocation": "Test University"
+                "email": process.env.UNITTESTEMAIL, "password": process.env.UNITTESTPASS,
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
                 expect(res.body.success).to.have.property('status').to.equal(200);
-                expect(res.body.success).to.have.property('message').to.equal('REGISTER_SUCCESS');
+                expect(res.body.success).to.have.property('message').to.equal('LOGIN_SUCCESS');
 
                 expect(res.body.success).to.have.property('accessToken');
                 expect(res.body.success).to.have.property('refreshToken');
-                expect(res.body.success).to.have.property('user');
-                expect(res.body.success.user).to.have.property('id');
                 //Store access token and the id of the admin
                 admin_access_token = res.body.success.accessToken;
-                adminRecordID = res.body.success.user.id;
                 done();
             });
     });
