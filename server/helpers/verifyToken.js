@@ -12,15 +12,14 @@ const auth = (req, res, next) => {
                 req.user = JWT.verify(token, process.env.SECRET_ACCESS_TOKEN); 
                 next();
             } catch (error) { //catch errors in verifing the token and send error response
-                console.log(error);
-                res.status(401).json({ error: { status: 401, message: "INVALID_ACCESS_TOKEN" } });
+                return res.status(401).json({ error: { status: 401, message: "INVALID_ACCESS_TOKEN" } });
             }
 
         } else {
-            res.status(401).json({ error: { status: 401, message: "NO_TOKEN" } });
+            return res.status(401).json({ error: { status: 401, message: "NO_TOKEN" } });
         }
     } catch (error) {
-        res.status(401).json({ error: { status: 400, message: "ACCESS_DENIED" } });
+        return res.status(401).json({ error: { status: 401, message: "ACCESS_DENIED" } });
     }
 }
 

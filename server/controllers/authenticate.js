@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const JWT = require('jsonwebtoken');
-const { registerSchema, loginSchema, emailSchema } = require('../helpers/inputValidation/requestValidation');
+const { facultyRegisterSchema, studentRegisterSchema, loginSchema, emailSchema } = require('../helpers/inputValidation/requestValidation');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
@@ -72,8 +72,13 @@ const login = async (req, res) => {
 */
 const register = async (req, res) => {
     try {
-        const { error } = registerSchema.validate(req.body, { abortEarly: false });
-        if (error) { //Validates the request body against the registration schema, otherwise sends an error response
+        let error = {};
+        if (req.body.accountType == process.env.STUDENT) { error = studentRegisterSchema.validate(req.body, { abortEarly: false }); }
+        else if (req.body.accountType == process.env.FACULTY) { error = facultyRegisterSchema.validate(req.body, { abortEarly: false }); }
+        else if (req.body.accountType == process.env.INDUSTRY) { error = facultyRegisterSchema.validate(req.body, { abortEarly: false }); }
+        else if (req.body.accountType == process.env.ADMIN) { error.error = true; }
+        else { error.error = true; }
+        if (error.error) { //Validates the request body against the registration schema, otherwise sends an error response
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                 errors: error.details, original: error._original
             }));
@@ -186,6 +191,10 @@ const token = async (req, res) => {
                 return;
             }
         } catch (error) {
+            if (error.expiredAt) {
+                res.status(401).json(generateRes(false, 401, "EXPIRED_REFRESH_TOKEN", {}));
+                return;
+            }
             res.status(401).json(generateRes(false, 401, "INVALID_REFRESH_TOKEN", {}));
             return;
         }
@@ -307,6 +316,15 @@ const generateAccessToken = (id, email, uName) => {
     return JWT.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
 }
 
+const generateExpiredToken = (id, email, uName) => {
+    let items = {
+        _id: id,
+        email: email,
+        name: uName,
+    }
+    return JWT.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: "2s" })
+}
+
 const generateRefreshToken = (id, email, uName) => {
     let items = {
         _id: id,
@@ -314,6 +332,15 @@ const generateRefreshToken = (id, email, uName) => {
         name: uName,
     }
     return JWT.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
+}
+
+const generateExpiredRefreshToken = (id, email, uName) => {
+    let items = {
+        _id: id,
+        email: email,
+        name: uName,
+    }
+    return JWT.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: "2s" });
 }
 
 /*  This function handles the refresh token addition to the database. This function takes a user record and a refreshtoken and adds the refreshtoken to the 
@@ -366,5 +393,6 @@ const addRefreshToken = async (user, refreshToken) => {
 module.exports = {
     test, register, token,
     confirmEmailToken, login,
-    getAvailableMajors
+    getAvailableMajors, generateExpiredToken,
+    generateExpiredRefreshToken, addRefreshToken
 };
