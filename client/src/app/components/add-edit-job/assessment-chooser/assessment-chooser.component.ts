@@ -1,14 +1,31 @@
 import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
 import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-assessment-chooser',
   templateUrl: './assessment-chooser.component.html',
-  styleUrls: ['./assessment-chooser.component.css']
+  styleUrls: ['./assessment-chooser.component.css'],
+  standalone: true,
+  imports: [
+    MatDialogModule,
+    MatProgressBarModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatOptionModule,
+    MatButtonModule,
+    MatSnackBarModule
+  ]
 })
 export class AssessmentChooserComponent {
   assessments: AssessmentData[];
@@ -19,7 +36,7 @@ export class AssessmentChooserComponent {
     private assessmentsService: AssessmentsService,
     private snackbar: MatSnackBar,
   ) { }
-    
+
   ngOnInit(): void {
     this.assessmentsService.getAssessments().subscribe({
       next: (data: any) => {

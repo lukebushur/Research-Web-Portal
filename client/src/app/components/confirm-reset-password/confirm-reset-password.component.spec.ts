@@ -46,7 +46,6 @@ describe('ConfirmResetPasswordComponent', () => {
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
-      declarations: [ConfirmResetPasswordComponent],
       imports: [
         HttpClientTestingModule,
         MatFormFieldModule,
@@ -56,12 +55,13 @@ describe('ConfirmResetPasswordComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
+        ConfirmResetPasswordComponent,
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
         { provide: LoginService, useValue: loginService },
         { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: activatedRoute},
+        { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     });
     fixture = TestBed.createComponent(ConfirmResetPasswordComponent);

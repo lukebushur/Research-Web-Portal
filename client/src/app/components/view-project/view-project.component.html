@@ -1,4 +1,5 @@
-<div class="page-container" *ngIf="projectData !== -1" id="applicantData">
+@if (projectData !== -1) {
+<div class="page-container" id="applicantData">
   <mat-accordion class="align-headers" multi>
     <mat-expansion-panel #projectExpPanel expanded>
       <mat-expansion-panel-header>
@@ -18,10 +19,12 @@
           <mat-card-content class="information">
             <h2>Description:</h2>
             <p>{{ projectData.description }}</p>
-            <div *ngIf="projectData.responsibilities">
+            @if (projectData.responsibilities) {
+            <div>
               <h2>Responsibilities:</h2>
               <p>{{ projectData.responsibilities }}</p>
             </div>
+            }
             <h2>Posted:</h2>
             <p>{{ posted }}</p>
             <h2>Deadline:</h2>
@@ -32,7 +35,6 @@
         </mat-card>
       </div>
     </mat-expansion-panel>
-
     <mat-expansion-panel #questionsExpPanel expanded>
       <mat-expansion-panel-header>
         <mat-panel-title>Project Questions</mat-panel-title>
@@ -41,7 +43,8 @@
           <mat-icon>quiz</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <div *ngFor="let question of projectData.questions; index as i" class="questions-container">
+      @for (question of projectData.questions; track question; let i = $index) {
+      <div class="questions-container">
         <mat-card class="content-card">
           <mat-card-header>
             <mat-card-title>
@@ -49,29 +52,37 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-
             <div class="single-question-container">
               <p>{{ question.question }}</p>
               <h3>Required Question?</h3>
               <p>{{ question.required ? 'Yes' : 'No' }}</p>
               <h3>Question Type:</h3>
               <p>{{ displayRequirementType(question.requirementType) }}</p>
-              <div *ngIf="question.requirementType === 'radio button' || question.requirementType === 'check box'"
-                class="choices-container">
+              @if (question.requirementType === 'radio button' || question.requirementType === 'check box') {
+              <div class="choices-container">
                 <h3>Choices:</h3>
-                <div *ngFor="let choice of question.choices" colspan="1" rowspan="1" class="choice-value">
-                  <mat-radio-button *ngIf="question.requirementType === 'radio button'" disabled>{{ choice
+                @for (choice of question.choices; track choice) {
+                <div colspan="1" rowspan="1" class="choice-value">
+                  @if (question.requirementType === 'radio button') {
+                  <mat-radio-button disabled>{{ choice
                     }}</mat-radio-button>
-                  <mat-checkbox *ngIf="question.requirementType === 'check box'" disabled>{{ choice }}</mat-checkbox>
+                  }
+                  @if (question.requirementType === 'check box') {
+                  <mat-checkbox disabled>{{ choice }}</mat-checkbox>
+                  }
                 </div>
+                }
               </div>
+              }
             </div>
           </mat-card-content>
         </mat-card>
       </div>
+      }
     </mat-expansion-panel>
 
-    <div *ngIf="!isStudent">
+    @if (!isStudent) {
+    <div>
       <mat-expansion-panel #filterQuestionsPanel expanded>
         <mat-expansion-panel-header>
           <mat-panel-title>Filter Applicants By Questions</mat-panel-title>
@@ -88,27 +99,32 @@
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <div *ngIf="currentQuestionType === 'radio button' || currentQuestionType === 'check box'"
-                class="choices-container">
+              @if (currentQuestionType === 'radio button' || currentQuestionType === 'check box') {
+              <div class="choices-container">
                 <h3>Choices:</h3>
-                <div *ngFor="let choice of projectData.questions[currentQuestionIndex].choices" colspan="1" rowspan="1"
-                  class="choice-value">
-                  <mat-radio-button *ngIf="currentQuestionType === 'radio button'"
-                    [checked]="facultyAnswers[currentQuestionIndex] === choice" [value]="choice"
+                @for (choice of projectData.questions[currentQuestionIndex].choices; track choice) {
+                <div colspan="1" rowspan="1" class="choice-value">
+                  @if (currentQuestionType === 'radio button') {
+                  <mat-radio-button [checked]="facultyAnswers[currentQuestionIndex] === choice" [value]="choice"
                     (change)="updateChoiceAnswer($event)">
                     {{ choice }}</mat-radio-button>
-                  <mat-checkbox *ngIf="currentQuestionType === 'check box'"
-                    [checked]="facultyAnswers[currentQuestionIndex].includes(choice)"
+                  }
+                  @if (currentQuestionType === 'check box') {
+                  <mat-checkbox [checked]="facultyAnswers[currentQuestionIndex].includes(choice)"
                     (change)="updateChoiceAnswer($event)" [value]="choice">{{ choice }}</mat-checkbox>
+                  }
                 </div>
+                }
               </div>
-              <div *ngIf="currentQuestionType === 'text'">
+              }
+              @if (currentQuestionType === 'text') {
+              <div>
                 <mat-form-field appearance="outline" class="filter-field">
                   <mat-label>Filter</mat-label>
-                  <input matInput (keyup)="updateTextAnswer($event)"
-                    placeholder="Filter by question answer">
+                  <input matInput (keyup)="updateTextAnswer($event)" placeholder="Filter by question answer">
                 </mat-form-field>
               </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -196,15 +212,20 @@
               Status
             </th>
             <td mat-cell *matCellDef="let student">
-              <p *ngIf="student.status === 'Accept' || student.status === 'Reject'"
-                [class.accept-status-text]="student.status === 'Accept'"
+              @if (student.status === 'Accept' || student.status === 'Reject') {
+              <p [class.accept-status-text]="student.status === 'Accept'"
                 [class.reject-status-text]="student.status === 'Reject'" class="status-text">
                 {{student.status}}ed
               </p>
-              <button *ngIf="student.status === 'Pending'" mat-raised-button color="primary"
-                (click)="applicationDecision(student.application, 'Accept')" class="accept-button">Accept</button>
-              <button *ngIf="student.status === 'Pending'" mat-raised-button color="warn"
+              }
+              @if (student.status === 'Pending') {
+              <button mat-raised-button color="primary" (click)="applicationDecision(student.application, 'Accept')"
+                class="accept-button">Accept</button>
+              }
+              @if (student.status === 'Pending') {
+              <button mat-raised-button color="warn"
                 (click)="applicationDecision(student.application, 'Reject')">Reject</button>
+              }
             </td>
           </ng-container>
 
@@ -212,13 +233,15 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
       </mat-expansion-panel>
-
     </div>
-    <div *ngIf="isStudent">
+    } @else {
+    <div>
       <button mat-raised-button color="primary" (click)="apply()">{{ 'APPLY' }}</button>
       <button mat-stroked-button class="align-end" (click)="back()">{{ 'CANCEL' }}</button>
     </div>
+    }
   </mat-accordion>
 </div>
+}
 
 <app-spinner></app-spinner>

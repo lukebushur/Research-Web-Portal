@@ -16,8 +16,16 @@ describe('StudentApplicationsOverviewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StudentApplicationsOverviewComponent, SpinnerComponent],
-      imports: [HttpClientTestingModule, MatTableModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, BrowserAnimationsModule],
+      imports: [
+        HttpClientTestingModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        StudentApplicationsOverviewComponent,
+        SpinnerComponent,
+      ],
     });
     fixture = TestBed.createComponent(StudentApplicationsOverviewComponent);
     component = fixture.componentInstance;

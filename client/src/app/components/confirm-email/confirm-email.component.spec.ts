@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { AutoSignUpComponent } from './auto-sign-up-component.component';
+import { ConfirmEmailComponent } from './confirm-email.component';
 
-describe('AutoSignUpComponentComponent', () => {
-  let component: AutoSignUpComponent;
-  let fixture: ComponentFixture<AutoSignUpComponent>;
+describe('ConfirmEmailComponent', () => {
+  let component: ConfirmEmailComponent;
+  let fixture: ComponentFixture<ConfirmEmailComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AutoSignUpComponent],
+      declarations: [ConfirmEmailComponent],
       imports: [HttpClientTestingModule],
     });
-    fixture = TestBed.createComponent(AutoSignUpComponent);
+    fixture = TestBed.createComponent(ConfirmEmailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

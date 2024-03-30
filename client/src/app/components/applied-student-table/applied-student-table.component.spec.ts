@@ -13,8 +13,15 @@ describe('AppliedStudentTableComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AppliedStudentTableComponent],
-      imports: [HttpClientTestingModule, MatTableModule, MatPaginatorModule, BrowserAnimationsModule, MatFormFieldModule, MatInputModule],
+      imports: [
+        HttpClientTestingModule,
+        MatTableModule,
+        MatPaginatorModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        AppliedStudentTableComponent,
+      ],
     });
     fixture = TestBed.createComponent(AppliedStudentTableComponent);
     component = fixture.componentInstance;
