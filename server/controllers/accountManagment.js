@@ -173,14 +173,8 @@ const resetPasswordConfirm = async (req, res) => {
         if (user.security.passwordReset.token === req.body.passwordResetToken) {
             const { error } = resetPasswordSchema.validate(req.body.provisionalPassword);
             if (error) {
-                await User.updateOne({ email: req.body.email }, {
-                    $set: {
-                        'security.passwordReset.token': null,
-                        'security.passwordReset.provisionalPassword': null,
-                        'security.passwordReset.expiry': null,
-                    },
-                });
-                return res.status(401).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid provisional password." }));
+                await resetResetPasswordToken(req.body.email);
+                return res.status(401).json(generateRes(false, 401, "INPUT_ERROR", { details: "Invalid provisional password." }));
             }
 
             //Hash Password
@@ -201,21 +195,17 @@ const resetPasswordConfirm = async (req, res) => {
                 return;
             } else {
                 //Removing password reset token because expiry  
-                await User.updateOne({ email: req.body.email }, {
-                    $set: {
-                        'security.passwordReset.token': null,
-                        'security.passwordReset.provisionalPassword': null,
-                        'security.passwordReset.expiry': null,
-                    },
-                });
+                await resetResetPasswordToken(req.body.email);
                 res.status(401).json(generateRes(false, 401, "PWD_TOKEN_EXPIRED", {}));
                 return;
             }
         } else {
+            await resetResetPasswordToken(req.body.email);
             res.status(401).json(generateRes(false, 401, "INVALID_PWD_TOKEN", {}));
             return;
         }
     } catch (error) {
+        await resetResetPasswordToken(req.body.email);
         res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
         return;
     }
@@ -255,28 +245,17 @@ const changeEmailConfirm = async (req, res) => {
                     res.status(200).json(generateRes(true, 200, "EMAIL_RESET_SUCCESS", {}));
                     return;
                 } else { //Otherwise the email token is expired and the reset token fields should be reset
-                    await User.updateOne({ email: decodeAccessToken.email }, {
-                        $set: {
-                            'security.changeEmail.token': null,
-                            'security.changeEmail.provisionalEmail': null,
-                            'security.changeEmail.expiry': null,
-                        },
-                    });
+                    await resetEmailToken(decodeAccessToken.email);
                     res.status(401).json(generateRes(false, 401, "EMAIL_TOKEN_EXPIRED", {}));
                     return;
                 }
             } else {
+                await resetEmailToken(decodeAccessToken.email);
                 res.status(401).json(generateRes(false, 401, "INVALID_EMAIL_TOKEN", {}));
                 return;
             }
         } else { //if the email already exists remove the emailreset fields
-            await User.updateOne({ email: decodeAccessToken.email }, {
-                $set: {
-                    'security.changeEmail.token': null,
-                    'security.changeEmail.expiry': null,
-                    'security.changeEmail.provisionalEmail': null,
-                }
-            });
+            await resetEmailToken(decodeAccessToken.email);
             res.status(401).json(generateRes(false, 401, "INPUT_ERROR", { details: "Email already exists." }));
             return;
         }
@@ -390,8 +369,64 @@ const changeEmailConfirmation = async (user) => {
     });
 };
 
+const resetResetPasswordToken = async (targetEmail) => {
+    await User.updateOne({ email: targetEmail }, {
+        $set: {
+            'security.passwordReset.token': null,
+            'security.passwordReset.provisionalPassword': null,
+            'security.passwordReset.expiry': null,
+        },
+    });
+}
+
+const resetEmailToken = async (targetEmail) => {
+    await User.updateOne({ email: targetEmail }, {
+        $set: {
+            'security.changeEmail.token': null,
+            'security.changeEmail.expiry': null,
+            'security.changeEmail.provisionalEmail': null,
+        }
+    });
+}
+//Method used for unit testing expired tokens
+const generateExpiredPasswordToken = async (targetEmail) => {
+    const passwordResetToken = uuidv4();
+    const expiresIn = moment().subtract(1, 'seconds').toISOString();
+
+    //Update user with password token, expiry, and provisional password
+    await User.findOneAndUpdate({ email: targetEmail }, {
+        $set: {
+            'security.passwordReset': {
+                token: passwordResetToken,
+                expiry: expiresIn
+            },
+        },
+    });
+
+    return passwordResetToken;
+}
+//Method used for unit testing expired tokens
+const generateExpiredEmailToken = async (targetEmail, newEmail) => {
+    const changeEmailToken = uuidv4();
+    const expiresIn = moment().subtract(1, 'seconds').toISOString();
+
+    //update user with email token
+    await User.findOneAndUpdate({ email: targetEmail }, {
+        $set: {
+            'security.changeEmail': {
+                token: changeEmailToken,
+                provisionalEmail: newEmail,
+                expiry: expiresIn,
+            },
+        },
+    });
+
+    return changeEmailToken;
+}
+
 module.exports = {
     modifyAccount, changeEmail,
     changeEmailConfirm, resetPassword,
     resetPasswordConfirm, getAccountInfo,
+    generateExpiredEmailToken, generateExpiredPasswordToken
 };

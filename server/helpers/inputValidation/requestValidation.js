@@ -7,15 +7,26 @@ const Joi = require('joi');
 */
 
 //This schema is used to validate register http bodies
-const registerSchema = Joi.object({
+const facultyRegisterSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
     "name": Joi.string().min(2).max(25).required(),
     "password": Joi.string().min(10).max(255).required(),
     "accountType": Joi.number().required(),
+    "universityLocation": Joi.string().min(2).max(86).required(),
     "GPA": Joi.number().max(4).min(0),
     "Major": Joi.array().items(Joi.string()),
-    "universityLocation": Joi.string().min(2).max(86),
 });
+
+const studentRegisterSchema = Joi.object({
+    "email": Joi.string().min(6).max(254).email().required(),
+    "name": Joi.string().min(2).max(25).required(),
+    "password": Joi.string().min(10).max(255).required(),
+    "accountType": Joi.number().required(),
+    "GPA": Joi.number().max(4).min(0).required(),
+    "Major": Joi.array().items(Joi.string()).required(),
+    "universityLocation": Joi.string().min(2).max(86).required(),
+});
+
 //schema for validating new password for password reseting 
 const resetPasswordSchema = Joi.string().min(10).max(255).required();
 //This schema is used to validate login http bodies
@@ -123,7 +134,7 @@ const jobSchema = Joi.object({
 // TODO: Industry assessments schema
 
 module.exports = {
-    registerSchema, loginSchema,
+    studentRegisterSchema, facultyRegisterSchema, loginSchema,
     emailSchema, activeProjectSchema,
     deleteProjectSchema, appDecision,
     applicationSchema, adminMajors,
