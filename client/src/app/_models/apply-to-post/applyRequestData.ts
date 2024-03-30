@@ -1,4 +1,4 @@
-import { QuestionData } from "./questionData";
+import { QuestionData } from "src/app/_models/projects/questionData";
 
 export interface ApplyRequestData {
   projectID: string;

@@ -3,7 +3,7 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
-import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { QuestionData } from 'src/app/_models/projects/questionData';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';

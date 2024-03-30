@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
-import { QuestionData } from '../../_models/apply-to-post/questionData';
+import { QuestionData } from '../../_models/projects/questionData';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';

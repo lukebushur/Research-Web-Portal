@@ -5,7 +5,7 @@ import { StudentViewApplicationComponent } from '../student-view-application/stu
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
-import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { QuestionData } from 'src/app/_models/projects/questionData';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
