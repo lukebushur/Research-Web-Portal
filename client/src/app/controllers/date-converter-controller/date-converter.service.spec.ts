@@ -6,11 +6,22 @@ describe('DateConverterService', () => {
   let service: DateConverterService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DateConverterService);
+    service = new DateConverterService();
   });
 
-  it('should be created', () => {
+  it('should create', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('convertDate should return a string representation', () => {
+    let date = new Date(2000, 0, 1, 12, 34, 56);
+    
+    expect(service.convertDate(date)).toBe('1/1/2000 12:34:56 PM');
+  });
+
+  it('convertShortDate should return a string representation', () => {
+    let date = new Date(2000, 0, 1, 12, 34, 56);
+    
+    expect(service.convertShortDate(date)).toBe('1/1/2000');
   });
 });
