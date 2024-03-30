@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -23,6 +24,7 @@ describe('AuthService', () => {
         }
       ]
     });
+
     service = TestBed.inject(AuthService);
     localStorage.setItem('jwt-auth-token', "BackendIsBad")
   });
@@ -42,8 +44,15 @@ describe('AuthService', () => {
   })
 
   it('should attempt to fetch accountInfo', () => {
-    const res = service.getAccountInfo()
-    expect(httpSpy).toHaveBeenCalled()
+    service.getAccountInfo()
+    const args = httpSpy.calls.mostRecent().args;
+    expect(args[0]).toBe(`${environment.apiUrl}/accountManagement/getAccountInfo`)
+  })
+
+  it('should fetch majors from my university', () => {
+    service.getMajors('Test University')
+    const args = httpSpy.calls.mostRecent().args;
+    expect(args[0]).toBe(`${environment.apiUrl}/getMajors?university=${'Test University'}`)
   })
 
 });

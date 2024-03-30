@@ -27,7 +27,7 @@ describe('ProfileServiceService', () => {
 
   const authService = jasmine.createSpyObj('AuthService', ['getHeaders']);
   let authSpy = authService.getHeaders.and.returnValue(
-    of(ExampleHttpHeaders));
+    ExampleHttpHeaders);
 
   service = new ProfileServiceService(httpService, authService);
 
