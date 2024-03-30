@@ -17,12 +17,12 @@ describe('ViewProjectComponent', () => {
   let getDetailedApplicants: jasmine.Spy;
   let getProjectInfo: jasmine.Spy;
 
-  const authService = jasmine.createSpyObj('AuthService', ['getAccountInfo']);
-  getAuthSpy = authService.getAccountInfo.and.returnValue(of({success: {accountData: {userType: environment.facultyType}}}));
+  // const authService = jasmine.createSpyObj('AuthService', ['getAccountInfo']);
+  // getAuthSpy = authService.getAccountInfo.and.returnValue(of({success: {accountData: {userType: environment.facultyType}}}));
 
-  const facultyProjects = jasmine.createSpyObj('FacultyProjectService', ['getProject', 'detailedFetchApplicants', 'applicationDecide'])
-  getProjectInfo = facultyProjects.getProject.and.returnValue(of(getProjectInfoResponse));
-  getDetailedApplicants = facultyProjects.detailedFetchApplicants.and.returnValue(of(applicantResponse));
+  // const facultyProjects = jasmine.createSpyObj('FacultyProjectService', ['getProject', 'detailedFetchApplicants', 'applicationDecide'])
+  // getProjectInfo = facultyProjects.getProject.and.returnValue(of(getProjectInfoResponse));
+  // getDetailedApplicants = facultyProjects.detailedFetchApplicants.and.returnValue(of(applicantResponse));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
