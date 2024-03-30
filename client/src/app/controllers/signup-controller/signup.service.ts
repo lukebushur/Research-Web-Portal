@@ -8,13 +8,13 @@ import { AuthService } from '../auth-controller/auth.service';
   providedIn: 'root'
 })
 export class SignupService {
-  private registerUrl = `${environment.apiUrl}/register`;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   signup(data: any): Observable<any> {
     const headers = this.authService.getHeaders();
 
-    return this.http.post(this.registerUrl, data, { headers: headers });
+    return this.http.post(`${this.apiUrl}/register`, data, { headers: headers });
   }
 }
