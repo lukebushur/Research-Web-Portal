@@ -4,11 +4,27 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-student-view-application',
   templateUrl: './student-view-application.component.html',
-  styleUrls: ['./student-view-application.component.css']
+  styleUrls: ['./student-view-application.component.css'],
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    SpinnerComponent
+  ]
 })
 export class StudentViewApplicationComponent {
 

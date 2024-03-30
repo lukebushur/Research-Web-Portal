@@ -6,12 +6,25 @@ import { StudentDashboardService } from 'src/app/controllers/student-dashboard-c
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @Component({
   selector: 'app-student-applications-overview',
   templateUrl: './student-applications-overview.component.html',
-  styleUrls: ['./student-applications-overview.component.css']
+  styleUrls: ['./student-applications-overview.component.css'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    SpinnerComponent
+  ]
 })
 export class StudentApplicationsOverviewComponent {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }

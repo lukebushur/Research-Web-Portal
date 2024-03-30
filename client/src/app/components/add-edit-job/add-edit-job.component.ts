@@ -1,21 +1,47 @@
 import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { AddEditJobService } from 'src/app/controllers/add-edit-job-controller/add-edit-job.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobCardData } from '../industry-dashboard/job-card/job-card-data';
 import { Location } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AssessmentChooserComponent } from './assessment-chooser/assessment-chooser.component';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { CreateQuestionsFormComponent } from '../create-questions-form/create-questions-form.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-add-edit-job',
   templateUrl: './add-edit-job.component.html',
-  styleUrls: ['./add-edit-job.component.css']
+  styleUrls: ['./add-edit-job.component.css'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+    MatChipsModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    CreateQuestionsFormComponent,
+    MatSnackBarModule,
+    MatDialogModule
+  ]
 })
 export class AddEditJobComponent {
   initialJobData?: JobCardData;
@@ -174,7 +200,7 @@ export class AddEditJobComponent {
           question: new FormControl(question.question, [Validators.required]),
           requirementType: new FormControl(question.requirementType, [Validators.required]),
           required: new FormControl(question.required, [Validators.required]),
-          choices: (question.choices) 
+          choices: (question.choices)
             ? new FormArray((question.choices.map(choice => {
               return new FormControl(choice, [Validators.required]);
             })))
