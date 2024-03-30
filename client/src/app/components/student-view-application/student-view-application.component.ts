@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
-import { WebSocketService } from 'src/app/controllers/web-socket-controller/web-socket.service';
 
 @Component({
   selector: 'app-student-view-application',

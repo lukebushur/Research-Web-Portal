@@ -7,6 +7,7 @@ import { DateConverterService } from 'src/app/controllers/date-converter-control
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { WebSocketService } from 'src/app/controllers/web-socket-controller/web-socket.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -16,10 +17,20 @@ import { WebSocketService } from 'src/app/controllers/web-socket-controller/web-
 })
 export class StudentApplicationsOverviewComponent {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService,private webSocketService: WebSocketService) { }
+  private applicationSubscription: Subscription;
 
   ngOnInit() {
-    this.getStudentApplications();
-    this.webSocketService.connect();
+    //this.getStudentApplications();
+    //this.webSocketService.connect();
+    this.applicationSubscription = this.webSocketService.applicationSubject.subscribe((data) => {
+      this.handleNewApplication(data);
+    })
+  }
+
+  ngOnDestroy() {
+    if(this.applicationSubscription) {
+      this.applicationSubscription.unsubscribe();
+    }
   }
 
   @ViewChild(MatSort) sort: MatSort;
@@ -147,5 +158,10 @@ export class StudentApplicationsOverviewComponent {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  handleNewApplication(data: any) {
+    const newApplication = data;
+    this.applications.push(newApplication);
   }
 }
