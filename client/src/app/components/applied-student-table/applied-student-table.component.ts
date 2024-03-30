@@ -3,7 +3,6 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Simpl
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -11,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
 
 // Interface for applied students table entries
-export interface AppliedStudent {
+interface AppliedStudent {
   name: string;
   gpa: number;
   majors: string;
@@ -36,21 +35,28 @@ export interface AppliedStudent {
   ],
 })
 
-//This component is for the table of applied students for a faculty project, this constructor just sets up the necessary services
+// this component is for the table of applied students for a faculty project
 export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
+  // project selected on the faculty dashboard
   @Input() project: ProjectFetchData | null;
-  displayedColumns: string[] = ['name', 'gpa', 'majors', 'email', 'status']; //This array determines the displayedd columns in the table
+  // determines the displayedd columns in the table
+  displayedColumns: string[] = ['name', 'gpa', 'majors', 'email', 'status']; 
+  // list of currently applied students
   appliedStudents: AppliedStudent[];
-  dataSource: MatTableDataSource<AppliedStudent> //This object is used for the material table data source to allow for the table to work/sort etc
+  // DataSource used for the material table to enable easy filtering, sorting, and pagination
+  dataSource: MatTableDataSource<AppliedStudent>
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  // TODO: Add this
-  // @Output() applicationUpdateEvent = new EventEmitter<number>();
+  // event emitted whenever an application decision is made within the table
+  @Output() applicationUpdateEvent = new EventEmitter<number>();
 
-  constructor(private _liveAnnouncer: LiveAnnouncer, private tableData: TableDataSharingService,
-    private facultyProjectService: FacultyProjectService,) {
+  constructor(
+    private _liveAnnouncer: LiveAnnouncer,
+    private facultyProjectService: FacultyProjectService,
+  ) {
+      // initialize table data
       if (!this.project) {
         this.appliedStudents = [];
       } else {
@@ -70,15 +76,18 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
+    // set paginator and sort
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
+  // whenever the selected project changes, this method is called
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['project'].previousValue === changes['project'].currentValue) {
       return;
     }
 
+    // whenever the selected project changes, update the table data
     if (!this.project) {
       this.appliedStudents = [];
     } else {
@@ -97,6 +106,9 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
     this.dataSource.data = this.appliedStudents;
   }
 
+  // called whenever the user types in the filter text field
+  // filters the table, removing rows that do not match with the filter text
+  // field value
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -106,7 +118,7 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  // Announce the change in sort state for assistive technology
+  // announce the change in sort state for assistive technology
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -115,11 +127,14 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  //This method makes a request to the server updating the decision then fetches the applicants
-  applicationDecision(app: any, decision: string) {
-    this.facultyProjectService.applicationDecide(app, this.tableData.projectID, decision).subscribe({
-      next: (data) => {
-        //TODO: emit event for faculty dashbaord to refresh data
+  // make a request to the server, updating the decision and emitting an
+  // application update event
+  applicationDecision(app: string, decision: string) {
+    this.facultyProjectService.applicationDecide(app, this.project!.id, decision).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.applicationUpdateEvent.emit(this.project!.number);
+        }
       },
     });
   }

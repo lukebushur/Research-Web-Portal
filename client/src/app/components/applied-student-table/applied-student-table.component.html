@@ -5,8 +5,7 @@
   </mat-form-field>
 </div>
 <div class="table-container">
-  <!-- (matSortChange)="announceSortChange($event)" -->
-  <table mat-table [dataSource]="dataSource" matSort [class.mat-elevation-z16]="true">
+  <table mat-table [dataSource]="dataSource" matSort  (matSortChange)="announceSortChange($event)" class="mat-elevation-z16">
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">

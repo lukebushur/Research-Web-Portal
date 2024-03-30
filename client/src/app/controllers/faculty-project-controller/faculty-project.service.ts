@@ -130,7 +130,7 @@ export class FacultyProjectService {
 
   //This method either rejects or accepts the applicant based on which button the professor selected
   //it takes the decision and application id and then makes a server request to update the application status
-  applicationDecide(app: any, projectID: any, decision: String): Observable<any> {
+  applicationDecide(app: string, projectID: string, decision: string): Observable<any> {
     let decision2 = (decision === 'Accept') ? 'Accept' : 'Reject';
     let data = {
       "projectID": projectID,
