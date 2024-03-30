@@ -131,11 +131,7 @@ export class StudentApplicationsOverviewComponent {
   }
 
   modifyApplication(applicationID: string) {
-    // this.router.navigate(['/student/apply-to-project'], {
-    //   queryParams: {
-    //     applicationID: applicationID,
-    //   }
-    // });
+    this.router.navigate(['/student/view-application', applicationID]);
   }
 
   applyFilter(event: Event) {

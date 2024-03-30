@@ -91,4 +91,21 @@ export class StudentViewApplicationComponent {
       },
     });
   }
+
+  submitModifications(questions: any) {
+  
+    console.log(this.applicationID);
+    console.log(questions);
+
+    this.studentService.updateApplication(this.applicationID, questions).subscribe({
+      next: (data: any) => {
+        this.router.navigate(['/student/applications-overview'], {
+        });
+      },
+      error: (data: any) => {
+        console.log('Error updating application', data);
+      }
+    });
+  }
+  
 }

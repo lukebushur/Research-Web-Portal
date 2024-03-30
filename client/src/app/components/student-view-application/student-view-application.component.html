@@ -68,7 +68,7 @@
                     <div *ngFor="let question of questions; index as i" class="questions">
                         <label id="question-label">Question {{ i + 1 }}: {{ question.question }}</label>
                         <div *ngIf="question.requirementType === 'radio button'">
-                            <mat-radio-group [value]="question.answers![0]" disabled>
+                            <mat-radio-group [value]="question.answers![0]">
                                 <mat-radio-button *ngFor="let choice of question.choices; index as j"
                                     [value]="choice">{{
                                     choice }}</mat-radio-button>
@@ -77,14 +77,14 @@
                         <div *ngIf="question.requirementType === 'check box'" class="radio-group">
                             <section>
                                 <mat-checkbox *ngFor="let choice of question.choices; index as j"
-                                    [checked]="question.answers?.includes(choice)" disabled>{{ choice }}</mat-checkbox>
+                                    [checked]="question.answers?.includes(choice)">{{ choice }}</mat-checkbox>
                             </section>
                         </div>
                         <div *ngIf="question.requirementType === 'text'">
                             <div class="text-response">
                                 <mat-form-field>
                                     <mat-label>Answer</mat-label>
-                                    <textarea matInput disabled>{{ question.answers![0] }}</textarea>
+                                    <textarea matInput>{{ question.answers![0] }}</textarea>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -93,9 +93,8 @@
             </mat-card-content>
             <mat-card-actions class="buttons-container">
                 <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
-                    class="accept-button">Modify
-                    Application</button>
-                <button mat-raised-button color="warn" (click)="rescindApplication(applicationData._id)">Rescind
+                    class="accept-button" (click)="submitModifications(questions)">Submit Modifications</button>
+                <button mat-raised-button color="warn" (click)="rescindApplication(applicationData)">Rescind
                     Application</button>
             </mat-card-actions>
         </mat-card>
