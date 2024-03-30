@@ -18,16 +18,21 @@
   height: 100%;
 }
 
-.faculty-project-applied-student-list {
-    margin-top: 1%;
-} 
-
 .faculty-active-projects {
   overflow-x: auto;  /* Add this line to enable horizontal scrolling */
   white-space: nowrap; /* Prevent cards from wrapping to the next line */
 }
 
-.project-selection-button {
+.tab {
+  display: flex;
+  margin: 10px;
+}
+
+.faculty-project-applied-student-list {
+    margin-top: 1%;
+} 
+
+/* .project-selection-button {
   width: 150px;
 }
 
@@ -35,4 +40,4 @@
   width: 150px;
   border-radius: 25px;
   margin-top: 50px;
-}
+} */

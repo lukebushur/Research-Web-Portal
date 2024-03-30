@@ -1,11 +1,44 @@
 <div class="faculty-dashboard-page-container">
+  @if (projects$ | async; as projects) {
   <div class="faculty-dashboard-info">
-      <div class="faculty-active-projects">
-        <app-research-project-card></app-research-project-card>
-      </div>
-      <div class="faculty-project-applied-student-list">
-        <app-applied-student-table></app-applied-student-table>
-      </div>
+    <div class="faculty-active-projects">
+      <mat-tab-group>
+        <mat-tab label="Active Projects">
+          <div class="tab">
+            @for (project of projects.active; track $index) {
+            <app-research-project-card [project]="project"
+              [selected]="((selectedIndex$ | async) || -1) === project.number"
+              (click)="selectedIndex$.next(project.number); selectedProject$.next(project)"
+              (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="Draft Projects">
+          <div class="tab">
+            @for (project of projects.draft; track $index) {
+            <app-research-project-card [project]="project"
+              [selected]="((selectedIndex$ | async) || -1) === project.number"
+              (click)="selectedIndex$.next(project.number); selectedProject$.next(project)"
+              (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="Archived Projects">
+          <div class="tab">
+            @for (project of projects.archived; track $index) {
+            <app-research-project-card [project]="project"
+              [selected]="((selectedIndex$ | async) || -1) === project.number"
+              (click)="selectedIndex$.next(project.number); selectedProject$.next(project)"
+              (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
+            }
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div class="faculty-project-applied-student-list">
+      <app-applied-student-table [project]="selectedProject$ | async"></app-applied-student-table>
+    </div>
   </div>
+  }
   <app-spinner></app-spinner>
 </div>
