@@ -1,11 +1,17 @@
-.faculty-active-projects {
+.tab {
+  display: flex;
+  align-items: center;
+  margin: 5px;
   overflow-x: auto;  /* Add this line to enable horizontal scrolling */
   white-space: nowrap; /* Prevent cards from wrapping to the next line */
 }
 
-.tab {
-  display: flex;
-  margin: 5px;
+.add-icon-button {
+  margin: 0px 75px 0px 20px;
+}
+
+.add-icon {
+  transform: scale(1.25);
 }
 
 .create-button {

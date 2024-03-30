@@ -10,6 +10,8 @@ import { AsyncPipe } from '@angular/common';
 import { Application } from 'src/app/_models/applications/application';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // interface for containing the projects according to their types
 interface ProjectsObj {
@@ -30,6 +32,8 @@ interface ProjectsObj {
     MatTabsModule,
     AsyncPipe,
     MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
   ]
 })
 
