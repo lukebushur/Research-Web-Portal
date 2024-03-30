@@ -11,6 +11,10 @@
               (click)="updatedSelected(project.number, project);"
               (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
             }
+            <button mat-fab color="primary" matTooltip="Create New Project" aria-label="Create new project button"
+              type="button" (click)="createNewProject()" class="add-icon-button">
+              <mat-icon class="add-icon">add</mat-icon>
+            </button>
           </div>
         </mat-tab>
         <mat-tab label="Draft Projects">
@@ -21,6 +25,10 @@
               (click)="updatedSelected(project.number, project);"
               (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
             }
+            <button mat-fab color="primary" matTooltip="Create New Project" aria-label="Create new project button"
+              type="button" (click)="createNewProject()" class="add-icon-button">
+              <mat-icon class="add-icon">add</mat-icon>
+            </button>
           </div>
         </mat-tab>
         <mat-tab label="Archived Projects">
@@ -35,7 +43,8 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-    <button mat-raised-button color="primary" type="button" class="create-button" (click)="createNewProject()">Create New Project</button>
+    <button mat-raised-button color="primary" type="button" class="create-button" (click)="createNewProject()">Create
+      New Project</button>
     <div class="faculty-project-applied-student-list">
       <app-applied-student-table [project]="selectedProject$ | async"
         (applicationUpdateEvent)="fetchProjects($event)"></app-applied-student-table>
