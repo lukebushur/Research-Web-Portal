@@ -152,7 +152,7 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   dateToString(dateString: string): String {
-    let date = new Date(dateString);
+    let date = new Date(dateString.replace(/-/g, '\/').replace(/T.+/, ''));
     return this.dateService.convertShortDate(date);
   }
 
