@@ -8,7 +8,7 @@
             @for (project of projects.active; track $index) {
             <app-research-project-card [project]="project"
               [selected]="((selectedIndex$ | async) || -1) === project.number"
-              (click)="selectedIndex$.next(project.number); selectedProject$.next(project)"
+              (click)="updatedSelected(project.number, project);"
               (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
             }
           </div>
@@ -18,7 +18,7 @@
             @for (project of projects.draft; track $index) {
             <app-research-project-card [project]="project"
               [selected]="((selectedIndex$ | async) || -1) === project.number"
-              (click)="selectedIndex$.next(project.number); selectedProject$.next(project)"
+              (click)="updatedSelected(project.number, project);"
               (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
             }
           </div>
@@ -28,15 +28,17 @@
             @for (project of projects.archived; track $index) {
             <app-research-project-card [project]="project"
               [selected]="((selectedIndex$ | async) || -1) === project.number"
-              (click)="selectedIndex$.next(project.number); selectedProject$.next(project)"
+              (click)="updatedSelected(project.number, project);"
               (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
             }
           </div>
         </mat-tab>
       </mat-tab-group>
     </div>
+    <button mat-raised-button color="primary" type="button" class="create-button" (click)="createNewProject()">Create New Project</button>
     <div class="faculty-project-applied-student-list">
-      <app-applied-student-table [project]="selectedProject$ | async"></app-applied-student-table>
+      <app-applied-student-table [project]="selectedProject$ | async"
+        (applicationUpdateEvent)="fetchProjects($event)"></app-applied-student-table>
     </div>
   </div>
   }
