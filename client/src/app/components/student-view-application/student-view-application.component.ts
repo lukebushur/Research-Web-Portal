@@ -31,14 +31,12 @@ export class StudentViewApplicationComponent {
   applicationID: string;
   applicationData: any = -1;
   projectInfo: any = -1;
-  answersArray: any[] = [];
 
   questions: QuestionData[];
 
   posted: String;
   deadline: String;
   appliedDate: String;
-
 
   constructor(private studentService: StudentDashboardService, private route: ActivatedRoute, private dateConverter: DateConverterService,
     private router: Router) {
@@ -55,6 +53,7 @@ export class StudentViewApplicationComponent {
             this.projectInfo = data1.success.project;
             this.deadline = this.dateConverter.convertShortDate(this.projectInfo.deadline);
             this.posted = this.dateConverter.convertShortDate(this.projectInfo.posted);
+            // console.log('Project', this.projectInfo);
           },
           error: (error) => {
             this.projectInfo = null;
@@ -66,21 +65,8 @@ export class StudentViewApplicationComponent {
         this.applicationData = data.success.application;
         this.appliedDate = this.dateConverter.convertShortDate(this.applicationData.appliedDate);
         this.questions = this.applicationData.questions;
-
-        for (let i = 0; i < this.applicationData.questions.length; i++) {
-          if (this.applicationData.questions[i].requirementType == "text") {
-            this.answersArray.push(this.applicationData.questions[i].answers[0]);
-          } else {
-            let tempArr = [];
-            for (let j = 0; j < this.applicationData.questions[i].choices.length; j++) {
-              tempArr.push({
-                question: this.applicationData.questions[i].choices[j],
-                answer: this.getChoice(this.applicationData.questions[i], j)
-              });
-            }
-            this.answersArray.push(tempArr);
-          }
-        }
+        // console.log('Application', this.applicationData);
+        // console.log('Questions', this.questions);
       },
       error: (error) => {
         console.error('Error fetching projects', error);
@@ -88,12 +74,6 @@ export class StudentViewApplicationComponent {
         });
       },
     })
-  }
-
-  getChoice(answer: any, index: number) {
-    let index1 = answer.answers.findIndex((element: string) => element == answer.choices[index]);
-    if (index1 !== -1) { return true; }
-    return false;
   }
 
   rescindApplication(applicationID: string) {

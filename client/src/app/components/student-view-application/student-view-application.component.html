@@ -5,13 +5,13 @@
     <mat-card>
       <mat-card-content>
         <div class="infoDiv">
-          <p>Professor Name · {{projectInfo.professorName}}
+          <p>Professor Name: {{projectInfo.professorName}}
           <p>
-          <p>Created · {{posted}} </p>
+          <p>Created: {{posted}} </p>
         </div>
         <p id="description">{{projectInfo.description}}</p>
         <div class="align-between">
-          <p class="dateCapsule">Applied : {{appliedDate}}</p>
+          <p class="dateCapsule">Applied: {{appliedDate}}</p>
           <div class="align-together">
             <p>Status: </p>
             @if (applicationData.status === 'Accept' || applicationData.status === 'Reject') {
@@ -85,7 +85,7 @@
               </mat-radio-group>
             </div>
             }
-            @if (question.requirementType === 'check box') {
+            @else if (question.requirementType === 'check box') {
             <div class="radio-group">
               <section>
                 @for (choice of question.choices; track choice; let j = $index) {
@@ -94,12 +94,12 @@
               </section>
             </div>
             }
-            @if (question.requirementType === 'text') {
+            @else {
             <div>
               <div class="text-response">
                 <mat-form-field>
                   <mat-label>Answer</mat-label>
-                  <textarea matInput disabled>{{ question.answers![0] }}</textarea>
+                  <textarea matInput readonly>{{ question.answers![0] }}</textarea>
                 </mat-form-field>
               </div>
             </div>
