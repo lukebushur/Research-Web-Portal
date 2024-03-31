@@ -37,7 +37,7 @@ before(function (done) {
     setTimeout(done, 3000);
 });
 
-//Basic register request for the faculty, should return a success response
+//BE-REG-9 Basic register request for the faculty, should return a success response
 describe('POST /api/register', () => {
     it('should return a registration success response', (done) => {
         chai.request(server)

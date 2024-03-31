@@ -22,7 +22,7 @@ const registerMajorValidation = async (req, res, next) => {
                 return;
             }
             //Validate that the GPA is within normal bounds: 
-            if (req.body.GPA > 4 || req.body.gpa < 0) {
+            if (req.body.GPA > 4 || req.body.GPA < 0) {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "GPA out of bounds." }));
                 return;
             }
