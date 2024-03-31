@@ -17,7 +17,7 @@ router.get('/auth/test', [rateLimiter(50, 10), verifyToken], authController.test
 router.post('/register', registerMajorValidation, authController.register);
 
 //POST TOKEN
-router.post('/token', authController.token);
+router.post('/token', verifyToken, authController.token);
 
 //POST Confirm Email!
 router.post('/confirmEmail', verifyToken, authController.confirmEmailToken);
