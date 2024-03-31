@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-controller/auth.service';
-import { TableDataSharingService } from 'src/app/_helpers/table-data-sharing/table-data-sharing.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class FacultyProjectService {
   apiUrl = environment.apiUrl;
   private authToken: string | null = null;
 
-  constructor(private http: HttpClient, private authService: AuthService, private tableShare: TableDataSharingService) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   setAuthToken(token: string): void {
     this.authToken = token;
