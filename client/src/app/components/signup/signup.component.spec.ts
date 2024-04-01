@@ -57,13 +57,12 @@ describe('SignupComponent', () => {
     // This spy returns an observable with the value of testGetMajorResponse.
     const authService = jasmine.createSpyObj('AuthService', ['getMajors']);
     getMajorsSpy = authService.getMajors.and.returnValue(Promise.resolve(of(testGetMajorResponse)));
-    
+
     // Create a spy to 'replace' the call to Router's navigate function.
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate;
 
     TestBed.configureTestingModule({
-      declarations: [SignupComponent],
       imports: [
         HttpClientTestingModule,
         MatFormFieldModule,
@@ -73,6 +72,7 @@ describe('SignupComponent', () => {
         MatIconModule,
         MatProgressBarModule,
         BrowserAnimationsModule,
+        SignupComponent,
       ],
       // Use the spies defined in this test instead of the actual services
       providers: [
@@ -159,7 +159,7 @@ describe('SignupComponent', () => {
     const testName = 'First Last';
     const testEmail = 'testemail@email.com';
     const testPassword = '10characters';
-    
+
     // set valid text field values in the DOM
     const nameInput = await loader.getHarness(MatInputHarness.with({ selector: '#name' }));
     await nameInput.setValue(testName);

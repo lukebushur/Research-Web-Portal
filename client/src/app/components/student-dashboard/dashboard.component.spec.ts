@@ -14,7 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('StudentDashboard', () => {
   let component: StudentDashboard;
@@ -94,9 +94,16 @@ describe('StudentDashboard', () => {
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
-      declarations: [StudentDashboard],
-      imports: [HttpClientTestingModule, CdkAccordionModule,
-        SpinnerSubComponent, MatTableModule, MatCardModule, MatDividerModule, MatTooltipModule],
+      imports: [
+        HttpClientTestingModule,
+        CdkAccordionModule,
+        SpinnerSubComponent,
+        MatTableModule,
+        MatCardModule,
+        MatDividerModule,
+        MatTooltipModule,
+        StudentDashboard
+      ],
       providers: [
         { provide: Router, useValue: router },
         { provide: StudentDashboardService, useValue: studentDashboardService }

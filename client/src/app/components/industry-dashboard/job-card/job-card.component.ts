@@ -1,13 +1,25 @@
 import { Component, Input } from '@angular/core';
 import { JobCardData } from './job-card-data';
 import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-job-card',
   templateUrl: './job-card.component.html',
-  styleUrls: ['./job-card.component.css']
+  styleUrls: ['./job-card.component.css'],
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatTooltipModule,
+    MatDividerModule,
+    MatButtonModule,
+    MatSnackBarModule,
+  ]
 })
 export class JobCardComponent {
   @Input() jobData: JobCardData;

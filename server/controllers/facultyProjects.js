@@ -29,6 +29,8 @@ const createProject = async (req, res) => {
             const userId = user._id;
             let projectType = req.body.projectType;
 
+            if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; }
+            
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
             let projectObject
@@ -160,8 +162,8 @@ const deleteProject = async (req, res) => {
     projectID (String, the mongodb __id of the project object to delete from array) - projectType (String, the type of project to access)
 */
 const getProject = async (req, res) => {
-    try {
-        if (!req.body.projectType || !req.body.projectID) { return res.status(400).json(generateRes(400, "INPUT_ERROR", {})); }
+    try {                                                       
+        if (!req.body.projectType || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
@@ -832,7 +834,7 @@ const publishProject = async (req, res) => {
                     draftProjectRecord.save(),
                 ];
 
-                await Promise.all(promises).then((results) =>{
+                await Promise.all(promises).then((results) => {
                     newProjectList = results[0];
                 });
 

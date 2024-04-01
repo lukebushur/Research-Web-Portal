@@ -1,10 +1,13 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, Input, ViewChild } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 //Interface for an entries to the applied student table
 export interface AppliedStudentList {
@@ -21,6 +24,15 @@ export interface AppliedStudentList {
   selector: 'app-applied-student-table',
   templateUrl: './applied-student-table.component.html',
   styleUrls: ['./applied-student-table.component.css'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatButtonModule,
+    MatPaginatorModule
+  ],
 })
 
 //This component is for the table of applied students for a faculty project, this constructor just sets up the necessary services

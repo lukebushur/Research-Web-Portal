@@ -9,8 +9,7 @@ describe('SignoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SignoutComponent],
-      imports: [MatSnackBarModule],
+      imports: [MatSnackBarModule, SignoutComponent],
     });
     fixture = TestBed.createComponent(SignoutComponent);
     component = fixture.componentInstance;
