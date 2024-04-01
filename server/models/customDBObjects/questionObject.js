@@ -12,6 +12,9 @@ const mongoose = require('mongoose');
     The question, requirement, and required fields are required to be put into the database while choices and answers are not. This is because the question could be a non-mutiple choice question and the object
     could be storing the question in the faculty project records, where there shouldn't be any answers.
 */
+
+const acceptableRequirementTypes = ["text", "check box", "radio button"];
+
 class question extends mongoose.SchemaType {
     constructor(key, options) {
         super(key, options, 'questions');
@@ -32,7 +35,7 @@ class question extends mongoose.SchemaType {
             throw new Error('question type is required to have a nonempty .question field of type string. ' + val + ' does not.');
         }
         //verify that the question object has the required string 'requirementType' field
-        if (verifyStringField(val, 'requirementType')) {
+        if (verifyStringField(val, 'requirementType') && verifyRequirements(val['requirementType'])) {
             returnVal.requirementType = val.requirementType;
         } else {
             throw new Error('question type is required to have a nonempty .requirementType field of type string. ' + val + ' does not.');
@@ -78,6 +81,11 @@ function verifyStringField(value, fieldName) {
     } else {
         return true;
     }
+}
+
+function verifyRequirements(value) {
+    if (!acceptableRequirementTypes.includes(value)) { return false; }
+    return true;
 }
 
 /*  This helper method ensures that a field in an object is a boolean and not null, it is necessary to have seperate method for each necessary datatype 
