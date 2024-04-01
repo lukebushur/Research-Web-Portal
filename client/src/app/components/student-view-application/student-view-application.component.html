@@ -68,7 +68,7 @@
                     <div *ngFor="let question of questions; index as i" class="questions">
                         <label id="question-label">Question {{ i + 1 }}: {{ question.question }}</label>
                         <div *ngIf="question.requirementType === 'radio button'">
-                            <mat-radio-group [value]="question.answers![0]">
+                            <mat-radio-group (change)="updateRadio($event, i)" [value]="question.answers![0]">
                                 <mat-radio-button *ngFor="let choice of question.choices; index as j"
                                     [value]="choice">{{
                                     choice }}</mat-radio-button>
@@ -93,7 +93,7 @@
             </mat-card-content>
             <mat-card-actions class="buttons-container">
                 <button *ngIf="applicationData.status === 'Pending'" mat-raised-button color="primary"
-                    class="accept-button" (click)="submitModifications(questions)">Submit Modifications</button>
+                    class="accept-button" (click)="submitModifications()">Submit Modifications</button>
                 <button mat-raised-button color="warn" (click)="rescindApplication(applicationData)">Rescind
                     Application</button>
             </mat-card-actions>

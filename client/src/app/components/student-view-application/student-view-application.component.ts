@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-student-view-application',
@@ -92,20 +93,22 @@ export class StudentViewApplicationComponent {
     });
   }
 
-  submitModifications(questions: any) {
-  
+  submitModifications() {
     console.log(this.applicationID);
-    console.log(questions);
-
-    this.studentService.updateApplication(this.applicationID, questions).subscribe({
+    console.log(this.questions);
+  
+    this.studentService.updateApplication(this.applicationID, this.questions).subscribe({
       next: (data: any) => {
-        this.router.navigate(['/student/applications-overview'], {
-        });
+        this.router.navigate(['/student/applications-overview'], {});
       },
       error: (data: any) => {
         console.log('Error updating application', data);
       }
     });
+  }
+
+  updateRadio(event: any, index: number) {
+    console.log('Selected:', event.value, index);
   }
   
 }
