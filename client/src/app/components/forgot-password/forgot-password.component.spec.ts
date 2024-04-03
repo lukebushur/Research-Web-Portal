@@ -35,7 +35,6 @@ describe('ForgotPasswordComponent', () => {
     navigateSpy = router.navigate;
 
     TestBed.configureTestingModule({
-      declarations: [ForgotPasswordComponent],
       imports: [
         HttpClientTestingModule,
         MatSnackBarModule,
@@ -45,6 +44,7 @@ describe('ForgotPasswordComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
+        ForgotPasswordComponent,
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes

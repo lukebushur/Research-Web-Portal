@@ -12,6 +12,8 @@ import { Component } from '@angular/core';
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { };
 
+import { provideRouter } from '@angular/router';
+
 describe('StudentViewApplicationComponent', () => {
   let component: StudentViewApplicationComponent;
   let fixture: ComponentFixture<StudentViewApplicationComponent>;
@@ -63,14 +65,28 @@ describe('StudentViewApplicationComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [StudentViewApplicationComponent],
-      imports: [MatCardModule,
-                SpinnerSubComponent,
+      
+      imports: [
+        SpinnerSubComponent,
+        HttpClientTestingModule,
+        StudentViewApplicationComponent,
+        MatCardModule,
+        SpinnerSubComponent,
       ],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: StudentDashboardService, useValue: studentServiceSpyObj },
         { provide: DateConverterService, useValue: dateConverterServiceSpyObj },
-        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) }
+        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
+        provide StudentDashboardService,
+        {
+          provide: DateConverterService,
+          useValue: {}
+        },
+        {
+          provide: SearchProjectService,
+          useValue: {}
+        }
       ]
     }).compileComponents();
 

@@ -21,6 +21,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { };
 
+
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
   let fixture: ComponentFixture<ApplyToPostComponent>;
@@ -77,7 +78,7 @@ describe('ApplyToPostComponent', () => {
     }
   };
   let navigateSpy: jasmine.Spy;
-  
+
   beforeEach(() => {
     // Spy object for ApplyToPostService. Captures the provided function calls and returns
     // predictable mock data instead.
@@ -98,7 +99,6 @@ describe('ApplyToPostComponent', () => {
     const snackBarOpenSpy = snackBar.open;
 
     TestBed.configureTestingModule({
-      declarations: [ApplyToPostComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -113,6 +113,7 @@ describe('ApplyToPostComponent', () => {
         MatStepperModule,
         SpinnerSubComponent,
         MatCardModule,
+        ApplyToPostComponent
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
@@ -138,6 +139,116 @@ describe('ApplyToPostComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  })
+
+  // it('should create and initialize project data', () => {
+  //   expect(component).toBeTruthy();
+  //   // Expect the project to be set correctly after ngOnInit
+  //   expect(component.project).toEqual({
+  //     ...testProjectData,
+  //     questions: testQuestionData.map((question, i) => {
+  //       return {
+  //         ...question,
+  //         questionNum: i + 1,
+  //       };
+  //     }),
+  //   });
+  //   // Expect the form values to be set correctly after ngOnInit
+  //   expect(component.formQuestions.value).toEqual([
+  //     // Question 1 Answers
+  //     {
+  //       item1: false,
+  //       item2: false,
+  //       item3: false,
+  //     },
+  //     // Question 2 Answers
+  //     '',
+  //     // Question 3 Answers
+  //     '',
+  //   ]);
+  //   expect(getProjectInfoSpy).withContext('getProjectInfo() called with test data').toHaveBeenCalledOnceWith({
+  //     professorEmail: testProjectData.professorEmail,
+  //     projectID: testProjectData.projectID,
+  //   });
+  // });
+
+  // // it('getCheckBoxControl() should function correctly', () => {
+  // //   // valid function call
+  // //   expect(component.getCheckBoxControl(0, 'item1')!.value).toBeFalse();
+  // //   // invalid index (not a checkbox question)
+  // //   expect(component.getCheckBoxControl(1, 'item1')).toBeNull();
+  // //   // invalid value (not a possible choice)
+  // //   expect(component.getCheckBoxControl(0, 'none')).toBeUndefined();
+  // // });
+
+  // // it('requireCheckboxesToBeChecked() should function correctly', () => {
+  // //   const checkboxGroup = new FormGroup({
+  // //     'one': new FormControl(false),
+  // //     'two': new FormControl(false),
+  // //     'three': new FormControl(false),
+  // //   });
+  // //   const checkboxValidator = component.requireCheckboxesToBeChecked(1);
+  // //   let checkboxValidatorResult = checkboxValidator(checkboxGroup); 
+  // //   // should not pass validation, as all checkbox controls are false
+  // //   expect(checkboxValidatorResult).toEqual({ requireCheckboxesToBeChecked: true });
+  // //   checkboxGroup.get('two')?.setValue(true);
+  // //   checkboxValidatorResult = checkboxValidator(checkboxGroup); 
+  // //   // should pass validation, as at least one checkbox control is true
+  // //   expect(checkboxValidatorResult).toBeNull();
+  // // });
+
+  // // it('categoriesString() should function correctly', () => {
+  // //   expect(component.categoriesString()).toEqual('Technology, Documentation, Writing');
+  // // });
+
+  // // it('majorsString() should function correctly', () => {
+  // //   expect(component.majorsString()).toEqual('Computer Science, Theatre');
+  // // });
+
+  // it('formatGPA() should function correctly', () => {
+  //   expect(component.formatGPA()).toEqual('2.00');
+  // });
+
+  // it('dateToString() should function correctly', () => {
+  //   // no date given
+  //   const dateStr = component.project.deadline;
+  //   // with date given
+  //   expect(component.dateToString(dateStr)).toEqual('Mar 17, 2024');
+  // });
+
+  // it('submitApp() should function correctly', (done: DoneFn) => {
+  //   // set applyForm to valid values
+  //   component.formQuestions.at(0).get('item1')!.setValue(true);
+  //   component.formQuestions.at(0).get('item3')!.setValue(true);
+  //   component.formQuestions.at(1).setValue('option2');
+  //   component.formQuestions.at(2).setValue('Some test details.');
+  //   component.onSubmit();
+  //   fixture.detectChanges();
+
+  //   expect(createApplicationSpy).withContext('createApplication() called').toHaveBeenCalledOnceWith({
+  //     projectID: testProjectData.projectID,
+  //     professorEmail: testProjectData.professorEmail,
+  //     questions: [
+  //       {
+  //         ...testQuestionData[0],
+  //         answers: ['item1', 'item3'],
+  //       },
+  //       {
+  //         ...testQuestionData[1],
+  //         answers: ['option2'],
+  //       },
+  //       {
+  //         ...testQuestionData[2],
+  //         answers: ['Some test details.'],
+  //       },
+  //     ],
+  //   });
+  //   expect(navigateSpy).withContext('navigate() called').toHaveBeenCalledOnceWith(['/student/dashboard']);
+  //   done();
+  // });
 
   // it('HTML should include correct information', () => {
   //   fixture.detectChanges();

@@ -9,8 +9,7 @@ describe('ResearchProjectCardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ResearchProjectCardComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, ResearchProjectCardComponent],
     });
     fixture = TestBed.createComponent(ResearchProjectCardComponent);
     component = fixture.componentInstance;

@@ -1,14 +1,22 @@
 import { Component, OnInit, } from '@angular/core';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { TableDataSharingService } from '../../_helpers/table-data-sharing/table-data-sharing.service'
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { MatCardModule } from '@angular/material/card';
+import { DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-research-project-card',
   templateUrl: './research-project-card.component.html',
   styleUrls: ['./research-project-card.component.css'],
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    DatePipe
+  ],
 })
 export class ResearchProjectCardComponent implements OnInit {
   projects: any[] = []; //Array of projects, this will be used to generate each project card
@@ -91,7 +99,7 @@ export class ResearchProjectCardComponent implements OnInit {
     });
   }
 
-  
+
 
   // Define a method to get the project data based on the project type
   getProjectsByType(type: string, data: any): any[] {

@@ -1,15 +1,26 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 //Interface for an entries to the applied student table
 export interface DetailedAppliedStudentList {
@@ -25,7 +36,23 @@ export interface DetailedAppliedStudentList {
 @Component({
   selector: 'app-view-project',
   templateUrl: './view-project.component.html',
-  styleUrls: ['./view-project.component.css']
+  styleUrls: ['./view-project.component.css'],
+  standalone: true,
+  imports: [
+    MatExpansionModule,
+    MatIconModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatSliderModule,
+    MatTableModule,
+    MatSortModule,
+    MatButtonModule,
+    SpinnerComponent,
+    MatCardModule
+  ]
 })
 
 export class ViewProjectComponent implements OnInit, AfterViewInit {
