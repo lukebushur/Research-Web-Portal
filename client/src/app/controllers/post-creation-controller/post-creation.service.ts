@@ -17,4 +17,8 @@ export class PostCreationService {
 
     return this.http.post(`${this.apiUrl}/projects/createProject`, data, {headers: headers});
   }
+
+  getApiUrl(): string {
+    return this.apiUrl;
+  }
 }

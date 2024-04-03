@@ -151,10 +151,20 @@ export class ApplyToPostComponent implements OnInit {
     return (Math.round(this.project.GPA * 100) / 100).toFixed(2);
   }
 
-  dateToString(dateString: string): String {
-    let date = new Date(dateString.replace(/-/g, '\/').replace(/T.+/, ''));
-    return this.dateService.convertShortDate(date);
+  dateToString(dateString: string | undefined): string {
+    if (!dateString) {
+      return 'None';
+    }
+    const date = new Date(dateString.replace(/-/g, '\/').replace(/T.+/, ''));
+    const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+      weekday: undefined,
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+    return dateTimeFormat.format(date);
   }
+
 
   onSubmit() {
     const data: ApplyRequestData = {

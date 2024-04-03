@@ -1,20 +1,66 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import HttpClientTestingModule
-import { AuthService } from '../auth-controller/auth.service';
+import { TestBed, inject } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SearchProjectService } from './search-project.service';
+import { AuthService } from '../auth-controller/auth.service';
+import { environment } from 'src/environments/environment';
+import { SearchOptions } from 'src/app/_models/searchOptions';
 
 describe('SearchProjectService', () => {
   let service: SearchProjectService;
+  let httpMock: HttpTestingController;
+
+  const mockSearchOptions: SearchOptions = {
+    query: 'mock query',
+    majors: ['Computer Science', 'Electrical Engineering'],
+    GPA: 3.5,
+    npp: 5,
+    pageNum: 1,
+    posted: new Date('2024-01-01'),
+    deadline: new Date('2024-04-01')
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // Import HttpClientTestingModule
-      providers: [AuthService] // Provide any required dependencies, such as AuthService
+      imports: [HttpClientTestingModule],
+      providers: [SearchProjectService, AuthService]
     });
     service = TestBed.inject(SearchProjectService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  // it('should send search request with multiple parameters', () => {
+
+  //   };
+
+  //   service.searchProjectsMultipleParams(mockSearchOptions).subscribe();
+
+  //   const req = httpMock.expectOne(`${environment.apiUrl}/search/searchProjects`);
+  //   expect(req.request.method).toBe('GET');
+  //   expect(req.request.params.get('query')).toEqual('mock query');
+  //   expect(req.request.params.get('majors')).toEqual('Computer Science,Electrical Engineering');
+  //   expect(req.request.params.get('GPA')).toEqual('3.5');
+  //   expect(req.request.params.get('npp')).toEqual('true');
+  //   expect(req.request.params.get('pageNum')).toEqual('1');
+  //   expect(req.request.params.get('posted')).toEqual('2024-01-01T00:00:00.000Z');
+  //   expect(req.request.params.get('deadline')).toEqual('2024-01-01T00:00:00.000Z');
+  //   req.flush({});
+  // });
+
+  it('should send search request with single parameter', () => {
+    const queryParams = '?query=mock%20query&majors=Computer%20Science';
+    
+    service.searchProjectsSingleParams(queryParams).subscribe();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/search/searchProjects` + queryParams);
+    expect(req.request.method).toBe('GET');
+    req.flush({});
   });
 });
