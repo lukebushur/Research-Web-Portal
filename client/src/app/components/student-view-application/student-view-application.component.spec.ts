@@ -78,15 +78,6 @@ describe('StudentViewApplicationComponent', () => {
         { provide: StudentDashboardService, useValue: studentServiceSpyObj },
         { provide: DateConverterService, useValue: dateConverterServiceSpyObj },
         { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
-        provide StudentDashboardService,
-        {
-          provide: DateConverterService,
-          useValue: {}
-        },
-        {
-          provide: SearchProjectService,
-          useValue: {}
-        }
       ]
     }).compileComponents();
 
