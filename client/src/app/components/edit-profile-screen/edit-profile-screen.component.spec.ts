@@ -1,5 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { EditProfileScreenComponent } from './edit-profile-screen.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,27 +6,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProfileServiceService } from 'src/app/controllers/profile-controller/profile-service.service';
+import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
 
 describe('EditProfileScreenComponent', () => {
   let component: EditProfileScreenComponent;
   let fixture: ComponentFixture<EditProfileScreenComponent>;
-  let getMajorsSpy: jasmine.Spy;
-  const getMajorsResponse = {
-    success: {
-      majors: [
-        'Computer Science',
-        'Mathematics',
-        'Biology',
-      ]
-    }
-  };
+  let profileService: ProfileServiceService;
+  let router: Router;
 
-  beforeEach(() => {
-    const authService = jasmine.createSpyObj('AuthService', ['getMajors']);
-    getMajorsSpy = authService.getMajors.and.returnValue(Promise.resolve(of(getMajorsResponse)));
-
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
@@ -40,15 +30,42 @@ describe('EditProfileScreenComponent', () => {
         EditProfileScreenComponent,
       ],
       providers: [
-        { provide: AuthService, useValue: authService },
-      ]
-    });
+        ProfileServiceService,
+        Router,
+      ],
+      teardown: {destroyAfterEach: false},
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(EditProfileScreenComponent);
     component = fixture.componentInstance;
+    profileService = TestBed.inject(ProfileServiceService);
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should pass GPA validators with valid input', () => {
+    const testGpa = component.editProfileForm.get('GPA');
+    testGpa?.setValue('3.5');
+    expect(testGpa?.valid).toBeTruthy();
+  });
+
+  it('should not pass GPA validators with invalid input', () => {
+    const testGpa = component.editProfileForm.get('GPA');
+    testGpa?.setValue('5');
+    expect(testGpa?.valid).toBeFalsy();
+  });
+
+  it('should navigate to email reset screen when reset password button is clicked', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    component.navigateToEmailResetScreen();
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot-password']);
+  });
+
 });
