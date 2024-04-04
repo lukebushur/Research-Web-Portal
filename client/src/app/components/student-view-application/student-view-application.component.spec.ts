@@ -64,13 +64,12 @@ describe('StudentViewApplicationComponent', () => {
     const dateConverterServiceSpyObj = jasmine.createSpyObj('DateConverterService', ['convertShortDate']);
 
     TestBed.configureTestingModule({
-      declarations: [StudentViewApplicationComponent],
-      
-      imports: [
+         imports: [
         SpinnerSubComponent,
         StudentViewApplicationComponent,
         MatCardModule,
         SpinnerSubComponent,
+        StudentViewApplicationComponent,
       ],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
