@@ -1,30 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatStepperModule } from '@angular/material/stepper';
+import { Component } from '@angular/core';
 import { ApplyToPostComponent } from './apply-to-post.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { ProjectData } from 'src/app/_models/apply-to-post/projectData';
-import { of } from 'rxjs';
-import { MatCardModule } from '@angular/material/card';
+import { of, throwError } from 'rxjs';
 import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
-import { Component } from '@angular/core';
+import {MatCardModule} from '@angular/material/card';
+import {MatStepperModule} from '@angular/material/stepper';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
+class SpinnerSubComponent { };
+
 
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
   let fixture: ComponentFixture<ApplyToPostComponent>;
   let getProjectInfoSpy: jasmine.Spy;
+  let snackBar: MatSnackBar;
+  let snackBarOpenSpy: jasmine.Spy;
+
   // Mock question data
   const testQuestionData: QuestionData[] = [
     {
@@ -53,7 +57,7 @@ describe('ApplyToPostComponent', () => {
     projectName: 'Test Project',
     description: 'This project is for testing.',
     categories: ['Technology', 'Documentation', 'Writing'],
-    GPA: 2.0,
+    GPA: 2.00,
     majors: ['Computer Science', 'Theatre'],
     posted: 'Fri Feb 16 2024',
     deadline: 'Sun Mar 17 2024',
@@ -90,11 +94,13 @@ describe('ApplyToPostComponent', () => {
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
+    // Mock MatSnackBar
+    const snackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
+    const snackBarOpenSpy = snackBar.open;
+
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        MatCardModule,
-        SpinnerSubComponent,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
@@ -105,6 +111,8 @@ describe('ApplyToPostComponent', () => {
         MatListModule,
         BrowserAnimationsModule,
         MatStepperModule,
+        SpinnerSubComponent,
+        MatCardModule,
         ApplyToPostComponent
       ],
       providers: [
@@ -123,6 +131,8 @@ describe('ApplyToPostComponent', () => {
             }
           }
         },
+        // Provide the MatSnackBar service
+        { provide: MatSnackBar, useValue: jasmine.createSpyObj('MatSnackBar', ['open']) },
       ],
     });
     fixture = TestBed.createComponent(ApplyToPostComponent);
@@ -241,20 +251,85 @@ describe('ApplyToPostComponent', () => {
   // });
 
   // it('HTML should include correct information', () => {
+  //   fixture.detectChanges();
   //   const applyElement: HTMLElement = fixture.nativeElement;
-  //   expect(applyElement.textContent).toContain('Test Project');
-  //   expect(applyElement.textContent).toContain('2.00');
+    
+  //   // Test project name and GPA
+  //   expect(applyElement.textContent).toContain(testProjectData.projectName);
+  //   expect(applyElement.textContent).toContain(component.formatGPA());
+    
+  //   // Test checkboxes
   //   const checkBoxes = applyElement.querySelectorAll('mat-checkbox');
-  //   expect(checkBoxes.length).toEqual(3);
-  //   for (let i = 0; i < checkBoxes.length; i++) {
-  //     expect(checkBoxes.item(i).textContent).toEqual('item' + (i + 1));
+  //   if (testQuestionData[0] && testQuestionData[0].choices && checkBoxes) {
+  //     expect(checkBoxes.length).toEqual(testQuestionData[0].choices.length);
+  //     testQuestionData[0].choices.forEach((choice, index) => {
+  //       const checkBox = checkBoxes.item(index);
+  //       if (checkBox) {
+  //         expect(checkBox.textContent?.trim()).toEqual(choice);
+  //       }
+  //     });
   //   }
+    
+  //   // Test radio buttons
   //   const radioButtons = applyElement.querySelectorAll('mat-radio-button');
-  //   expect(radioButtons.length).toEqual(3);
-  //   for (let i = 0; i < radioButtons.length; i++) {
-  //     expect(radioButtons.item(i).textContent).toEqual('option' + (i + 1));      
+  //   if (testQuestionData[1] && testQuestionData[1].choices && radioButtons) {
+  //     expect(radioButtons.length).toEqual(testQuestionData[1].choices.length);
+  //     testQuestionData[1].choices.forEach((choice, index) => {
+  //       const radioButton = radioButtons.item(index);
+  //       if (radioButton) {
+  //         expect(radioButton.textContent?.trim()).toEqual(choice);
+  //       }
+  //     });
   //   }
+    
+  //   // Test text area
   //   const textArea = applyElement.querySelector('textarea');
   //   expect(textArea).toBeTruthy();
+  // }); 
+   
+
+  it('should correctly initialize formQuestions array', () => {
+    expect(component.formQuestions).toBeDefined();
+    expect(component.formQuestions instanceof FormArray).toBeTruthy();
+    expect(component.formQuestions.length).toBe(3); // Assuming 3 questions in test data
+  });
+
+  it('should correctly set up checkbox form controls', () => {
+    const checkBoxControls = component.formQuestions.at(0) as FormGroup;
+    expect(checkBoxControls.controls['item1']).toBeDefined();
+    expect(checkBoxControls.controls['item2']).toBeDefined();
+    expect(checkBoxControls.controls['item3']).toBeDefined();
+    // Add more assertions as needed...
+  });
+
+  it('should correctly format GPA', () => {
+    // Assuming GPA is 2.0 in test data
+    expect(component.formatGPA()).toBe('2.00');
+  });
+
+  it('should correctly convert date to string', () => {
+    const dateStr = '2024-03-17T00:00:01.000Z'; // Assuming deadline in ISO format
+    expect(component.dateToString(dateStr)).toBe('Mar 17, 2024');
+  });
+  
+  // it('should correctly navigate to student app overview after successful submission', async () => {
+  //   // spyOn(component, 'onSubmit').and.callThrough();
+  //   const snackBarOpenSpy = spyOn(component['snackBar'], 'open').and.stub(); // Stubbing MatSnackBar open method
+  
+  //   await component.onSubmit(); // Assuming onSubmit returns a Promise
+    
+  //   // Since onSubmit should have been called and awaited, we check if navigate and snackBar open methods were called after that
+  //   expect(navigateSpy).toHaveBeenCalledWith(['/student/applications-overview']);
+  //   expect(snackBarOpenSpy).toHaveBeenCalledWith('Application submitted!', 'Close', { duration: 5000 });
+  // });
+  
+
+  // it('should handle error if application submission fails', () => {
+  //   spyOn(component, 'onSubmit').and.callThrough();
+  //   createApplicationSpy.and.returnValue(throwError('Error submitting application.'));
+  //   component.onSubmit();
+  //   fixture.whenStable().then(() => {
+  //     expect(snackBarOpenSpy).toHaveBeenCalledWith('Error submitting application.', 'Close', { duration: 5000 });
+  //   });
   // });
 });

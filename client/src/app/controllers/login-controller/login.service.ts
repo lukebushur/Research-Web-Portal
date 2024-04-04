@@ -26,4 +26,9 @@ export class LoginService {
   confirmResetPassword(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/accountManagement/confirmResetPassword`, data);
   }
+
+  getApiUrl(): string {
+    return this.apiUrl;
+  }
 }
+
