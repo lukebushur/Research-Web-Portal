@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentViewApplicationComponent } from './student-view-application.component';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentViewApplicationComponent } from '../student-view-application/student-view-application.component';
 import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { of, throwError } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
