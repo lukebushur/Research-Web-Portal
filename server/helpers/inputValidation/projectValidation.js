@@ -28,6 +28,7 @@ const applicationValidation = async (req, res, next) => {
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email); //Get student record
+        if (student && student.userType.Type == process.env.FACULTY) { return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {})); }
 
         const project = await getProject(req, res, student);
         if (!project) { return; } //If the project is not found, then a response has already been generated, so the function should end
@@ -57,6 +58,11 @@ const applicationValidation = async (req, res, next) => {
                     res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Answers do not align with the choices" }));
                     return;
                 }
+            }
+
+            if(facultyQuestions[i].question !== studentQuestions[i].question) {
+                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Questions do not match what is in the database" }));
+                    return;
             }
         }
 
