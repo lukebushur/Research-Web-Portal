@@ -68,7 +68,6 @@ describe('StudentViewApplicationComponent', () => {
       
       imports: [
         SpinnerSubComponent,
-        HttpClientTestingModule,
         StudentViewApplicationComponent,
         MatCardModule,
         SpinnerSubComponent,
