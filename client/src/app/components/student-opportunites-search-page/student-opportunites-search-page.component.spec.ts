@@ -14,10 +14,12 @@ import { MatNativeDateModule } from '@angular/material/core'; // Import MatNativ
 import { Component } from '@angular/core';
 import { of } from 'rxjs';
 import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
-import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
-import { ProjectData } from 'src/app/_models/apply-to-post/projectData';
+
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
+import { QuestionData } from 'src/app/_models/projects/questionData';
+import { ProjectData } from 'src/app/_models/projects/projectData';
+
 
 const testQuestionData: QuestionData[] = [
   {
