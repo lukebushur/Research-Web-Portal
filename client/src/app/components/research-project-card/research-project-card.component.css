@@ -1,14 +1,7 @@
-.project-card-container {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  min-width: 20%;
-  /* Prevent cards from wrapping to the next line */
-}
-
 .project-card {
   margin: 10px 20px;
   padding: 10px;
-  min-width: fit-content;
+  width: fit-content;
   flex-grow: 1;
 }
 
@@ -72,14 +65,4 @@
 ::-webkit-scrollbar-corner {
   background: transparent;
   /* Background color of the scrollbar corner */
-}
-
-.faculty-project-selection-column {
-  margin-left: 20px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.project-selection-button {
-  margin-right: 20px;
 }
