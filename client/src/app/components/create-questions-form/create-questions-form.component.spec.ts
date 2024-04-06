@@ -36,4 +36,11 @@ describe('CreateQuestionsFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show an error when you don\'t put anything in the question field', () => {
+    // get the question html input by the formgroup question
+    const questionHtml = fixture.debugElement.query((element) => element.attributes['formControlName'] === 'question');
+    questionHtml.nativeElement.value = '';
+    console.log(questionHtml);
+  });
 });

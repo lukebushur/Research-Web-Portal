@@ -62,4 +62,31 @@ describe('PostProjectComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // Set all form values via HTML to random data and check and see if they were properly submitted
+  it('should check for data', () => {
+    // Should set the HTML values to random data
+    const title = 'test title';
+    const description = 'test description';
+    const category = 'test category';
+    const startDate = new Date();
+    const endDate = new Date();
+    const questions = [{ question: 'test question', type: 'text', required: true}];
+
+    // Now we want to set the form values to the random data
+    component.projectForm.setValue({
+      details: {
+        projectName: title,
+        description: description,
+        majors: null,
+        categories: [],
+        deadline: endDate,
+        responsibilities: null,
+        GPA: null
+      },
+      questionsGroup: {
+        questions: questions
+      }
+    });
+  })
+
 });
