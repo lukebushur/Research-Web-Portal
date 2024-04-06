@@ -178,7 +178,7 @@
               Name
             </th>
             <td mat-cell *matCellDef="let student">
-              <a href="/faculty/application/{{student.project}}/{{student.application}}">{{ student.name }} </a>
+              <a mat-raised-button href="/faculty/application/{{student.project}}/{{student.application}}">🔎 View {{ student.name }} </a>
             </td>
           </ng-container>
 
