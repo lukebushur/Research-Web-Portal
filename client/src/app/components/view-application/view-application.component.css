@@ -47,6 +47,13 @@ table {
 }
 
 .pending-status-text {
-    color: gray;
-    border: 1px solid gray;
+    color: white;
+    background-color: goldenrod;
+    border: 1px solid goldenrod;
+    margin-left: 5px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-around;
 }
