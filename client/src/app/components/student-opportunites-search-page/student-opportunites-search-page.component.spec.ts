@@ -142,7 +142,9 @@ describe('StudentOpportunitesSearchPageComponent', () => {
   });
 
   it('should call searchProjectsMultipleParams', () => {
-    component.searchQuery = 'Test Project'
+    if (component.searchForm) {
+      component.searchForm.get("projectName")?.setValue('Test Project');
+    }
     searchProjects.searchProjectsMultipleParams.calls.reset();
     component.searchProjects();
     expect(searchSpy).toHaveBeenCalledOnceWith({

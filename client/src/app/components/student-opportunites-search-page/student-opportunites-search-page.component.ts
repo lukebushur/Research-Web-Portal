@@ -6,7 +6,7 @@ import { SearchOptions } from 'src/app/_models/searchOptions';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
@@ -40,16 +40,20 @@ import { SpinnerComponent } from '../spinner/spinner.component';
     MatOptionModule,
     MatCardModule,
     MatDividerModule,
-    SpinnerComponent
+    SpinnerComponent,
+    ReactiveFormsModule
   ]
 })
 export class StudentOpportunitesSearchPageComponent {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private search: SearchProjectService) { }
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private search: SearchProjectService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.getStudentInfo();
   }
 
+  searchForm = this.fb.group({
+    projectName: ['', [Validators.required]],
+  });
 
   announcer = inject(LiveAnnouncer);
 
@@ -71,7 +75,7 @@ export class StudentOpportunitesSearchPageComponent {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   opportunities: any[] = [];
-  searchQuery: string = ''; // Variable to hold search query
+  //searchQuery: string = ''; // Variable to hold search query
   filteredOpportunities: any[] = [];
   availableMajors: string[] = [];
   selectedMajors: string[] = [];
@@ -87,7 +91,7 @@ export class StudentOpportunitesSearchPageComponent {
     searchOpts.posted = this.posted ? this.posted : undefined;
     searchOpts.GPA = this.GPA ? this.GPA : undefined;
     searchOpts.majors = this.majors ? this.majors : undefined;
-    searchOpts.query = this.searchQuery ? this.searchQuery : undefined;
+    searchOpts.query = this.searchForm.get('projectName')?.value ?? undefined;
 
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
