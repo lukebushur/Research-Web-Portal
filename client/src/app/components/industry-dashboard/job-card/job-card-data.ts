@@ -1,4 +1,4 @@
-import { QuestionData } from "src/app/_models/apply-to-post/questionData";
+import { QuestionData } from "src/app/_models/projects/questionData";
 
 export interface JobCardData {
   _id: string;

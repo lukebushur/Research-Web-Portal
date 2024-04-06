@@ -1,60 +1,24 @@
-<div class="faculty-project-selection-column">
-  <button mat-raised-button class="project-selection-button" (click)="updateProjectType('active')">Active
-    Projects</button>
-  <button mat-raised-button class="project-selection-button" (click)="updateProjectType('archived')">Archived
-    Projects</button>
-  <button mat-raised-button class="project-selection-button" (click)="updateProjectType('draft')">Project
-    Drafts</button>
-  <button mat-raised-button color="primary" class="project-creation-button" (click)="redirectToCreateProject()">Create
-    Project</button>
-</div>
-<div class="scroll-x">
-  @for (project of projects; track project) {
-  <div class="project-card-container">
-    @if (project.projectType === currentProjectType) {
-    <mat-card class="project-card" [id]="'p'+project.number"
-      [style.background-color]="selected[project.number] ? '#EBD99F' : 'white'"
-      (click)="regenerateTableData(project, project.number)">
-      <mat-card-title class="project-card-title"><a href="/faculty/view-project/{{project.projectType}}/{{project.id}}">
-          {{ project.projectName }}
-        </a>
-      </mat-card-title>
-      <mat-card-content>
-        <!-- <p>Professor: {{ project.professor }}</p> -->
-        <p>Posted Date: {{ project.posted }}</p>
-        <p>Application Deadline: {{ project.deadline }}</p>
-        <p>
-          Number of Applicants: {{project.numApp}}
-        </p>
-        <!-- <p>{{project._id}}</p> -->
-      </mat-card-content>
-      <mat-card-actions>
-        <div class="action-buttons">
-          @if (project.projectType === 'active') {
-          <button mat-raised-button color="primary" (click)="buttonUpdateProject(project.id,'Active')">Update</button>
-          }
-          @if (project.projectType === 'active') {
-          <button mat-raised-button color="accent" (click)="buttonArchiveProject(project.id)">Archive</button>
-          }
-          @if (project.projectType === 'active') {
-          <button mat-raised-button color="warn" (click)="buttonDeleteProject(project.id,'Active')">Delete</button>
-          }
-          @if (project.projectType === 'archived') {
-          <button mat-raised-button color="warn" (click)="buttonDeleteProject(project.id,'Archived')">Delete</button>
-          }
-          @if (project.projectType === 'draft') {
-          <button mat-raised-button color="primary" (click)="buttonUpdateProject(project.id,'Draft')">Update</button>
-          }
-          @if (project.projectType === 'draft') {
-          <button mat-raised-button color="accent">Publish</button>
-          }
-          @if (project.projectType === 'draft') {
-          <button mat-raised-button color="warn" (click)="buttonDeleteProject(project.id,'Draft')">Delete</button>
-          }
-        </div>
-      </mat-card-actions>
-    </mat-card>
-    }
-  </div>
-  }
-</div>
+<mat-card class="project-card" [style.background-color]="selected ? '#ebd99f' : 'white'">
+  <mat-card-title class="project-card-title">
+    <a routerLink="/faculty/view-project/{{ project.projectType }}/{{ project.id }}">
+      {{ project.projectName }}
+    </a>
+  </mat-card-title>
+  <mat-card-content>
+    <p>Posted Date: {{ dateConverter.convertShortDate(project.posted) }}</p>
+    <p>Application Deadline: {{ dateConverter.convertShortDate(project.deadline) }}</p>
+    <p>Number of Applicants: {{ project.numApp }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <div class="action-buttons">
+      @if (project.projectType === 'active') {
+      <button mat-raised-button color="primary" (click)="buttonUpdateProject()">Update</button>
+      <button mat-raised-button color="accent" (click)="buttonArchiveProject()">Archive</button>
+      } @else if (project.projectType === 'draft') {
+      <button mat-raised-button color="primary" (click)="buttonUpdateProject()">Update</button>
+      <button mat-raised-button color="accent">Publish</button>
+      }
+      <button mat-raised-button color="warn" (click)="buttonDeleteProject()">Delete</button>
+    </div>
+  </mat-card-actions>
+</mat-card>
