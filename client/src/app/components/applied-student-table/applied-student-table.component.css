@@ -76,7 +76,12 @@
     /* Background color of the scrollbar corner */
 }
 
-#filterDiv > mat-form-field {
-    width : 24%;
+#filter-div {
+    display: flex;
+    justify-content: center;
+}
+
+#filter-div > mat-form-field {
+    width: 400px;
     position: sticky;
 }

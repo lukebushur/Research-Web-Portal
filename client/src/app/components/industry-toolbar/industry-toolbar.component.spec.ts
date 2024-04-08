@@ -7,7 +7,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatListModule } from '@angular/material/list';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatToolbarHarness } from '@angular/material/toolbar/testing';
@@ -15,6 +14,7 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatSidenavContainerHarness, MatSidenavHarness } from '@angular/material/sidenav/testing';
 import { MatNavListHarness } from '@angular/material/list/testing';
 import { MatMenuHarness } from '@angular/material/menu/testing';
+import { provideRouter } from '@angular/router';
 
 describe('IndustryToolbarComponent', () => {
   let component: IndustryToolbarComponent;
@@ -23,16 +23,16 @@ describe('IndustryToolbarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [IndustryToolbarComponent],
       imports: [
         MatToolbarModule,
         MatIconModule,
         MatMenuModule,
         MatSidenavModule,
         MatListModule,
-        RouterTestingModule,
         BrowserAnimationsModule,
+        IndustryToolbarComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(IndustryToolbarComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);

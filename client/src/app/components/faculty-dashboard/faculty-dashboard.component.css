@@ -1,38 +1,23 @@
-.example-full-width {
-  width: 300px;
-  text-align: center;
+.tab {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  overflow-x: auto;  /* Add this line to enable horizontal scrolling */
+  white-space: nowrap; /* Prevent cards from wrapping to the next line */
 }
 
-.faculty-search-form {
-  display: flex;
-  justify-content: center;
+.add-icon-button {
+  margin: 0px 75px 0px 20px;
 }
 
-.faculty-project-selection-column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  float: left;
-  border: 1px solid #000;
-  height: 100%;
+.add-icon {
+  transform: scale(1.25);
+}
+
+.create-button {
+  margin: 20px 0px 0px 25px;
 }
 
 .faculty-project-applied-student-list {
     margin-top: 1%;
 } 
-
-.faculty-active-projects {
-  overflow-x: auto;  /* Add this line to enable horizontal scrolling */
-  white-space: nowrap; /* Prevent cards from wrapping to the next line */
-}
-
-.project-selection-button {
-  width: 150px;
-}
-
-.project-creation-button {
-  width: 150px;
-  border-radius: 25px;
-  margin-top: 50px;
-}

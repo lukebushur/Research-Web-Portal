@@ -5,7 +5,6 @@ import { PostProjectComponent } from './posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Component, Input } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -14,12 +13,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { QuestionData } from 'src/app/_models/projects/questionData';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 @Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
 class CreateQuestionsFormStubComponent {
@@ -33,12 +33,10 @@ describe('PostProjectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PostProjectComponent],
       imports: [
         SpinnerSubComponent,
         CreateQuestionsFormStubComponent,
         HttpClientTestingModule,
-        RouterTestingModule,
         MatDialogModule,
         MatRadioModule,
         MatSnackBarModule,
@@ -51,7 +49,9 @@ describe('PostProjectComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
+        PostProjectComponent,
       ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(PostProjectComponent);
     component = fixture.componentInstance;

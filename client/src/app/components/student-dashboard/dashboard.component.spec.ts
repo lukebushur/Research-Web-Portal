@@ -7,14 +7,14 @@ import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
-import { ProjectData } from 'src/app/_models/apply-to-post/projectData';
-import { QuestionData } from 'src/app/_models/apply-to-post/questionData';
+import { ProjectData } from 'src/app/_models/projects/projectData';
+import { QuestionData } from 'src/app/_models/projects/questionData';
 import { MatCard, MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 describe('StudentDashboard', () => {
   let component: StudentDashboard;
@@ -94,9 +94,16 @@ describe('StudentDashboard', () => {
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
-      declarations: [StudentDashboard],
-      imports: [HttpClientTestingModule, CdkAccordionModule,
-        SpinnerSubComponent, MatTableModule, MatCardModule, MatDividerModule, MatTooltipModule],
+      imports: [
+        HttpClientTestingModule,
+        CdkAccordionModule,
+        SpinnerSubComponent,
+        MatTableModule,
+        MatCardModule,
+        MatDividerModule,
+        MatTooltipModule,
+        StudentDashboard
+      ],
       providers: [
         { provide: Router, useValue: router },
         { provide: StudentDashboardService, useValue: studentDashboardService }

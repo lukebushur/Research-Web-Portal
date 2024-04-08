@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ViewApplicationComponent } from './view-application.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('ViewApplicationComponent', () => {
   let component: ViewApplicationComponent;
@@ -10,8 +10,11 @@ describe('ViewApplicationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewApplicationComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule,],
+      imports: [
+        HttpClientTestingModule,
+        ViewApplicationComponent,
+      ],
+      providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(ViewApplicationComponent);
     component = fixture.componentInstance;

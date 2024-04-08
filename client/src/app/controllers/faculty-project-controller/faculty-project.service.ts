@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-controller/auth.service';
-import { TableDataSharingService } from 'src/app/_helpers/table-data-sharing/table-data-sharing.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class FacultyProjectService {
   apiUrl = environment.apiUrl;
   private authToken: string | null = null;
 
-  constructor(private http: HttpClient, private authService: AuthService, private tableShare: TableDataSharingService) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   setAuthToken(token: string): void {
     this.authToken = token;
@@ -130,7 +129,7 @@ export class FacultyProjectService {
 
   //This method either rejects or accepts the applicant based on which button the professor selected
   //it takes the decision and application id and then makes a server request to update the application status
-  applicationDecide(app: any, projectID: any, decision: String): Observable<any> {
+  applicationDecide(app: string, projectID: string, decision: string): Observable<any> {
     let decision2 = (decision === 'Accept') ? 'Accept' : 'Reject';
     let data = {
       "projectID": projectID,

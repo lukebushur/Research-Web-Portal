@@ -34,7 +34,6 @@ describe('JobCardComponent', () => {
     deleteJobSpy = industryDashboardService.deleteJob.and.returnValue(of(testDeleteJobsResponse));
 
     TestBed.configureTestingModule({
-      declarations: [JobCardComponent],
       imports: [
         HttpClientTestingModule,
         MatCardModule,
@@ -43,6 +42,7 @@ describe('JobCardComponent', () => {
         MatSnackBarModule,
         BrowserAnimationsModule,
         MatTooltipModule,
+        JobCardComponent,
       ],
       providers: [
         { provide: IndustryDashboardService, useValue: industryDashboardService }
