@@ -22,7 +22,6 @@ export class EmailService {
     this.http.post(`${this.apiUrl}/api/confirmEmail`, data, { headers: authToken })
       .subscribe(
         (response: any) => {
-          console.log('Email confirmation successful!', response);
           // TODO: Update this to the correct route
           // this.router.navigate(['/home']);
         },
