@@ -1,7 +1,7 @@
 <div [formGroup]="questionsGroup">
   <div formArrayName="questions">
     @for (question of questions.controls; track question; let i = $index) {
-    <div [formGroupName]="i">
+    <div [formGroupName]="i" id="Question{{i}}">
       <div class="question-heading">
         <h2 class="bold">Question {{ i + 1 }}:</h2>
         <button mat-stroked-button color="warn" type="button" (click)="removeQuestion(i)">Remove Question</button>
