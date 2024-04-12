@@ -179,7 +179,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     await component.searchProjects();
     fixture.detectChanges();
     const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent.trim() === 'Apply'
+      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent.trim() === 'APPLY'
     )
     buttonDebugElement.triggerEventHandler('click', null)
     expect(routerSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {

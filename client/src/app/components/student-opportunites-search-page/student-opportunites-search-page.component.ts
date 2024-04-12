@@ -97,7 +97,6 @@ export class StudentOpportunitesSearchPageComponent {
 
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
-        console.log(data);
         this.allOpportunities = data.success.results;
         this.filteredOpportunities = this.allOpportunities;
         this.opportunities = this.filteredOpportunities.slice(0, this.npp);
