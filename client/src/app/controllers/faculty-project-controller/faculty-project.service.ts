@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-controller/auth.service';
 
@@ -10,21 +9,8 @@ import { AuthService } from '../auth-controller/auth.service';
 })
 export class FacultyProjectService {
   apiUrl = environment.apiUrl;
-  private authToken: string | null = null;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
-
-  setAuthToken(token: string): void {
-    this.authToken = token;
-  }
-
-  login(email: string, password: string): Observable<any> {
-    const loginData = { email, password };
-    return this.http.post(`${this.apiUrl}/login`, loginData)
-      .pipe(
-        tap((response: any) => this.setAuthToken(response?.success?.accessToken))
-      );
-  }
 
   getProjects(): Observable<any> {
     const headers = this.authService.getHeaders();
@@ -79,46 +65,12 @@ export class FacultyProjectService {
     return this.http.put(`${this.apiUrl}/projects/publishDraft`, data, { headers });
   }
 
-  demoGetActiveProjects(): Observable<any> {
-    const headers = this.authService.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers });
-  }
-
-  demoGetStudentData(): Observable<any> {
-    const headers = this.authService.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/applications/demoGetStudentInfo`, { headers });
-  }
-
-  demoApplyToPosition(email: String, projectId: String, GPA: Number): Observable<any> {
-    const headers = this.authService.getHeaders();
-    const data = { "projectID": projectId, "professorEmail": email, "gpa": GPA };
-
-    return this.http.post(`${this.apiUrl}/applications/createApplication`, data, { headers });
-  }
-
-  demoFetchApplicants(projectId: String): Observable<any> {
-    const headers = this.authService.getHeaders();
-    const data = { "projectID": projectId };
-
-    return this.http.post(`${this.apiUrl}/projects/getApplicants`, data, { headers: headers });
-  }
-
   //This method access the backend API for fetching a single applicant. It requires the id of the project and the application id
   fetchApplicant(projectID: String, applicantionID: String): Observable<any> {
     const headers = this.authService.getHeaders();
     const data = { "projectID": projectID, "applicationID": applicantionID }
 
     return this.http.post(`${this.apiUrl}/projects/getApplicant`, data, { headers: headers });
-  }
-
-  demoAutoCreateAccount(data: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-
-    return this.http.post(`${this.apiUrl}/register`, data, { headers: headers });
   }
 
   applicationDecision(data: any): Observable<any> {
@@ -136,7 +88,6 @@ export class FacultyProjectService {
       "applicationID": app,
       "decision": decision2
     }
-    console.log(app + " " + projectID);
     return this.applicationDecision(data); //Use the other method that creates a server request to update decision.
   }
 

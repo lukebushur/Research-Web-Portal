@@ -4,7 +4,7 @@ import { ActivatedRoute, CanActivateFn, Router, RouterStateSnapshot, UrlTree } f
 import { AuthGuard } from './auth.guard';
 import { Observable, of } from 'rxjs';
 
-describe('authGuard', () => {
+describe('AuthGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
     TestBed.runInInjectionContext(() => AuthGuard(...guardParameters));
 
