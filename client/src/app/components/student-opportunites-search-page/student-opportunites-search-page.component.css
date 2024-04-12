@@ -141,3 +141,7 @@
 #page-selector>button {
   width: 20%;
 }
+
+.title {
+  font-weight: 500;
+}

@@ -1,12 +1,14 @@
 <div class="student-opportunites-search-page-container">
   <div class="header" style="padding: 0.5em 0.5em;">
-    <h1>Opportunites Search</h1>
+    <h1 class="title">Opportunites Search</h1>
     <!-- Search input for opportunities -->
-    <div class="searchBar">
-      <mat-form-field>
-        <input matInput type="text" placeholder="Search..." [(ngModel)]="searchQuery">
-      </mat-form-field>
-      <button mat-raised-button (click)="onSearchButtonClick()" id="searchButton">Search</button>
+    <div class="searchForm">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearchButtonClick()">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Search..." formControlName="projectName">
+        </mat-form-field>
+        <!-- <button mat-raised-button (click)="onSearchButtonClick()" id="searchButton">Search</button> -->
+      </form>
     </div>
   </div>
   <mat-accordion class="oppExpansion">
