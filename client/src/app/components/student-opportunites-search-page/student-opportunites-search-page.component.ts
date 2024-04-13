@@ -71,6 +71,8 @@ export class StudentOpportunitesSearchPageComponent {
   resultFilterString: string = "";
   allUnChecked: boolean = true;
 
+  gpaPattern = /^[0-3](\.[0-9]{1,2})?$|^4(\.[0]{1,2})?$/;
+
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
