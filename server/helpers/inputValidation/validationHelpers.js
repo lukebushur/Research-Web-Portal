@@ -15,23 +15,20 @@ const getProject = async (req, res, student) => {
     if (!projectID) { //If no projectID, then the projectID has to be accessed through database records - This code block handles the updateApplication Route
         let applicationID = hasField(req.body, "applicationID").applicationID; //Check if applicationID exists
         if (!applicationID) { //If not then there is not way to access the questions for validation
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
-            return;
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {}));
         }
 
         //This sequence of network operations are unavoidable as each relies on a previous operation to complete successfully
         const applications = await retrieveOrCacheApplications(req, student.userType.studentApplications); //Get Application record from student information
         if (!applications) {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid applicationID." }));
-            return;
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid applicationID." }));
         }
         const application = applications.applications.find(y => y.id === req.body.applicationID); //Get specific application
         projectID = application.opportunityId; //get the projectID from the application
 
         const projects = await retrieveOrCacheProjects(req, application.opportunityRecordId); //Get project records
         if (!projects) { //If the project record doesn't exist, there is an error with the request
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "The project the application is associated with no longer exists." }));
-            return;
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "The project the application is associated with no longer exists." }));
         }
         const project = projects.projects.find(x => x.id === projectID.toString()); //get the specific project
 
@@ -40,16 +37,20 @@ const getProject = async (req, res, student) => {
 
         const faculty = await retrieveOrCacheUsers(req, professorEmail.professorEmail); //Get faculty account record
         if (!faculty) {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid professorEmail address." }));
-            return
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid professorEmail address." }));
         }
         const projects = await retrieveOrCacheProjects(req, faculty.userType.FacultyProjects.Active); //Get the activeProject record because students can only apply to active projects
 
         const project = projects.projects.find(x => x.id === projectID.projectID); //get the specific project because projectID exists
-        return project;
-    }
+        if(project) {return project}
 
-    return null;
+        return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "No professorEmail address." }));
+    } else if (!professorEmail) {
+        if (!faculty) {
+            return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "No professorEmail address." }));
+        }
+    }
+    return res.status(500).json(generateRes(false, 400, "SERVER_ERROR", {}));
 }
 
 /*  This helper function grabs the project object from the HTTP request and returns it. It takes the express request object and express response object as parameters.

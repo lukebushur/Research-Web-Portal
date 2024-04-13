@@ -30,7 +30,6 @@ const createProject = async (req, res) => {
             let projectType = req.body.projectType;
 
             if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; }
-
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
             let projectObject
