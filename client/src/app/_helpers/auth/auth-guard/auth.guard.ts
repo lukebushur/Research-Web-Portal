@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActiva
 @Injectable({
   providedIn: 'root',
 })
-class AuthenticationService {
+class AuthenticationGuardService {
 
   constructor(private router: Router) { }
 
@@ -24,5 +24,5 @@ class AuthenticationService {
 }
 
 export const AuthGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
-  return inject(AuthenticationService).canActivate(route, state);
+  return inject(AuthenticationGuardService).canActivate(route, state);
 }

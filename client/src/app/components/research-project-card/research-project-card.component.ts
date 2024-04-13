@@ -42,13 +42,11 @@ export class ResearchProjectCardComponent {
   // server and emit a project update event
   buttonDeleteProject(): void {
     const upperProjectType = this.project.projectType.charAt(0).toUpperCase() + this.project.projectType.slice(1);
-    console.log(`Deleting project with ID ${this.project.id} and type ${upperProjectType}`);
     this.facultyProjectService.deleteProject(this.project.id, upperProjectType).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.projectUpdateEvent.emit(this.project.number);
         }
-        console.log('Delete response:', data);
       },
       error: (error) => {
         console.error('Error deleting project:', error);
@@ -64,7 +62,6 @@ export class ResearchProjectCardComponent {
         if (data.success) {
           this.projectUpdateEvent.emit(this.project.number);
         }
-        console.log('Archive response:', data);
       },
       error: (error) => {
         console.error('Error archiving project:', error);
