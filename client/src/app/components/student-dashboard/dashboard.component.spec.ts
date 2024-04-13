@@ -134,7 +134,7 @@ describe('StudentDashboard', () => {
 
   it('should navigate you to search projects', () => {
     const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'Search opportunities'
+      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'Search projects'
     )
     buttonDebugElement.triggerEventHandler('click', null)
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/search-projects']);

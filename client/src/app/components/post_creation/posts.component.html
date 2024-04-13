@@ -1,7 +1,7 @@
 <div class="page-container">
   <div class="heading">
     <h1>{{ isCreateProject ? 'Create Project Post' : 'Update Project Post' }}</h1>
-    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button type="button" (click)="cancel()">Cancel</button>
   </div>
   <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
     <mat-stepper class="item-to-center">
