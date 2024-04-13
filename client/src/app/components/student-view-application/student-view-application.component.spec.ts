@@ -109,47 +109,4 @@ describe('StudentViewApplicationComponent', () => {
       expect(routerSpy.navigate).toHaveBeenCalledWith(['/student/applications-overview'], Object({  }));
     });
   });
-
-  // describe('getChoice', () => {
-  //   it('should return true if answer matches choice', () => {
-  //     const answer = { answers: ['choice1'] };
-  //     const index = 0;
-  //     const result = component.getChoice(answer, index);
-  //     expect(result).toBeTruthy();
-  //   });
-
-  //   it('should return false if answer does not match choice', () => {
-  //     const answer = { answers: ['other-choice'] };
-  //     const index = 0;
-  //     const result = component.getChoice(answer, index);
-  //     expect(result).toBeFalsy();
-  //   });
-  // });
-
-  // describe('rescindApplication', () => {
-  //   it('should navigate to applications overview after rescinding application', () => {
-  //     const mockApplicationData = {
-  //       success: {
-  //         application: { /* Your mock application data */ }
-  //       }
-  //     };    
-  //     // Set up spy to return mock application data
-  //     studentServiceSpy.getApplication.and.returnValue(of(mockApplicationData));    
-  //     // Trigger ngOnInit
-  //     component.ngOnInit();    
-  //     // Expect application data to be set
-  //     expect(component.applicationData).toEqual(mockApplicationData.success.application);    
-  //     // Call rescindApplication
-  //     component.rescindApplication('applicationID');    
-  //     // Expect Router.navigate to be called with the correct argument
-  //     expect(routerSpy.navigate).toHaveBeenCalledWith(['/student/applications-overview']);
-  //   });
-
-  //   it('should log error if rescinding application fails', () => {
-  //     studentServiceSpy.deleteApplication.and.returnValue(throwError('Error rescinding application'));
-  //     spyOn(console, 'log');
-  //     component.rescindApplication('mock-application-id');
-  //     expect(console.log).toHaveBeenCalledWith('Error', jasmine.any(String));
-  //   });
-  // });
 });
