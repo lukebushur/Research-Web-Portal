@@ -41,10 +41,10 @@ const testQuestionData: QuestionData[] = [
   },
 ];
 // Mock project data
-const testProjectData: ProjectData = {
+const testProjectData = {
   professorName: 'Test Professor',
   professorEmail: 'testemail@email.com',
-  projectID: '123',
+  _id: '123',
   projectName: 'Test Project',
   description: 'This project is for testing.',
   categories: ['Technology', 'Documentation', 'Writing'],
@@ -186,7 +186,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
       queryParams: {
         profName: testProjectData.professorName,
         profEmail: testProjectData.professorEmail,
-        oppId: testProjectData.projectID,
+        oppId: testProjectData._id,
       }
     });
   })
