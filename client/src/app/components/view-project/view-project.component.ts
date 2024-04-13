@@ -113,7 +113,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
         // Now we're going to assume this is just the student dashboard viewing a project
         this.projectType = "active";
         // Convert from Base64 so it looks prettier in the URL
-        this.professorEmail = atob(params['projectEmail'] || "");
+        this.professorEmail = params['projectEmail'] || "";
         projectFetchInformation = this.studentService.getProjectInfo(this.professorEmail, this.projectID)
       }
       //grab projectID from url parameter
@@ -135,6 +135,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
           }
           this.posted = this.dateConverter.convertShortDate(this.projectData.posted); //get the string for the posted variable
           this.deadline = this.dateConverter.convertShortDate(this.projectData.deadline); //get the string for the deadlien variable
+          console.log(this.projectData);
         },
         error: (error) => {
           console.error('Error fetching projects', error);

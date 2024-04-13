@@ -18,8 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatTooltipModule,
     MatDividerModule,
-    SpinnerComponent
-]
+    SpinnerComponent,
+  ]
 })
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }
@@ -81,7 +81,7 @@ export class StudentDashboard {
   viewProject(project: any) {
     // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
-    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
+    this.router.navigate([`/student/view-project/${project.professorEmail}/${project.projectID}`]);
   }
 
   getStudentInfo(): void {

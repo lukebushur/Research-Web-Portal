@@ -241,7 +241,7 @@ export class StudentOpportunitesSearchPageComponent {
   viewProject(project: any) {
     // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
-    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project._id}`]);
+    this.router.navigate([`/student/view-project/${project.professorEmail}/${project._id}`]);
   }
 
   onCheckboxChange(event: MatSelectChange) {

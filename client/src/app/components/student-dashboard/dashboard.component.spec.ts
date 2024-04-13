@@ -145,7 +145,7 @@ describe('StudentDashboard', () => {
       debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'VIEW'
     )
     buttonDebugElement.triggerEventHandler('click', null)
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${btoa(testProjectData.professorEmail)}/${testProjectData.projectID}`]);
+    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${testProjectData.professorEmail}/${testProjectData.projectID}`]);
   })
 
   it('should navigate you to apply-to-project', () => {
