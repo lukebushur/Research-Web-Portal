@@ -36,24 +36,6 @@ describe('SearchProjectService', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should send search request with multiple parameters', () => {
-
-  //   };
-
-  //   service.searchProjectsMultipleParams(mockSearchOptions).subscribe();
-
-  //   const req = httpMock.expectOne(`${environment.apiUrl}/search/searchProjects`);
-  //   expect(req.request.method).toBe('GET');
-  //   expect(req.request.params.get('query')).toEqual('mock query');
-  //   expect(req.request.params.get('majors')).toEqual('Computer Science,Electrical Engineering');
-  //   expect(req.request.params.get('GPA')).toEqual('3.5');
-  //   expect(req.request.params.get('npp')).toEqual('true');
-  //   expect(req.request.params.get('pageNum')).toEqual('1');
-  //   expect(req.request.params.get('posted')).toEqual('2024-01-01T00:00:00.000Z');
-  //   expect(req.request.params.get('deadline')).toEqual('2024-01-01T00:00:00.000Z');
-  //   req.flush({});
-  // });
-
   it('should send search request with single parameter', () => {
     const queryParams = '?query=mock%20query&majors=Computer%20Science';
     
