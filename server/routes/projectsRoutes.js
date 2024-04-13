@@ -27,6 +27,9 @@ router.put('/updateProject', verifyToken, projectValidation("update"), facultyPr
 //PUT Archive a Project and move it to archived from Active
 router.put('/archiveProject', verifyToken, facultyProjects.archiveProject);
 
+//PUT Unarchive a project and move it to the active project
+router.put('/unarchiveProject', verifyToken, facultyProjects.unarchiveProject);
+
 //PUT Accept or Reject an application for a project
 router.put('/application', verifyToken, decisionValidation, facultyProjects.applicationDecision);
 

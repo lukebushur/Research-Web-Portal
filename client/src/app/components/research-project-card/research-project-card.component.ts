@@ -59,8 +59,21 @@ export class ResearchProjectCardComponent {
   // if the user presses the archive button, send an archive project request to
   // the server and emit a project update event
   buttonArchiveProject(): void {
-    console.log(`Deleting project with ID ${this.project.id}`);
     this.facultyProjectService.archiveProject(this.project.id).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.projectUpdateEvent.emit(this.project.number);
+        }
+        console.log('Archive response:', data);
+      },
+      error: (error) => {
+        console.error('Error archiving project:', error);
+      }
+    });
+  }
+
+  buttonUnArchiveProject(): void {
+    this.facultyProjectService.unarchiveProject(this.project.id).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.projectUpdateEvent.emit(this.project.number);

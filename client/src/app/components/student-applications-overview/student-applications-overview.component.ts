@@ -9,6 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 @Component({
@@ -23,7 +26,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSortModule,
     MatButtonModule,
     MatPaginatorModule,
-    SpinnerComponent
+    SpinnerComponent,
+    MatIconModule,
+    MatTooltipModule
   ]
 })
 export class StudentApplicationsOverviewComponent {

@@ -226,6 +226,12 @@ export class SignupComponent {
       },
       error: (data: any) => {
         console.error('Registration failed.', data);
+        if (data?.error?.error?.message === 'EMAIL_EXISTS') {
+          alert('Registration failed, email already exists');
+        }
+        else {// Notify user of registration failure
+          alert('Registration failed. Please try again later.');
+        }
       },
     });
   }
