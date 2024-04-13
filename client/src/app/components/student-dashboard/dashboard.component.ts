@@ -145,6 +145,7 @@ export class StudentDashboard {
   }
 
   hasNextPage(major: string) {
+    if (this.majorOpportunities[major] === undefined) { return false; }
     if (this.majorOpportunities[major].opps.length > this.npp * this.majorOpportunities[major].pageNum) { return true; }
     return false;
   }
