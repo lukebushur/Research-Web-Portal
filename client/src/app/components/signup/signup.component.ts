@@ -199,6 +199,10 @@ export class SignupComponent {
     this.signupForm.get('Major')?.enable();
   }
 
+  routeToLoginPage() {
+    this.router.navigate(['/login']);
+  }
+
   onSubmit() {
     this.signupService.signup(this.signupForm.value).subscribe({
       next: (data: any) => {
