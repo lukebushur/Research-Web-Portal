@@ -156,7 +156,7 @@ export class StudentOpportunitesSearchPageComponent {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
-        oppId: opportunity.projectID,
+        oppId: opportunity._id,
       }
     });
   }
