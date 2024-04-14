@@ -75,6 +75,8 @@ io.on('connection', (socket) => {
     });
 });
 
+app.set('io', io);
+
 dbConnect();
 
 process.on('SIGINT', () => {

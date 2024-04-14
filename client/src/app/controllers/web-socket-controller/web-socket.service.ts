@@ -16,7 +16,7 @@ export class WebSocketService {
     this.socket = io(this.socketUrl);
 
     //used to listen for application updates
-    this.socket.on('newApplication', (data) => {
+    this.socket.on('newApplication', (data: any) => {
       this.applicationSubject.next(data);
     });
   }

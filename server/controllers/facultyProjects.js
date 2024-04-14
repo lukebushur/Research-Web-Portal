@@ -513,7 +513,10 @@ const applicationDecision = async (req, res) => {
             ];
 
             await Promise.all(savePromises);
+            const io = req.app.get('io');
+            io.emit('newApplication');
             return res.status(200).json(generateRes(true, 200, "APPLICATION_STATUS_UPDATED", {}));
+            
 
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
