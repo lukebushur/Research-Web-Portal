@@ -1,14 +1,12 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StudentViewProjectComponent } from './student-view-project.component';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { QuestionData } from 'src/app/_models/projects/questionData';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { of } from 'rxjs';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { MatButtonHarness } from '@angular/material/button/testing';
 
 interface ProjectData {
   projectName: string;
@@ -27,8 +25,12 @@ describe('StudentViewProjectComponent', () => {
   let component: StudentViewProjectComponent;
   let fixture: ComponentFixture<StudentViewProjectComponent>;
   let loader: HarnessLoader;
+
+  // URL parameters
   const projectId = '123';
   const professorEmail = 'test@email.com';
+
+  // question data associated with the fake project
   const questionData: QuestionData[] = [
     {
       question: 'Choose any of the following.',
@@ -48,6 +50,7 @@ describe('StudentViewProjectComponent', () => {
       required: true,
     },
   ];
+  // fake project data produced from the HTTP request
   const httpProjectData = {
     projectName: 'Test Name',
     professorName: 'Test Prof',
@@ -60,6 +63,8 @@ describe('StudentViewProjectComponent', () => {
     deadline: 'Wed Apr 24 2024',
     questions: questionData,
   };
+  // fake project data from the HTTP request after being transformed to match
+  // the ProjectData interface
   const projectData: ProjectData = {
     projectName: 'Test Name',
     professorName: 'Test Prof',
@@ -76,6 +81,7 @@ describe('StudentViewProjectComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
+    // Create the spy object to mock the getProjectInfo method.
     studentService = jasmine.createSpyObj<StudentDashboardService>('StudentDashboardService', ['getProjectInfo']);
     studentService.getProjectInfo.and.returnValue(of({
       success: {
@@ -101,7 +107,9 @@ describe('StudentViewProjectComponent', () => {
     .compileComponents();
     
     fixture = TestBed.createComponent(StudentViewProjectComponent);
+    // loader for Material component testing
     loader = TestbedHarnessEnvironment.loader(fixture);
+    // inject router so that it can later be spied on
     router = TestBed.inject(Router);
     component = fixture.componentInstance;
     fixture.detectChanges();

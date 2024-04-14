@@ -12,6 +12,8 @@ import { QuestionData } from 'src/app/_models/projects/questionData';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
+    
+// Interface for storing project data
 interface ProjectData {
   projectName: string;
   professorName: string;
@@ -45,9 +47,14 @@ interface ProjectData {
 })
 export class StudentViewProjectComponent implements OnInit {
 
+  // Project data stored in behavior subject, which requires an initial value,
+  // and it emits the current value to any new subscribers.
+  // It is used with the async pipe in the template (HTML) to load the page
+  // content only when the data is loaded (after HTTP request finishes).
   projectData$ = new BehaviorSubject<ProjectData | null>(null);
+
+  // URL parameters
   projectId: string;
-  projectType: string;
   professorEmail: string;
 
   constructor(
@@ -56,11 +63,16 @@ export class StudentViewProjectComponent implements OnInit {
     private studentService: StudentDashboardService,
     private location: Location,
   ) {
+    // assign value of URL parameters
     this.projectId = this.route.snapshot.paramMap.get('projectId')!;
     this.professorEmail = this.route.snapshot.paramMap.get('professorEmail')!;
   }
 
   ngOnInit(): void {
+    // Get project data.
+    // The request is piped into a map to transform the data to match the
+    // ProjectData interface. It also catches any errors.
+    // Once transformed, projectData$ is assigned its result.
     this.studentService.getProjectInfo(
       this.professorEmail,
       this.projectId
@@ -80,6 +92,8 @@ export class StudentViewProjectComponent implements OnInit {
     ).subscribe(this.projectData$);
   }
 
+  // Return a more understandable string for displaying what the given question
+  // requirementType is
   displayRequirementType(reqType: string): string {
     if (reqType === 'text') {
       return 'Text Response';
@@ -91,6 +105,8 @@ export class StudentViewProjectComponent implements OnInit {
     return 'Invalid Question Type';
   }
 
+  // After clicking the apply button, navigate to the apply-to-project page
+  // with the corresponding query parameters.
   apply() {
     this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
@@ -101,8 +117,8 @@ export class StudentViewProjectComponent implements OnInit {
     });
   }
 
+  // Send the user back
   back() {
-    // Send the user back!
     this.location.back();
   }
 }
