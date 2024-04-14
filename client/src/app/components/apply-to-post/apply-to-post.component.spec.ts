@@ -156,7 +156,6 @@ describe('ApplyToPostComponent', () => {
     expect(checkBoxControls.controls['item1']).toBeDefined();
     expect(checkBoxControls.controls['item2']).toBeDefined();
     expect(checkBoxControls.controls['item3']).toBeDefined();
-    // Add more assertions as needed...
   });
 
   it('should correctly format GPA', () => {
