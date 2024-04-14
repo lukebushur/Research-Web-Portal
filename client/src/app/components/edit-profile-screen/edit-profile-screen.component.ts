@@ -8,6 +8,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit-profile-screen',
@@ -27,7 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class EditProfileScreenComponent implements OnInit {
   constructor(private router: Router,
     private authService: AuthService,
-    private profileService: ProfileServiceService,) { }
+    private profileService: ProfileServiceService, private location: Location ) { }
 
   // Set up the variables for the universityLocation dropdown 
   universityLocations: string[] = [
@@ -120,6 +121,18 @@ export class EditProfileScreenComponent implements OnInit {
         },
       });
     }
+    this.authService.getAccountInfo().subscribe({
+      next: (data: any) => {
+        const accountInfo = data.success.accountData;
+        this.editProfileForm.get('name')?.setValue(accountInfo.name);
+        this.editProfileForm.get('GPA')?.setValue(accountInfo.GPA);
+        this.editProfileForm.get('Major')?.setValue(accountInfo.Major);
+        this.editProfileForm.get('universityLocation')?.setValue(accountInfo.universityLocation);
+      },
+      error: (data: any) => {
+        console.log("Error", data);
+      }
+    })
     this.editProfileForm.get('GPA')?.enable();
     this.editProfileForm.get('Major')?.enable();
   }
@@ -129,6 +142,7 @@ export class EditProfileScreenComponent implements OnInit {
     this.profileService.submitProfileChanges(this.editProfileForm.value).subscribe({
       next: (data: any) => {
         console.log('Profile Updated Successfully');
+        // this.location.back();
       },
       error: (data: any) => {
         console.error('Profile change request failed', data);
