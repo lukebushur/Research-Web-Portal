@@ -48,7 +48,7 @@ const routeConfig: Routes = [
       // Route parameters for type of project and project ID
       { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
       // This route is used to view a specific project and its applicants
-      { path: 'view-project/:projectType/:projectID', component: ViewProjectComponent },
+      { path: 'view-project/:projectType/:projectId', component: ViewProjectComponent },
       // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
       { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
     ]

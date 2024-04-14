@@ -79,7 +79,6 @@ export class StudentDashboard {
   }
 
   viewProject(project: any) {
-    // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
     this.router.navigate([`/student/view-project/${project.professorEmail}/${project.projectID}`]);
   }
