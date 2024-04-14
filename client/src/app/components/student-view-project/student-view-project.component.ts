@@ -1,4 +1,4 @@
-import { AsyncPipe, Location } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,7 +9,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { QuestionData } from 'src/app/_models/projects/questionData';
-import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
@@ -31,6 +30,8 @@ interface ProjectData {
   standalone: true,
   imports: [
     AsyncPipe,
+    DatePipe,
+    DecimalPipe,
     MatExpansionModule,
     MatIconModule,
     MatCardModule,
@@ -42,7 +43,7 @@ interface ProjectData {
   templateUrl: './student-view-project.component.html',
   styleUrl: './student-view-project.component.css'
 })
-export class StudentViewProjectComponent {
+export class StudentViewProjectComponent implements OnInit {
 
   projectData$ = new BehaviorSubject<ProjectData | null>(null);
   projectId: string;
@@ -53,12 +54,13 @@ export class StudentViewProjectComponent {
     private route: ActivatedRoute,
     private router: Router,
     private studentService: StudentDashboardService,
-    private dateConverter: DateConverterService,
     private location: Location,
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId')!;
     this.professorEmail = this.route.snapshot.paramMap.get('professorEmail')!;
+  }
 
+  ngOnInit(): void {
     this.studentService.getProjectInfo(
       this.professorEmail,
       this.projectId
@@ -71,20 +73,11 @@ export class StudentViewProjectComponent {
           deadline: new Date(projectData.deadline),
         };
       }),
-      catchError((error) => {
+      catchError((error: any) => {
         console.log(error);
         return of(null);
       }),
     ).subscribe(this.projectData$);
-    
-  }
-
-  convertShortDate(date: Date): string {
-    return String(this.dateConverter.convertShortDate(date));
-  }
-
-  formatGpa(gpa: number): string {
-    return (Math.round(gpa * 100) / 100).toFixed(2);
   }
 
   displayRequirementType(reqType: string): string {
@@ -109,6 +102,7 @@ export class StudentViewProjectComponent {
   }
 
   back() {
+    // Send the user back!
     this.location.back();
   }
 }

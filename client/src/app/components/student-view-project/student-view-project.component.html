@@ -13,7 +13,7 @@
         <mat-card class="content-card">
           <mat-card-header>
             <mat-card-title>
-              <h1>{{ project.projectName }}</h1>
+              <h2>{{ project.projectName }}</h2>
             </mat-card-title>
           </mat-card-header>
           <mat-card-content class="information">
@@ -28,12 +28,12 @@
             <p>{{ project.categories.join(', ') }}</p>
             }
             <h2>Posted:</h2>
-            <p>{{ convertShortDate(project.posted) }}</p>
+            <p>{{ project.posted | date: 'longDate' }}</p>
             <h2>Deadline:</h2>
-            <p>{{ convertShortDate(project.deadline) }}</p>
+            <p>{{ project.deadline | date: 'longDate' }}</p>
             @if (project.GPA) {
             <h2>Minimum Required GPA:</h2>
-            <p>{{ formatGpa(project.GPA) }}</p>
+            <p>{{ project.GPA | number: '1.2-2' }}</p>
             }
             @if (project.majors && project.majors.length > 0) {
             <h2>Applicable Major(s):</h2>

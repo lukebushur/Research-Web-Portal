@@ -7,11 +7,7 @@
   align-items: center;
 }
 
-h1 {
-  margin: 10px auto;
-}
-
-h1, h2, h3 {
+h2, h3 {
   font-weight: 500;
 }
 
