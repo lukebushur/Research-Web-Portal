@@ -12,8 +12,7 @@ import { QuestionData } from 'src/app/_models/projects/questionData';
 import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
-    
-// Interface for storing project data
+// interface for storing project data
 interface ProjectData {
   projectName: string;
   professorName: string;

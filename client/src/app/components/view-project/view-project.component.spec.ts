@@ -9,6 +9,8 @@ import { QuestionData } from 'src/app/_models/projects/questionData';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 interface ProjectData {
   projectName: string;
@@ -42,8 +44,13 @@ class SpinnerSubComponent { }
 describe('ViewProjectComponent', () => {
   let component: ViewProjectComponent;
   let fixture: ComponentFixture<ViewProjectComponent>;
+  let loader: HarnessLoader;
+
+  // URL parameters
   const projectId = '123';
   const projectType = 'active';
+
+  // question data associated with the fake project
   const questionData: QuestionData[] = [
     {
       question: 'Choose any of the following.',
@@ -63,6 +70,7 @@ describe('ViewProjectComponent', () => {
       required: true,
     },
   ];
+  // fake project data produced from the HTTP request
   const httpProjectData = {
     projectName: 'Test Name',
     professorName: 'Test Prof',
@@ -75,6 +83,8 @@ describe('ViewProjectComponent', () => {
     deadline: 'Wed Apr 24 2024',
     questions: questionData,
   };
+  // fake project data from the HTTP request after being transformed to match
+  // the ProjectData interface
   const projectData: ProjectData = {
     projectName: 'Test Name',
     professorName: 'Test Prof',
@@ -87,6 +97,7 @@ describe('ViewProjectComponent', () => {
     deadline: new Date(httpProjectData.deadline),
     questions: questionData,
   };
+  // fake applicants data for the project
   const applicationsData: ApplicantData[] = [
     {
       application: '0',
@@ -101,6 +112,8 @@ describe('ViewProjectComponent', () => {
           ...question,
           answers: []
         };
+        // applicants' answers data contains the questions with the applicants'
+        // answers 
         if (question.requirementType === 'text') {
           questionWithAnswer.answers!.push('name1 answer');
         } else if (question.requirementType === 'radio button') {
@@ -126,6 +139,8 @@ describe('ViewProjectComponent', () => {
           ...question,
           answers: []
         };
+        // applicants' answers data contains the questions with the applicants'
+        // answers 
         if (question.requirementType === 'text') {
           questionWithAnswer.answers!.push('name2 answer');
         } else if (question.requirementType === 'radio button') {
@@ -151,6 +166,8 @@ describe('ViewProjectComponent', () => {
           ...question,
           answers: []
         };
+        // applicants' answers data contains the questions with the applicants'
+        // answers 
         if (question.requirementType === 'text') {
           questionWithAnswer.answers!.push('name3 answer');
         } else if (question.requirementType === 'radio button') {
@@ -168,10 +185,13 @@ describe('ViewProjectComponent', () => {
   let facultyService: jasmine.SpyObj<FacultyProjectService>;
 
   beforeEach(() => {
+    // Create the spy object to mock the getProjectInfo nad
+    // detailedFetchApplicants methods.
     facultyService = jasmine.createSpyObj<FacultyProjectService>('FacultyProjectService', [
       'getProject',
       'detailedFetchApplicants'
     ]);
+    // spied methods' return values are the fake data defined above
     facultyService.getProject.and.returnValue(of({
       success: {
         project: httpProjectData
@@ -212,6 +232,8 @@ describe('ViewProjectComponent', () => {
       ]
     });
     fixture = TestBed.createComponent(ViewProjectComponent);
+    // loader for Material component testing
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -241,4 +263,6 @@ describe('ViewProjectComponent', () => {
     expect(component.displayRequirementType(reqTypes[1])).toEqual('Single Select');
     expect(component.displayRequirementType(reqTypes[2])).toEqual('Multiple Select');
   });
+
+  // TODO: finish unit tests
 });

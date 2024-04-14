@@ -20,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'src/app/_models/projects/questionData';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
+// interface for storing project data
 interface ProjectData {
   projectName: string;
   professorName: string;
@@ -33,6 +34,7 @@ interface ProjectData {
   questions: QuestionData[];
 };
 
+// interface
 interface ApplicantData {
   application: string;
   appliedDate: Date;
@@ -68,23 +70,41 @@ interface ApplicantData {
     MatPaginatorModule,
     MatButtonModule,
     SpinnerComponent,
-    MatCardModule
+    MatCardModule,
   ]
 })
 
 export class ViewProjectComponent implements OnInit, AfterContentInit {
 
+  // Project data stored in behavior subject, which requires an initial value,
+  // and it emits the current value to any new subscribers.
+  // It is used with the async pipe in the template (HTML) to load the page
+  // content only when the data is loaded (after HTTP request finishes).
   projectData$ = new BehaviorSubject<ProjectData | null>(null);
-  projectId: string;
-  projectType: string; //projectType, grabbed from the url parameter and used in requests
+  // array for easily accessing the project's questions
   questions: QuestionData[];
 
+  // URL parameters
+  projectId: string;
+  projectType: string; //projectType, grabbed from the url parameter and used in requests
+
+  // holds all the applicant data for the project
   allApplicantsData: ApplicantData[];
+  // holds the applicant data filtered by the custom filters on the page
   filteredApplicantsData: ApplicantData[];
-  dataSource = new MatTableDataSource<ApplicantData>([]); // = new MatTableDataSource(this.studentData); //This object is used for the material table data source to allow for the table to work/sort etc
+  // This object is used for the Material table data source to enable sorting,
+  // filtering, pagination, etc.
+  dataSource = new MatTableDataSource<ApplicantData>([]);
+
+  // Material table sort and pginator objects
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = ['name', 'email', 'GPA', 'majors', 'status']; //This array determines the displayedd columns in the table
+  
+  // This array determines the displayedd columns in the table.
+  displayedColumns: string[] = ['name', 'email', 'GPA', 'majors', 'status'];
+
+  // Variables holding the minimum and maximum values currently reflected by
+  // the GPA slider on the page. This is used for filtering applicants.
   minGPA: number = 0;
   maxGPA: number = 4;
 
@@ -100,7 +120,10 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit(): void {
-    //Get project data from database, this only grabs the project name currently, but if more information is need it will exist in the data variable below
+    // Get project data.
+    // The request is piped into a map to transform the data to match the
+    // ProjectData interface. It also catches any errors.
+    // Once transformed, projectData$ and other variables are are assigned.
     this.facultyService.getProject(
       this.projectId,
       this.projectType
@@ -119,6 +142,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       })
     ).subscribe({
       next: (projectData: ProjectData | null) => {
+        // initialize variables' values
         this.projectData$.next(projectData);
         this.questions = projectData?.questions ?? [];
         this.currentQuestionIndex = 0;
@@ -136,6 +160,8 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     });
   }
 
+  // After the table is loaded in the DOM, then the table sort and paginator
+  // will be set. Thus, the table values and functionality can be initialized.
   ngAfterContentInit(): void {
     this.getStudentApplicants().subscribe({
       next: (applicantData: ApplicantData[]) => {
@@ -148,6 +174,10 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     });
   }
 
+  // Get applicants data.
+  // The request is piped into a map to transform the data to match the
+  // ApplicantData interface. It also catches any errors.
+  // Returns the transformed result of the HTTP request (applicants data).
   getStudentApplicants(): Observable<ApplicantData[]> {
     return this.facultyService.detailedFetchApplicants(this.projectId).pipe(
       map((data: any) => {
@@ -169,6 +199,8 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     );
   }
 
+  // Return a more understandable string for displaying what the given question
+  // requirementType is
   displayRequirementType(reqType: string): string {
     if (reqType === 'text') {
       return 'Text Response';
@@ -180,9 +212,8 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     return 'Invalid Question Type';
   }
 
-  // called whenever the user types in the filter text field
-  // filters the table, removing rows that do not match with the filter text
-  // field value
+  // called whenever the user uses the text field right above the table to
+  // filter the results
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -201,7 +232,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     }
   }
 
-  //This method makes a request to the server updating the decision then fetches the applicants
+  // This method makes a request to the server updating the decision then fetches the applicants
   applicationDecision(app: any, decision: string) {
     this.facultyService.applicationDecide(app, this.projectId, decision).subscribe({
       next: (data: any) => {
@@ -215,22 +246,23 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     });
   }
 
+  // Method to update the table of applied students based upon the filters
   applyCustomFilters(): void {
     this.filteredApplicantsData = this.allApplicantsData.filter((applicant: ApplicantData) => {
       // Compare GPA to min/max
       const passesGPACheck = this.minGPA <= applicant.GPA && applicant.GPA <= this.maxGPA;
-      //Calls checkAnswers to filter students by the answers the faculty has selected
+      // Calls checkAnswers to filter students by the answers the faculty has selected
       const passesQuestionsCheck = this.checkAnswers(applicant.questions);
       // Only pass this student if it passes the GPA check
       return passesGPACheck && passesQuestionsCheck;
     });
 
     // Set the new data (update table)
-    this.dataSource.data =this.filteredApplicantsData;
+    this.dataSource.data = this.filteredApplicantsData;
   }
 
-  //This method fetches the applicants and then updates the shared applicants data, if it is able to get the projectID from the 
-  //table data sharing service, then it grabs the applicants and sets the datasource to the object returned
+  // This method fetches the applicants and then updates the applicants table,
+  // making sure to apply the custom filters again.
   fetchApplicants() {
     this.getStudentApplicants().subscribe({
       next: (applicantData: ApplicantData[]) => {
@@ -240,15 +272,25 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     });
   }
 
-  //This code is used for the question filtering by faculty. What happens is the faculty can move through each of their questions and provide their
-  //answers to the questions. Then the applied students table is filtered to only include students whose responses match their own.  
-  // questions: string[] = []; // This array stores the questions from the application, it is created to make the accessing of the question string easier in the html
-  currentQuestionIndex: number // = 0; //This number is the current index for the question array, it exists to make the accessing of a particular element of the arrays easier in the html
-  currentQuestionType: string; //= ""; //This string stores the current question type, this lets the html know which question to load.
-  currentQuestion: string; // = this.questions[this.currentQuestionIndex].question; //This string holds the current question of the questions array
-  facultyAnswers: any[] = []; //This array stores the faculty's choices for their questions, and is used to filter the students based on their answers compared to the faculty's
+  // This code is used for the question filtering by faculty. What happens is the
+  // faculty can move through each of their questions and provide their answers
+  // to the questions. Then the applied students table is filtered to only
+  // include students whose responses match their own.
 
-  previousQuestion() { //This method moves the question card in the html to its previous question
+  // This number is the current index for the question array. It exists to make
+  // the accessing of a particular element of the arrays easier in the HTML.
+  currentQuestionIndex: number;
+  // This string stores the current question type, this lets the HTML know which
+  // question to load.
+  currentQuestionType: string;
+  // This string holds the current question of the questions array.
+  currentQuestion: string;
+  // This array stores the faculty's choices for their questions, and is used to
+  // filter the students based on their answers compared to the faculty's.
+  facultyAnswers: any[] = [];
+
+  // This method moves the question card in the HTML to its previous question.
+  previousQuestion() {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
       this.currentQuestion = this.questions[this.currentQuestionIndex].question;
@@ -256,33 +298,45 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     }
   }
 
-  nextQuestion() { //This method moves the question card to the next question
+  // This method moves the question card to the next question.
+  nextQuestion() {
     if (this.currentQuestionIndex < this.questions.length - 1) {
       this.currentQuestionIndex++;
       this.currentQuestion = this.questions[this.currentQuestionIndex].question;
       this.currentQuestionType = this.questions[this.currentQuestionIndex].requirementType;
     }
   }
-
-  checkAnswers(studentQuestions: any) { //This method checks to see if the questions provided by the faculty match the student parameter's questions
-    for (let x = 0; x < this.facultyAnswers.length; x++) { //iterate through all faculty answers
-      if (this.questions[x].requirementType === "radio button") { //check if the requirement is radio button, if so ensure the choices are equal
+  
+  // This method checks to see if the questions provided by the faculty match
+  // the student parameter's questions.
+  checkAnswers(studentQuestions: any) {
+    // iterate through all faculty answers
+    for (let x = 0; x < this.facultyAnswers.length; x++) {
+      // Check if the requirement is radio button. If so, ensure the choices
+      // are equal.
+      if (this.questions[x].requirementType === "radio button") {
         if (this.facultyAnswers[x] != "" && this.facultyAnswers[x] != studentQuestions[x].answers[0]) {
           return false;
         }
-      } else if (this.questions[x].requirementType === "check box") { //check if the requirement is check box, if so, ensure the student response has all the faculty choices
+      // Check if the requirement is check box. If so, ensure the student
+      // response has all the faculty choices.
+      } else if (this.questions[x].requirementType === "check box") {
         if (!this.facultyAnswers[x].every((element: any) => studentQuestions[x].answers.includes(element))) {
           return false;
         }
-      } else if (this.questions[x].requirementType === "text") { //check if the requirement is text, if so then check that the input string matches the text body
+      // Check if the requirement is text. If so, then check that the input
+      // string matches the text body.
+      } else if (this.questions[x].requirementType === "text") {
         if (this.facultyAnswers[x] != "" && !studentQuestions[x].answers[0].includes(this.facultyAnswers[x])) {
           return false;
         }
       }
     }
-    return true; //if the code reaches here, then the check passed for all questions
+    // if the code reaches here, then the above checks have passed for all questions
+    return true; 
   }
-  //this method updates the faculty answer for a text response then updates the table
+
+  // This method updates the faculty answer for a text response then updates the table.
   updateTextAnswer(event: any) {
     const inputValue = event?.target?.value;
     if (inputValue !== undefined) {
@@ -290,7 +344,8 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       this.applyCustomFilters();
     }
   }
-  //this method updates the choices for check box or radio button, then updates the table
+
+  // This method updates the choices for check box or radio button, then updates the table.
   updateChoiceAnswer(event: any) {
     if (this.currentQuestionType === "radio button") {
       this.facultyAnswers[this.currentQuestionIndex] = event.value;
@@ -301,12 +356,16 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     }
     this.applyCustomFilters();
   }
-  //this method should remove the selection of a radio button (is currently not implemented)
+
+  // This method should remove the selection of a radio button
+  // (it is currently not implemented).
   removeSelection() {
     this.facultyAnswers[this.currentQuestionIndex] = "";
   }
-  //this method resets all choices for the faculty answers, either to a new, empty array for check boxes or an empty string for radio buttons and text
-  //then it updates the table to reset the applicants
+
+  // This method resets all choices for the faculty answers either to a new,
+  // empty array for check boxes or an empty string for radio buttons and text.
+  // Then, it updates the table to reset the applicants.
   resetAnswers() {
     for (let i = 0; i < this.facultyAnswers.length; i++) {
       if (typeof (this.facultyAnswers[i]) === "string") {
@@ -318,8 +377,8 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     this.applyCustomFilters();
   }
 
+  // Send the user back
   back() {
-    // Send the user back!
     this.location.back();
   }
 } 

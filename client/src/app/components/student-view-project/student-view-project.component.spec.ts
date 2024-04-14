@@ -83,6 +83,7 @@ describe('StudentViewProjectComponent', () => {
   beforeEach(async () => {
     // Create the spy object to mock the getProjectInfo method.
     studentService = jasmine.createSpyObj<StudentDashboardService>('StudentDashboardService', ['getProjectInfo']);
+    // spied methods' return values are the fake data defined above
     studentService.getProjectInfo.and.returnValue(of({
       success: {
         project: httpProjectData
