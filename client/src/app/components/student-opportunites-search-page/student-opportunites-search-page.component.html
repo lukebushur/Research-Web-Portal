@@ -1,38 +1,40 @@
 <div class="student-opportunites-search-page-container">
   <div class="header" style="padding: 0.5em 0.5em;">
-    <h1>Opportunites Search</h1>
+    <h1 class="title">Opportunites Search</h1>
     <!-- Search input for opportunities -->
-    <div class="searchBar">
-      <mat-form-field>
-        <input matInput type="text" placeholder="Search..." [(ngModel)]="searchQuery">
-      </mat-form-field>
-      <button mat-raised-button (click)="onSearchButtonClick()" id="searchButton">Search</button>
+    <div class="searchForm">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearchButtonClick()">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Search..." formControlName="projectName">
+        </mat-form-field>
+        <!-- <button mat-raised-button (click)="onSearchButtonClick()" id="searchButton">Search</button> -->
+      </form>
     </div>
   </div>
 
   <!-- <div class="example-accordion-item-header" (click)="questionAccordionItem.toggle()">
-        Show Filters for Majors
-        <span class="example-accordion-item-description">
-          Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
-        </span>
-      </div>
+  Show Filters for Majors
+  <span class="example-accordion-item-description">
+    Click to {{ questionAccordionItem.expanded ? 'close' : 'open' }}
+  </span>
+</div>
 
-     checkboxes for majors
-    <div class="example-accordion-item-body" role="region"
-      [style.display]="questionAccordionItem.expanded ? '' : 'none'" [attr.id]="'question-accordion-body'"
-      [attr.aria-labelledby]="'question-accordion-header'">
-      <div class="majors-list">
-          <cdk-accordion class="example-accordion">
-              <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
-                tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
-                [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
-              <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
-                  {{ major }}
-              </mat-checkbox>
-              </cdk-accordion-item>
-          </cdk-accordion>
-      </div>
-    </div> -->
+checkboxes for majors
+<div class="example-accordion-item-body" role="region"
+  [style.display]="questionAccordionItem.expanded ? '' : 'none'" [attr.id]="'question-accordion-body'"
+  [attr.aria-labelledby]="'question-accordion-header'">
+  <div class="majors-list">
+    <cdk-accordion class="example-accordion">
+      <cdk-accordion-item #questionAccordionItem="cdkAccordionItem" class="example-accordion-item" role="button"
+        tabindex="0" [attr.id]="'question-accordion-header'" [attr.aria-expanded]="questionAccordionItem.expanded"
+        [expanded]="true" [attr.aria-controls]="'question-accordion-body'">
+        <mat-checkbox *ngFor="let major of availableMajors" (change)="onCheckboxChange(major, $event.checked)">
+          {{ major }}
+        </mat-checkbox>
+      </cdk-accordion-item>
+    </cdk-accordion>
+  </div>
+</div> -->
 
   <mat-accordion class="oppExpansion">
     <mat-expansion-panel (opened)="searchfilters = true" (closed)="searchfilters = false">
@@ -46,14 +48,15 @@
           <mat-form-field type="majors" class="example-chip-list" required>
             <mat-label>Majors</mat-label>
             <mat-chip-grid #chipGrid aria-label="Enter majors">
-              <mat-chip-row *ngFor="let major of majors; let i = index"
-                [ngStyle]="{'background-color': isEven(i) ? '#CFB991' : '#999' }" (removed)="remove(major)"
+              @for (major of majors; track major; let i = $index) {
+              <mat-chip-row [ngStyle]="{'background-color': isEven(i) ? '#CFB991' : '#999' }" (removed)="remove(major)"
                 [editable]="true" (edited)="edit(major, $event)">
                 {{ major }}
                 <button matChipRemove>
                   <mat-icon>cancel</mat-icon>
                 </button>
               </mat-chip-row>
+              }
               <input placeholder="Add major or leave blank for all" [matChipInputFor]="chipGrid"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
                 (matChipInputTokenEnd)="add($event)" />
@@ -83,7 +86,7 @@
 
         <div class="searchFilterDiv">
           <mat-form-field>
-            <input matInput type="number" placeholder="Enter a GPA between 0 and 4" name="GPA" [(ngModel)]="GPA" min="0"
+            <input matInput type="number" placeholder="GPA" name="GPA" [(ngModel)]="GPA" min="0"
               max="4">
           </mat-form-field>
         </div>
@@ -105,9 +108,11 @@
           <mat-form-field>
             <mat-label>Select Major</mat-label>
             <mat-select multiple [(ngModel)]="selectedMajors" (selectionChange)="onCheckboxChange($event)">
-              <mat-option *ngFor="let major of availableMajors" [value]="major">
+              @for (major of availableMajors; track major) {
+              <mat-option [value]="major">
                 {{ major }}
               </mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>
@@ -134,7 +139,8 @@
 
   <!-- filtered opportunities -->
   <div class="opportunities-list">
-    <div *ngFor="let opportunity of opportunities" class="opportunities-container">
+    @for (opportunity of opportunities; track opportunity) {
+    <div class="opportunities-container">
       <mat-card class="oppCard">
         <mat-card-title class="opportunity-card-title">
           {{ opportunity.projectName }}
@@ -159,14 +165,19 @@
           {{opportunity.applied ? 'Already Applied' : ''}}</button>
       </mat-card>
     </div>
+    }
     <br>
-    <div id="page-selector" *ngIf="allOpportunities">
+    @if (allOpportunities) {
+    <div id="page-selector">
       <button mat-raised-button color="primary" [disabled]="!hasPrevPage()" class="activeButton"
         (click)="prevPage()">Previous Page</button>
-      <p id="pageNum" *ngIf="pageNum != 0">Page: {{pageNum}}</p>
+      @if (pageNum != 0) {
+      <p id="pageNum">Page: {{pageNum}}</p>
+      }
       <button mat-raised-button color="primary" [disabled]="!hasNextPage()" class="activeButton"
         (click)="nextPage()">Next Page</button>
     </div>
+    }
   </div>
 </div>
 <app-spinner></app-spinner>

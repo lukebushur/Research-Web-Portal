@@ -7,12 +7,12 @@
       <div class="content-container">
         <div class="field-title">Created:</div>
         <div>{{ dateToString(assessmentData.dateCreated) }}</div>
-        <ng-container *ngFor="let question of topQuestions(); index as i">
-          <div class="field-title">{{ question ? 'Question ' + (i + 1) + ':' : ''}}</div>
-          <div class="field-content">
-            <div class="max-two-lines">{{ question }}</div>
-          </div>
-        </ng-container>
+        @for (question of topQuestions(); track question; let i = $index) {
+        <div class="field-title">{{ question ? 'Question ' + (i + 1) + ':' : ''}}</div>
+        <div class="field-content">
+          <div class="max-two-lines">{{ question }}</div>
+        </div>
+        }
       </div>
       <mat-divider class="divider"></mat-divider>
     </mat-card-content>

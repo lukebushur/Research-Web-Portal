@@ -93,6 +93,11 @@ const projectValidation = (mode = "create") => {
             const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
             const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
             const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+            if (userAccount.userType.Type !== parseInt(process.env.FACULTY)) {
+                return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
+            }
+
             let reqMajors, project; //these values will be used to validate the project. reqMajors is the request majors of the project and project should be the actual project
             //if the project is a draft, then it doesn't need to conform to the major validation requirements yet
             if (req.body.projectType === "Draft") { next(); return; }

@@ -6,23 +6,54 @@ import { SearchOptions } from 'src/app/_models/searchOptions';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatSelectChange } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { NgStyle } from '@angular/common';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-student-opportunites-search-page',
   templateUrl: './student-opportunites-search-page.component.html',
-  styleUrls: ['./student-opportunites-search-page.component.css']
+  styleUrls: ['./student-opportunites-search-page.component.css'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatChipsModule,
+    NgStyle,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatCardModule,
+    MatDividerModule,
+    SpinnerComponent,
+    ReactiveFormsModule
+  ]
 })
 export class StudentOpportunitesSearchPageComponent {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private search: SearchProjectService) { }
+  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private search: SearchProjectService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.getStudentInfo();
   }
 
+  searchForm = this.fb.group({
+    projectName: ['', [Validators.required]],
+  });
 
   announcer = inject(LiveAnnouncer);
 
@@ -44,7 +75,7 @@ export class StudentOpportunitesSearchPageComponent {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   opportunities: any[] = [];
-  searchQuery: string = ''; // Variable to hold search query
+  //searchQuery: string = ''; // Variable to hold search query
   filteredOpportunities: any[] = [];
   availableMajors: string[] = [];
   selectedMajors: string[] = [];
@@ -60,7 +91,7 @@ export class StudentOpportunitesSearchPageComponent {
     searchOpts.posted = this.posted ? this.posted : undefined;
     searchOpts.GPA = this.GPA ? this.GPA : undefined;
     searchOpts.majors = this.majors ? this.majors : undefined;
-    searchOpts.query = this.searchQuery ? this.searchQuery : undefined;
+    searchOpts.query = this.searchForm.get('projectName')?.value ?? undefined;
 
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
@@ -125,7 +156,7 @@ export class StudentOpportunitesSearchPageComponent {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
-        oppId: opportunity._id,
+        oppId: opportunity.projectID,
       }
     });
   }
@@ -207,7 +238,7 @@ export class StudentOpportunitesSearchPageComponent {
     // Navigate the student to the view-project page
     this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
   }
-  
+
   onCheckboxChange(event: MatSelectChange) {
     const major = event.source.value;
     if (event.source.selected) {

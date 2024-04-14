@@ -1,4 +1,4 @@
-import { QuestionData } from "../apply-to-post/questionData";
+import { QuestionData } from "src/app/_models/projects/questionData";
 
 export interface AssessmentData {
   _id: string,
