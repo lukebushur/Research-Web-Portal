@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
@@ -72,7 +72,7 @@ interface ApplicantData {
   ]
 })
 
-export class ViewProjectComponent implements OnInit, AfterViewInit {
+export class ViewProjectComponent implements OnInit, AfterContentInit {
 
   projectData$ = new BehaviorSubject<ProjectData | null>(null);
   projectId: string;
@@ -136,7 +136,7 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
+  ngAfterContentInit(): void {
     this.getStudentApplicants().subscribe({
       next: (applicantData: ApplicantData[]) => {
         this.allApplicantsData = applicantData;
@@ -152,8 +152,6 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
     return this.facultyService.detailedFetchApplicants(this.projectId).pipe(
       map((data: any) => {
         const applicantsData: any[] = data.success.applicants;
-        console.log(applicantsData);
-        
         return applicantsData.map((applicantData: any) => {
           return <ApplicantData>{
             ...applicantData,
