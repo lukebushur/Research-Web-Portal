@@ -70,3 +70,11 @@
   background: transparent;
   /* Background color of the scrollbar corner */
 }
+
+.project-name {
+  color: black;
+}
+
+.project-name:hover {
+  color: purple;
+}
