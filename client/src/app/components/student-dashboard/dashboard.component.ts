@@ -31,7 +31,6 @@ export class StudentDashboard {
     this.getStudentInfo();
   }
 
-  // Variables
   majorOpportunities: { [major: string]: {
     opps: any[],
     pageNum: number,
@@ -46,19 +45,13 @@ export class StudentDashboard {
   pageNum: number = 1;
   npp: number = 6;
 
-  // Functions 
-  // Get all opportunities
-  // This function is called when the component is loaded
   getAllOpportunities() {
     let searchOpts: SearchOptions = {}
 
-    // If the student has majors, then we should search for opportunities that match their major
     searchOpts.majors = this.studentMajors ? this.studentMajors : undefined;
 
-    // If the student has a GPA, then we should search for opportunities that match their GPA
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
-        // Define the opportunities object
         const opportunities = data.success.results;
 
         // Group opportunities by major
@@ -69,9 +62,7 @@ export class StudentDashboard {
               this.majorOpportunities[major] = { opps: [], pageNum: 1 }
               this.majors.push(major);
             }
-            // Add the opportunity to the majorOpportunities object
             this.majorOpportunities[major].opps.push(opportunity);
-            // Set the filteredMajorOpps object
             this.resetPage(major);
           });
         });
@@ -159,46 +150,35 @@ export class StudentDashboard {
     return dateTimeFormat.format(date);
   }
 
-  // Move to the next page
   nextPage(major: string) {
-    // Increment the page number
     this.majorOpportunities[major].pageNum += 1;
     const pageNum = this.majorOpportunities[major].pageNum;
-    // Set the filteredMajorOpps object to the next page
     this.filteredMajorOpps[major] = this.majorOpportunities[major].opps.slice(this.npp * pageNum, this.npp * (pageNum + 1))
   }
 
-  // Move to the previous page
   prevPage(major: string) {
     this.majorOpportunities[major].pageNum--;
     const pageNum = this.majorOpportunities[major].pageNum;
     this.filteredMajorOpps[major] = this.majorOpportunities[major].opps.slice(this.npp * (pageNum - 1), this.npp * pageNum)
   }
 
-  // Check if there is a next page
   hasNextPage(major: string) {
-    // Check if the majorOpportunities object exists
     if (this.majorOpportunities[major] === undefined) { return false; }
-    // Check if the majorOpportunities object has more opportunities
     if (this.majorOpportunities[major].opps.length > this.npp * this.majorOpportunities[major].pageNum) { return true; }
     return false;
   }
 
-  // Get the page number
   getPageNum(major: string) {
     if (!this.majorOpportunities[major]) { return 1; }
     return this.majorOpportunities[major].pageNum;
   }
 
-  // Check if there is a previous page
   hasPrevPage(major: string) {
     if (!this.majorOpportunities[major]) { return false; }
     if (this.majorOpportunities[major].pageNum > 1) { return true; }
     return false;
   }
 
-  // Reset the page
-  // This function is called to regenerate the page
   resetPage(major: string) {
     if (!this.majorOpportunities[major]) { return; }
     this.majorOpportunities[major].pageNum = 1;
