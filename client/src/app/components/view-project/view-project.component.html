@@ -219,12 +219,12 @@
               </p>
               }
               @if (student.status === 'Pending') {
-              <button mat-raised-button color="primary" (click)="applicationDecision(student.application, 'Accept')"
+              <button mat-raised-button color="primary" (click)="openConfirmationDialog(student.application, 'Accept', 'accept this user?')"
                 class="accept-button">Accept</button>
               }
               @if (student.status === 'Pending') {
               <button mat-raised-button color="warn"
-                (click)="applicationDecision(student.application, 'Reject')">Reject</button>
+                (click)="openConfirmationDialog(student.application, 'Reject', 'reject this user?')">Reject</button>
               }
             </td>
           </ng-container>
@@ -237,7 +237,7 @@
     } @else {
     <div>
       <button mat-raised-button color="primary" (click)="apply()">{{ 'APPLY' }}</button>
-      <button mat-stroked-button class="align-end" (click)="back()">{{ 'CANCEL' }}</button>
+      <button mat-raised-button class="align-end" (click)="back()">{{ 'CANCEL' }}</button>
     </div>
     }
   </mat-accordion>

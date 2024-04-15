@@ -71,6 +71,8 @@ export class StudentOpportunitesSearchPageComponent {
   resultFilterString: string = "";
   allUnChecked: boolean = true;
 
+  gpaPattern = /^[0-3](\.[0-9]{1,2})?$|^4(\.[0]{1,2})?$/;
+
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
@@ -156,7 +158,7 @@ export class StudentOpportunitesSearchPageComponent {
       queryParams: {
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
-        oppId: opportunity.projectID,
+        oppId: opportunity._id,
       }
     });
   }
@@ -236,7 +238,7 @@ export class StudentOpportunitesSearchPageComponent {
   viewProject(project: any) {
     // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
-    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project.projectID}`]);
+    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project._id}`]);
   }
 
   onCheckboxChange(event: MatSelectChange) {

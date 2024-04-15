@@ -12,6 +12,7 @@ import { QuestionData } from 'src/app/_models/projects/questionData';
 import { MatCard, MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -23,6 +24,7 @@ describe('StudentDashboard', () => {
   let getProjectsSpy: jasmine.Spy;
   let navigateSpy: jasmine.Spy;
   let getStudentInfoSpy: jasmine.Spy;
+  let searchProjectsSpy: jasmine.Spy;
 
   const testQuestionData: QuestionData[] = [
     {
@@ -44,10 +46,10 @@ describe('StudentDashboard', () => {
     },
   ];
   // Mock project data
-  const testProjectData: ProjectData = {
+  const testProjectData: any = {
     professorName: 'Test Professor',
     professorEmail: 'testemail@email.com',
-    projectID: '123',
+    _id: '123',
     projectName: 'Test Project',
     description: 'This project is for testing.',
     categories: ['Technology', 'Documentation', 'Writing'],
@@ -66,6 +68,15 @@ describe('StudentDashboard', () => {
       ]
     }
   };
+  const getSearchResponse = {
+    success: {
+      status: 200,
+      message: "PROJECTS_FOUND",
+      results: [
+        testProjectData
+      ]
+    }
+  };
   const getStudentInfoResponse = {
     success: {
       status: 200,
@@ -77,7 +88,7 @@ describe('StudentDashboard', () => {
         emailConfirmed: true,
         GPA: 3.0,
         Major: [
-          "Major 1",
+          "Computer Science",
           "Major 2"
         ]
       }
@@ -93,6 +104,9 @@ describe('StudentDashboard', () => {
     const router = jasmine.createSpyObj('Router', ['navigate']);
     navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
+    const searchProjectService = jasmine.createSpyObj('SearchProjectService', ['searchProjectsMultipleParams']);
+    searchProjectsSpy = searchProjectService.searchProjectsMultipleParams.and.returnValue(of(getSearchResponse));
+
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
@@ -106,7 +120,8 @@ describe('StudentDashboard', () => {
       ],
       providers: [
         { provide: Router, useValue: router },
-        { provide: StudentDashboardService, useValue: studentDashboardService }
+        { provide: StudentDashboardService, useValue: studentDashboardService },
+        { provide: SearchProjectService, useValue: searchProjectService}
       ]
     });
     fixture = TestBed.createComponent(StudentDashboard);
@@ -145,7 +160,7 @@ describe('StudentDashboard', () => {
       debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'VIEW'
     )
     buttonDebugElement.triggerEventHandler('click', null)
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${btoa(testProjectData.professorEmail)}/${testProjectData.projectID}`]);
+    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${btoa(testProjectData.professorEmail)}/${testProjectData._id}`]);
   })
 
   it('should navigate you to apply-to-project', () => {
@@ -157,7 +172,7 @@ describe('StudentDashboard', () => {
       queryParams: {
         profName: testProjectData.professorName,
         profEmail: testProjectData.professorEmail,
-        oppId: testProjectData.projectID,
+        oppId: testProjectData._id,
       }
     });
   })

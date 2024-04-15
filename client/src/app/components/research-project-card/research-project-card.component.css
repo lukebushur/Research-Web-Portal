@@ -23,6 +23,10 @@
   flex-basis: 30%;
 }
 
+.unarchive-button {
+  flex-basis: 45% !important;
+}
+
 .scroll-x {
   overflow-x: scroll;
 }
