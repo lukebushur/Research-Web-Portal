@@ -26,6 +26,7 @@ import { SearchOptions } from 'src/app/_models/searchOptions';
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService, private search: SearchProjectService) { }
 
+  // This function is called when the component is loaded
   ngOnInit() {
     this.getStudentInfo();
   }
@@ -56,6 +57,7 @@ export class StudentDashboard {
         // Group opportunities by major
         opportunities.forEach((opportunity: { majors: string[]; }) => {
           opportunity.majors.forEach((major: string) => {
+            // If the major does not exist in the majorOpportunities object, then add it
             if (!this.majorOpportunities[major]) {
               this.majorOpportunities[major] = { opps: [], pageNum: 1 }
               this.majors.push(major);
@@ -74,10 +76,13 @@ export class StudentDashboard {
     });
   }
 
-
+  // Apply to opportunity
+  // This function is called when the student clicks on the apply button
   applyToOpportunity(opportunity: any): void {
+    // Navigate the student to the apply-to-project page
     this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
+        // Pass the opportunity information to the apply-to-project page
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
         oppId: opportunity._id,
@@ -85,24 +90,33 @@ export class StudentDashboard {
     });
   }
 
+  // Search opportunities
   searchOpportunities() {
+    // Navigate the student to the search-projects page
     this.router.navigate(['/student/search-projects']);
   }
 
+  // Get student applications
   getStudentApplications() {
+    // Navigate the student to the applications-overview page
     this.router.navigate(['/student/applications-overview']);
   }
 
+  // View project
   viewProject(project: any) {
+    // Convert the email to Base64
     // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
     this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project._id}`]);
   }
 
+  // Get student information
   getStudentInfo(): void {
+    // Get the student information
     this.studentDashboardService.getStudentInfo().subscribe({
       next: (data: any) => {
         if (data.success) {
+          // Set the student GPA and majors
           this.studentGPA = data.success.accountData.GPA;
           this.studentMajors = data.success.accountData.Major || [];
           // Reset the majors pages now
@@ -115,6 +129,7 @@ export class StudentDashboard {
     });
   }
 
+  // Check if the student meets the requirements
   meetRequirements(opportunity: any): boolean {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
       && ((opportunity.majors.length === 0) ||
@@ -123,11 +138,14 @@ export class StudentDashboard {
         (this.studentMajors.length > 0 && opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
 
+  // Convert date to string
   dateToString(dateString: string | undefined): string {
     if (!dateString) {
       return 'None';
     }
+    // Convert the date to a string
     const date = new Date(dateString);
+    // Format the date
     const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
     return dateTimeFormat.format(date);
   }
