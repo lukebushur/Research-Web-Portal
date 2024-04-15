@@ -107,6 +107,7 @@ export class ApplyToPostComponent implements OnInit {
     const profName = this.route.snapshot.queryParamMap.get('profName')!;
     this.professorEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
     this.projectId = this.route.snapshot.queryParamMap.get('oppId')!;
+    console.log(this.projectId);
 
     this.applyService.getProjectInfo({
       professorEmail: this.professorEmail,

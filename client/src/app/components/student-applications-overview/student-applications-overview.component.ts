@@ -33,9 +33,10 @@ export class StudentApplicationsOverviewComponent {
   private applicationSubscription: Subscription;
 
   ngOnInit() {
-    //this.getStudentApplications();
+    this.getStudentApplications();
     //this.webSocketService.connect();
     this.applicationSubscription = this.webSocketService.applicationSubject.subscribe((data) => {
+      console.log('here')
       this.handleNewApplication(data);
     })
   }
@@ -175,6 +176,7 @@ export class StudentApplicationsOverviewComponent {
 
   handleNewApplication(data: any) {
     const newApplication = data;
+    console.log(newApplication);
     this.applications.push(newApplication);
   }
 }

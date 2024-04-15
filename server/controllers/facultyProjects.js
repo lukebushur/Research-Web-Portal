@@ -514,7 +514,7 @@ const applicationDecision = async (req, res) => {
 
             await Promise.all(savePromises);
             const io = req.app.get('io');
-            io.emit('newApplication');
+            io.emit('newApplication', 'yo');
             return res.status(200).json(generateRes(true, 200, "APPLICATION_STATUS_UPDATED", {}));
             
 
