@@ -76,8 +76,8 @@
             [class.reject-status-text]="responseData.applicantData.status === 'Reject'"
             [class.pending-status-text]="responseData.applicantData.status === 'Pending'" class="status-text">
             {{applicationStatus}}</span></p>
-      <div class="buttons-container">
-        @if (responseData.applicantData.status === 'Pending') {
+        <div class="buttons-container">
+          @if (responseData.applicantData.status === 'Pending') {
           <button mat-raised-button color="primary"
             (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
             class="accept-button">Accept</button>
@@ -86,7 +86,7 @@
           <button mat-raised-button color="warn"
             (click)="applicationDecision(responseData.applicantData.application, projectID, 'Reject')">Reject</button>
           }
-      </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
