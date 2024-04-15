@@ -21,6 +21,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 //Interface for an entries to the applied student table
 export interface DetailedAppliedStudentList {
@@ -90,7 +92,8 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
     private dateConverter: DateConverterService,
     private _liveAnnouncer: LiveAnnouncer,
     private authService: AuthService,
-    private location: Location
+    private location: Location,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -332,5 +335,18 @@ export class ViewProjectComponent implements OnInit, AfterViewInit {
       }
     }
     this.updateTable();
+  }
+
+  openConfirmationDialog(app: string, decision: string, sentence: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // User clicked "Yes", perform your action here
+        this.applicationDecision(app, decision);
+      } else {
+        // User clicked "No" or closed the dialog
+      }
+    });
   }
 } 

@@ -16,6 +16,11 @@
     width: 55%;
 }
 
+button {
+    margin-top: 1%;
+    margin-right: 2%;
+}
+
 .applicationInfo {
     margin: 0 auto;
     display: flex;

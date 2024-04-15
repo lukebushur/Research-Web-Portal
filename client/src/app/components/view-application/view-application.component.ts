@@ -9,6 +9,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-view-application',
@@ -43,7 +45,10 @@ export class ViewApplicationComponent {
 
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
-  constructor(private facultyService: FacultyProjectService, private route: ActivatedRoute, private dateConverter: DateConverterService,) {
+  constructor(private facultyService: FacultyProjectService,
+    private route: ActivatedRoute,
+    private dateConverter: DateConverterService,
+    public dialog: MatDialog) {
     this.route.params.subscribe(params => {
       this.projectID = params['projectID'];
       this.applicantionID = params['applicationID'];
@@ -109,5 +114,18 @@ export class ViewApplicationComponent {
     let index1 = answer.answers.findIndex((element: string) => element == answer.choices[index]);
     if (index1 !== -1) { return true; }
     return false;
+  }
+
+  openConfirmationDialog(app: string, projectID: any, decision: string, sentence: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // User clicked "Yes", perform your action here
+        this.applicationDecision(app, projectID, decision);
+      } else {
+        // User clicked "No" or closed the dialog
+      }
+    });
   }
 }
