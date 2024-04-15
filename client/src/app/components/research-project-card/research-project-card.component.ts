@@ -70,4 +70,18 @@ export class ResearchProjectCardComponent {
       }
     });
   }
+
+  buttonUnArchiveProject(): void {
+    this.facultyProjectService.unarchiveProject(this.project.id).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.projectUpdateEvent.emit(this.project.number);
+        }
+        console.log('Archive response:', data);
+      },
+      error: (error) => {
+        console.error('Error archiving project:', error);
+      }
+    });
+  }
 }

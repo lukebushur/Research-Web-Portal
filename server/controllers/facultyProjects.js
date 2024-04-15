@@ -30,7 +30,6 @@ const createProject = async (req, res) => {
             let projectType = req.body.projectType;
 
             if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; }
-            
             if (projectType !== "Active" && projectType !== "Draft") { throw error; }
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
             let projectObject
@@ -162,7 +161,7 @@ const deleteProject = async (req, res) => {
     projectID (String, the mongodb __id of the project object to delete from array) - projectType (String, the type of project to access)
 */
 const getProject = async (req, res) => {
-    try {                                                       
+    try {
         if (!req.body.projectType || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
@@ -458,6 +457,71 @@ const archiveProject = async (req, res) => {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
+
+const unarchiveProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+        //check if user type is faculty
+        if (user.userType.Type == process.env.FACULTY) {
+            if (!req.body.projectID) {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                    errors: error.details,
+                    original: error._original
+                }));
+            }
+
+            const userId = user._id; //Grabs the active projects from the user specified by the access token and then checks to see if the list exists
+            let archProjects = await retrieveOrCacheProjects(req, user.userType.FacultyProjects.Archived);
+            if (!archProjects) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
+
+            const archProject = archProjects._doc.projects.find(x => x.id === req.body.projectID); //Grabs the specified project from the array from the Record
+            if (!archProject) {
+                return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
+            }
+            let newProject = {
+                projectName: archProject.projectName,
+                professorId: archProject.professorId,
+                archived: new Date(),
+                posted: archProject.posted,
+                deadline: archProject.deadline,
+                description: archProject.description,
+                responsibilities: archProject.responsibilities,
+                questions: archProject.questions,
+                applications: archProject.applications,
+                GPA: archProject.GPA,
+                majors: archProject.majors,
+                categories: archProject.categories,
+            };
+            await Project.updateOne({ _id: user.userType.FacultyProjects.Active }, {
+                $push: { //push new project to the array 
+                    projects: newProject,
+                }
+            })
+
+            //Grab the length from the array and new length from the active array 
+            let numProjects = archProjects._doc.projects.length;
+            let selectedProject = archProjects.projects.pull(req.body.projectID);
+
+            if (selectedProject.length == numProjects) { //Check that an element was removed, if not send error response
+                return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
+            }
+            else {
+                await archProjects.save();
+                return res.status(200).json(generateRes(true, 200, "PROJECT_UNARCHIVED", {}));
+            }
+        } else {
+            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
+        }
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+    }
+}
+
 
 /*  This function handles the faculty decision making for applications, should only be used as a PUT request, and requires an access token
     This funciton sets the values of status for the application to the value given in the request across both the faculty project record and the 
@@ -881,5 +945,5 @@ module.exports = {
     getAllActiveProjects, fetchAllApplicants,
     fetchApplicant, getProject,
     fetchApplicantsFromProject,
-    publishProject,
+    publishProject, unarchiveProject
 };
