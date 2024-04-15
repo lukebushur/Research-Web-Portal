@@ -26,10 +26,12 @@ import { SearchOptions } from 'src/app/_models/searchOptions';
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService, private search: SearchProjectService) { }
 
+  // This function is called when the component is loaded
   ngOnInit() {
     this.getStudentInfo();
   }
 
+  // Variables
   majorOpportunities: { [major: string]: {
     opps: any[],
     pageNum: number,
@@ -44,23 +46,32 @@ export class StudentDashboard {
   pageNum: number = 1;
   npp: number = 6;
 
+  // Functions 
+  // Get all opportunities
+  // This function is called when the component is loaded
   getAllOpportunities() {
     let searchOpts: SearchOptions = {}
 
+    // If the student has majors, then we should search for opportunities that match their major
     searchOpts.majors = this.studentMajors ? this.studentMajors : undefined;
 
+    // If the student has a GPA, then we should search for opportunities that match their GPA
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
+        // Define the opportunities object
         const opportunities = data.success.results;
 
         // Group opportunities by major
         opportunities.forEach((opportunity: { majors: string[]; }) => {
           opportunity.majors.forEach((major: string) => {
+            // If the major does not exist in the majorOpportunities object, then add it
             if (!this.majorOpportunities[major]) {
               this.majorOpportunities[major] = { opps: [], pageNum: 1 }
               this.majors.push(major);
             }
+            // Add the opportunity to the majorOpportunities object
             this.majorOpportunities[major].opps.push(opportunity);
+            // Set the filteredMajorOpps object
             this.resetPage(major);
           });
         });
@@ -74,10 +85,13 @@ export class StudentDashboard {
     });
   }
 
-
+  // Apply to opportunity
+  // This function is called when the student clicks on the apply button
   applyToOpportunity(opportunity: any): void {
+    // Navigate the student to the apply-to-project page
     this.router.navigate(['/student/apply-to-project'], {
       queryParams: {
+        // Pass the opportunity information to the apply-to-project page
         profName: opportunity.professorName,
         profEmail: opportunity.professorEmail,
         oppId: opportunity._id,
@@ -85,24 +99,33 @@ export class StudentDashboard {
     });
   }
 
+  // Search opportunities
   searchOpportunities() {
+    // Navigate the student to the search-projects page
     this.router.navigate(['/student/search-projects']);
   }
 
+  // Get student applications
   getStudentApplications() {
+    // Navigate the student to the applications-overview page
     this.router.navigate(['/student/applications-overview']);
   }
 
+  // View project
   viewProject(project: any) {
+    // Convert the email to Base64
     // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
     this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project._id}`]);
   }
 
+  // Get student information
   getStudentInfo(): void {
+    // Get the student information
     this.studentDashboardService.getStudentInfo().subscribe({
       next: (data: any) => {
         if (data.success) {
+          // Set the student GPA and majors
           this.studentGPA = data.success.accountData.GPA;
           this.studentMajors = data.success.accountData.Major || [];
           // Reset the majors pages now
@@ -115,6 +138,7 @@ export class StudentDashboard {
     });
   }
 
+  // Check if the student meets the requirements
   meetRequirements(opportunity: any): boolean {
     return ((!opportunity.GPA) || (this.studentGPA >= opportunity.GPA))
       && ((opportunity.majors.length === 0) ||
@@ -123,44 +147,58 @@ export class StudentDashboard {
         (this.studentMajors.length > 0 && opportunity.majors.some((major: string) => this.studentMajors.includes(major))));
   }
 
+  // Convert date to string
   dateToString(dateString: string | undefined): string {
     if (!dateString) {
       return 'None';
     }
+    // Convert the date to a string
     const date = new Date(dateString);
+    // Format the date
     const dateTimeFormat = new Intl.DateTimeFormat('en-US', { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' });
     return dateTimeFormat.format(date);
   }
 
+  // Move to the next page
   nextPage(major: string) {
+    // Increment the page number
     this.majorOpportunities[major].pageNum += 1;
     const pageNum = this.majorOpportunities[major].pageNum;
+    // Set the filteredMajorOpps object to the next page
     this.filteredMajorOpps[major] = this.majorOpportunities[major].opps.slice(this.npp * pageNum, this.npp * (pageNum + 1))
   }
 
+  // Move to the previous page
   prevPage(major: string) {
     this.majorOpportunities[major].pageNum--;
     const pageNum = this.majorOpportunities[major].pageNum;
     this.filteredMajorOpps[major] = this.majorOpportunities[major].opps.slice(this.npp * (pageNum - 1), this.npp * pageNum)
   }
 
+  // Check if there is a next page
   hasNextPage(major: string) {
+    // Check if the majorOpportunities object exists
     if (this.majorOpportunities[major] === undefined) { return false; }
+    // Check if the majorOpportunities object has more opportunities
     if (this.majorOpportunities[major].opps.length > this.npp * this.majorOpportunities[major].pageNum) { return true; }
     return false;
   }
 
+  // Get the page number
   getPageNum(major: string) {
     if (!this.majorOpportunities[major]) { return 1; }
     return this.majorOpportunities[major].pageNum;
   }
 
+  // Check if there is a previous page
   hasPrevPage(major: string) {
     if (!this.majorOpportunities[major]) { return false; }
     if (this.majorOpportunities[major].pageNum > 1) { return true; }
     return false;
   }
 
+  // Reset the page
+  // This function is called to regenerate the page
   resetPage(major: string) {
     if (!this.majorOpportunities[major]) { return; }
     this.majorOpportunities[major].pageNum = 1;
