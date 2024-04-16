@@ -9,6 +9,10 @@
     margin-bottom: 5px;
 }
 
+h1 {
+    font-weight: 500;
+}
+
 .accept-status-text {
     color: green;
     border: 1px solid green;
@@ -91,9 +95,9 @@
     width: 6%;
 }
 
-.mat-column-actions {
+/* .mat-column-actions {
     width: 30%;
-}
+} */
 
 .buttons > * {
     margin-top: 3px;
@@ -101,6 +105,7 @@
 }
 
 .filter {
+    padding-top: 2%;
     width: 25% !important;
 }
 

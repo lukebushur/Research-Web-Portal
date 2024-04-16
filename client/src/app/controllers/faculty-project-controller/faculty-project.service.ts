@@ -44,6 +44,14 @@ export class FacultyProjectService {
     return this.http.delete(`${this.apiUrl}/projects/deleteProject`, options);
   }
 
+  //This method takes the projectID from the webpage and then makes a request to unarchive an archived project
+  unarchiveProject(projectID: string): Observable<any> { 
+    const headers = this.authService.getHeaders();
+    const data = { "projectID": projectID }
+
+    return this.http.put(`${this.apiUrl}/projects/unarchiveProject`, data, { headers });
+  }
+
   archiveProject(projectId: string): Observable<any> {
     const headers = this.authService.getHeaders();
     const data = { "projectID": projectId }

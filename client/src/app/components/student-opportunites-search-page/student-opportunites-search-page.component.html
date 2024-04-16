@@ -61,7 +61,7 @@
 
         <div class="searchFilterDiv">
           <mat-form-field>
-            <input matInput type="number" placeholder="GPA" name="GPA" [(ngModel)]="GPA" min="0" max="4">
+            <input matInput type="text" placeholder="GPA" name="GPA" [(ngModel)]="GPA" [pattern]="gpaPattern">
           </mat-form-field>
         </div>
       </div>
@@ -94,7 +94,7 @@
         <div class="resultFilterDiv">
           <mat-form-field>
             <mat-label>GPA</mat-label>
-            <input matInput type="number" [(ngModel)]="filterGPA" (ngModelChange)="onSliderChange()" min="0" max="4">
+            <input matInput type="text" [(ngModel)]="filterGPA" (ngModelChange)="onSliderChange()" [pattern]="gpaPattern">
           </mat-form-field>
         </div>
 

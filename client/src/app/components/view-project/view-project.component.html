@@ -230,10 +230,10 @@
                 {{student.status}}ed
               </p>
               } @else {
-              <button mat-raised-button color="primary" (click)="applicationDecision(student.application, 'Accept')"
+              <button mat-raised-button color="primary" (click)="openConfirmationDialog(student.application, 'Accept', 'accept this user?')"
                 class="accept-button">Accept</button>
               <button mat-raised-button color="warn"
-                (click)="applicationDecision(student.application, 'Reject')">Reject</button>
+                (click)="openConfirmationDialog(student.application, 'Reject', 'reject this user?')">Reject</button>
               }
             </td>
           </ng-container>

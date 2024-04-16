@@ -17,6 +17,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { QuestionData } from 'src/app/_models/projects/questionData';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
@@ -112,7 +114,8 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     private route: ActivatedRoute,
     private facultyService: FacultyProjectService,
     private _liveAnnouncer: LiveAnnouncer,
-    private location: Location
+    private location: Location,
+    public dialog: MatDialog
   ) {
     // Grab project type and project ID from the URL parameters
     this.projectType = this.route.snapshot.paramMap.get('projectType')!;
@@ -380,5 +383,18 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
   // Send the user back
   back() {
     this.location.back();
+  }
+
+  openConfirmationDialog(app: string, decision: string, sentence: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // User clicked "Yes", perform your action here
+        this.applicationDecision(app, decision);
+      } else {
+        // User clicked "No" or closed the dialog
+      }
+    });
   }
 } 

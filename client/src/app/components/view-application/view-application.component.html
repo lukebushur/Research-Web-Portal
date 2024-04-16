@@ -78,12 +78,12 @@
             {{applicationStatus}}</span></p>
         @if (responseData.applicantData.status === 'Pending') {
         <button mat-raised-button color="primary"
-          (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
+          (click)="openConfirmationDialog(responseData.applicantData.application, projectID, 'Accept', 'accept this user?')"
           class="accept-button">Accept</button>
         }
         @if (responseData.applicantData.status === 'Pending') {
         <button mat-raised-button color="warn"
-          (click)="applicationDecision(responseData.applicantData.application, projectID, 'Reject')">Reject</button>
+          (click)="openConfirmationDialog(responseData.applicantData.application, projectID, 'Reject', 'reject this user?')">Reject</button>
         }
       </mat-card-content>
     </mat-card>
