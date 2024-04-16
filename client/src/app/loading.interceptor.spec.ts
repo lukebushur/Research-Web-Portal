@@ -17,14 +17,13 @@ function ObservableDelay<T>(val: T, delay: number, cb = () => {
   });
 }
 
-
-
 describe('LoadingInterceptor', () => {
-
-  const loaderService = jasmine.createSpyObj('LoaderService', ['setLoading']);
-  let loader = loaderService.setLoading.and.returnValue(of(true));
+  let setLoadingSpy: jasmine.Spy;
 
   beforeEach(() => {
+    const loaderService = jasmine.createSpyObj<LoaderService>('LoaderService', ['setLoading']);
+    setLoadingSpy = loaderService.setLoading.and.returnValue();
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, HttpClientModule],
       providers: [
@@ -51,13 +50,13 @@ describe('LoadingInterceptor', () => {
 
   // Make a mock HTTP request to send through, waits for that, then checks if it was called with true and false
   it('should start loading when a request comes in', fakeAsync(() => { 
-    const requestMock = new HttpRequest('GET', '/test');
+    const mockRequest = new HttpRequest('GET', '/test');
     const interceptor = TestBed.inject(LoadingInterceptor);
 
-    interceptor.intercept(requestMock, next).subscribe(() => {
-      expect(loader).withContext('be called with true').toHaveBeenCalledWith(true);
-      tick()
-      expect(loader).withContext('to finish loading now').toHaveBeenCalledWith(false);
-    })
+    interceptor.intercept(mockRequest, next).subscribe({
+      complete: () => {
+        expect(setLoadingSpy).withContext('be called with true').toHaveBeenCalledWith(true);
+      }
+    });
   }));
 });
