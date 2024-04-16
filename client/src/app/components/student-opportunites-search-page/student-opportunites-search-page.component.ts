@@ -19,6 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-student-opportunites-search-page',
@@ -41,7 +42,8 @@ import { SpinnerComponent } from '../spinner/spinner.component';
     MatCardModule,
     MatDividerModule,
     SpinnerComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTooltipModule,
   ]
 })
 export class StudentOpportunitesSearchPageComponent {
@@ -107,7 +109,6 @@ export class StudentOpportunitesSearchPageComponent {
     // Send the search request to the back-end
     this.search.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
-        console.log(data);
         // Set the opportunities to the search results
         this.allOpportunities = data.success.results;
         this.filteredOpportunities = this.allOpportunities;
@@ -135,6 +136,8 @@ export class StudentOpportunitesSearchPageComponent {
     // If there are more opportunities to display, display the next page
     this.opportunities = this.filteredOpportunities.slice(this.npp * this.pageNum, this.npp * (this.pageNum + 1))
     this.pageNum++;
+    let firstOpp = document.getElementById('firstOpp');
+    firstOpp?.scrollIntoView({ behavior: 'smooth' });
   }
 
   // Move to the previous page
@@ -142,6 +145,8 @@ export class StudentOpportunitesSearchPageComponent {
     // If there is a previous page, display it
     this.pageNum--;
     this.opportunities = this.filteredOpportunities.slice(this.npp * (this.pageNum - 1), this.npp * this.pageNum)
+    let firstOpp = document.getElementById('firstOpp');
+    firstOpp?.scrollIntoView({ behavior: 'smooth' });
   }
 
   // Check if there is a next page
@@ -280,9 +285,8 @@ export class StudentOpportunitesSearchPageComponent {
 
   // View project
   viewProject(project: any) {
-    // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
-    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project._id}`]);
+    this.router.navigate([`/student/view-project/${project.professorEmail}/${project._id}`]);
   }
 
   onCheckboxChange(event: MatSelectChange) {

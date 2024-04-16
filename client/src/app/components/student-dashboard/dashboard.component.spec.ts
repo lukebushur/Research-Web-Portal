@@ -183,7 +183,7 @@ describe('StudentDashboard', () => {
     )
     buttonDebugElement.triggerEventHandler('click', null)
     // Make sure it navigates you to the right place
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${btoa(testProjectData.professorEmail)}/${testProjectData._id}`]);
+    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${testProjectData.professorEmail}/${testProjectData._id}`]);
   })
 
   it('should navigate you to apply-to-project', () => {

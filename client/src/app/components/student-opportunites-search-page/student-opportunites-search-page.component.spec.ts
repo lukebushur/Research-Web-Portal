@@ -205,7 +205,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     fixture.detectChanges();
     // Find the button we want
     const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent.trim() === 'Apply'
+      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent.trim() === 'APPLY'
     )
     // Click the button
     buttonDebugElement.triggerEventHandler('click', null)

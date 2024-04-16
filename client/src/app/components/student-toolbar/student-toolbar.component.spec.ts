@@ -35,6 +35,7 @@ describe('StudentToolbarComponent', () => {
       providers: [provideRouter([])]
     });
     fixture = TestBed.createComponent(StudentToolbarComponent);
+    // loader for Material component testing
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
