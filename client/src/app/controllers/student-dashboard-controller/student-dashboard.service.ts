@@ -14,12 +14,14 @@ export class StudentDashboardService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   // Send request to the back-end for the applications associated with the user
+  // uses our auth service in order to insert our http headers
   getStudentApplications(): Observable<any> {
     const headers = this.authService.getHeaders()
     return this.http.get(`${this.apiUrl}/applications/getApplications`, { headers });
   }
 
   // Send request to the back-end for all the opportunities available to students
+  // uses our auth service in order to insert our http headers
   getOpportunities(): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers })
@@ -27,17 +29,22 @@ export class StudentDashboardService {
 
   // Send request to the back-end for the majors list associated with the given
   // university or the user's university
+  // uses the authservice in order to get the available majors from a university
   async getAvailableMajors(university?: string): Promise<Observable<any>> {
     return await this.authService.getMajors(university);
   }
 
   // Send request to the back-end for the student user's information
+  // uses our auth service in order to insert our http headers
+  // uses the /accountManagement/getAccountInfo route
   getStudentInfo(): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`, { headers })
   }
 
   //Send a request to grab a singular application from the student perspective
+  // uses our auth service in order to insert our http headers
+  // uses the /applications/getApplication route
   getApplication(applicationID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
@@ -51,6 +58,8 @@ export class StudentDashboardService {
   }
 
   // Get the project information for the given professor and project ID
+  // uses our auth service in order to insert our http headers
+  //uses the /applications/getProjectInfo route
   getProjectInfo(professorEmail: string, projectID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
@@ -65,6 +74,8 @@ export class StudentDashboardService {
   }
 
   // To update an application pass the application ID and the questions to update
+  // uses our auth service in order to insert our http headers
+  // uses the /applications/updateApplication route
   updateApplication(applicationID: string, questions: any): Observable<any> {
     const headers = this.authService.getHeaders();
 
@@ -79,6 +90,7 @@ export class StudentDashboardService {
   }
 
   // To delete an application pass the application ID
+  // uses our auth service in order to insert our http headers
   deleteApplication(applicationID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
