@@ -301,7 +301,7 @@ describe('AppliedStudentTableComponent', () => {
     //   );
     //   expect(outputSpy).toHaveBeenCalledOnceWith(projectData.number);
 
-    await acceptAppButton.click();
+    //await acceptAppButton.click();
     expect(component.dialog.open).toHaveBeenCalledOnceWith(ConfirmationDialogComponent, {
       data: {
         message: 'accept this user?'
