@@ -115,7 +115,6 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     private route: ActivatedRoute,
     private facultyService: FacultyProjectService,
     private _liveAnnouncer: LiveAnnouncer,
-    private authService: AuthService,
     private location: Location,
     public dialog: MatDialog
   ) {
@@ -385,19 +384,6 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
   // Send the user back
   back() {
     this.location.back();
-  }
-
-  openConfirmationDialog(app: string, decision: string, sentence: string): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        // User clicked "Yes", perform your action here
-        this.applicationDecision(app, decision);
-      } else {
-        // User clicked "No" or closed the dialog
-      }
-    });
   }
 
   openConfirmationDialog(app: string, decision: string, sentence: string): void {
