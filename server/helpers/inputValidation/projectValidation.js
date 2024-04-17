@@ -41,7 +41,7 @@ const applicationValidation = async (req, res, next) => {
         let today = new Date();
         let deadline = new Date(project.deadline);
 
-        if (givenDate > today) {
+        if (deadline < today) {
             res.status(400).json(generateRes(false, 400, "DEADLINE_EXPIRED", {}));
             return;
         }
