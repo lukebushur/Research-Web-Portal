@@ -10,10 +10,14 @@ export class AuthService {
   
   constructor(private http: HttpClient,) { }
 
+  //our api url from out environments file
   apiUrl = environment.apiUrl;
   
+  //used as a function to get the headers to avoid reuse of code where this would be written in almost every http call
   getHeaders() {
+    //gets the jwt token from local storage
     const authToken = localStorage.getItem("jwt-auth-token");
+    //sets our http headers with our auth token
     return new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${authToken}`,
