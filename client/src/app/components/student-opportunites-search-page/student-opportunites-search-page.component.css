@@ -15,10 +15,14 @@
   width: 33%;
 }
 
+.search-form-field {
+  width: 25%;
+}
+
 #searchButton {
-  margin-left: 4%; 
-  height: 4em;
-  width: 17.5%;
+  margin-left: 20px; 
+  /* height: 4em;
+  width: 17.5%; */
 }
 
 #resetButton {
@@ -144,4 +148,5 @@
 
 .title {
   font-weight: 500;
+  margin-bottom: 20px;
 }
