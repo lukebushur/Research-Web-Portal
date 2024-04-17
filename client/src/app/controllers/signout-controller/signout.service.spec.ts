@@ -8,6 +8,8 @@ describe('SignoutService', () => {
   const randomToken = '1234567890'
 
   beforeEach(() => {
+    // set the authentication token in the browser before anything happens
+    // (signifies that a user is signed in)
     localStorage.setItem('jwt-auth-token', randomToken)
     TestBed.configureTestingModule({});
     service = TestBed.inject(SignoutService);
