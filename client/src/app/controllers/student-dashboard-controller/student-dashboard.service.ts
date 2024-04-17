@@ -41,38 +41,48 @@ export class StudentDashboardService {
   getApplication(applicationID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
+    // Data to send to the back-end
     const data = {
       "applicationID": applicationID
     }
 
+    // Send the request to the back-end
     return this.http.post(`${this.apiUrl}/applications/getApplication`, data, { headers })
   }
 
+  // Get the project information for the given professor and project ID
   getProjectInfo(professorEmail: string, projectID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
+    // Generate the data to send to the back-end
     const data = {
       "professorEmail": professorEmail,
       "projectID": projectID
     }
 
+    // Send the request to the back-end
     return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data, { headers })
   }
 
+  // To update an application pass the application ID and the questions to update
   updateApplication(applicationID: string, questions: any): Observable<any> {
     const headers = this.authService.getHeaders();
 
+    // Data to send to the back-end
     const data = {
       "questions": questions,
       "applicationID": applicationID
     }
 
+    // Send the request to the back-end
     return this.http.put(`${this.apiUrl}/applications/updateApplication`, data, { headers })
   }
 
+  // To delete an application pass the application ID
   deleteApplication(applicationID: string): Observable<any> {
     const headers = this.authService.getHeaders();
 
+    // Options to send to the back-end
     const options = {
       headers: headers,
       body: {
@@ -80,6 +90,8 @@ export class StudentDashboardService {
       }
     }
 
+    // Send the request to the back-end
+    // The delete method is used to send the application ID in the body of the request
     return this.http.delete(`${this.apiUrl}/applications/deleteApplication`, options);
   }
 }

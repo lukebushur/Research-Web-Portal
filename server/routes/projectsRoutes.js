@@ -34,7 +34,12 @@ router.put('/updateProject', [verifyToken, projectValidation("update")], faculty
 router.put('/archiveProject', [verifyToken], facultyProjects.archiveProject);
 
 //PUT Unarchive a project and move it to the active project
+
 router.put('/unarchiveProject', [verifyToken], facultyProjects.unarchiveProject);
+
+//PUT Accept or Reject an application for a project
+router.put('/application', verifyToken, decisionValidation, facultyProjects.applicationDecision);
+
 
 //PUT Accept or Reject an application for a project - utilizies decisionValidation middleware to ensure than the choice made with the request
 //is a value that the server expects so that the backend and frontend applications can work with the data stored in the database

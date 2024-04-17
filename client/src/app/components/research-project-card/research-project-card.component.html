@@ -1,6 +1,6 @@
 <mat-card class="project-card" [style.background-color]="selected ? '#ebd99f' : 'white'">
   <mat-card-title class="project-card-title">
-    <a routerLink="/faculty/view-project/{{ project.projectType }}/{{ project.id }}">
+    <a class="project-name" routerLink="/faculty/view-project/{{ project.projectType }}/{{ project.id }}" [matTooltip]="project.projectName">
       {{ project.projectName }}
     </a>
   </mat-card-title>

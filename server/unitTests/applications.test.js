@@ -637,6 +637,7 @@ describe('BE-APP-1.3 : POST /api/applications/createApplication', () => {
                 },]
             })
             .end((err, res) => {
+
                 expect(res.status).to.be.oneOf([400, 500]);
                 expect(res.body).to.have.property('error');
                 expect(res.body.error).to.have.property('status').to.be.oneOf([400, 500]);

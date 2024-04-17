@@ -84,8 +84,7 @@
                 }
               </mat-radio-group>
             </div>
-            }
-            @else if (question.requirementType === 'check box') {
+            } @else if (question.requirementType === 'check box') {
             <div class="radio-group">
               <section>
                 @for (choice of question.choices; track choice; let j = $index) {
@@ -93,8 +92,7 @@
                 }
               </section>
             </div>
-            }
-            @else {
+            } @else {
             <div>
               <div class="text-response">
                 <mat-form-field>

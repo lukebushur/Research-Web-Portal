@@ -143,15 +143,13 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
   }
 
   openConfirmationDialog(app: string, decision: string, sentence: string): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {data: {message: sentence}});  
-
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
         // User clicked "Yes", perform your action here
         this.applicationDecision(app, decision);
       } else {
         // User clicked "No" or closed the dialog
-        
       }
     });
   }
