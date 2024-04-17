@@ -40,6 +40,7 @@ export class EditProfileScreenComponent implements OnInit {
 
   majors: string[] = [];
 
+  //formgroup that shows the inputs that will be on the page along with the validators
   editProfileForm = new FormGroup({
     name: new FormControl('', [
       Validators.required,
@@ -60,10 +61,12 @@ export class EditProfileScreenComponent implements OnInit {
     ]),
   })
 
+  //on initialization update the form with the updated values
   ngOnInit(): void {
     this.updateForm();
   }
 
+  //function that navigates to the forgot password screen
   navigateToEmailResetScreen() {
     this.router.navigate(['/forgot-password']);
   }
@@ -71,13 +74,13 @@ export class EditProfileScreenComponent implements OnInit {
   // Error message for name based on validators
   nameErrorMessage(): string {
     if (this.editProfileForm.get('name')?.hasError('required')) {
-      return 'Name is a required field';
+      return 'Name is a required field';//name must submit something
     }
     if (this.editProfileForm.get('name')?.hasError('minlength')) {
-      return 'Minimum length: 2';
+      return 'Minimum length: 2'; //name must be min length 2
     }
     if (this.editProfileForm.get('name')?.hasError('maxlength')) {
-      return 'Maximum length: 25';
+      return 'Maximum length: 25';//name must be max length 25
     }
     return '';
   }
@@ -105,15 +108,17 @@ export class EditProfileScreenComponent implements OnInit {
     return '';
   }
 
+  //function that updates the form with the most updated values, also will update whenever you switch universities to get the correct majors list
   async updateForm(): Promise<void> {
+    //upon change in the university value
     if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.editProfileForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.editProfileForm.get('universityLocation')?.value;
-      const getMajorsPromise = await this.authService.getMajors(this.prevSelectedUniversity ?? undefined);
+      const getMajorsPromise = await this.authService.getMajors(this.prevSelectedUniversity ?? undefined);//gets the list of majors for new university
       getMajorsPromise.subscribe({
         next: (data: any) => {
           if (data.success) {
-            this.majors = data.success.majors.toSorted();
+            this.majors = data.success.majors.toSorted();//upon success get the list of majors in order
           }
         },
         error: (data: any) => {
@@ -121,8 +126,10 @@ export class EditProfileScreenComponent implements OnInit {
         },
       });
     }
+    //gets the current information about the account
     this.authService.getAccountInfo().subscribe({
       next: (data: any) => {
+        //updates the profile form value with the current info upon success
         const accountInfo = data.success.accountData;
         this.editProfileForm.get('name')?.setValue(accountInfo.name);
         this.editProfileForm.get('GPA')?.setValue(accountInfo.GPA);
@@ -138,11 +145,10 @@ export class EditProfileScreenComponent implements OnInit {
   }
 
   onSubmit() {
-    // TODO: fix majors and GPA not changing
+    //calls the profile service to make changes with the given input
     this.profileService.submitProfileChanges(this.editProfileForm.value).subscribe({
       next: (data: any) => {
-        console.log('Profile Updated Successfully');
-        // this.location.back();
+        console.log('Profile Updated Successfully');//response for a successful profile update
       },
       error: (data: any) => {
         console.error('Profile change request failed', data);
