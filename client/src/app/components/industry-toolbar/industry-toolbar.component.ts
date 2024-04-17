@@ -30,6 +30,7 @@ export class IndustryToolbarComponent {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
+  // routes that the industry user can navigate to via the sidenav
   navigationChoices: NavChoice[] = [
     {
       name: 'Dashboard',
@@ -58,6 +59,12 @@ export class IndustryToolbarComponent {
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
   ) {
+    // Keeps track of the max-width of the browser that the web portal is running
+    // in. If it is less than 600px, then the mobile view is in use where the
+    // sidenav is overlayed on top of the inner content when the navigation list
+    // is active. If it is greater than 600px, then the desktop view is in use,
+    // where the sidenav pushes the inner content to the side to make room for
+    // the active navigation list (when it is active).
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);

@@ -12,9 +12,12 @@ export class PostCreationService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
+  // Send HTTP post request to the server to create the project with the given
+  // information.
+  // Returns an observable containing the result of the HTTP request.
   createPost(data: any): Observable<any> {
     const headers = this.authService.getHeaders();
 
-    return this.http.post(`${this.apiUrl}/projects/createProject`, data, {headers: headers});
+    return this.http.post(`${this.apiUrl}/projects/createProject`, data, { headers: headers });
   }
 }

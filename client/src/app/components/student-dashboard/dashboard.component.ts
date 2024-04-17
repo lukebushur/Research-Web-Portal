@@ -20,8 +20,8 @@ import { SearchOptions } from 'src/app/_models/searchOptions';
     MatCardModule,
     MatTooltipModule,
     MatDividerModule,
-    SpinnerComponent
-]
+    SpinnerComponent,
+  ]
 })
 export class StudentDashboard {
   constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService, private search: SearchProjectService) { }
@@ -104,10 +104,8 @@ export class StudentDashboard {
 
   // View project
   viewProject(project: any) {
-    // Convert the email to Base64
-    // btoa -> Converts the email to Base64
     // Navigate the student to the view-project page
-    this.router.navigate([`/student/view-project/${btoa(project.professorEmail)}/${project._id}`]);
+    this.router.navigate([`/student/view-project/${project.professorEmail}/${project._id}`]);
   }
 
   // Get student information

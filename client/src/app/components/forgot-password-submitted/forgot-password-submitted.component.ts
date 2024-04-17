@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -6,6 +7,6 @@ import { RouterLink } from '@angular/router';
   templateUrl: './forgot-password-submitted.component.html',
   styleUrls: ['./forgot-password-submitted.component.css'],
   standalone: true,
-  imports: [RouterLink]
+  imports: [RouterLink, MatCardModule]
 })
 export class ForgotPasswordSubmittedComponent { }

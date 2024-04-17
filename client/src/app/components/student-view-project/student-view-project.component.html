@@ -1,0 +1,97 @@
+@if (projectData$ | async; as project) {
+<div class="page-container" id="applicantData">
+  <mat-accordion class="align-headers" multi>
+    <mat-expansion-panel #projectExpPanel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Project Information</mat-panel-title>
+        <mat-panel-description>
+          Click to {{ projectExpPanel.expanded ? 'close' : 'open' }}
+          <mat-icon>description</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="project-information-container">
+        <mat-card class="content-card">
+          <mat-card-header>
+            <mat-card-title>
+              <h2>{{ project.projectName }}</h2>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="information">
+            <h2>Description:</h2>
+            <p>{{ project.description }}</p>
+            @if (project.responsibilities) {
+            <h2>Responsibilities:</h2>
+            <p>{{ project.responsibilities }}</p>
+            }
+            @if (project.categories && project.categories.length > 0) {
+            <h2>Categories:</h2>
+            <p>{{ project.categories.join(', ') }}</p>
+            }
+            <h2>Posted:</h2>
+            <p>{{ project.posted | date: 'longDate' }}</p>
+            <h2>Deadline:</h2>
+            <p>{{ project.deadline | date: 'longDate' }}</p>
+            @if (project.GPA) {
+            <h2>Minimum Required GPA:</h2>
+            <p>{{ project.GPA | number: '1.2-2' }}</p>
+            }
+            @if (project.majors && project.majors.length > 0) {
+            <h2>Applicable Major(s):</h2>
+            <p>{{ project.majors.join(', ') }}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel #questionsExpPanel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Project Questions</mat-panel-title>
+        <mat-panel-description>
+          Click to {{ questionsExpPanel.expanded ? 'close' : 'open' }}
+          <mat-icon>quiz</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      @for (question of project.questions; track question; let i = $index) {
+      <div class="questions-container">
+        <mat-card class="content-card">
+          <mat-card-header>
+            <mat-card-title>
+              <h2>Question {{ i + 1}}</h2>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="single-question-container">
+              <p class="question-text">{{ question.question }}</p>
+              <h3>Required Question?</h3>
+              <p>{{ question.required ? 'Yes' : 'No' }}</p>
+              <h3>Question Type:</h3>
+              <p>{{ displayRequirementType(question.requirementType) }}</p>
+              @if (question.requirementType === 'radio button' || question.requirementType === 'check box') {
+              <div class="choices-container">
+                <h3>Choices:</h3>
+                @for (choice of question.choices; track choice) {
+                <div colspan="1" rowspan="1" class="choice-value">
+                  @if (question.requirementType === 'radio button') {
+                  <mat-radio-button disabled>{{ choice }}</mat-radio-button>
+                  }
+                  @if (question.requirementType === 'check box') {
+                  <mat-checkbox disabled>{{ choice }}</mat-checkbox>
+                  }
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      }
+    </mat-expansion-panel>
+    <div class="buttons-container">
+      <button mat-raised-button color="primary" (click)="apply()">APPLY</button>
+      <button mat-raised-button (click)="back()">CANCEL</button>
+    </div>
+  </mat-accordion>
+</div>
+}
+<app-spinner></app-spinner>

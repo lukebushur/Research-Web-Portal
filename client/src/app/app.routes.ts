@@ -26,6 +26,7 @@ import { StudentToolbarComponent } from "./components/student-toolbar/student-to
 import { StudentViewApplicationComponent } from "./components/student-view-application/student-view-application.component";
 import { ViewApplicationComponent } from "./components/view-application/view-application.component";
 import { ViewProjectComponent } from "./components/view-project/view-project.component";
+import { StudentViewProjectComponent } from "./components/student-view-project/student-view-project.component";
 
 const routeConfig: Routes = [
   // AUTHENTICATION ROUTES
@@ -47,7 +48,7 @@ const routeConfig: Routes = [
       // Route parameters for type of project and project ID
       { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
       // This route is used to view a specific project and its applicants
-      { path: 'view-project/:projectType/:projectID', component: ViewProjectComponent },
+      { path: 'view-project/:projectType/:projectId', component: ViewProjectComponent },
       // This route has two URL parameters, one for projectID, and one for applicationID. It is used to access a specific applicant's data by the faculty
       { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
     ]
@@ -66,7 +67,7 @@ const routeConfig: Routes = [
       //This route is for students to view an overview of their applied projects
       { path: 'applications-overview', component: StudentApplicationsOverviewComponent },
       //This route is for the students to view an existing project
-      { path: 'view-project/:projectEmail/:projectID', component: ViewProjectComponent, canActivate: [AuthGuard]}
+      { path: 'view-project/:professorEmail/:projectId', component: StudentViewProjectComponent, canActivate: [AuthGuard]},
     ],
   },
 
