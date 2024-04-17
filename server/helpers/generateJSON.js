@@ -11,10 +11,10 @@ const generateRes = (isSuccessful, statusCode, message, misc) => {
         successStatus = "success";
     } else if (isSuccessful == false) {
         successStatus = "error";
-    } else {
+    } else { //This creates a server error in the case of incorrect parameter
         return generateServerError;
     }
-
+    //This also creates a server error in the case of incorrect parameter
     if (statusCode > 599 || statusCode < 100) {
         generateServerError;
     }

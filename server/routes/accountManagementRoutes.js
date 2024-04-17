@@ -1,3 +1,5 @@
+/*  This is the file for authentication and authorization routes. These routes are account type agnostic, so they can be used by either faculty or students. */
+
 const express = require('express');
 const accountManagement = require('../controllers/accountManagment');
 
@@ -10,21 +12,21 @@ const { accountModifyMajorValidation } = require('../helpers/inputValidation/acc
 const router = express.Router();
 
 //updateAccount Route, updates the account of a student or faculty
-router.post('/updateAccount', verifyToken, accountModifyMajorValidation, accountManagement.modifyAccount);
+router.post('/updateAccount', [verifyToken, accountModifyMajorValidation], accountManagement.modifyAccount);
 
-//Post Reset Password request
+//Post Reset Password request - Does not require an access token because this route is used when the user forgots their password
 router.post('/resetPassword', accountManagement.resetPassword);
 
-//Post Confirm Reset Password
+//Post Confirm Reset Password 
 router.post('/confirmResetPassword', accountManagement.resetPasswordConfirm);
 
 //POST Change Email
-router.post('/changeEmail', verifyToken, accountManagement.changeEmail);
+router.post('/changeEmail', [verifyToken], accountManagement.changeEmail);
 
 //POST Confirm Change Email
-router.post('/changeEmailConfirm', verifyToken, accountManagement.changeEmailConfirm);
+router.post('/changeEmailConfirm', [verifyToken], accountManagement.changeEmailConfirm);
 
 //GET Get account info
-router.get('/getAccountInfo', verifyToken, accountManagement.getAccountInfo);
+router.get('/getAccountInfo', [verifyToken], accountManagement.getAccountInfo);
 
 module.exports = router;

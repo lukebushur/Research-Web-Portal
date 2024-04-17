@@ -1,3 +1,8 @@
+/*  This testing file addresses success and failure cases for administrative routes, which currently are only are for defining what 
+    majors each university location allows students and faculty to choose.
+    Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
+*/
+
 const chai = require('chai');
 const chaiHTTP = require('chai-http');
 const server = require('../server.js');

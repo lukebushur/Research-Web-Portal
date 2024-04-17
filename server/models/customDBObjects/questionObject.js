@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
     could be storing the question in the faculty project records, where there shouldn't be any answers.
 */
 
+//This const array determiens what requirements are allowed and supported by the front end
 const acceptableRequirementTypes = ["text", "check box", "radio button"];
 
 class question extends mongoose.SchemaType {
@@ -68,7 +69,7 @@ class question extends mongoose.SchemaType {
 mongoose.Schema.Types.question = question;
 
 
-// HELPER METHOD BELOW
+// HELPER METHODs BELOW
 /*  This helper method ensures that a field in an object is a string and is nonempty
     It returns true if there exists a field that is a string and nonempty, and false otherwise
 */
@@ -83,6 +84,7 @@ function verifyStringField(value, fieldName) {
     }
 }
 
+//This function ensures the requirements provided match the array above
 function verifyRequirements(value) {
     if (!acceptableRequirementTypes.includes(value)) { return false; }
     return true;

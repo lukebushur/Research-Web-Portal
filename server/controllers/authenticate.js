@@ -9,10 +9,10 @@ const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../helpers/sche
 
 
 /*  This function handles the login funciton, should only be used with a POST request
-    This funciton takes the login credentials and returns an accesstoken and refresh token
+    This function takes the login credentials and returns an accesstoken and refresh token
     
     The request body requires the following fields : 
-    email (String, the email of the account(might be replaced with username in future)) - password (String, the password of the account)
+    email (String, the email of the account) - password (String, the password of the account)
 */
 const login = async (req, res) => {
     try {
@@ -62,22 +62,22 @@ const login = async (req, res) => {
     }
 }
 
-/*  This Incomplete function handles the account creation, should only be used with a POST request
+/*  This function handles the account creation, should only be used with a POST request
     This function takes the information required to create an account and creates an account in the database. This function should return an access & 
     refresh token and account information upon success 
     
     The request body requires the following fields : 
     email (String, email of account) - name (String, name of user) - password (String, password for the account) - accountType (The identifier for the account type) 
-    Major (Optional String for the student's major) - universityLocation (Optinal string for the account's location) - GPA (Optional number, the gpa of the student)
+    Majors (Optional String array for the student's major(s)) - universityLocation (Optinal string for the account's location) - GPA (Optional number, the gpa of the student)
 */
 const register = async (req, res) => {
     try {
-        let error = {};
+        let error = {}; //These lines check the accountType provided, and validates it against schemas for the valid account types (student, faculty, industry)
         if (req.body.accountType == process.env.STUDENT) { error = studentRegisterSchema.validate(req.body, { abortEarly: false }); }
         else if (req.body.accountType == process.env.FACULTY) { error = facultyRegisterSchema.validate(req.body, { abortEarly: false }); }
         else if (req.body.accountType == process.env.INDUSTRY) { error = facultyRegisterSchema.validate(req.body, { abortEarly: false }); }
-        else if (req.body.accountType == process.env.ADMIN) { error.error = true; }
-        else { error.error = true; }
+        else if (req.body.accountType == process.env.ADMIN) { error.error = true; } //Admin accounts should only be set up by people with database / developer access
+        else { error.error = true; } //otherwise if none of these cases occurred, throw an error
         if (error.error) { //Validates the request body against the registration schema, otherwise sends an error response
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
                 errors: error.details, original: error._original
@@ -114,7 +114,6 @@ const register = async (req, res) => {
                 userType: userInfo,
             });
 
-
             //attempt save user
             await user.save();
 
@@ -132,9 +131,9 @@ const register = async (req, res) => {
                     },
                 },
             });
-
-            //await sendEmailConfirmation(user);
-
+            //send the confirmation to the user
+            await sendEmailConfirmation(user);
+            //indicate registeration was successful
             res.status(200).header().json(
                 generateRes(true, 200, "REGISTER_SUCCESS", {
                     accessToken: access_token,
@@ -177,7 +176,7 @@ const token = async (req, res) => {
             const user = await retrieveOrCacheUsers(req, decodeRefreshToken.email);
             const existingTokens = user.security.tokens;
 
-            //checking if refresh token is in document
+            //checking if refresh token is in record
             if (existingTokens.some(token => token.refreshToken === refreshToken)) {
                 //generate new access token
                 const access_token = generateAccessToken(user.id, user.email, user.name);
@@ -210,7 +209,7 @@ const token = async (req, res) => {
     
     The request body requires the following fields : 
     emailToken (String, the token that will be used to attempt to validate the email of the account)
-*/
+*/ 
 const confirmEmailToken = async (req, res) => {
     try {
         const emailToken = req.body.emailToken;
@@ -249,7 +248,8 @@ const confirmEmailToken = async (req, res) => {
 
 /*  This function gets the list of available majors from the university given as a 
     query parameter. It has no other requirements and can be used by any account type, 
-    including student, faculty, and industry. It takes no fields in the request body.
+    including student, faculty, and industry. It takes one field in the body: 
+    university (String, the name of the university's majors that is being queried)
 */
 const getAvailableMajors = async (req, res) => {
     try {
@@ -258,7 +258,7 @@ const getAvailableMajors = async (req, res) => {
         if (!location) {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
-
+        //grab majors record
         majorsRecord = await retrieveOrCacheMajors(req, location);
 
         if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
@@ -269,21 +269,9 @@ const getAvailableMajors = async (req, res) => {
     }
 }
 
-
-/* Test function, nothing important here */
-const test = async (req, res) => {
-    try {
-        req.user
-        res.send("GOOD" + req.user.email);
-    }
-    catch {
-        res.send('Error');
-    }
-}
-
 //Helper methods
 
-
+//This helper method send the email confirmation link through the email
 const sendEmailConfirmation = async (user) => {
     let transport = nodemailer.createTransport({
         service: 'gmail',
@@ -292,7 +280,7 @@ const sendEmailConfirmation = async (user) => {
             pass: process.env.EMAIL_PASSWORD
         }
     });
-
+    
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
@@ -306,7 +294,7 @@ const sendEmailConfirmation = async (user) => {
         }
     });
 }
-// These two function handles the token generation, either accesstoken for accessing api/webapp or refresh token for regenerating an access token
+//This function generates a valid access token
 const generateAccessToken = (id, email, uName) => {
     let items = {
         _id: id,
@@ -315,7 +303,7 @@ const generateAccessToken = (id, email, uName) => {
     }
     return JWT.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
 }
-
+//This function generates an expired access token for unit tests
 const generateExpiredToken = (id, email, uName) => {
     let items = {
         _id: id,
@@ -324,7 +312,7 @@ const generateExpiredToken = (id, email, uName) => {
     }
     return JWT.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: "2s" })
 }
-
+//This function generates a refresh token 
 const generateRefreshToken = (id, email, uName) => {
     let items = {
         _id: id,
@@ -333,7 +321,7 @@ const generateRefreshToken = (id, email, uName) => {
     }
     return JWT.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
 }
-
+//This function generates an expired refresh token for unit tests
 const generateExpiredRefreshToken = (id, email, uName) => {
     let items = {
         _id: id,
@@ -391,7 +379,7 @@ const addRefreshToken = async (user, refreshToken) => {
 
 
 module.exports = {
-    test, register, token,
+    register, token,
     confirmEmailToken, login,
     getAvailableMajors, generateExpiredToken,
     generateExpiredRefreshToken, addRefreshToken
