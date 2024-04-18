@@ -306,6 +306,6 @@ describe('AppliedStudentTableComponent', () => {
     // data: {
     //    message: 'accept this user?'
     //  }
-    });
+   // });
   });
 });
