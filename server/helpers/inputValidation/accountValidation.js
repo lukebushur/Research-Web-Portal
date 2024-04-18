@@ -1,13 +1,12 @@
-/*  This JavaScript file will handle the necessary validation for creating accountActions such as registration and modification
-*/
+//  This JavaScript file will handle the necessary validation for creating accountActions such as registration and modification, any other 
+//  account related validations should be put in here.
 
-const User = require('../../models/user');
-const Majors = require('../../models/majors');
 const JWT = require('jsonwebtoken');
 const generateRes = require('../generateJSON');
 const { getMajors } = require('./validationHelpers');
 const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../schemaCaching');
 
+//  This middleware provides the validation required for account registering, such as ensuring that the account's major and GPA is correct (for student)
 const registerMajorValidation = async (req, res, next) => {
     try {
         const majors = await retrieveOrCacheMajors(req, req.body.universityLocation);
@@ -15,7 +14,7 @@ const registerMajorValidation = async (req, res, next) => {
             res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Invalid university location." }));
             return;
         }
-        //If account type is a student, then validate its fields are valid
+        //If account type is a student, then validate its fields are valid. If other faculty specific validation becomes required, then create an else if to address that case
         if (req.body.accountType == process.env.STUDENT) {
             if (!req.body.GPA || !req.body.Major) {
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Missing student fields." }));
@@ -65,7 +64,7 @@ const accountModifyMajorValidation = async (req, res, next) => {
 
         let major;
         let newMajors;
-        await Promise.all(promises).then(values => {
+        await Promise.all(promises).then(values => { //Excute one or both promises depending on if the university location is getting switched
             major = values[0];
             if (values.length > 1) {
                 newMajors = values[1];
@@ -97,10 +96,6 @@ const accountModifyMajorValidation = async (req, res, next) => {
         res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
         return;
     }
-}
-//This will ensure the account is validated before allowing the request to continue. It will also pass the user object along to the next function that handles the request
-confirmAccountValidation = async (req, res, next) => {
-
 }
 
 module.exports = {

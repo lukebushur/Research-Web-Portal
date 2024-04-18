@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const customObjects = require('./customDBObjects/questionObject');
 
 const researchOpp = new mongoose.Schema({
-    type: {
+    type: { //Type identifies what type of project record the record is, active, draft, or archived. Only active projects can be applied to
         type: String,
         required: true,
     },
@@ -33,8 +33,8 @@ const researchOpp = new mongoose.Schema({
             type: String,
             required: false
         }],
-        applications: [
-            {
+        applications: [ //This is an array of objects that holds information regarding the applicants. (Small amount of data duplication)
+            { 
                 applicationRecordID: {
                     type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationRecord'
                 },

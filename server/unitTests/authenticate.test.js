@@ -1,3 +1,8 @@
+/*  This testing file addresses success and failure cases for account authentication and authorization, including creating accounts,
+    reseting passwords, confirming accounts, changing emails, and loging in.
+    Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
+*/
+
 const chai = require('chai');
 const chaiHTTP = require('chai-http');
 const server = require('../server.js');

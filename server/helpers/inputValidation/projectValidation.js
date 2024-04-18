@@ -19,7 +19,7 @@ const statusChoices = ["Hold", "Accept", "Reject"]; //This is a const array for 
 
     This method will grab the questions, and projectID from the request. In the case of the createApplication route, the project ID is provided,
     but in the case of the updateApplication route the projectID is not provided and it will be grabbed from the application record. Then, once the
-    projectID is taken the answers will be compared against the question to ensure the number of questions and answers match, the required questions have
+    projectID is taken, the answers will be compared against the question to ensure the number of questions and answers match, the required questions have
     answers, and that the answers for multiple choice match that of the provided choices.
 */
 const applicationValidation = async (req, res, next) => {
@@ -28,14 +28,22 @@ const applicationValidation = async (req, res, next) => {
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
         const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email); //Get student record
-        if (student && student.userType.Type == process.env.FACULTY) { return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {})); }
+        if (student && student.userType.Type != process.env.STUDENT) { return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {})); }
 
         const project = await getProject(req, res, student);
-        if (!project) { return; } //If the project is not found, then a response has already been generated, so the function should end
+        if (!project) { return; } //If the project is not found, then an error response has already been generated, so the function should end
         const studentQuestions = req.body.questions;
         const facultyQuestions = project.questions;
         if (facultyQuestions.length === 0 && studentQuestions.length === 0) { //If facultyQuestions.length is 0, that means questions were retrieved but it was empty so move on if the student's questions are also empty
             next();
+        }
+
+        let today = new Date();
+        let deadline = new Date(project.deadline);
+
+        if (deadline < today) {
+            res.status(400).json(generateRes(false, 400, "DEADLINE_EXPIRED", {}));
+            return;
         }
 
         //If there are missing questions or if the length of each array of questions are different, throw and error
@@ -44,25 +52,25 @@ const applicationValidation = async (req, res, next) => {
             return;
         }
 
-        for (let i = 0; i < facultyQuestions.length; i++) { //CASES 2 IF MULTIPLE CHOICE QUESTIONS have an provided answer - 
-            if (facultyQuestions[i].required) { //Checks to see that each required question has a respective answer
-                if (!studentQuestions[i].answers) {
+        for (let i = 0; i < facultyQuestions.length; i++) { //Explores each faculty question, and validates them 
+            if (facultyQuestions[i].required) { //Checks if the faculty question is required
+                if (!studentQuestions[i].answers) { //If the faculty question is required and the student quetsion does not have an answer, then return an error
                     res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Missing required answers." }));
                     return;
                 }
             }
 
-            if (questionsWithChoices.includes(facultyQuestions[i].requirementType)) {
+            if (questionsWithChoices.includes(facultyQuestions[i].requirementType)) { //Check that the requirement type matches a multiple choice question
                 if (!studentQuestions[i].answers && !facultyQuestions[i].required) { continue } //if the question is not required and there is no answer continue
-                else if (!studentQuestions[i].answers.every(x => facultyQuestions[i].choices.includes(x))) {
+                else if (!studentQuestions[i].answers.every(x => facultyQuestions[i].choices.includes(x))) { //Otherwise check that the student response is one of the faculty provided choices
                     res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Answers do not align with the choices" }));
                     return;
                 }
             }
 
-            if(facultyQuestions[i].question !== studentQuestions[i].question) {
+            if (facultyQuestions[i].question !== studentQuestions[i].question) { //checks that the student's questions match the faculty's questions
                 res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Questions do not match what is in the database" }));
-                    return;
+                return;
             }
         }
 
@@ -73,7 +81,7 @@ const applicationValidation = async (req, res, next) => {
         }
 
         let majorIncluded = false;
-        student.userType.Major.forEach((major) => { //This checks every major a student has, and if one of them is included in the project's majors, then the student is allowed to apply 
+        student.userType.Major.forEach((major) => { //This checks every major a student has. If one of them is included in the project's majors, then the student is allowed to apply 
             if (project.majors.includes(major)) { majorIncluded = true; }
         });
         if (!majorIncluded) {
@@ -83,7 +91,7 @@ const applicationValidation = async (req, res, next) => {
 
         next();
 
-    } catch (error) {
+    } catch (error) { //Otherwise error
         res.status(500).json(generateRes(false, 500, "INPUT_ERROR", { "details": "Error in validating requirements." }));
         return;
     }
@@ -159,12 +167,13 @@ const projectValidation = (mode = "create") => {
     }
 }
 
+//This method validates the decision route for the faculty, it ensures that the decision is a valid choice.
 const decisionValidation = async (req, res, next) => {
     try {
-        const decision = getDecision(req, res);
+        const decision = getDecision(req, res); //grab the decision value
         if (!decision) { return; } //if no decision is found, then return as the response has already been sent
 
-        if (!statusChoices.includes(decision)) {
+        if (!statusChoices.includes(decision)) { //checks that the decision is one of the allowed choices
             return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Provided decisions is not an acceptable value." }));
         }
 

@@ -180,13 +180,12 @@ const resetPasswordConfirm = async (req, res) => {
             //Hash Password
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.provisionalPassword, salt);
-            //check if password reset token expired
+            //check if password reset token expired. 
             if (new Date().getTime() <= new Date(user.security.passwordReset.expiry).getTime()) {
                 await User.updateOne({ email: req.body.email }, {
                     $set: { //resets the password reset fields, and sets the password to the new password
                         'password': hashedPassword,
                         'security.passwordReset.token': null,
-                        'security.passwordReset.provisionalPassword': null,
                         'security.passwordReset.expiry': null,
                     },
                 });

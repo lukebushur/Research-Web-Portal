@@ -229,7 +229,8 @@
                 [class.reject-status-text]="student.status === 'Reject'" class="status-text">
                 {{student.status}}ed
               </p>
-              } @else {
+              }
+              @if (student.status === 'Pending') {
               <button mat-raised-button color="primary" (click)="openConfirmationDialog(student.application, 'Accept', 'accept this user?')"
                 class="accept-button">Accept</button>
               <button mat-raised-button color="warn"

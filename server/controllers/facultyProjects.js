@@ -1,3 +1,6 @@
+/*  This file handles the faculty project controllers tha are used in the projects routes. These controllers handle the logic for creating, 
+    updating, deleting and accessing the project and their related information
+*/
 const Project = require('../models/project');
 const Application = require('../models/application');
 const User = require('../models/user');
@@ -7,14 +10,18 @@ const generateRes = require('../helpers/generateJSON');
 const { retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjects } = require('../helpers/schemaCaching');
 
 /*  This function handles the faculty project creation, should only be used as a POST request, and requires and access token
-    This funciton takes information required for creating a faculty project, creates an active project in the DB, and updates the 
-    faculty account with the projectID
+    This function takes information required for creating a faculty project, creates an active project in the DB, and updates the 
+    faculty account with the projectID. If the account has no record for the project type that is being created, then the record type 
+    is created, otherwise the project is appended to the existing record type
 
     The request body requires the following fields : 
-    projectType (String, the type of project being created (Draft or Active)) professor (String, name of professor) - 
+    projectType (String, the type of project being created (Draft or Active)) 
     projectDetails (Object, contain all the project details) projectDetails fields : 
-    posted (Date, date project was created) - description (String, description of the project) - projectName (String, name of the project)
-    questions (Array of Strings, questions for applicants)
+     
+    categories(Array of strings each describing research categories of the project) - description (String, description of the project) - 
+    projectName (String, name of the project) - majors (Array of strings that defines what majors can apply to the project) - 
+    GPA (Number, the minimum GPA required to apply) - deadline (Date, determines the lastest possible date that students can apply to the project)
+    questions (Array of custom objects that holds the question type, question, whether it is required, and optionally choices for the students)
 */
 const createProject = async (req, res) => {
     try {
@@ -29,8 +36,9 @@ const createProject = async (req, res) => {
             const userId = user._id;
             let projectType = req.body.projectType;
 
-            if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; }
-            if (projectType !== "Active" && projectType !== "Draft") { throw error; }
+            if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; } //If no GPA is provided, set it to 0
+            if (projectType !== "Active" && projectType !== "Draft") { throw error; } //Ensure that the type is Active or Draft
+
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
             let projectObject
             //Two seperate blocks of code are needed, one for if the project type is active and one for draft. This is because draft projects 
@@ -62,7 +70,7 @@ const createProject = async (req, res) => {
                 }
             }
 
-            //if there is no active mongodb record for this professor's active projects then create a new record
+            //if there is no active mongodb record for this professor's projects of the specified type, then create a new record
             if (!existingProject) {
                 let newProjectList = new Project({
                     type: req.body.projectType,
@@ -158,7 +166,7 @@ const deleteProject = async (req, res) => {
     This funciton takes the projectID and type and then retrieves the project specified, either active, draft, or archived
     
     The request body requires the following fields : 
-    projectID (String, the mongodb __id of the project object to delete from array) - projectType (String, the type of project to access)
+    projectID (String, the mongodb __id of the project object to grab from array) - projectType (String, the type of project to access)
 */
 const getProject = async (req, res) => {
     try {
@@ -197,10 +205,10 @@ const getProject = async (req, res) => {
                 //get and update the project from the project array that has the matching information 
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
-                    const deadline = project.deadline
+                    const deadline = project.deadline // if there exists a project deadline, convert it to date string otherwise null
                         ? (new Date(project.deadline)).toDateString()
                         : null;
-                    const posted = project.posted
+                    const posted = project.posted // if there exists a project posted date, convert it to a date string, otherwise its null
                         ? (new Date(project.posted)).toDateString()
                         : null;
                     let returnProject = {
@@ -249,12 +257,12 @@ const getProjects = async (req, res) => {
             let activeProjects;
             let draftProjects;
 
+            //Grab each project record in a promise
             const promises = [
                 retrieveOrCacheProjects(req, projectsList.Archived),
                 retrieveOrCacheProjects(req, projectsList.Active),
                 retrieveOrCacheProjects(req, projectsList.Draft),
             ];
-
             await Promise.all(promises).then(results => {
                 archivedProjects = results[0];
                 activeProjects = results[1];
@@ -300,8 +308,14 @@ const getProjects = async (req, res) => {
     This funciton takes a project ID, project type (Draft, Active, Archived), and all of the project information (changed and unchanged)
 
     The request body requires the following fields : 
-    projectID (String, the id of the project in the DB) - projectType (String, the type of project i.e. Active, Draft, or Archived) - 
-    projectDetails (Object, contains all the information for the project, both changed and unchanged fields)
+    projectType (String, the type of project being created (Draft or Active)), projectID (String, the object id of the project that will be updated (in string form))
+    
+    projectDetails (Object, contain all the project details) projectDetails fields : 
+     
+    categories(Array of strings each describing research categories of the project) - description (String, description of the project) - 
+    projectName (String, name of the project) - majors (Array of strings that defines what majors can apply to the project) - 
+    GPA (Number, the minimum GPA required to apply) - deadline (Date, determines the lastest possible date that students can apply to the project)
+    questions (Array of custom objects that holds the question type, question, whether it is required, and optionally choices for the students)
 */
 const updateProject = async (req, res) => {
     try {
@@ -363,7 +377,7 @@ const updateProject = async (req, res) => {
 }
 
 /*  This function handles the archiving of active requests, should only be used as a PUT request, and requires an access token
-    This funciton removes the active project from the active project list, and puts that information into a new archived project
+    This funciton removes the active project from the active project list, and puts that information into a new archived project.
 
     The request body requires the following fields : 
     projectID (String, the objectID of the active project that will be archived)
@@ -414,7 +428,7 @@ const archiveProject = async (req, res) => {
                         categories: archProject.categories,
                     }]
                 });
-                await newArchiveList.save(); //Save the archlive list
+                await newArchiveList.save(); //Save the archive list
                 var $set = { $set: {} };
                 $set.$set['userType.FacultyProjects.' + "Archived"] = newArchiveList._id;
                 await User.findOneAndUpdate({ _id: userId }, $set); //Set the archive id in the user facultyProjects
@@ -444,7 +458,7 @@ const archiveProject = async (req, res) => {
             let selectedProject = project.projects.pull(req.body.projectID);
 
             if (selectedProject.length == numProjects) { //Check that an element was removed, if not send error response
-                return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
+                return res.status(404).json(generateRes(false, 404, "ACTIVE_PROJECT_NOT_REMOVED", {}));
             }
             else {
                 await project.save();
@@ -458,6 +472,12 @@ const archiveProject = async (req, res) => {
     }
 }
 
+/*  This function handles the unarchiving of archived projects, should only be used as a PUT request, and requires an access token
+    This funciton removes the archived project from the active project list, and puts that information into a new active project.
+
+    The request body requires the following fields : 
+    projectID (String, the objectID of the archived project that will be returned to the active project record)
+*/
 const unarchiveProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -483,6 +503,7 @@ const unarchiveProject = async (req, res) => {
             if (!archProject) {
                 return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
             }
+
             let newProject = {
                 projectName: archProject.projectName,
                 professorId: archProject.professorId,
@@ -497,6 +518,8 @@ const unarchiveProject = async (req, res) => {
                 majors: archProject.majors,
                 categories: archProject.categories,
             };
+
+            //This code assumes that there exists an active projects record because archived projects cannot be created without first creating an active project
             await Project.updateOne({ _id: user.userType.FacultyProjects.Active }, {
                 $push: { //push new project to the array 
                     projects: newProject,
@@ -521,7 +544,6 @@ const unarchiveProject = async (req, res) => {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
-
 
 /*  This function handles the faculty decision making for applications, should only be used as a PUT request, and requires an access token
     This funciton sets the values of status for the application to the value given in the request across both the faculty project record and the 
@@ -586,59 +608,11 @@ const applicationDecision = async (req, res) => {
         return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
     }
 }
-//Demo route - used for the demostration to get a list of all active projects.
-const getAllActiveProjects = async (req, res) => {
-    try {
-        const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
-        //check if user exists
-        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
-        /*
-            if (user.userType.Type != process.env.FACULTY) {
-                return res.status(400).json(generateRes(false, 400, "UNAUTHORIZED", {details: "Invalid account type for this route"}));
-            }
-        */
-
-        //get the project lists for active, archived, and draft projects,
-        let activeProjects = await Project.find({ type: "Active" });
-
-        let data = [];
-
-        activeProjects.forEach(x => {
-            x.projects.forEach(y => {
-                let project = {
-                    projectName: y.projectName,
-                    professorName: x.professorName,
-                    professorEmail: x.professorEmail,
-                    title: y.projectName,
-                    projectID: y.id,
-                    GPA: y.GPA,
-                    majors: y.majors,
-                    categories: y.categories,
-                    description: y.description,
-                    responsibilities: y.responsibilities,
-                    posted: y.posted,
-                    deadline: y.deadline,
-                    questions: y.questions
-                }
-                data.push(project);
-            });
-        });
-
-        //This specific response doesn't work with the generateRes method, will look into solutions
-        return res.status(200).json({ success: { status: 200, message: "PROJECTS_FOUND", data } });
-
-
-    } catch (error) {
-        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
-    }
-}
 
 /*  This function returns a single applicant's data for a professor. Should only be used with a POST request, and requires and access token,
 
-    This function takes fields in the request body: projectID (String, the id of the project that the faculty member will be )
-    and applicationID (String, the id of the application that the faculty wishes to view)
+    This function takes fields in the request body: 
+    projectID (String, the id of the project that the faculty member will be ) - applicationID (String, the id of the application that the faculty wishes to view)
 */
 const fetchApplicant = async (req, res) => {
     try {
@@ -651,11 +625,8 @@ const fetchApplicant = async (req, res) => {
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
             const projectsList = user.userType.FacultyProjects;
-            //get the project lists for active, archived, and draft projects
-
-            let activeProjects;
-
-            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active);
+            let activeProjects; 
+            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active); //Grab active project because applicants are only associated with active projects
 
             //This block of code grabs the specified project from the projects record, then grabs the applicant index from the array of applicants and sets the applicant variable
             let applicant, project, applicantIndex;
@@ -666,7 +637,7 @@ const fetchApplicant = async (req, res) => {
                 else { applicant = project.applications[applicantIndex]; }
             }
 
-            //This block of code then grabs teh specified applicantion record from the applicant's record in the project database
+            //This block of code then grabs the specified application record from the applicant's record in the project database
             //It then sets up the applicantData object to be sent back in the request
             let applicantRecord = await retrieveOrCacheApplications(req, applicant.applicationRecordID);
             let applicantData;
@@ -714,8 +685,8 @@ const fetchApplicant = async (req, res) => {
 /*  This is a general fetchApplicants route which fetches only basic information from each application. This is used in the faculty overiew web page,
     and is seperate from the fetchApplicantsFromProject which grabs more indepth information from the database and uses a lot more network operations
 
-    This function grabs the basic information from all applicants from an active projects, it requires a faculty access token and a projectID in the request body.
-    This function should be used with put requests, and it will grab the applicant data from the specified project. That data includes :
+    This function grabs the basic information from all applicants from an active projects, it requires a faculty access token and a projectID (String, the object id of the specified project)
+    in the request body. This function should be used with put requests, and it will grab the applicant data from the specified project. That data includes :
     applicationRecordID, application, status, name, GPA, major, email, appliedDate, and application object id
 */
 const fetchAllApplicants = async (req, res) => {
@@ -729,11 +700,8 @@ const fetchAllApplicants = async (req, res) => {
         //check if user type is faculty
         if (user.userType.Type === parseInt(process.env.FACULTY)) {
             const projectsList = user.userType.FacultyProjects;
-            //get the project lists for active, archived, and draft projects
-
             let activeProjects;
-
-            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active);
+            activeProjects = await retrieveOrCacheProjects(req, projectsList.Active); //Grabs active projects because applications should only be for active projects
 
             let theApplicants = {}; //object to store the array of applicants
             if (activeProjects) {
@@ -829,6 +797,11 @@ const fetchApplicantsFromProject = async (req, res) => {
     }
 }
 
+/*  This controller handles the logic to publish a draft project to an active project. It should be used with a PUT request and requires a 
+    faculty access token. 
+
+    This controller requires one object in the request body : projectID (String, the id of the draft project that will be updated to an active project)
+*/
 const publishProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -850,7 +823,7 @@ const publishProject = async (req, res) => {
                 draftProjectRecord = results[0];
                 activeProjectRecord = results[1];
             });
-
+            //Check if the draft record exits. Afterwards it also checks if the selectedProject exists in the record
             if (!draftProjectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECTS_NOT_FOUND", {})); }
             let selectedProject = draftProjectRecord.projects.find(x => x.id.toString() === req.body.projectID);
             if (!selectedProject) { return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {})); }
@@ -866,14 +839,14 @@ const publishProject = async (req, res) => {
                 majors: selectedProject.majors,
                 categories: selectedProject.categories,
             }
-
+            //Get the length of the draft projects and pull the selected draft project from the record
             let numProjects = draftProjectRecord.projects.length;
             let newProjectList = draftProjectRecord.projects.pull(req.body.projectID);
 
             if (newProjectList.length == numProjects) { //Check that an element was removed, if not send error response
                 return res.status(404).json(generateRes(false, 404, "PROJECT_NOT_FOUND", {}));
             }
-
+            //if there exist an active project record, push the new project to it
             if (activeProjectRecord) {
                 const promises = [
                     Project.updateOne({ _id: activeProjectRecord._id }, {
@@ -885,7 +858,7 @@ const publishProject = async (req, res) => {
                 ];
 
                 await Promise.all(promises);
-            } else {
+            } else { //otherwise, create a new active project record
                 let newProjectList = new Project({
                     type: "Active",
                     professorEmail: user.email,
@@ -942,7 +915,7 @@ module.exports = {
     createProject, deleteProject,
     getProjects, updateProject,
     archiveProject, applicationDecision,
-    getAllActiveProjects, fetchAllApplicants,
+    fetchAllApplicants,
     fetchApplicant, getProject,
     fetchApplicantsFromProject,
     publishProject, unarchiveProject
