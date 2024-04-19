@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ProfileServiceService } from './profile-service.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from '../auth-controller/auth.service';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 
+// mock data for testing
 const exampleProfileData = {
   name: 'Name',
   GPA: 3,
@@ -14,6 +13,7 @@ const exampleProfileData = {
   universityLocation: 'Purdue University Fort Wayne'
 }
 
+// mock headers for mock authService
 const ExampleHttpHeaders = of(new HttpHeaders({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${'123456'}`,
@@ -22,29 +22,20 @@ const ExampleHttpHeaders = of(new HttpHeaders({
 describe('ProfileServiceService', () => {
   let service: ProfileServiceService;
 
+  // mock post request to capture when post requests are made
   const httpService = jasmine.createSpyObj('HttpClient', ['post'])
   let httpSpy = httpService.post.and.returnValue(of(true));
 
+  // mock getHeaders function to capture when these calls are made
   const authService = jasmine.createSpyObj('AuthService', ['getHeaders']);
   let authSpy = authService.getHeaders.and.returnValue(
     ExampleHttpHeaders);
 
-  service = new ProfileServiceService(httpService, authService);
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-      ],
       providers: [
-        {
-          provide: AuthService,
-          useValue: authService
-        },
-        { 
-          provide: HttpClient,
-          useValue: httpService
-        }
+        { provide: AuthService, useValue: authService },
+        { provide: HttpClient, useValue: httpService },
       ]
     });
     service = TestBed.inject(ProfileServiceService);

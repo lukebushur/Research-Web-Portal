@@ -1,13 +1,13 @@
 <div class="student-opportunites-search-page-container">
   <div class="header" style="padding: 0.5em 0.5em;">
-    <h1 class="title">Opportunites Search</h1>
+    <h1 class="title">Search Projects</h1>
     <!-- Search input for opportunities -->
     <div class="searchForm">
       <form [formGroup]="searchForm" (ngSubmit)="onSearchButtonClick()">
-        <mat-form-field>
+        <mat-form-field class="search-form-field">
           <input matInput type="text" placeholder="Search..." formControlName="projectName">
         </mat-form-field>
-        <!-- <button mat-raised-button (click)="onSearchButtonClick()" id="searchButton">Search</button> -->
+        <button mat-raised-button (click)="onSearchButtonClick()" id="searchButton">Search</button>
       </form>
     </div>
   </div>

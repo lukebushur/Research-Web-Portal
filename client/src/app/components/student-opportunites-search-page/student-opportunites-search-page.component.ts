@@ -56,7 +56,7 @@ export class StudentOpportunitesSearchPageComponent {
 
   // Form for the search bar
   searchForm = this.fb.group({
-    projectName: ['', [Validators.required]],
+    projectName: [''],
   });
 
   // Live announcer for screen reader accessibility
