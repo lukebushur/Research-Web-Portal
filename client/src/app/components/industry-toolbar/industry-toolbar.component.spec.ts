@@ -62,7 +62,7 @@ describe('IndustryToolbarComponent', () => {
     const sidenavLoader = await loader.getChildLoader('mat-sidenav');
     const navList = await sidenavLoader.getHarness(MatNavListHarness);
     const navListItem = (await navList.getItems())[0];
-    expect((await navList.getItems()).length).toBe(4);
+    expect((await navList.getItems()).length).toBe(6);
     expect(await navListItem.getFullText()).toContain('');
   });
 
