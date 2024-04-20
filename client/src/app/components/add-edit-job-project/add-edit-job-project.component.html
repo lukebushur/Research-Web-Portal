@@ -1,1 +1,43 @@
-<p>add-edit-job-project works!</p>
+<div class="page-container">
+  <h1 class="item-to-center">{{ isCreate ? 'Create New Pre-Hire Project' : 'Edit Pre-Hire Project' }}</h1>
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="block item-to-center">
+      <mat-label>Project Title</mat-label>
+      <input matInput type="text" formControlName="title">
+    </mat-form-field>
+    <mat-form-field class="block item-to-center">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+    <mat-form-field class="block item-to-center">
+      <mat-label>Skills Assessed</mat-label>
+      <input matInput type="text" formControlName="skillsAssessed">
+    </mat-form-field>
+    <mat-form-field class="block item-to-center">
+      <mat-label>Estimated Time for Completion</mat-label>
+      <input matInput type="text" formControlName="eta">
+    </mat-form-field>
+    <mat-form-field class="block item-to-center">
+      <mat-label>Project Deadline</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="deadline">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <h3 class="item-to-center">Upload other materials for students (optional)</h3>
+    <button mat-raised-button color="primary" type="button" class="browse-button" (click)="chooseFile()">Browse</button>
+    <div class="item-to-center">
+      <mat-radio-group aria-label="Student Submission Type" formControlName="submissionType" class="block radio-field">
+        <h3>Student Submission Type*</h3>
+        <div class="radio-buttons">
+          <mat-radio-button [value]="true">Written Response</mat-radio-button>
+          <mat-radio-button [value]="false">File Upload</mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+    <div class="buttons-container">
+      <button mat-raised-button class="first-button" type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">{{ isCreate ? 'Create Project' : 'Update Project' }}</button>
+    </div>
+  </form>
+</div>

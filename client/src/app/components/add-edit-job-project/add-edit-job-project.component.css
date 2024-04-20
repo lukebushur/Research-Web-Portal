@@ -1,0 +1,39 @@
+.page-container {
+  margin: 0px 18%;
+  padding: 20px;
+  height: max-content;
+  background-color: white;
+}
+
+h1, h3 {
+  font-weight: 500;
+}
+
+.item-to-center {
+  display: block;
+  margin: 0em 8% 20px 8%;
+}
+
+h1.item-to-center {
+  margin-top: 1em;
+}
+
+.block {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.browse-button {
+  margin: 0em 8% 20px 8%;
+}
+
+.radio-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 8% 20px 8%;
+}
