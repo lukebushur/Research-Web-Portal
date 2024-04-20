@@ -52,6 +52,16 @@ export class IndustryToolbarComponent {
       link: '/industry/create-assessment',
       icon: 'library_add',
     },
+    {
+      name: 'Pre-Hire Projects',
+      link: '/industry/job-projects',
+      icon: 'list_alt',
+    },
+    {
+      name: 'Create Pre-Hire Project',
+      link: '/industry/create-job-project',
+      icon: 'add_box',
+    },
   ];
 
   constructor(

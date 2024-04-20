@@ -27,6 +27,8 @@ import { StudentViewApplicationComponent } from "./components/student-view-appli
 import { ViewApplicationComponent } from "./components/view-application/view-application.component";
 import { ViewProjectComponent } from "./components/view-project/view-project.component";
 import { StudentViewProjectComponent } from "./components/student-view-project/student-view-project.component";
+import { AddEditJobProjectComponent } from "./components/add-edit-job-project/add-edit-job-project.component";
+import { JobProjectBrowserComponent } from "./components/job-project-browser/job-project-browser.component";
 
 const routeConfig: Routes = [
 
@@ -98,6 +100,13 @@ const routeConfig: Routes = [
       // 1 route parameter for the assessment ID of the assessment to edit
       // edit an existing assessment
       { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
+      // overview of the pre-hire projects that the industry user has created
+      { path: 'job-projects', component: JobProjectBrowserComponent },
+      // create a new pre-hire project
+      { path: 'create-job-project', component: AddEditJobProjectComponent },
+      // 1 route parameter for the ID of the pre-hire project to edit
+      // edit an existing pre-hire project
+      { path: 'edit-job-project/:jobProjectId', component: AddEditJobProjectComponent },
     ]
   },
 
