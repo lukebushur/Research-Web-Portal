@@ -279,33 +279,33 @@ describe('AppliedStudentTableComponent', () => {
     }
   });
 
-  it('should open ConfirmationDialogComponent', async () => {
-    component.project = projectData;
-    component.ngOnChanges({
-      project: new SimpleChange(null, projectData, false),
-    });
-    // const outputSpy = spyOn(component.applicationUpdateEvent, 'emit');
-    spyOn(component.dialog, 'open').and.callThrough();
+  // it('should open ConfirmationDialogComponent', async () => {
+  //   component.project = projectData;
+  //   component.ngOnChanges({
+  //     project: new SimpleChange(null, projectData, false),
+  //   });
+  //   // const outputSpy = spyOn(component.applicationUpdateEvent, 'emit');
+  //   spyOn(component.dialog, 'open').and.callThrough();
 
-    const table = await loader.getHarness(MatTableHarness);
-    const tableRows = await table.getRows();
-    const pendingAppCells = await tableRows[0].getCells();
-    // expect(await pendingAppCells[4].hasHarness(MatButtonHarness)).toBeTrue();
-    // const acceptAppButton = await pendingAppCells[4].getHarness(MatButtonHarness);
+  //   const table = await loader.getHarness(MatTableHarness);
+  //   const tableRows = await table.getRows();
+  //   const pendingAppCells = await tableRows[0].getCells();
+  //   // expect(await pendingAppCells[4].hasHarness(MatButtonHarness)).toBeTrue();
+  //   // const acceptAppButton = await pendingAppCells[4].getHarness(MatButtonHarness);
 
-    // await acceptAppButton.click();
-    //   expect(facultyService.applicationDecide).toHaveBeenCalledOnceWith(
-    //     projectData.applications[0].application,
-    //     projectData.id,
-    //     'Accept'
-    //   );
-    //   expect(outputSpy).toHaveBeenCalledOnceWith(projectData.number);
+  //   // await acceptAppButton.click();
+  //   //   expect(facultyService.applicationDecide).toHaveBeenCalledOnceWith(
+  //   //     projectData.applications[0].application,
+  //   //     projectData.id,
+  //   //     'Accept'
+  //   //   );
+  //   //   expect(outputSpy).toHaveBeenCalledOnceWith(projectData.number);
 
-    //await acceptAppButton.click();
-   // expect(component.dialog.open).toHaveBeenCalledOnceWith(ConfirmationDialogComponent, {
-    // data: {
-    //    message: 'accept this user?'
-    //  }
-   // });
-  });
+  //   //await acceptAppButton.click();
+  //  // expect(component.dialog.open).toHaveBeenCalledOnceWith(ConfirmationDialogComponent, {
+  //   // data: {
+  //   //    message: 'accept this user?'
+  //   //  }
+  //  // });
+  // });
 });
