@@ -7,6 +7,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,11 @@ export class LoginComponent {
     ]),
   });
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private snackbar: MatSnackBar,
+  ) { }
 
   // Error message for email based on validators
   emailErrorMessage() {
@@ -89,11 +94,29 @@ export class LoginComponent {
 
           // Navigate based on the account type
           if (accountType === environment.industryType) {
-            this.router.navigate(['/industry/dashboard']);
+            this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackbar.open('Log in successful!', 'Dismiss', {
+                  duration: 5000
+                });
+              }
+            });
           } else if (accountType === environment.studentType) {
-            this.router.navigate(['/student/dashboard']);
+            this.router.navigate(['/student/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackbar.open('Log in successful!', 'Dismiss', {
+                  duration: 5000
+                });
+              }
+            });
           } else {
-            this.router.navigate(['/faculty/dashboard']);
+            this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackbar.open('Log in successful!', 'Dismiss', {
+                  duration: 5000
+                });
+              }
+            });
           }
         } else {
           console.error('Authentication token not found in the response.');
@@ -101,6 +124,9 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('error logging in', error);
+        this.snackbar.open('Error logging in', 'Dismiss', {
+          duration: 5000
+        });
       },
     });
   }

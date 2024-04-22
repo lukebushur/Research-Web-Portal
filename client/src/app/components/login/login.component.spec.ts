@@ -108,6 +108,7 @@ describe('LoginComponent', () => {
 
   it('should route to the student dashboard component', () => {
     const navigateSpy = spyOn(router, 'navigate');
+    navigateSpy.and.returnValue(Promise.resolve(false));
     component.onSubmit();
     expect(loginSpy.calls.any()).withContext('login called').toBeTrue();
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
