@@ -81,14 +81,16 @@ const accountModifyMajorValidation = async (req, res, next) => {
             return;
         }
 
-        let reqMajors = getMajors(req, res); //grab majors from the request
-        if (!reqMajors && !res.headersSent) { //Checks if there is a majors field found and if the response hasn't be send, if so there has been an input error
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "No provided majors" }));
-            return;
-        } else if (!reqMajors) { return } //If reqMajors doesn't exist and the res has been sent, then the response is s already been generated or the request by the helper
-        if (!reqMajors.every(x => major.majors.includes(x))) {
-            res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Provided major do not align with the univeristy's major list." }));
-            return;
+        if (userAccount.userType.Type == process.env.STUDENT) {
+            let reqMajors = getMajors(req, res); //grab majors from the request
+            if (!reqMajors && !res.headersSent) { //Checks if there is a majors field found and if the response hasn't be send, if so there has been an input error
+                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "No provided majors" }));
+                return;
+            } else if (!reqMajors) { return } //If reqMajors doesn't exist and the res has been sent, then the response is s already been generated or the request by the helper
+            if (!reqMajors.every(x => major.majors.includes(x))) {
+                res.status(400).json(generateRes(false, 400, "INPUT_ERROR", { details: "Provided major do not align with the univeristy's major list." }));
+                return;
+            }
         }
 
         next();
