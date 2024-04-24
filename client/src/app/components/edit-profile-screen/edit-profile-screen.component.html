@@ -8,6 +8,7 @@
       <mat-error>{{ nameErrorMessage() }}</mat-error>
       }
     </mat-form-field>
+    @if (accountType == 0) {
     <mat-form-field class="block">
       <mat-label>GPA</mat-label>
       <input matInput type="text" id="gpa" formControlName="GPA" name="GPA" required>
@@ -15,6 +16,7 @@
       <mat-error>{{ gpaErrorMessage() }}</mat-error>
       }
     </mat-form-field>
+    }
     <mat-form-field class="block">
       <mat-label>University</mat-label>
       <mat-select id="universityLocation" formControlName="universityLocation" (selectionChange)="updateForm()"
@@ -29,6 +31,7 @@
         requiredFieldErrorMessage('universityLocation', 'University') }}</mat-error>
       }
     </mat-form-field>
+    @if (accountType == 0) {
     <mat-form-field class="block">
       <mat-label>Majors</mat-label>
       <mat-select id="Major" formControlName="Major" multiple>
@@ -41,6 +44,7 @@
         }}</mat-error>
       }
     </mat-form-field>
+    }
     <div class="buttons-container">
       <button mat-raised-button color="primary" type="submit" [disabled]="editProfileForm.invalid"
         class="submit-button">Submit Changes</button>
@@ -49,3 +53,4 @@
     </div>
   </form>
 </div>
+<app-spinner></app-spinner>

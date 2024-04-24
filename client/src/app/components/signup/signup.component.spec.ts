@@ -60,7 +60,7 @@ describe('SignupComponent', () => {
 
     // Create a spy to 'replace' the call to Router's navigate function.
     const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate;
+    navigateSpy = router.navigate.and.returnValue(Promise.resolve(false));
 
     TestBed.configureTestingModule({
       imports: [

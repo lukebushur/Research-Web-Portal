@@ -4,6 +4,7 @@
   margin: 5px;
   overflow-x: auto;  /* Add this line to enable horizontal scrolling */
   white-space: nowrap; /* Prevent cards from wrapping to the next line */
+  min-height: 100px;
 }
 
 .add-icon-button {
