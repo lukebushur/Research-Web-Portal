@@ -209,7 +209,7 @@ const token = async (req, res) => {
     
     The request body requires the following fields : 
     emailToken (String, the token that will be used to attempt to validate the email of the account)
-*/
+*/ 
 const confirmEmailToken = async (req, res) => {
     try {
         const emailToken = req.body.emailToken;
@@ -280,7 +280,7 @@ const sendEmailConfirmation = async (user) => {
             pass: process.env.EMAIL_PASSWORD
         }
     });
-
+    
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,

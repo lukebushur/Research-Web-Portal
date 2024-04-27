@@ -8,16 +8,16 @@
   <div>
     <div class="student-dashboard-page-container">
       <!-- Display opportunities grouped by major -->
-      @for (major of majors; track major) {
+      @for (major of studentMajors; track major) {
       <div>
         <h2 class="oppCard">{{ major }} Opportunities</h2>
         <div class="opps-container">
-          @for (opportunity of majorOpportunities[major]; track opportunity) {
+          @for (opportunity of filteredMajorOpps[major]; track opportunity) {
           <div>
             <mat-card class="opp-card">
               <mat-card-header>
                 <mat-card-title class="opp-title">
-                  <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.title }}</div>
+                  <div [matTooltip]="opportunity.title" class="max-two-lines">{{ opportunity.projectName }}</div>
                 </mat-card-title>
               </mat-card-header>
               <mat-card-content>
@@ -44,7 +44,15 @@
               </mat-card>
           </div>
           }
-        </div>
+          
+        </div> 
+        <div id="page-selector">
+          <button mat-raised-button color="primary" [disabled]="!hasPrevPage(major)" class="activeButton"
+            (click)="prevPage(major)">Previous Page</button>
+            <p id="pageNum">Page: {{getPageNum(major)}}</p>
+          <button mat-raised-button color="primary" [disabled]="!hasNextPage(major)" class="activeButton"
+            (click)="nextPage(major)">Next Page</button>
+        </div> 
       </div>
       }
     </div>

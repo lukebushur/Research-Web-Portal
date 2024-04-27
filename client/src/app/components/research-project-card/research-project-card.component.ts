@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
 import { RouterModule } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-research-project-card',
@@ -16,6 +17,7 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     MatCardModule,
     RouterModule,
+    MatTooltipModule
   ],
 })
 export class ResearchProjectCardComponent {
