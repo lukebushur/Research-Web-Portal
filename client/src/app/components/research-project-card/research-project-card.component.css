@@ -23,6 +23,10 @@
   flex-basis: 30%;
 }
 
+.unarchive-button {
+  flex-basis: 45% !important;
+}
+
 .scroll-x {
   overflow-x: scroll;
 }
@@ -65,4 +69,12 @@
 ::-webkit-scrollbar-corner {
   background: transparent;
   /* Background color of the scrollbar corner */
+}
+
+.project-name {
+  color: black;
+}
+
+.project-name:hover {
+  color: purple;
 }

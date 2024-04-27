@@ -1,3 +1,7 @@
+/*  This testing file addresses success and failure cases for creating, accessing, modifying, and deleting projects.
+    Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
+*/
+
 const chai = require('chai');
 const chaiHTTP = require('chai-http');
 const server = require('../server.js');
@@ -28,7 +32,6 @@ let projectID, //id of the first active project
 const randomPass = Math.random().toString(36).substring(0).repeat(2);
 const randomName = Math.random().toString(36).substring(2);
 const randomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
-
 
 //This waits for the connection to the DB to be set up before running the tests
 before(function (done) {

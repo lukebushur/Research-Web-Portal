@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 // Interface for applied students table entries
 interface AppliedStudent {
@@ -31,7 +33,7 @@ interface AppliedStudent {
     MatTableModule,
     MatSortModule,
     MatButtonModule,
-    MatPaginatorModule
+    MatPaginatorModule,
   ],
 })
 
@@ -40,7 +42,7 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
   // project selected on the faculty dashboard
   @Input() project: ProjectFetchData | null;
   // determines the displayedd columns in the table
-  displayedColumns: string[] = ['name', 'gpa', 'majors', 'email', 'status']; 
+  displayedColumns: string[] = ['name', 'gpa', 'majors', 'email', 'status'];
   // list of currently applied students
   appliedStudents: AppliedStudent[];
   // DataSource used for the material table to enable easy filtering, sorting, and pagination
@@ -55,24 +57,25 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private facultyProjectService: FacultyProjectService,
+    public dialog: MatDialog
   ) {
-      // initialize table data
-      if (!this.project) {
-        this.appliedStudents = [];
-      } else {
-        this.appliedStudents = this.project.applications.map((application) => {
-          return {
-            name: application.name,
-            gpa: application.GPA,
-            majors: application.major.join(', '),
-            email: application.email,
-            status: application.status,
-            project: this.project!.id,
-            application: application.application
-          };
-        });
-      }
-      this.dataSource = new MatTableDataSource(this.appliedStudents);
+    // initialize table data
+    if (!this.project) {
+      this.appliedStudents = [];
+    } else {
+      this.appliedStudents = this.project.applications.map((application) => {
+        return {
+          name: application.name,
+          gpa: application.GPA,
+          majors: application.major.join(', '),
+          email: application.email,
+          status: application.status,
+          project: this.project!.id,
+          application: application.application
+        };
+      });
+    }
+    this.dataSource = new MatTableDataSource(this.appliedStudents);
   }
 
   ngAfterViewInit(): void {
@@ -136,6 +139,18 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
           this.applicationUpdateEvent.emit(this.project!.number);
         }
       },
+    });
+  }
+
+  openConfirmationDialog(app: string, decision: string, sentence: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // User clicked "Yes", perform your action here
+        this.applicationDecision(app, decision);
+      } else {
+        // User clicked "No" or closed the dialog
+      }
     });
   }
 }

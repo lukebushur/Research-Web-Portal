@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 interface AccountType {
   value: number;
@@ -31,7 +33,8 @@ interface AccountType {
     MatIconModule,
     MatSelectModule,
     MatOptionModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    SpinnerComponent,
   ]
 })
 export class SignupComponent {
@@ -100,6 +103,7 @@ export class SignupComponent {
     private router: Router,
     private signupService: SignupService,
     private authService: AuthService,
+    private snackbar: MatSnackBar,
   ) { }
 
   // Error message for name based on validators
@@ -199,6 +203,10 @@ export class SignupComponent {
     this.signupForm.get('Major')?.enable();
   }
 
+  routeToLoginPage() {
+    this.router.navigate(['/login']);
+  }
+
   onSubmit() {
     this.signupService.signup(this.signupForm.value).subscribe({
       next: (data: any) => {
@@ -214,11 +222,29 @@ export class SignupComponent {
 
           // Navigate based on the account type
           if (accountType === environment.industryType) {
-            this.router.navigate(['/industry/dashboard']);
+            this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackbar.open('Log in successful!', 'Dismiss', {
+                  duration: 5000
+                });
+              }
+            });
           } else if (accountType === environment.studentType) {
-            this.router.navigate(['/student/dashboard']);
+            this.router.navigate(['/student/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackbar.open('Log in successful!', 'Dismiss', {
+                  duration: 5000
+                });
+              }
+            });
           } else {
-            this.router.navigate(['/faculty/dashboard']);
+            this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackbar.open('Log in successful!', 'Dismiss', {
+                  duration: 5000
+                });
+              }
+            });
           }
         } else {
           console.error('Authentication token not found in the response.');
@@ -226,6 +252,12 @@ export class SignupComponent {
       },
       error: (data: any) => {
         console.error('Registration failed.', data);
+        if (data?.error?.error?.message === 'EMAIL_EXISTS') {
+          alert('Registration failed, email already exists');
+        }
+        else {// Notify user of registration failure
+          alert('Registration failed. Please try again later.');
+        }
       },
     });
   }

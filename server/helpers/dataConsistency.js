@@ -1,8 +1,10 @@
+/*  Due to the small amount of data duplication present in this application, this file exists for helpers that address any data consistency issues.
+    Methods that ensure data is consistent between multiple records should be kept here. Currently, only one method exists, which is the updateApplicationsRecord
+    which ensures that any changes to a student account (i.e. GPA, Name, Major) is reflected in the faculty's project record
+*/
+
 const Application = require('../models/application');
 const Project = require('../models/project');
-const User = require('../models/user');
-const JWT = require('jsonwebtoken');
-const generateRes = require('../helpers/generateJSON');
 const { retrieveOrCacheApplications } = require('./schemaCaching');
 
 /*  This helper function updates student's information in their associated application record and project record. It takes three parameters, 
@@ -72,10 +74,6 @@ const updateApplicationRecords = async (req, user, modifyFields, originalData) =
         await user.save();
         return false;
     }
-}
-
-const updateQuestions = async () => {
-
 }
 
 module.exports = {

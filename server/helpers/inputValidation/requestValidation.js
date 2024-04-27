@@ -6,7 +6,7 @@ const Joi = require('joi');
     respective routes.
 */
 
-//This schema is used to validate register http bodies
+//Validation for faculty registering for an account
 const facultyRegisterSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
     "name": Joi.string().min(2).max(25).required(),
@@ -17,6 +17,7 @@ const facultyRegisterSchema = Joi.object({
     "Major": Joi.array().items(Joi.string()),
 });
 
+//Validation for registering for students
 const studentRegisterSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
     "name": Joi.string().min(2).max(25).required(),
@@ -34,11 +35,11 @@ const loginSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
     "password": Joi.string().min(10).max(255).required(),
 });
-
+//Small schema for validating an individual email
 const emailSchema = Joi.object({
     "email": Joi.string().min(6).max(254).email().required(),
 });
-
+//schema for delete project requests
 const deleteProjectSchema = Joi.object({
     "projectID": Joi.string().required().min(24).max(24),
     "projectType": Joi.string().required()

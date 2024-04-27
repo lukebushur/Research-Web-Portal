@@ -1,3 +1,5 @@
+/*  This is the file for authentication and authorization routes. These routes are account type agnostic, so they can be used by either faculty or students. */
+
 const express = require('express');
 const authController = require('../controllers/authenticate');
 
@@ -10,22 +12,20 @@ const { registerMajorValidation } = require('../helpers/inputValidation/accountV
 //Router initialisation
 const router = express.Router();
 
-//routes
-router.get('/auth/test', [rateLimiter(50, 10), verifyToken], authController.test);
+//POST REGISTER - Route to create an account, utilizes the registerMajorValidation middleware to ensure that student accounts have majors
+//that align with the available majors from their university.
+router.post('/register', [registerMajorValidation], authController.register);
 
-//POST REGISTER
-router.post('/register', registerMajorValidation, authController.register);
+//POST TOKEN - Route to regenerate an access token given a refresh token and valid access token
+router.post('/token', [verifyToken], authController.token);
 
-//POST TOKEN
-router.post('/token', verifyToken, authController.token);
-
-//POST Confirm Email!
-router.post('/confirmEmail', verifyToken, authController.confirmEmailToken);
+//POST Confirm Email 
+router.post('/confirmEmail', [verifyToken], authController.confirmEmailToken);
 
 //POST Login
 router.post('/login', authController.login);
 
-//GET Get available Majors
+//GET Get available Majors - This route grabs the list of available majors from a university, which allows the frontend to popualte drop down boxes
 router.get('/getMajors', authController.getAvailableMajors)
 
 module.exports = router;

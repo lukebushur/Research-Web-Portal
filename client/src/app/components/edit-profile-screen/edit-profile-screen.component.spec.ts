@@ -8,8 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProfileServiceService } from 'src/app/controllers/profile-controller/profile-service.service';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
 
 describe('EditProfileScreenComponent', () => {
   let component: EditProfileScreenComponent;

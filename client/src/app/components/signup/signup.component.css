@@ -27,3 +27,12 @@
 .submit-button {
     margin-top: 0.3em;
 }
+
+.custom-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .custom-link:hover {
+    color: darkblue;
+  }

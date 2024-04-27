@@ -14,7 +14,7 @@ const { retrieveOrCacheUsers, retrieveOrCacheProjects, retrieveOrCacheApplicatio
     projectID (String, the object id of the project that the student is applying to) - professorEmail (String, the email of the professor
     that created the project) - questions (Array, the questions objects that stores all information for the application) 
 */
-const createApplication = async (req, res) => {
+const createApplication = async (req, res) => { //TODO ADD DEADLINE CHECKING
     try {
         //Check for error in application http request
         const { error } = applicationSchema.validate(req.body);
@@ -162,7 +162,8 @@ const createApplication = async (req, res) => {
 
 /*  This function handles the application update for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should update an existing student application and takes most of the same data as the create application
-    function
+    function - The information in the application is not shared with the faculty's project record, the only data shared there is from the student's
+    user account record. As such, no data consistency functions are required 
 
     This request takes two fields : 
     questions (Array, the questions objects that stores all information for the application) - applicationID (String, the id
@@ -188,7 +189,7 @@ const updateApplication = async (req, res) => {
             //fetch application list from db, then check if it exists
             let applications = await retrieveOrCacheApplications(req, student.userType.studentApplications);
             if (!applications) { return res.status(404).json(generateRes(false, 404, "APPLICATION_LIST_NOT_FOUND", {})) }
-
+            //update the application that matches by the id provided in the body
             applications = await Application.updateOne({ _id: student.userType.studentApplications, "applications": { "$elemMatch": { "_id": req.body.applicationID } } }, {
                 $set: {
                     "applications.$.questions": req.body.questions,
@@ -270,7 +271,6 @@ const deleteApplication = async (req, res) => {
                     return res.status(200).json(generateRes(true, 200, "APPLICATION_DELETED", {}));
                 }
             }
-
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
         }
@@ -298,7 +298,6 @@ const getApplications = async (req, res) => {
 
             let recordIDs = []; //array for each projectRecordID
             let opportunityIDs = {}; //dictionary where each key is a projectRecordID and its value is an array with each element being an array of size 2, with the opporutnityID and the index of that application
-
 
             applications.applications.forEach((item, index) => {
                 /*  it was difficult to compare the IDs of the objects in the application as they are not stored as strings but rather objects.
@@ -466,30 +465,6 @@ const getTopRecentApplications = async (req, res) => {
     }
 };
 
-const demoGetStudentInfo = async (req, res) => {
-    try {
-        const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
-        //check if user exists
-        const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
-
-        if (student.userType.Type === parseInt(process.env.STUDENT)) {
-
-            let data = {
-                GPA: student.userType.GPA,
-                major: student.userType.Major,
-                name: student.name
-            }
-
-            return res.status(200).json({ success: { status: 200, message: "DATA_FOUND", data } });
-        } else {
-            return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
-        }
-    } catch (error) {
-        return res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
-    }
-}
 /*  This simple function allows students to get the project data of an active faculty project. It requires an a student access token to use and should be
     used with a post request. It takes fields in the http body, professorEmail and projectID. These allow the server to grab the specified professor's 
     active project through the id. This function should only ever be able to grab active project data as otherwise it could allow students to access data 
@@ -522,14 +497,14 @@ const getProjectData = async (req, res) => {
         if (student.userType.Type == process.env.STUDENT) {
             const profID = faculty._id; //store faculty id for later use
 
-            let recordID = faculty.userType.FacultyProjects.Active;; //recordID will be taken from the user's record depending on the projectType field in the request
+            let recordID = faculty.userType.FacultyProjects.Active; //recordID will be taken from the user's record depending on the projectType field in the request
 
             let projectRecord = await retrieveOrCacheProjects(req, recordID); //get the active project record
             if (!projectRecord) { return res.status(404).json(generateRes(false, 404, "PROJECT_LIST_NOT_FOUND", {})); }
             else { //If the project list was found, then continue
                 //get the project that matches the projectID
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
-                if (project) {
+                if (project) { //IMPORTANT : Ensure that applicant data is never returned through this method, as that data should be private
                     const deadline = new Date(project.deadline);
                     const posted = new Date(project.posted);
                     let returnProject = {
@@ -561,6 +536,6 @@ const getProjectData = async (req, res) => {
 module.exports = {
     createApplication, deleteApplication,
     getApplications, getTopRecentApplications,
-    demoGetStudentInfo, updateApplication,
+    updateApplication,
     getProjectData, getApplication
 };

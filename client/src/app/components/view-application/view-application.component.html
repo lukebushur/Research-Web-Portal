@@ -76,15 +76,17 @@
             [class.reject-status-text]="responseData.applicantData.status === 'Reject'"
             [class.pending-status-text]="responseData.applicantData.status === 'Pending'" class="status-text">
             {{applicationStatus}}</span></p>
-        @if (responseData.applicantData.status === 'Pending') {
-        <button mat-raised-button color="primary"
-          (click)="applicationDecision(responseData.applicantData.application, projectID, 'Accept')"
-          class="accept-button">Accept</button>
-        }
-        @if (responseData.applicantData.status === 'Pending') {
-        <button mat-raised-button color="warn"
-          (click)="applicationDecision(responseData.applicantData.application, projectID, 'Reject')">Reject</button>
-        }
+        <div class="buttons-container">
+          @if (responseData.applicantData.status === 'Pending') {
+          <button mat-raised-button color="primary"
+            (click)="openConfirmationDialog(responseData.applicantData.application, projectID, 'Accept', 'accept this user?')"
+            class="accept-button">Accept</button>
+          }
+          @if (responseData.applicantData.status === 'Pending') {
+          <button mat-raised-button color="warn"
+            (click)="openConfirmationDialog(responseData.applicantData.application, projectID, 'Reject', 'reject this user?')">Reject</button>
+          }
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

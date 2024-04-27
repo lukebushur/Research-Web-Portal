@@ -14,6 +14,7 @@ describe('FacultyProjectService', () => {
   const apiUrl = environment.apiUrl;
 
   beforeEach(() => {
+    // mock services to instantiate and test FacultyProjectService
     httpSpy = jasmine.createSpyObj('HttpClient', ['get', 'post', 'put', 'delete']);
     authService = new AuthService(httpSpy);
     service = new FacultyProjectService(httpSpy, authService);

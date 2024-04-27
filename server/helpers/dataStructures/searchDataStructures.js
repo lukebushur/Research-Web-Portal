@@ -1,3 +1,5 @@
+//  This file is the data structure required for the search function / route. It is fairly generic so it can be used with other fields / areas other than just project searching
+
 const { bm25 } = require('./bm25');
 
 //This stopwords array are words that contribute little meaning to text, so they will be ignored by the search to provide better results. These will be used to filter the query and the documents that will be searched

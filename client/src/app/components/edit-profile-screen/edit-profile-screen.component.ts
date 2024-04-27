@@ -8,6 +8,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-edit-profile-screen',
@@ -21,14 +23,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
-    MatButtonModule
+    MatButtonModule,
+    SpinnerComponent,
   ]
 })
 export class EditProfileScreenComponent implements OnInit {
-  constructor(private router: Router,
-    private authService: AuthService,
-    private profileService: ProfileServiceService,) { }
-
   // Set up the variables for the universityLocation dropdown 
   universityLocations: string[] = [
     'Purdue University Fort Wayne',
@@ -38,6 +37,8 @@ export class EditProfileScreenComponent implements OnInit {
   prevSelectedUniversity: string | undefined | null;
 
   majors: string[] = [];
+
+  accountType: number = 1;
 
   editProfileForm = new FormGroup({
     name: new FormControl('', [
@@ -58,6 +59,13 @@ export class EditProfileScreenComponent implements OnInit {
       Validators.required,
     ]),
   })
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private profileService: ProfileServiceService,
+    private snackbar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.updateForm();
@@ -120,18 +128,45 @@ export class EditProfileScreenComponent implements OnInit {
         },
       });
     }
-    this.editProfileForm.get('GPA')?.enable();
-    this.editProfileForm.get('Major')?.enable();
+    this.authService.getAccountInfo().subscribe({
+      next: (data: any) => {
+        const accountInfo = data.success.accountData;
+        console.log(accountInfo);
+        
+        this.editProfileForm.get('name')?.setValue(accountInfo.name);
+        this.editProfileForm.get('GPA')?.setValue(accountInfo.GPA);
+        this.editProfileForm.get('Major')?.setValue(accountInfo.Major);
+        this.editProfileForm.get('universityLocation')?.setValue(accountInfo.universityLocation);
+        this.accountType = accountInfo.userType;
+        if (accountInfo.userType === 0) {
+          this.editProfileForm.get('GPA')?.enable();
+          this.editProfileForm.get('Major')?.enable();
+        } else {
+          this.editProfileForm.get('GPA')?.disable();
+          this.editProfileForm.get('Major')?.disable();
+        }
+      },
+      error: (data: any) => {
+        console.log("Error", data);
+      }
+    });
   }
 
   onSubmit() {
-    // TODO: fix majors and GPA not changing
     this.profileService.submitProfileChanges(this.editProfileForm.value).subscribe({
       next: (data: any) => {
-        console.log('Profile Updated Successfully');
+        if (data.success) {
+          console.log('Profile Updated Successfully');
+          this.snackbar.open('Profile successfully updated!', 'Dismiss', {
+            duration: 5000
+          });
+        }
       },
       error: (data: any) => {
         console.error('Profile change request failed', data);
+        this.snackbar.open('Error updating profile', 'Dismiss', {
+          duration: 5000
+        });
       }
     });
   }

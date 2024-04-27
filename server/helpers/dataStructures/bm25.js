@@ -112,7 +112,7 @@ class bm25 {
         return score; //return the score
     }
 }
-
+// This is a test method used to test the other functions in this file
 const test = () => {
     let query = 'The intersection of graph survey and trees'
 

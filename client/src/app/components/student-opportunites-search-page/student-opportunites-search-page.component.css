@@ -15,10 +15,12 @@
   width: 33%;
 }
 
+.search-form-field {
+  width: 25%;
+}
+
 #searchButton {
-  margin-left: 4%; 
-  height: 4em;
-  width: 17.5%;
+  margin-left: 20px; 
 }
 
 #resetButton {
@@ -28,19 +30,10 @@
   display: flex;
 }
 
-table.projectDetails {
-  text-align: center;
-  width: 100%;
-}
-
-.projectDetails tr td {
-  padding: 0.5em;
-}
-
 .opportunities-container {
-  width: 80%;
-  padding: 0.5em;
-  margin: 0 auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 }
 
 .oppExpansion {
@@ -50,19 +43,30 @@ table.projectDetails {
 
 .content-container {
   display: grid;
-  grid-template-columns: auto auto;
-  gap: 5px 10px;
+  grid-template-columns: 9em 13em;
+  gap: 10px;
   align-items: center;
   justify-content: start;
 }
 
 .opp-card {
-  margin: 0px 10px 0px 10px;
-  width: 350px;
+  margin: 20px 10px;
+  width: 400px;
 }
 
 .opp-title {
   height: 3.5em;
+}
+
+.opp-subtitle {
+  height: 5.5em;
+}
+
+.max-one-line {
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
+  max-width: 13em;
 }
 
 .max-two-lines {
@@ -72,22 +76,26 @@ table.projectDetails {
   -webkit-line-clamp: 2;
 }
 
+.max-three-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .field-title {
   margin: auto 0px;
   font-weight: 500;
 }
 
-.field-content {
-  display: flex;
-  align-items: center;
-  height: 3.5em;
+.divider {
+  margin-top: 16px;
 }
 
-.opps-container {
-  display: grid;
-  grid-template-columns: repeat(3, 350px);
-  grid-gap: 1em;
-  margin: 20px;
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px;
 }
 
 .searchFilterDiv {
@@ -138,4 +146,5 @@ table.projectDetails {
 
 .title {
   font-weight: 500;
+  margin-bottom: 20px;
 }

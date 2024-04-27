@@ -72,14 +72,12 @@
           Actions
         </th>
         <td mat-cell *matCellDef="let application">
-          <div class="buttons">
-            <button [disabled]="application.status !== 'Pending'" mat-raised-button color="primary"
-              (click)="modifyApplication(application.id)" class="action-button">Modify
-              Application</button>
+          <button [disabled]="application.status !== 'Pending'" mat-icon-button color="black"
+            (click)="modifyApplication(application.id)"
+            matTooltip="Modify Application"><mat-icon>edit</mat-icon></button>
 
-            <button mat-raised-button color="warn" (click)="rescindApplication(application.id)"
-              class="action-button">Rescind Application</button>
-          </div>
+          <button mat-icon-button color="warn" (click)="rescindApplication(application.id)"
+            matTooltip="Rescind Application"><mat-icon>delete_forever</mat-icon></button>
         </td>
       </ng-container>
 

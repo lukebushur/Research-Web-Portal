@@ -16,6 +16,11 @@
     width: 55%;
 }
 
+button {
+    margin-top: 1%;
+    margin-right: 2%;
+}
+
 .applicationInfo {
     margin: 0 auto;
     display: flex;
@@ -47,6 +52,13 @@ table {
 }
 
 .pending-status-text {
-    color: gray;
-    border: 1px solid gray;
+    color: white;
+    background-color: goldenrod;
+    border: 1px solid goldenrod;
+    margin-left: 5px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-around;
 }
