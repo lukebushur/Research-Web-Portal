@@ -209,7 +209,7 @@ const token = async (req, res) => {
     
     The request body requires the following fields : 
     emailToken (String, the token that will be used to attempt to validate the email of the account)
-*/ 
+*/
 const confirmEmailToken = async (req, res) => {
     try {
         const emailToken = req.body.emailToken;
@@ -280,7 +280,7 @@ const sendEmailConfirmation = async (user) => {
             pass: process.env.EMAIL_PASSWORD
         }
     });
-    
+
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
@@ -377,10 +377,25 @@ const addRefreshToken = async (user, refreshToken) => {
     }
 }
 
+const unitTestVerify = async (accessToken, token) => {
+    const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+    //check if user exists
+    const user = await User.findOne({email: decodeAccessToken.email})
+
+    if (!user.emailConfirmed) {
+        //check if provided email token matches
+        if (token === user.emailToken) {
+            await User.updateOne({ email: decodeAccessToken.email }, { $set: { emailConfirmed: true, emailToken: null } })
+        }
+    }
+}
+
 
 module.exports = {
     register, token,
     confirmEmailToken, login,
     getAvailableMajors, generateExpiredToken,
-    generateExpiredRefreshToken, addRefreshToken
+    generateExpiredRefreshToken, addRefreshToken,
+    unitTestVerify
 };

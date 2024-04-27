@@ -98,6 +98,25 @@ const accountModifyMajorValidation = async (req, res, next) => {
     }
 }
 
+const verifiedValidation = async (req, res, next) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
+        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
+
+        if(userAccount.emailConfirmed === false) {
+            res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
+            return;
+        } else {
+            next();
+        }
+    } catch (error) {
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return;
+    }
+}
+
 module.exports = {
-    accountModifyMajorValidation, registerMajorValidation
+    accountModifyMajorValidation, registerMajorValidation,
+    verifiedValidation
 }

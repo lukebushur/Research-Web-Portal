@@ -6,7 +6,8 @@ const authController = require('../controllers/authenticate');
 //API MIDDLEWARE
 const verifyToken = require('../helpers/verifyToken');
 const rateLimiter = require('../helpers/rateLimiter');
-const { registerMajorValidation } = require('../helpers/inputValidation/accountValidation');
+const { registerMajorValidation, verifiedValidation } = require('../helpers/inputValidation/accountValidation');
+
 
 
 //Router initialisation
@@ -17,7 +18,7 @@ const router = express.Router();
 router.post('/register', [registerMajorValidation], authController.register);
 
 //POST TOKEN - Route to regenerate an access token given a refresh token and valid access token
-router.post('/token', [verifyToken], authController.token);
+router.post('/token', [verifyToken, verifiedValidation], authController.token);
 
 //POST Confirm Email 
 router.post('/confirmEmail', [verifyToken], authController.confirmEmailToken);
