@@ -7,12 +7,13 @@ const search = require('../controllers/studentControllers/studentSearchRecommend
 
 //API MIDDLEWARE
 const verifyToken = require('../helpers/verifyToken');
+const { verifiedValidation } = require('../helpers/inputValidation/accountValidation');
 const rateLimiter = require('../helpers/rateLimiter');
 
 //Router initialisation
 const router = express.Router();
 
 //GET - Search for projects  
-router.get('/searchProjects', [verifyToken], search.searchProjects);
+router.get('/searchProjects', [verifyToken, verifiedValidation], search.searchProjects);
 
 module.exports = router;

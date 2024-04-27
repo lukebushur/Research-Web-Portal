@@ -132,7 +132,7 @@ const resetPassword = async (req, res) => {
         //Generate Password Reset Token and expiresIn - 10 minutes
         const passwordResetToken = uuidv4();
         const expiresIn = moment().add(10, 'm').toISOString();
-
+        
         //Update user with password token, expiry, and provisional password
         const user = await User.findOneAndUpdate({ email: req.body.email }, {
             $set: {

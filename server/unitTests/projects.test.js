@@ -8,6 +8,7 @@ const server = require('../server.js');
 const User = require('../models/user');
 const Project = require('../models/project.js');
 const Majors = require('../models/majors.js');
+const { unitTestVerify } = require('../controllers/authenticate.js');
 require('dotenv').config();
 
 server.unitTest = true;
@@ -68,6 +69,24 @@ describe('BE-REG-10 :  POST /api/register', () => {
 
 //BE-REG-8 : Basic register unit test for students, expects the response to output successful register response
 describe('BE-REG-8 : POST /api/register', () => {
+    after(async () => {
+        const Promises = [
+            User.findOne({ email: randomEmail }),
+            User.findOne({ email: "AXAXXA" + randomEmail}),
+        ]
+        let emailtokens = [];
+        const values = await Promise.all(Promises);
+        values.forEach(user => {
+            emailtokens.push(user.emailToken);
+        });
+    
+        const verifyPromises = [
+            unitTestVerify(access_token, emailtokens[0]),
+            unitTestVerify(student_access_token, emailtokens[1]),
+        ]
+        await Promise.all(verifyPromises);
+    });
+
     it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')

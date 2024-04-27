@@ -377,10 +377,25 @@ const addRefreshToken = async (user, refreshToken) => {
     }
 }
 
+const unitTestVerify = async (accessToken, token) => {
+    const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+    //check if user exists
+    const user = await User.findOne({email: decodeAccessToken.email})
+
+    if (!user.emailConfirmed) {
+        //check if provided email token matches
+        if (token === user.emailToken) {
+            await User.updateOne({ email: decodeAccessToken.email }, { $set: { emailConfirmed: true, emailToken: null } })
+        }
+    }
+}
+
 
 module.exports = {
     register, token,
     confirmEmailToken, login,
     getAvailableMajors, generateExpiredToken,
-    generateExpiredRefreshToken, addRefreshToken
+    generateExpiredRefreshToken, addRefreshToken,
+    unitTestVerify
 };

@@ -3,26 +3,26 @@ const industryController = require('../controllers/industry');
 
 // API Middleware
 const verifyToken = require('../helpers/verifyToken')
-
+const { verifiedValidation } = require('../helpers/inputValidation/accountValidation');
 // Router Initialisation
 const router = express.Router();
 
 // Job Routes
 
 // GET - get all the active, draft, and archived jobs from a user
-router.get('/getJobs', [verifyToken], industryController.getJobs);
+router.get('/getJobs', [verifyToken, verifiedValidation], industryController.getJobs);
 
 // GET - get a job associated with the user at the specified ID
-router.get('/getJob/:jobId', [verifyToken], industryController.getJob);
+router.get('/getJob/:jobId', [verifyToken, verifiedValidation], industryController.getJob);
 
 // POST - create a new job associated with a user
-router.post('/createJob', [verifyToken], industryController.createJob);
+router.post('/createJob', [verifyToken, verifiedValidation], industryController.createJob);
 
 // PUT - edit an existing job
-router.put('/editJob', [verifyToken], industryController.editJob);
+router.put('/editJob', [verifyToken, verifiedValidation], industryController.editJob);
 
 // DELETE - delete the job at the specified ID
-router.delete('/deleteJob/:jobId', [verifyToken], industryController.deleteJob);
+router.delete('/deleteJob/:jobId', [verifyToken, verifiedValidation], industryController.deleteJob);
 
 // Assessment Routes
 

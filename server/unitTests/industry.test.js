@@ -4,6 +4,7 @@ const server = require('../server.js');
 const chance = require('chance').Chance();
 const User = require('../models/user');
 const IndustryData = require('../models/industryData.js');
+const { unitTestVerify } = require('../controllers/authenticate.js');
 require('dotenv').config();
 
 server.unitTest = true;
@@ -48,6 +49,23 @@ before(function (done) {
 
 //Basic register request for the industry user, should return a success response
 describe('POST /api/register', () => {
+    after(async () => {
+        const Promises = [
+            User.findOne({ email: randomEmail }),
+        ]
+        let emailtokens = [];
+        const values = await Promise.all(Promises);
+        values.forEach(user => {
+            emailtokens.push(user.emailToken);
+        });
+
+        const verifyPromises = [
+            unitTestVerify(industry_access_token, emailtokens[0]),
+        ]
+        await Promise.all(verifyPromises);
+    });
+
+    
     it('should return a registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
