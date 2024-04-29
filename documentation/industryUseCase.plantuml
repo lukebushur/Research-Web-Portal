@@ -1,0 +1,18 @@
+@startuml industry-use-case
+left to right direction
+actor "Industry User" as ind
+rectangle {
+  usecase "Create an account" as UC1
+  usecase "Log in with their account information" as UC2
+  usecase "View industry dashboard" as UC3
+  usecase "Create pre-hire projects" as UC4
+  usecase "Create pre-hire assessments" as UC5
+  usecase "Post job/internship opportunities" as UC6
+}
+ind --> UC1
+ind --> UC2
+ind --> UC3
+ind --> UC4
+ind --> UC5
+ind --> UC6
+@enduml
