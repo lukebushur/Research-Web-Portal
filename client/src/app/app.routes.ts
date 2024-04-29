@@ -60,6 +60,8 @@ const routeConfig: Routes = [
       // the application ID of the project applicant. It is used to access a
       // specific applicant's data.
       { path: 'application/:projectID/:applicationID', component: ViewApplicationComponent },
+      // edit a faculty user's details
+      { path: 'edit-profile', component: EditProfileScreenComponent },
     ]
   },
 
@@ -80,6 +82,8 @@ const routeConfig: Routes = [
       // 2 route parameters: professor email and project ID associated with a project
       // used to view an existing faculty project
       { path: 'view-project/:professorEmail/:projectId', component: StudentViewProjectComponent, canActivate: [AuthGuard]},
+      // edit a student user's details
+      { path: 'edit-profile', component: EditProfileScreenComponent },
     ],
   },
 
@@ -100,6 +104,8 @@ const routeConfig: Routes = [
       // 1 route parameter for the assessment ID of the assessment to edit
       // edit an existing assessment
       { path: 'edit-assessment/:assessmentId', component: AddEditAssessmentComponent },
+      // edit an industry user's details
+      { path: 'edit-profile', component: EditProfileScreenComponent },
       // overview of the pre-hire projects that the industry user has created
       { path: 'job-projects', component: JobProjectBrowserComponent },
       // create a new pre-hire project
@@ -109,10 +115,6 @@ const routeConfig: Routes = [
       { path: 'edit-job-project/:jobProjectId', component: AddEditJobProjectComponent },
     ]
   },
-
-  // ALL USER ROUTES
-  // edit an existing user's details
-  { path: 'edit-profile', component: EditProfileScreenComponent },
 
   // LAST ROUTE - KEEP THIS ROUTE LAST FOR IT TO WORK
   // Catches any attempt to access a route that does not exist. It sends the
