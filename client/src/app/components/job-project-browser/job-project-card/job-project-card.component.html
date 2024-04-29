@@ -1,0 +1,34 @@
+<div>
+  <mat-card class="job-project-card">
+    <mat-card-header>
+      <mat-card-title class="job-project-title">
+        <div [matTooltip]="jobProjectData.title" matTooltipShowDelay="1000" class="max-two-lines">{{
+          jobProjectData.title }}</div>
+      </mat-card-title>
+      <mat-card-subtitle class="job-project-subtitle">
+        <div [matTooltip]="jobProjectData.description" matTooltipShowDelay="1000" class="max-three-lines">Description:
+          {{ jobProjectData.description }}</div>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="content-container">
+        <div class="field-title">Created:</div>
+        <div>{{ jobProjectData.dateCreated | date:'fullDate' }}</div>
+        <div class="field-title">Deadline:</div>
+        <div>{{ jobProjectData.deadline | date:'fullDate' }}</div>
+        <div class="field-title">Skills Assessed:</div>
+        <div class="field-content">
+          <div [matTooltip]="jobProjectData.skillsAssessed" matTooltipShowDelay="1000" class="max-two-lines">{{
+            jobProjectData.skillsAssessed }}</div>
+        </div>
+        <div class="field-title">Submission Type:</div>
+        <div>{{ jobProjectData.submissionType === 'text' ? 'Written Response' : 'File Upload' }}</div>
+      </div>
+      <mat-divider class="divider"></mat-divider>
+    </mat-card-content>
+    <mat-card-actions class="actions-container">
+      <button mat-button (click)="editJobProject()">EDIT</button>
+      <button mat-button color="warn" (click)="deleteJobProject()">DELETE</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
