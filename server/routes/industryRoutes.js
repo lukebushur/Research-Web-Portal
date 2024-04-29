@@ -41,4 +41,21 @@ router.put('/editAssessment', [verifyToken], industryController.editAssessment);
 // DELETE - delete the assessment at the specified ID
 router.delete('/deleteAssessment/:assessmentId', [verifyToken], industryController.deleteAssessment);
 
+// Pre-Hire Project Routes
+
+// GET - get all job projects
+router.get('/getJobProjects', [verifyToken], industryController.getJobProjects);
+
+// GET - get the job project at the specified ID
+router.get('/getJobProject/:jobProjectId', [verifyToken], industryController.getJobProject);
+
+// POST - create a new job project
+router.post('/createJobProject', [verifyToken], industryController.createJobProject);
+
+// PUT - edit an existing job project
+router.put('/editJobProject', [verifyToken], industryController.editJobProject);
+
+// DELETE - delete the job project at the specified ID
+router.delete('/deleteJobProject/:jobProjectId', [verifyToken], industryController.deleteJobProject);
+
 module.exports = router;

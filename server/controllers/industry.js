@@ -36,6 +36,7 @@ const getJobs = async (req, res) => {
     }
 }
 
+// get a job associated with the user at the specified ID
 const getJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -105,6 +106,7 @@ const createJob = async (req, res) => {
                     archived: [],
                 },
                 assessments: [],
+                jobProjects: [],
             })
             : await retrieveOrCacheIndustry(req, user.userType.industryData);
 
@@ -145,6 +147,7 @@ const createJob = async (req, res) => {
     }
 };
 
+// edit a job with the specified ID
 const editJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -184,6 +187,7 @@ const editJob = async (req, res) => {
     }
 };
 
+// delete a job with the specified ID
 const deleteJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
@@ -306,6 +310,7 @@ const createAssessment = async (req, res) => {
                     archived: [],
                 },
                 assessments: [],
+                jobProjects: [],
             })
             : await retrieveOrCacheIndustry(req, user.userType.industryData);
 
@@ -399,6 +404,183 @@ const deleteAssessment = async (req, res) => {
     }
 };
 
+// Get all the job projects associated with an industry user.
+const getJobProjects = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
+
+        //check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'UNAUTHORIZED', {}));
+        }
+
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
+        if (!industryData) {
+            return res.status(404).json(generateRes(false, 404, 'INDUSTRY_DATA_NOT_FOUND', {}));
+        }
+
+        const jobProjects = industryData.jobProjects;
+
+        return res.status(200).json(generateRes(true, 200, 'JOBS_PROJECTS_FOUND', { jobProjects: jobProjects }));
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, 'SERVER_ERROR', { error }));
+    }
+}
+
+// get a job project associated with the user at the specified ID
+const getJobProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        const jobProjectId = req.params.jobProjectId;
+        if (!jobProjectId) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
+
+        //check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'UNAUTHORIZED', {}));
+        }
+
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
+        if (!industryData) {
+            return res.status(404).json(generateRes(false, 404, 'INDUSTRY_DATA_NOT_FOUND', {}));
+        }
+
+        const jobProject = industryData.jobProjects.id(jobProjectId);
+        if (jobProject) {
+            return res.status(200).json(generateRes(true, 200, 'JOB_PROJECT_FOUND', { jobProject: JSON.stringify(jobProject) }));
+        }
+
+        return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, 'SERVER_ERROR', { error }));
+    }
+};
+
+// create a new job project
+const createJobProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        // check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+        // check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'UNAUTHORIZED', {}));
+        }
+
+        const industryData = (!user.userType.industryData)
+            ? new IndustryData({
+                jobs: {
+                    active: [],
+                    draft: [],
+                    archived: [],
+                },
+                assessments: [],
+                jobProjects: [],
+            })
+            : await retrieveOrCacheIndustry(req, user.userType.industryData);
+
+        const jobProjectDetails = req.body.jobProjectDetails;
+
+        const newJobProject = {
+            title: jobProjectDetails.title,
+            description: jobProjectDetails.description,
+            skillsAssessed: jobProjectDetails.skillsAssessed,
+            eta: jobProjectDetails.eta,
+            deadline: jobProjectDetails.deadline,
+            materials: jobProjectDetails.materials,
+            submissionType: jobProjectDetails.submissionType,
+            fileTypes: jobProjectDetails.fileTypes,
+            dateCreated: new Date(),
+        };
+
+        industryData.jobProjects.push(newJobProject);
+        await industryData.save();
+
+        if (!user.userType.industryData) {
+            user.userType.industryData = industryData._id;
+            await user.save();
+        }
+
+        return res.status(201).json(generateRes(true, 201, 'JOB_CREATED', {}));
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, 'SERVER_ERROR', { error }));
+    }
+};
+
+// edit an existing job project
+const editJobProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        //check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
+
+        // check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'UNAUTHORIZED', {}));
+        }
+
+        const jobProjectId = req.body.jobProjectId;
+        const jobProjectDetails = req.body.jobProjectDetails;
+
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
+        const jobProjectToUpdate = industryData.jobProjects.id(jobProjectId);
+        jobProjectToUpdate.set(jobProjectDetails);
+        await industryData.save();
+
+        return res.status(200).json(generateRes(true, 200, 'JOB_PROJECT_UPDATED', {}));
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, 'SERVER_ERROR', { error }));
+    }
+};
+
+// delete the job project at the specified ID
+const deleteJobProject = async (req, res) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1];
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+
+        if (!req.params.jobProjectId) {
+            return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
+        }
+
+        // check if user exists
+        const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+
+        // check if user type is industry
+        if (user.userType.Type != process.env.INDUSTRY) {
+            return res.status(400).json(generateRes(false, 400, 'UNAUTHORIZED', {}));
+        }
+
+        const industryData = await retrieveOrCacheIndustry(req, user.userType.industryData);
+        const numJobProjects = industryData.jobProjects.length;
+        const jobProjectsWithRemoved = industryData.jobProjects.pull({ _id: req.params.jobProjectId });
+
+        if (numJobProjects === jobProjectsWithRemoved.length) {
+            return res.status(404).json(generateRes(false, 404, 'JOB_PROJECT_NOT_FOUND', {}));
+        }
+        await industryData.save();
+
+        return res.status(200).json(generateRes(true, 200, 'JOB_PROJECT_DELETED', {}));
+    } catch (error) {
+        return res.status(500).json(generateRes(false, 500, 'SERVER_ERROR', { error }));
+    }
+};
+
 module.exports = {
     getJobs,
     getJob,
@@ -411,4 +593,10 @@ module.exports = {
     createAssessment,
     editAssessment,
     deleteAssessment,
+
+    getJobProjects,
+    getJobProject,
+    createJobProject,
+    editJobProject,
+    deleteJobProject,
 };
