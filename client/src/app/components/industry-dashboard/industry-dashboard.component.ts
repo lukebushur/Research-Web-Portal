@@ -20,7 +20,7 @@ export class IndustryDashboardComponent {
   draftedJobs: JobCardData[];
   archivedJobs: JobCardData[];
 
-  constructor(private router: Router, private industryDashboardService: IndustryDashboardService) { }
+  constructor(private industryDashboardService: IndustryDashboardService) { }
 
   ngOnInit(): void {
     this.timeInterval = interval(5000).pipe(
