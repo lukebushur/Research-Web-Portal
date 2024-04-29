@@ -43,6 +43,45 @@ const jobSchema = new mongoose.Schema({
   questions: [customObjects.question],
 });
 
+const jobProjectSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  skillsAssessed: {
+    type: String,
+    required: true,
+  },
+  eta: {
+    type: String,
+    required: true,
+  },
+  deadline: {
+    type: Date,
+    required: true,
+  },
+  materials: {
+    type: [String],
+    required: false,
+  },
+  submissionType: {
+    type: String,
+    required: true,
+  },
+  fileTypes: {
+    type: [String],
+    required: false,
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const industryDataSchema = new mongoose.Schema({
   jobs: {
     active: {
@@ -69,6 +108,10 @@ const industryDataSchema = new mongoose.Schema({
     },
     questions: [customObjects.question],
   }],
+  jobProjects: {
+    type: [jobProjectSchema],
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('IndustryData', industryDataSchema);
