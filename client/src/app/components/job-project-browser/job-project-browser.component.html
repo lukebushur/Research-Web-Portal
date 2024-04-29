@@ -1,1 +1,6 @@
-<p>job-project-browser works!</p>
+<div class="page-container">
+  @for (project of jobProjects$ | async; track project._id) {
+    <app-job-project-card [jobProjectData]="project"></app-job-project-card>
+  }
+</div>
+<div class="bottom-portion"></div>
