@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
 import { ActivatedRoute } from '@angular/router';
-import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,7 +35,7 @@ export class ViewApplicationComponent {
   responseData: any = -1; //the object that will store the response data
   answersArray: any[];
 
-  //these are the String representations of posted, deadline, and applied time. This is necessary because the format is originally date, 
+  //these are the String representations of posted, deadline, and applied time. This is necessary because the format is originally date,
   //and needs to be converted with a service, so storing them as seperate variables makes the html cleaner.
   posted: String;
   deadline: String;
@@ -43,7 +43,7 @@ export class ViewApplicationComponent {
 
   applicationStatus = "Pending";
 
-  //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service 
+  //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
   constructor(private facultyService: FacultyProjectService,
     private route: ActivatedRoute,

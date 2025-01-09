@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssessmentCardComponent } from './assessment-card.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
+import { AssessmentData } from 'app/_models/assessments/assessmentData';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AssessmentCardComponent', () => {
   let component: AssessmentCardComponent;
@@ -20,12 +21,12 @@ describe('AssessmentCardComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         MatSnackBarModule,
         MatCardModule,
         MatDividerModule,
-        AssessmentCardComponent,
+        AssessmentCardComponent
       ],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     fixture = TestBed.createComponent(AssessmentCardComponent);
     component = fixture.componentInstance;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 import { AuthService } from '../auth-controller/auth.service';
 
 @Injectable({
@@ -48,7 +48,7 @@ export class FacultyProjectService {
 
   // This method takes the projectID from the webpage and then makes a
   // request to unarchive an archived project
-  unarchiveProject(projectID: string): Observable<any> { 
+  unarchiveProject(projectID: string): Observable<any> {
     const headers = this.authService.getHeaders();
     const data = { "projectID": projectID }
 

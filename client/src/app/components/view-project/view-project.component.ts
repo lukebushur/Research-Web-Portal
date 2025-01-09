@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -19,7 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 
@@ -102,7 +102,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
   // Material table sort and pginator objects
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  
+
   // This array determines the displayedd columns in the table.
   displayedColumns: string[] = ['name', 'email', 'GPA', 'majors', 'status'];
 
@@ -310,7 +310,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       this.currentQuestionType = this.questions[this.currentQuestionIndex].requirementType;
     }
   }
-  
+
   // This method checks to see if the questions provided by the faculty match
   // the student parameter's questions.
   checkAnswers(studentQuestions: any) {
@@ -337,7 +337,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       }
     }
     // if the code reaches here, then the above checks have passed for all questions
-    return true; 
+    return true;
   }
 
   // This method updates the faculty answer for a text response then updates the table.
@@ -398,4 +398,4 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       }
     });
   }
-} 
+}

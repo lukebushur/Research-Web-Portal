@@ -1,4 +1,4 @@
-import { Application } from "src/app/_models/applications/application";
+import { Application } from "app/_models/applications/application";
 import { QuestionData } from "./questionData";
 
 export interface ProjectFetchData {

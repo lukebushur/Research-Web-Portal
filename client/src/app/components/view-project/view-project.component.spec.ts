@@ -1,16 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewProjectComponent } from './view-project.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
-import { QuestionData } from 'src/app/_models/projects/questionData';
-import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
+import { QuestionData } from 'app/_models/projects/questionData';
+import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 interface ProjectData {
   projectName: string;
@@ -113,7 +114,7 @@ describe('ViewProjectComponent', () => {
           answers: []
         };
         // applicants' answers data contains the questions with the applicants'
-        // answers 
+        // answers
         if (question.requirementType === 'text') {
           questionWithAnswer.answers!.push('name1 answer');
         } else if (question.requirementType === 'radio button') {
@@ -140,7 +141,7 @@ describe('ViewProjectComponent', () => {
           answers: []
         };
         // applicants' answers data contains the questions with the applicants'
-        // answers 
+        // answers
         if (question.requirementType === 'text') {
           questionWithAnswer.answers!.push('name2 answer');
         } else if (question.requirementType === 'radio button') {
@@ -167,7 +168,7 @@ describe('ViewProjectComponent', () => {
           answers: []
         };
         // applicants' answers data contains the questions with the applicants'
-        // answers 
+        // answers
         if (question.requirementType === 'text') {
           questionWithAnswer.answers!.push('name3 answer');
         } else if (question.requirementType === 'radio button') {
@@ -212,23 +213,26 @@ describe('ViewProjectComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         SpinnerSubComponent,
         MatTableModule,
         ViewProjectComponent,
-        BrowserAnimationsModule,
+        BrowserAnimationsModule
       ],
       providers: [
         provideRouter([]),
         { provide: FacultyProjectService, useValue: facultyService },
-        { provide: ActivatedRoute, useValue: {
-          snapshot: {
-            paramMap: convertToParamMap({
-              projectType: projectType,
-              projectId: projectId,
-            })
+        {
+          provide: ActivatedRoute, useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({
+                projectType: projectType,
+                projectId: projectId,
+              })
+            }
           }
-        }},
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
       ]
     });
     fixture = TestBed.createComponent(ViewProjectComponent);

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { JobCardData } from './job-card-data';
-import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';

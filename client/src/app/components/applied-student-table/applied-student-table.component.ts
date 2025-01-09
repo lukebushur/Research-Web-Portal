@@ -7,7 +7,7 @@ import { FacultyProjectService } from '../../controllers/faculty-project-control
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
+import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 

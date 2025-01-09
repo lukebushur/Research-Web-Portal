@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpinnerComponent } from './spinner.component';
-import { LoaderService } from 'src/app/controllers/load-controller/loader.service';
+import { LoaderService } from 'app/controllers/load-controller/loader.service';
 
 describe('SpinnerComponent', () => {
   let component: SpinnerComponent;

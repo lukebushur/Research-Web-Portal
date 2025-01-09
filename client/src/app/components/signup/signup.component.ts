@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
-import { environment } from 'src/environments/environment';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { SignupService } from 'app/controllers/signup-controller/signup.service';
+import { environment } from 'environments/environment';
+import { AuthService } from 'app/controllers/auth-controller/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -39,7 +39,7 @@ interface AccountType {
 })
 export class SignupComponent {
 
-  // Set up the variables for the universityLocation dropdown 
+  // Set up the variables for the universityLocation dropdown
   universityLocations: string[] = [
     'Purdue University Fort Wayne',
     'Purdue University',
@@ -51,7 +51,7 @@ export class SignupComponent {
   // list from the back-end again
   prevSelectedUniversity: string | undefined | null;
 
-  // Set up the variables for the account type dropdown 
+  // Set up the variables for the account type dropdown
   accountTypes: AccountType[] = [
     { value: 0, text: 'Student' },
     { value: 1, text: 'Faculty' },

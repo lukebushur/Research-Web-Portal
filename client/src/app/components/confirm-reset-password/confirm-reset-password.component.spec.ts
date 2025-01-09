@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmResetPasswordComponent } from './confirm-reset-password.component';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
-import { LoginService } from 'src/app/controllers/login-controller/login.service';
+import { LoginService } from 'app/controllers/login-controller/login.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConfirmResetPasswordComponent', () => {
   let component: ConfirmResetPasswordComponent;
@@ -47,7 +48,6 @@ describe('ConfirmResetPasswordComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         MatFormFieldModule,
         MatSnackBarModule,
         MatIconModule,
@@ -55,14 +55,16 @@ describe('ConfirmResetPasswordComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
-        ConfirmResetPasswordComponent,
+        ConfirmResetPasswordComponent
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
         { provide: LoginService, useValue: loginService },
         { provide: Router, useValue: router },
         { provide: ActivatedRoute, useValue: activatedRoute },
-      ],
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ]
     });
     fixture = TestBed.createComponent(ConfirmResetPasswordComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);

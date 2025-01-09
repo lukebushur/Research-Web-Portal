@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { PostProjectComponent } from './posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -13,17 +13,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
-import { ProjectData } from 'src/app/_models/projects/projectData';
+import { ProjectData } from 'app/_models/projects/projectData';
 import { of } from 'rxjs';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/controllers/auth-controller/auth.service';
 import { MatSelectHarness } from '@angular/material/select/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -72,7 +73,6 @@ describe('PostProjectComponent', () => {
       imports: [
         SpinnerSubComponent,
         CreateQuestionsFormStubComponent,
-        HttpClientTestingModule,
         MatDialogModule,
         MatRadioModule,
         MatSnackBarModule,
@@ -85,12 +85,12 @@ describe('PostProjectComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        PostProjectComponent,
+        PostProjectComponent
       ],
       providers: [provideRouter([]), {
         provide: AuthService,
         useValue: authService
-      }]
+      }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     fixture = TestBed.createComponent(PostProjectComponent);
     component = fixture.componentInstance;
@@ -178,11 +178,11 @@ describe('PostProjectComponent', () => {
 
   // it('should submit the project', fakeAsync(() => {
   //   tick();
-  //   // Convert this to individual 
-  //   // Like 
+  //   // Convert this to individual
+  //   // Like
   //   component.projectForm.get("details")?.get("projectName")?.setValue(testProjectData.projectName);
   //   component.projectForm.get("details")?.get("description")?.setValue(testProjectData.description);
-    
+
   //   let formBuilder = new FormBuilder();
   //   component.categories.push(formBuilder.control('Technology'));
 
@@ -194,7 +194,7 @@ describe('PostProjectComponent', () => {
   //   component.questionsGroup.get("questions")?.setValue([]);
 
   //   expect(component.details.get("questionsGroup")?.valid).withContext('to be valid').toBe(true);
-   
+
   //   expect(component.projectForm.valid).toBe(true);
   // }))
 

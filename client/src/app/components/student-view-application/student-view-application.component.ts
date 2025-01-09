@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';

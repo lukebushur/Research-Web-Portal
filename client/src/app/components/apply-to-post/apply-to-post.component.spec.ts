@@ -5,17 +5,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { ProjectData } from 'src/app/_models/projects/projectData';
+import { ProjectData } from 'app/_models/projects/projectData';
 import { of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
-import { ApplyToPostService } from 'src/app/controllers/apply-to-post/apply-to-post.service';
+import { ApplyToPostService } from 'app/controllers/apply-to-post/apply-to-post.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { Component } from '@angular/core';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
@@ -181,11 +181,11 @@ describe('ApplyToPostComponent', () => {
   // //     'three': new FormControl(false),
   // //   });
   // //   const checkboxValidator = component.requireCheckboxesToBeChecked(1);
-  // //   let checkboxValidatorResult = checkboxValidator(checkboxGroup); 
+  // //   let checkboxValidatorResult = checkboxValidator(checkboxGroup);
   // //   // should not pass validation, as all checkbox controls are false
   // //   expect(checkboxValidatorResult).toEqual({ requireCheckboxesToBeChecked: true });
   // //   checkboxGroup.get('two')?.setValue(true);
-  // //   checkboxValidatorResult = checkboxValidator(checkboxGroup); 
+  // //   checkboxValidatorResult = checkboxValidator(checkboxGroup);
   // //   // should pass validation, as at least one checkbox control is true
   // //   expect(checkboxValidatorResult).toBeNull();
   // // });
@@ -252,7 +252,7 @@ describe('ApplyToPostComponent', () => {
   //   const radioButtons = applyElement.querySelectorAll('mat-radio-button');
   //   expect(radioButtons.length).toEqual(3);
   //   for (let i = 0; i < radioButtons.length; i++) {
-  //     expect(radioButtons.item(i).textContent).toEqual('option' + (i + 1));      
+  //     expect(radioButtons.item(i).textContent).toEqual('option' + (i + 1));
   //   }
   //   const textArea = applyElement.querySelector('textarea');
   //   expect(textArea).toBeTruthy();

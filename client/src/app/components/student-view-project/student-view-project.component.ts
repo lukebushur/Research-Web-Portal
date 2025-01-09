@@ -8,8 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
-import { QuestionData } from 'src/app/_models/projects/questionData';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { QuestionData } from 'app/_models/projects/questionData';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 // interface for storing project data
@@ -76,7 +76,7 @@ export class StudentViewProjectComponent implements OnInit {
       this.professorEmail,
       this.projectId
     ).pipe(
-      map((data: any) => { 
+      map((data: any) => {
         const projectData = data.success.project;
         return <ProjectData>{
           ...projectData,

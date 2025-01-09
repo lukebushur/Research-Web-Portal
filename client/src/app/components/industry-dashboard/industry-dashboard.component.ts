@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
 import { JobCardData } from './job-card/job-card-data';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
 import { JobCardComponent } from './job-card/job-card.component';

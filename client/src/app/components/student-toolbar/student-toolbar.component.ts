@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, RouterModule } from '@angular/router';
-import { NavChoice } from 'src/app/_models/toolbar/navchoice';
+import { NavChoice } from 'app/_models/toolbar/navchoice';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';

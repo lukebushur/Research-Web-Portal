@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PostCreationService } from 'src/app/controllers/post-creation-controller/post-creation.service';
+import { PostCreationService } from 'app/controllers/post-creation-controller/post-creation.service';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service'
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/controllers/auth-controller/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
 import { SpinnerComponent } from '../spinner/spinner.component';

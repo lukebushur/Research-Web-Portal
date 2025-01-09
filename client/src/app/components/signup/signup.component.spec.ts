@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
@@ -12,12 +12,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { SignupService } from 'src/app/controllers/signup-controller/signup.service';
+import { SignupService } from 'app/controllers/signup-controller/signup.service';
 import { Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
@@ -64,7 +65,6 @@ describe('SignupComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
@@ -72,14 +72,15 @@ describe('SignupComponent', () => {
         MatIconModule,
         MatProgressBarModule,
         BrowserAnimationsModule,
-        SignupComponent,
+        SignupComponent
       ],
-      // Use the spies defined in this test instead of the actual services
       providers: [
         { provide: SignupService, useValue: signupService },
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
-      ],
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ]
     });
     fixture = TestBed.createComponent(SignupComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
