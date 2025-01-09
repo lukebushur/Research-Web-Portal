@@ -1,58 +1,51 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient, HttpHeaders, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { of } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 
 describe('AuthService', () => {
-  let service: AuthService;
-  let httpSpy: jasmine.Spy;
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
+  let authService: AuthService;
 
   beforeEach(() => {
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    httpClientSpy.get.and.returnValue(of(true));
 
-    const httpClient = jasmine.createSpyObj('HttpClient', ['get']);
-    httpSpy = httpClient.get.and.returnValue(of(true))
+    authService = new AuthService(httpClientSpy);
 
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        {
-          provide: HttpClient,
-          useValue: httpClient
-        }
-      ]
-    });
-
-    service = TestBed.inject(AuthService);
-    localStorage.setItem('jwt-auth-token', "BackendIsBad")
+    localStorage.setItem('jwt-auth-token', "invalid")
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(authService).toBeTruthy();
   });
 
   it('should return headers properly with auth token', () => {
-    const res = service.getHeaders()
+    const res = authService.getHeaders()
+
     expect(res.get('Authorization')).toEqual(`Bearer ${localStorage.getItem('jwt-auth-token')}`);
   })
 
   it('should return jwt-auth-token', () => {
-    const res = service.getAuthToken()
+    const res = authService.getAuthToken()
+
     expect(res).toEqual(localStorage.getItem('jwt-auth-token'))
   })
 
   it('should attempt to fetch accountInfo', () => {
-    service.getAccountInfo()
-    const args = httpSpy.calls.mostRecent().args;
+    authService.getAccountInfo()
+    const args = httpClientSpy.get.calls.mostRecent().args;
+
     expect(args[0]).toBe(`${environment.apiUrl}/accountManagement/getAccountInfo`)
   })
 
   it('should fetch majors from my university', () => {
-    service.getMajors('Test University')
-    const args = httpSpy.calls.mostRecent().args;
+    authService.getMajors('Test University')
+    const args = httpClientSpy.get.calls.mostRecent().args;
+
     expect(args[0]).toBe(`${environment.apiUrl}/getMajors?university=${'Test University'}`)
   })
-
 });
