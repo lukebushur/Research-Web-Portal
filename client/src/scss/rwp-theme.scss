@@ -1,34 +1,52 @@
-@use '@angular/material' as mat;
-@use './rwp-palette.scss' as rwp-pal;
+@use "@angular/material" as mat;
+// @use "./rwp-m3-theme.scss" as rwp;
+@use "./rwp-m2-palettes.scss" as rwp-pal;
 
 @include mat.core();
 
-$pfw-primary: mat.define-palette(rwp-pal.$pfw-palette-primary);
-$pfw-accent: mat.define-palette(rwp-pal.$pfw-palette-accent);
-$pfw-warn: mat.define-palette(mat.$red-palette);
+// To switch to Material 3 styling, uncomment the following block and comment
+// everything after it. Also, make sure to uncomment the necessary import above.
+// Material 3 is not supported - may be done in the future.
 
-$pfw-typography: mat.define-typography-config();
+// html {
+//   @include mat.all-component-themes(rwp.$light-theme);
+// }
 
-$pfw-theme: mat.define-light-theme((color: (primary: $pfw-primary,
-        accent: $pfw-accent,
-        warn: $pfw-warn,
-      ),
-      typography: $pfw-typography,
-    ));
+$pfw-primary: mat.m2-define-palette(rwp-pal.$pfw-palette-primary);
+$pfw-accent: mat.m2-define-palette(rwp-pal.$pfw-palette-accent);
+$pfw-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+$pfw-typography: mat.m2-define-typography-config();
+
+$pfw-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $pfw-primary,
+      accent: $pfw-accent,
+      warn: $pfw-warn
+    ),
+    typography: $pfw-typography
+  )
+);
 
 @include mat.all-component-themes($pfw-theme);
 
 // To use the following student theme, the parent tag must have class="stud"
 .elec-indi {
-  $electric-indigo-primary: mat.define-palette(rwp-pal.$electric-indigo-palette);
-  $electric-indigo-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+  $electric-indigo-primary: mat.m2-define-palette(rwp-pal.$electric-indigo-palette);
+  $electric-indigo-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
-  $electric-indigo-warn: mat.define-palette(mat.$red-palette);
+  $electric-indigo-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-  $electric-indigo-theme: mat.define-light-theme((color: (primary: $electric-indigo-primary,
-          accent: $electric-indigo-accent,
-          warn: $electric-indigo-warn,
-        )));
+  $electric-indigo-theme: mat.m2-define-light-theme(
+    (
+      color: (
+        primary: $electric-indigo-primary,
+        accent: $electric-indigo-accent,
+        warn: $electric-indigo-warn
+      )
+    )
+  );
 
   @include mat.all-component-colors($electric-indigo-theme);
 }
