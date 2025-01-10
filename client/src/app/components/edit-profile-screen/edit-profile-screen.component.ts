@@ -15,7 +15,6 @@ import { SpinnerComponent } from '../spinner/spinner.component';
   selector: 'app-edit-profile-screen',
   templateUrl: './edit-profile-screen.component.html',
   styleUrls: ['./edit-profile-screen.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

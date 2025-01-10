@@ -6,7 +6,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-forgot-password-submitted',
   templateUrl: './forgot-password-submitted.component.html',
   styleUrls: ['./forgot-password-submitted.component.css'],
-  standalone: true,
   imports: [RouterLink, MatCardModule]
 })
 export class ForgotPasswordSubmittedComponent { }

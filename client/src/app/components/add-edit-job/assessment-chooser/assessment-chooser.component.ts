@@ -14,7 +14,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   selector: 'app-assessment-chooser',
   templateUrl: './assessment-chooser.component.html',
   styleUrls: ['./assessment-chooser.component.css'],
-  standalone: true,
   imports: [
     MatDialogModule,
     MatProgressBarModule,

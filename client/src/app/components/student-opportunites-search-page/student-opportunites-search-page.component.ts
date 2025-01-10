@@ -25,7 +25,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-student-opportunites-search-page',
   templateUrl: './student-opportunites-search-page.component.html',
   styleUrls: ['./student-opportunites-search-page.component.css'],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

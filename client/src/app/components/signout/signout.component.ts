@@ -7,8 +7,7 @@ import { SignoutService } from 'app/controllers/signout-controller/signout.servi
   selector: 'app-signout',
   templateUrl: './signout.component.html',
   styleUrls: ['./signout.component.css'],
-  standalone: true,
-  imports: [MatSnackBarModule],
+  imports: [MatSnackBarModule]
 })
 export class SignoutComponent implements OnInit {
 

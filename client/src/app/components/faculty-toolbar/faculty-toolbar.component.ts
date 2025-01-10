@@ -13,7 +13,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   selector: 'app-faculty-toolbar',
   templateUrl: './faculty-toolbar.component.html',
   styleUrls: ['./faculty-toolbar.component.css'],
-  standalone: true,
   imports: [
     MatToolbarModule,
     MatButtonModule,

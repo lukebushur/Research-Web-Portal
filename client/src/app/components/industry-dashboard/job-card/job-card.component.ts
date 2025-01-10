@@ -12,7 +12,6 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-job-card',
   templateUrl: './job-card.component.html',
   styleUrls: ['./job-card.component.css'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatTooltipModule,

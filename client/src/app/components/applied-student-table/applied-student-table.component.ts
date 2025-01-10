@@ -26,7 +26,6 @@ interface AppliedStudent {
   selector: 'app-applied-student-table',
   templateUrl: './applied-student-table.component.html',
   styleUrls: ['./applied-student-table.component.css'],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -34,7 +33,7 @@ interface AppliedStudent {
     MatSortModule,
     MatButtonModule,
     MatPaginatorModule,
-  ],
+  ]
 })
 
 // this component is for the table of applied students for a faculty project

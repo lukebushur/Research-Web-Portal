@@ -14,7 +14,6 @@ import { SearchOptions } from 'app/_models/searchOptions';
   selector: 'student-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
@@ -31,10 +30,12 @@ export class StudentDashboard {
     this.getStudentInfo();
   }
 
-  majorOpportunities: { [major: string]: {
-    opps: any[],
-    pageNum: number,
-  } } = {};
+  majorOpportunities: {
+    [major: string]: {
+      opps: any[],
+      pageNum: number,
+    }
+  } = {};
   majors: string[] = [];
   studentGPA: number = 0;
   studentMajors: string[] = [];

@@ -55,7 +55,6 @@ interface ApplicantData {
   selector: 'app-view-project',
   templateUrl: './view-project.component.html',
   styleUrls: ['./view-project.component.css'],
-  standalone: true,
   imports: [
     AsyncPipe,
     DatePipe,
@@ -322,14 +321,14 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
         if (this.facultyAnswers[x] != "" && this.facultyAnswers[x] != studentQuestions[x].answers[0]) {
           return false;
         }
-      // Check if the requirement is check box. If so, ensure the student
-      // response has all the faculty choices.
+        // Check if the requirement is check box. If so, ensure the student
+        // response has all the faculty choices.
       } else if (this.questions[x].requirementType === "check box") {
         if (!this.facultyAnswers[x].every((element: any) => studentQuestions[x].answers.includes(element))) {
           return false;
         }
-      // Check if the requirement is text. If so, then check that the input
-      // string matches the text body.
+        // Check if the requirement is text. If so, then check that the input
+        // string matches the text body.
       } else if (this.questions[x].requirementType === "text") {
         if (this.facultyAnswers[x] != "" && !studentQuestions[x].answers[0].includes(this.facultyAnswers[x])) {
           return false;

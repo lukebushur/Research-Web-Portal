@@ -24,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-posts',
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
-  standalone: true,
   imports: [
     MatButtonModule,
     FormsModule,

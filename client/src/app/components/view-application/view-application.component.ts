@@ -16,7 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
   selector: 'app-view-application',
   templateUrl: './view-application.component.html',
   styleUrls: ['./view-application.component.css'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatDividerModule,

@@ -12,13 +12,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-research-project-card',
   templateUrl: './research-project-card.component.html',
   styleUrls: ['./research-project-card.component.css'],
-  standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
     RouterModule,
     MatTooltipModule
-  ],
+  ]
 })
 export class ResearchProjectCardComponent {
   // project data from the faculty dashboard

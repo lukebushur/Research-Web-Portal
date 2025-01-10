@@ -28,7 +28,8 @@ interface ProjectData {
 
 @Component({
   selector: 'app-student-view-project',
-  standalone: true,
+  templateUrl: './student-view-project.component.html',
+  styleUrl: './student-view-project.component.css',
   imports: [
     AsyncPipe,
     DatePipe,
@@ -40,9 +41,7 @@ interface ProjectData {
     MatCheckboxModule,
     MatButtonModule,
     SpinnerComponent,
-  ],
-  templateUrl: './student-view-project.component.html',
-  styleUrl: './student-view-project.component.css'
+  ]
 })
 export class StudentViewProjectComponent implements OnInit {
 

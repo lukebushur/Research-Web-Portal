@@ -12,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-confirm-reset-password',
   templateUrl: './confirm-reset-password.component.html',
   styleUrls: ['./confirm-reset-password.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

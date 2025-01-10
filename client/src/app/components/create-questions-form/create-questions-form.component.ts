@@ -17,7 +17,6 @@ interface RequirementOption {
   selector: 'app-create-questions-form',
   templateUrl: './create-questions-form.component.html',
   styleUrls: ['./create-questions-form.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

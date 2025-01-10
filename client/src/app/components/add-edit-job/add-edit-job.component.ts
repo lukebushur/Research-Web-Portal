@@ -25,7 +25,6 @@ import { MatNativeDateModule } from '@angular/material/core';
   selector: 'app-add-edit-job',
   templateUrl: './add-edit-job.component.html',
   styleUrls: ['./add-edit-job.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

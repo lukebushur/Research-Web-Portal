@@ -9,7 +9,6 @@ import { AssessmentCardComponent } from './assessment-card/assessment-card.compo
   selector: 'app-assessment-browser',
   templateUrl: './assessment-browser.component.html',
   styleUrls: ['./assessment-browser.component.css'],
-  standalone: true,
   imports: [AssessmentCardComponent]
 })
 export class AssessmentBrowserComponent {

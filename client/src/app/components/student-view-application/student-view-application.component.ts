@@ -15,7 +15,6 @@ import { MatRadioModule } from '@angular/material/radio';
   selector: 'app-student-view-application',
   templateUrl: './student-view-application.component.html',
   styleUrls: ['./student-view-application.component.css'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatRadioModule,

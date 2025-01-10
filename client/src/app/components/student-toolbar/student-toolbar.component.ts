@@ -12,7 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-student-toolbar',
-  standalone: true,
+  templateUrl: './student-toolbar.component.html',
+  styleUrls: ['./student-toolbar.component.css'],
   imports: [
     RouterModule,
     MatToolbarModule,
@@ -21,9 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatMenuModule,
     MatSidenavModule,
     MatListModule
-  ],
-  templateUrl: './student-toolbar.component.html',
-  styleUrls: ['./student-toolbar.component.css']
+  ]
 })
 export class StudentToolbarComponent {
   mobileQuery: MediaQueryList;

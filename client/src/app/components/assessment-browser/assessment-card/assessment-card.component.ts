@@ -11,7 +11,6 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-assessment-card',
   templateUrl: './assessment-card.component.html',
   styleUrls: ['./assessment-card.component.css'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatDividerModule,

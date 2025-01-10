@@ -14,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-add-edit-assessment',
   templateUrl: './add-edit-assessment.component.html',
   styleUrls: ['./add-edit-assessment.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

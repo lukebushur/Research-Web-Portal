@@ -13,7 +13,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

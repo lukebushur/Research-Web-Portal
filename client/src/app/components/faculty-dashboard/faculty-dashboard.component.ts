@@ -24,7 +24,6 @@ interface ProjectsObj {
   selector: 'app-faculty-dashboard',
   templateUrl: './faculty-dashboard.component.html',
   styleUrls: ['./faculty-dashboard.component.css'],
-  standalone: true,
   imports: [
     ResearchProjectCardComponent,
     AppliedStudentTableComponent,

@@ -23,7 +23,6 @@ interface AccountType {
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

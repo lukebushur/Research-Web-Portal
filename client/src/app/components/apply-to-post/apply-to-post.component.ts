@@ -19,7 +19,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-to-post',
   templateUrl: './apply-to-post.component.html',
   styleUrls: ['./apply-to-post.component.css'],
-  standalone: true,
   imports: [
     MatButtonModule,
     FormsModule,
@@ -32,7 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     SpinnerComponent,
     MatSnackBarModule
-  ],
+  ]
 })
 export class ApplyToPostComponent implements OnInit {
   //For side-nav opening
