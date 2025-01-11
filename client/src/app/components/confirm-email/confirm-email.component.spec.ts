@@ -31,8 +31,7 @@ describe('ConfirmEmailComponent', () => {
     routerSpy.navigate.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
-      declarations: [ConfirmEmailComponent],
-      imports: [],
+      imports: [ConfirmEmailComponent],
       providers: [
         {
           provide: ActivatedRoute, useValue: {

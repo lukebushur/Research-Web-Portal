@@ -7,7 +7,8 @@ import { EmailService } from 'app/controllers/email-controller/email.service';
 @Component({
   selector: 'app-confirm-email',
   templateUrl: './confirm-email.component.html',
-  styleUrls: ['./confirm-email.component.css']
+  styleUrls: ['./confirm-email.component.css'],
+  imports: []
 })
 export class ConfirmEmailComponent implements OnInit {
   public href: string = "";
@@ -51,7 +52,6 @@ export class ConfirmEmailComponent implements OnInit {
         });
       },
       error: (error: any) => {
-        console.error('Confirmation failed.', error);
         this.redirectToLogin('Invalid email confirmation token');
       }
     });
