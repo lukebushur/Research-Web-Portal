@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
-import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
-import { SearchOptions } from 'src/app/_models/searchOptions';
+import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
+import { SearchOptions } from 'app/_models/searchOptions';
 
 @Component({
   selector: 'student-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
@@ -31,10 +30,12 @@ export class StudentDashboard {
     this.getStudentInfo();
   }
 
-  majorOpportunities: { [major: string]: {
-    opps: any[],
-    pageNum: number,
-  } } = {};
+  majorOpportunities: {
+    [major: string]: {
+      opps: any[],
+      pageNum: number,
+    }
+  } = {};
   majors: string[] = [];
   studentGPA: number = 0;
   studentMajors: string[] = [];

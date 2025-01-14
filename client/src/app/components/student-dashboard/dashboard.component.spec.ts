@@ -1,18 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { StudentDashboard } from './dashboard.component';
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
-import { ProjectData } from 'src/app/_models/projects/projectData';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { ProjectData } from 'app/_models/projects/projectData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { MatCard, MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
+import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -119,7 +120,6 @@ describe('StudentDashboard', () => {
     // Create the test bed
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         CdkAccordionModule,
         SpinnerSubComponent,
         MatTableModule,
@@ -134,7 +134,9 @@ describe('StudentDashboard', () => {
         // Provide the search project service
         { provide: Router, useValue: router },
         { provide: StudentDashboardService, useValue: studentDashboardService },
-        { provide: SearchProjectService, useValue: searchProjectService}
+        { provide: SearchProjectService, useValue: searchProjectService },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
     // Create the component

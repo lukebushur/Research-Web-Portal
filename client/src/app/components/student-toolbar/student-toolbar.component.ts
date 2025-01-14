@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, RouterModule } from '@angular/router';
-import { NavChoice } from 'src/app/_models/toolbar/navchoice';
+import { NavChoice } from 'app/_models/toolbar/navchoice';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,7 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-student-toolbar',
-  standalone: true,
+  templateUrl: './student-toolbar.component.html',
+  styleUrls: ['./student-toolbar.component.css'],
   imports: [
     RouterModule,
     MatToolbarModule,
@@ -21,9 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatMenuModule,
     MatSidenavModule,
     MatListModule
-  ],
-  templateUrl: './student-toolbar.component.html',
-  styleUrls: ['./student-toolbar.component.css']
+  ]
 })
 export class StudentToolbarComponent {
   mobileQuery: MediaQueryList;

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginService } from 'src/app/controllers/login-controller/login.service';
+import { LoginService } from 'app/controllers/login-controller/login.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -12,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-confirm-reset-password',
   templateUrl: './confirm-reset-password.component.html',
   styleUrls: ['./confirm-reset-password.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

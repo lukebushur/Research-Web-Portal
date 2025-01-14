@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { StudentViewApplicationComponent } from '../student-view-application/student-view-application.component';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
@@ -15,6 +15,7 @@ import { MatRadioGroupHarness } from '@angular/material/radio/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -125,19 +126,22 @@ describe('StudentViewApplicationComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SpinnerSubComponent,
-        HttpClientTestingModule,
         StudentViewApplicationComponent,
-        BrowserAnimationsModule,
+        BrowserAnimationsModule
       ],
       providers: [
         provideRouter([]),
         StudentDashboardService,
         { provide: StudentDashboardService, useValue: studentService },
-        { provide: ActivatedRoute, useValue: {
-          params: of({
-            applicationID: applicationId,
-          })
-        }}
+        {
+          provide: ActivatedRoute, useValue: {
+            params: of({
+              applicationID: applicationId,
+            })
+          }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
     fixture = TestBed.createComponent(StudentViewApplicationComponent);
@@ -211,7 +215,7 @@ describe('StudentViewApplicationComponent', () => {
   });
 
   it('should display a button for application modification', async () => {
-    const modifyButton = await loader.getHarness(MatButtonHarness.with({text: 'Modify Application'}));
+    const modifyButton = await loader.getHarness(MatButtonHarness.with({ text: 'Modify Application' }));
     expect(modifyButton).toBeTruthy();
     await modifyButton.click();
     //TODO: Test this functionality once it is implemented
@@ -219,7 +223,7 @@ describe('StudentViewApplicationComponent', () => {
 
   it('should display a button for rescinding and application', async () => {
     const navigateSpy = spyOn(router, 'navigate');
-    const rescindButton = await loader.getHarness(MatButtonHarness.with({text: 'Rescind Application'}));
+    const rescindButton = await loader.getHarness(MatButtonHarness.with({ text: 'Rescind Application' }));
     expect(rescindButton).toBeTruthy();
     await rescindButton.click();
     expect(studentService.deleteApplication).toHaveBeenCalledOnceWith(applicationData._id);

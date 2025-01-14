@@ -1,6 +1,6 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
@@ -17,7 +17,6 @@ interface RequirementOption {
   selector: 'app-create-questions-form',
   templateUrl: './create-questions-form.component.html',
   styleUrls: ['./create-questions-form.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

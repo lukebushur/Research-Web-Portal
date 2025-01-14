@@ -7,7 +7,7 @@ import { FacultyProjectService } from '../../controllers/faculty-project-control
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
+import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -26,7 +26,6 @@ interface AppliedStudent {
   selector: 'app-applied-student-table',
   templateUrl: './applied-student-table.component.html',
   styleUrls: ['./applied-student-table.component.css'],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -34,7 +33,7 @@ interface AppliedStudent {
     MatSortModule,
     MatButtonModule,
     MatPaginatorModule,
-  ],
+  ]
 })
 
 // this component is for the table of applied students for a faculty project

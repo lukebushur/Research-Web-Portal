@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentDashboardService } from '../../controllers/student-dashboard-controller/student-dashboard.service';
-import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
-import { SearchOptions } from 'src/app/_models/searchOptions';
+import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
+import { SearchOptions } from 'app/_models/searchOptions';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -25,7 +25,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-student-opportunites-search-page',
   templateUrl: './student-opportunites-search-page.component.html',
   styleUrls: ['./student-opportunites-search-page.component.css'],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

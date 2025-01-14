@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
-import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
-import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
+import { AssessmentData } from 'app/_models/assessments/assessmentData';
+import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
 import { AssessmentCardComponent } from './assessment-card/assessment-card.component';
 
 @Component({
   selector: 'app-assessment-browser',
   templateUrl: './assessment-browser.component.html',
   styleUrls: ['./assessment-browser.component.css'],
-  standalone: true,
   imports: [AssessmentCardComponent]
 })
 export class AssessmentBrowserComponent {

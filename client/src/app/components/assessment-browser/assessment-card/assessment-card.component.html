@@ -7,7 +7,7 @@
       <div class="content-container">
         <div class="field-title">Created:</div>
         <div>{{ dateToString(assessmentData.dateCreated) }}</div>
-        @for (question of topQuestions(); track question; let i = $index) {
+        @for (question of topQuestions(); track $index; let i = $index) {
         <div class="field-title">{{ question ? 'Question ' + (i + 1) + ':' : ''}}</div>
         <div class="field-content">
           <div class="max-two-lines">{{ question }}</div>

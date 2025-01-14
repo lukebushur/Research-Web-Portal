@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { LoginComponent } from './login.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -7,9 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { LoginService } from 'src/app/controllers/login-controller/login.service';
+import { LoginService } from 'app/controllers/login-controller/login.service';
 import { Router, provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -35,18 +36,18 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         SpinnerSubComponent,
-        HttpClientTestingModule,
         ReactiveFormsModule,
         MatInputModule,
         MatFormFieldModule,
         BrowserAnimationsModule,
-        LoginComponent,
+        LoginComponent
       ],
-      // Use the spies defined in this test instead of the actual services
       providers: [
         provideRouter([]),
         { provide: LoginService, useValue: loginService },
-      ],
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ]
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

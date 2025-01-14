@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignoutComponent } from './signout.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SignoutService } from 'src/app/controllers/signout-controller/signout.service';
+import { SignoutService } from 'app/controllers/signout-controller/signout.service';
 
 describe('SignoutComponent', () => {
   let component: SignoutComponent;

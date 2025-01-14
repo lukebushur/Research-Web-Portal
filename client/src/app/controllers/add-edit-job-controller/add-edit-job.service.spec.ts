@@ -1,14 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { AddEditJobService } from './add-edit-job.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AddEditJobService', () => {
   let service: AddEditJobService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     service = TestBed.inject(AddEditJobService);
   });

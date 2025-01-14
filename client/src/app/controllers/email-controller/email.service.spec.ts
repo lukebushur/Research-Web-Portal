@@ -1,69 +1,50 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { EmailService } from './email.service';
 import { of } from 'rxjs';
 import { AuthService } from '../auth-controller/auth.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { HttpClient, HttpHeaders, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { environment } from 'environments/environment';
 import { Router } from '@angular/router';
 
 describe('EmailService', () => {
-  let service: EmailService;
+  let emailService: EmailService;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
-  let authService;
-  let authSpy: jasmine.Spy;
-  
-  let httpClient;
-  let httpSpy: jasmine.Spy;
-
-  const headerReply = new Headers({
+  const headerReply = new HttpHeaders({
     'Content-Type': 'application/json',
-    Authorization: `Bearer 123456`,
+    Authorization: 'Bearer 123456',
   })
 
   beforeEach(() => {
-    authService = jasmine.createSpyObj('AuthService', ['getHeaders'])
-    authSpy = authService.getHeaders.and.returnValue(headerReply)
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    httpClientSpy.post.and.returnValue(of(true))
 
-    httpClient = jasmine.createSpyObj('HttpClient', ['post']);
-    httpSpy = httpClient.post.and.returnValue(of(true))
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['getHeaders'])
+    authServiceSpy.getHeaders.and.returnValue(headerReply)
 
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        {
-          provide: AuthService,
-          useValue: authService
-        },
-        {
-          provide: HttpClient,
-          useValue: httpClient
-        },
-        {
-          provide: Router,
-          useValue: {
-            url: `/random_token`
-          }
-        }
-      ]
-    });
-    service = TestBed.inject(EmailService);
+    emailService = new EmailService(httpClientSpy, authServiceSpy);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(emailService).toBeTruthy();
   });
 
   it('should get headers from authService', () => {
-    service.confirmEmail();
-    expect(authSpy).toHaveBeenCalled()
+    emailService.confirmEmail('emailToken');
+
+    expect(authServiceSpy.getHeaders).toHaveBeenCalled()
   })
 
   it('should send the email confirmation HttpPost', () => {
-    service.confirmEmail();
-    expect(httpSpy).toHaveBeenCalledOnceWith(`${environment.apiUrl}/api/confirmEmail`, {
-      ["emailToken"]: 'random_token',
-    }, { headers: headerReply })
+    emailService.confirmEmail('emailToken');
+
+    expect(httpClientSpy.post).toHaveBeenCalledOnceWith(`${environment.apiUrl}/confirmEmail`, {
+      emailToken: 'emailToken',
+    }, {
+      headers: headerReply
+    });
   })
 });

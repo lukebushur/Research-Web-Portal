@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 
 import { ForgotPasswordComponent } from './forgot-password.component';
@@ -14,7 +14,8 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { LoginService } from 'src/app/controllers/login-controller/login.service';
+import { LoginService } from 'app/controllers/login-controller/login.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
@@ -36,7 +37,6 @@ describe('ForgotPasswordComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         MatSnackBarModule,
         MatFormFieldModule,
         MatIconModule,
@@ -44,13 +44,15 @@ describe('ForgotPasswordComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
-        ForgotPasswordComponent,
+        ForgotPasswordComponent
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
         { provide: LoginService, useValue: loginService },
         { provide: Router, useValue: router },
-      ],
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ]
     });
     fixture = TestBed.createComponent(ForgotPasswordComponent);
     // For easier Angular material components testing

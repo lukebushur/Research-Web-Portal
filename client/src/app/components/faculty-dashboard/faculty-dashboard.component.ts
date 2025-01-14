@@ -3,11 +3,11 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { AppliedStudentTableComponent } from '../applied-student-table/applied-student-table.component';
 import { ResearchProjectCardComponent } from '../research-project-card/research-project-card.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
-import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
+import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
+import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { Application } from 'src/app/_models/applications/application';
+import { Application } from 'app/_models/applications/application';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,7 +24,6 @@ interface ProjectsObj {
   selector: 'app-faculty-dashboard',
   templateUrl: './faculty-dashboard.component.html',
   styleUrls: ['./faculty-dashboard.component.css'],
-  standalone: true,
   imports: [
     ResearchProjectCardComponent,
     AppliedStudentTableComponent,
@@ -44,7 +43,7 @@ export class FacultyDashboardComponent implements OnInit {
   selectedIndex$ = new BehaviorSubject<number>(-1);
   // for holding the currently selected project object and notifying subscribers of changes
   selectedProject$ = new BehaviorSubject<ProjectFetchData | null>(null);
-  
+
   constructor(
     private router: Router,
     private facultyService: FacultyProjectService,
@@ -78,7 +77,7 @@ export class FacultyDashboardComponent implements OnInit {
             }
             return projectResult;
           });
-          
+
           // construct the object with the project data
           const projectsObj: ProjectsObj = {
             active: [],

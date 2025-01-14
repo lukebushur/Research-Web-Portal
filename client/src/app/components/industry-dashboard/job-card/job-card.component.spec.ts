@@ -5,8 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { of } from 'rxjs';
-import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -14,6 +14,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatCardHarness } from '@angular/material/card/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('JobCardComponent', () => {
   let component: JobCardComponent;
@@ -35,18 +36,19 @@ describe('JobCardComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         MatCardModule,
         MatChipsModule,
         MatDividerModule,
         MatSnackBarModule,
         BrowserAnimationsModule,
         MatTooltipModule,
-        JobCardComponent,
+        JobCardComponent
       ],
       providers: [
-        { provide: IndustryDashboardService, useValue: industryDashboardService }
-      ],
+        { provide: IndustryDashboardService, useValue: industryDashboardService },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     fixture = TestBed.createComponent(JobCardComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);

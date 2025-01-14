@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { IndustryDashboardComponent } from './industry-dashboard.component';
 import { Component, Input } from '@angular/core';
@@ -7,9 +7,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JobCardData } from './job-card/job-card-data';
 import { of } from 'rxjs';
-import { IndustryDashboardService } from 'src/app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ standalone: true, selector: 'app-job-card', template: '' })
 class JobCardStubComponent { @Input() jobData: JobCardData }
@@ -67,15 +68,16 @@ intellectually stimulating environment, apply now!`,
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         JobCardStubComponent,
         MatTabsModule,
         BrowserAnimationsModule,
-        IndustryDashboardComponent,
+        IndustryDashboardComponent
       ],
       providers: [
         { provide: IndustryDashboardService, useValue: industryDashboardService },
-      ],
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ]
     });
     fixture = TestBed.createComponent(IndustryDashboardComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);

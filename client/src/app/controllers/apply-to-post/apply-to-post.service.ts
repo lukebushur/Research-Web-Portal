@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 import { AuthService } from '../auth-controller/auth.service';
-import { ApplyRequestData } from 'src/app/_models/apply-to-post/applyRequestData';
+import { ApplyRequestData } from 'app/_models/apply-to-post/applyRequestData';
 import { Observable } from 'rxjs';
 
 @Injectable({

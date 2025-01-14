@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
-import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
+import { AssessmentData } from 'app/_models/assessments/assessmentData';
+import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateQuestionsFormComponent } from '../create-questions-form/create-questions-form.component';
 import { MatInputModule } from '@angular/material/input';
@@ -14,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-add-edit-assessment',
   templateUrl: './add-edit-assessment.component.html',
   styleUrls: ['./add-edit-assessment.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

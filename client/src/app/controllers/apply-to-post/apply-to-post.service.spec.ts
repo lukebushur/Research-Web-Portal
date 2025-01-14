@@ -2,7 +2,7 @@ import { ApplyToPostService } from './apply-to-post.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth-controller/auth.service';
 import { of } from 'rxjs';
-import { ApplyRequestData } from 'src/app/_models/apply-to-post/applyRequestData';
+import { ApplyRequestData } from 'app/_models/apply-to-post/applyRequestData';
 
 describe('ApplyToPostService', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient>;

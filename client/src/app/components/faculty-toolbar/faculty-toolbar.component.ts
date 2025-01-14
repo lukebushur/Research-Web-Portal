@@ -1,7 +1,7 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { NavChoice } from 'src/app/_models/toolbar/navchoice';
+import { NavChoice } from 'app/_models/toolbar/navchoice';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,7 +13,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   selector: 'app-faculty-toolbar',
   templateUrl: './faculty-toolbar.component.html',
   styleUrls: ['./faculty-toolbar.component.css'],
-  standalone: true,
   imports: [
     MatToolbarModule,
     MatButtonModule,
