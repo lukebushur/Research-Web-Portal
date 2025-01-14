@@ -2,11 +2,12 @@
 // @use "./rwp-m3-theme.scss" as rwp;
 @use "./rwp-m2-palettes.scss" as rwp-pal;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // To switch to Material 3 styling, uncomment the following block and comment
 // everything after it. Also, make sure to uncomment the necessary import above.
-// Material 3 is not supported - may be done in the future.
+// Material 3 is currently not supported - may be supported in the future.
 
 // html {
 //   @include mat.all-component-themes(rwp.$light-theme);
