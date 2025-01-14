@@ -13,7 +13,8 @@ import verifyToken from '../helpers/verifyToken';
 
 //API MIDDLEWARE
 const rateLimiter = require('../helpers/rateLimiter');
-const { registerMajorValidation } = require('../helpers/inputValidation/accountValidation');
+const { registerMajorValidation, verifiedValidation } = require('../helpers/inputValidation/accountValidation');
+
 
 
 //Router initialisation
@@ -24,7 +25,7 @@ const router = express.Router();
 router.post('/register', [registerMajorValidation], register);
 
 //POST TOKEN - Route to regenerate an access token given a refresh token and valid access token
-router.post('/token', [verifyToken], token);
+router.post('/token', [verifyToken, verifiedValidation], token);
 
 //POST Confirm Email 
 router.post('/confirmEmail', [verifyToken], confirmEmailToken);

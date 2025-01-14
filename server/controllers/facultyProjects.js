@@ -38,7 +38,6 @@ const createProject = async (req, res) => {
 
             if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; } //If no GPA is provided, set it to 0
             if (projectType !== "Active" && projectType !== "Draft") { throw error; } //Ensure that the type is Active or Draft
-
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
             let projectObject
             //Two seperate blocks of code are needed, one for if the project type is active and one for draft. This is because draft projects 

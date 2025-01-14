@@ -8,6 +8,7 @@ const server = require('../server.js');
 const User = require('../models/user');
 const Project = require('../models/project.js');
 const Application = require('../models/application.js');
+const { unitTestVerify } = require('../controllers/authenticate.js');
 require('dotenv').config();
 
 server.unitTest = true;
@@ -157,6 +158,30 @@ describe('BE-REG-8 : POST /api/register', () => {
 
 //BE-REG-8 : Student register request, should return a success response. This second student will be used to test the fetchApplicants routes
 describe('BE-REG-8 : POST /api/register', () => {
+    after(async () => {
+        const Promises = [
+            User.findOne({ email: randomEmail }),
+            User.findOne({ email: "ZZYYSSD" + randomEmail }),
+            User.findOne({ email: "aXAX" + randomEmail }),
+            User.findOne({ email: "a" + randomEmail }),
+            User.findOne({ email: "z" + randomEmail }),
+        ]
+        let emailtokens = [];
+        const values = await Promise.all(Promises);
+        values.forEach(user => {
+            emailtokens.push(user.emailToken);
+        });
+
+        const verifyPromises = [
+            unitTestVerify(faculty_access_token, emailtokens[0]),
+            unitTestVerify(lowGPA_student_access_token, emailtokens[1]),
+            unitTestVerify(wrongMajor_student_access_token, emailtokens[2]),
+            unitTestVerify(student_access_token, emailtokens[3]),
+            unitTestVerify(student_access_token2, emailtokens[4]),
+        ]
+        await Promise.all(verifyPromises);
+    });
+
     it('should return a second registration success response', (done) => {
         chai.request(server)
             .post('/api/register')
@@ -477,7 +502,7 @@ describe('BE-GPI-4 : POST /api/applications/getProjectInfo', () => {
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
                 "projectID": projectID,
-                "professorEmail": randomEmail  + "BINGUS",
+                "professorEmail": randomEmail + "BINGUS",
             })
             .end((err, res) => {
                 expect(res).to.have.status(500);
@@ -497,7 +522,7 @@ describe('BE-GPI-5 : POST /api/applications/getProjectInfo', () => {
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
                 "projectID": projectID,
-                "professorEmail": randomEmail  + "BINGUS",
+                "professorEmail": randomEmail + "BINGUS",
             })
             .end((err, res) => {
                 expect(res).to.have.status(401);
@@ -637,7 +662,6 @@ describe('BE-APP-1.3 : POST /api/applications/createApplication', () => {
                 },]
             })
             .end((err, res) => {
-
                 expect(res.status).to.be.oneOf([400, 500]);
                 expect(res.body).to.have.property('error');
                 expect(res.body.error).to.have.property('status').to.be.oneOf([400, 500]);
