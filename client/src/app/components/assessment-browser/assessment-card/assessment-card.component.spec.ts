@@ -15,7 +15,13 @@ describe('AssessmentCardComponent', () => {
     _id: '123',
     name: 'Test Assessment Name',
     dateCreated: new Date(),
-    questions: [],
+    questions: [
+      {
+        question: 'Test Question?',
+        required: true,
+        requirementType: 'radio button',
+      }
+    ],
   };
 
   beforeEach(() => {
