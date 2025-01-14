@@ -9,7 +9,7 @@ const facultyProjects = require('../controllers/facultyProjects');
 const verifyToken = require('../helpers/verifyToken');
 const rateLimiter = require('../helpers/rateLimiter');
 const { projectValidation, decisionValidation } = require('../helpers/inputValidation/projectValidation');
-
+const { verifiedValidation } = require('../helpers/inputValidation/accountValidation');
 
 //Router initialisation
 const router = express.Router();
@@ -18,28 +18,23 @@ const router = express.Router();
 
 //POST Create Project - Utilizes projectValidation middleware to ensure that the project has valid majors for the university the faculty is
 //apart of and that the project conforms to minimum requirements (if an active project, drafts are exempt)
-router.post('/createProject', [verifyToken, projectValidation("create")], facultyProjects.createProject);
+router.post('/createProject', [verifyToken, verifiedValidation, projectValidation("create")], facultyProjects.createProject);
 
 //DELETE Delete Project
-router.delete('/deleteProject', [verifyToken], facultyProjects.deleteProject);
+router.delete('/deleteProject', [verifyToken, verifiedValidation], facultyProjects.deleteProject);
 
 //GET Gets Projects from Account - Grabs all projects and their information for a specific faculty account
-router.get('/getProjects', [verifyToken], facultyProjects.getProjects);
+router.get('/getProjects', [verifyToken, verifiedValidation], facultyProjects.getProjects);
 
 //PUT Update a Project from Account - Updates a project, utilizes projectValidation middleware to ensure the updating conforms to minimum
 //standards.
-router.put('/updateProject', [verifyToken, projectValidation("update")], facultyProjects.updateProject);
+router.put('/updateProject', [verifyToken, verifiedValidation, projectValidation("update")], facultyProjects.updateProject);
 
 //PUT Archive a Project and move it to archived from Active
-router.put('/archiveProject', [verifyToken], facultyProjects.archiveProject);
+router.put('/archiveProject', [verifyToken, verifiedValidation], facultyProjects.archiveProject);
 
 //PUT Unarchive a project and move it to the active project
-
 router.put('/unarchiveProject', [verifyToken], facultyProjects.unarchiveProject);
-
-//PUT Accept or Reject an application for a project
-router.put('/application', verifyToken, decisionValidation, facultyProjects.applicationDecision);
-
 
 //PUT Accept or Reject an application for a project - utilizies decisionValidation middleware to ensure than the choice made with the request
 //is a value that the server expects so that the backend and frontend applications can work with the data stored in the database
