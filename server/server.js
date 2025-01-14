@@ -1,27 +1,26 @@
-//  This is the main server file, it is the entry point for the backend application. The routes and database connection is set up here.
-
-const express = require('express');
+// This is the main server file; it is the entry point for the back-end application.
+// The routes and database connection are set up here.
+import express from 'express';
 const app = express();
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors')
-const generateRes = require('./helpers/generateJSON');
-
-app.set('trust proxy', '127.0.0.1');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(cors());
-require('dotenv').config();
+import cors from 'cors';
+import mongoose from 'mongoose';
+import 'dotenv/config';
 
 //These objects import the routes from their respective files
-const authRoutes = require('./routes/authRoutes');
-const projectRoutes = require('./routes/projectsRoutes');
-const applicationRoutes = require('./routes/applicationRoutes');
-const industryRoutes = require('./routes/industryRoutes');
-const adminRoutes = require('./routes/adminstrativeRoutes');
-const accountManagment = require('./routes/accountManagementRoutes');
-const searchRoutes = require('./routes/searchRoutes');
+import authRoutes from './routes/authRoutes';
+import projectRoutes from './routes/projectsRoutes';
+import applicationRoutes from './routes/applicationRoutes';
+import industryRoutes from './routes/industryRoutes';
+import adminRoutes from './routes/adminstrativeRoutes';
+import accountManagment from './routes/accountManagementRoutes';
+import searchRoutes from './routes/searchRoutes';
+
+import generateRes from './helpers/generateJSON';
+
+app.set('trust proxy', '127.0.0.1');
+app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 //These statements map the routes to endpoints, each new endpoint needs to be unique, i.e. there should not be two 
 //app.use() statements with '/api', 

@@ -5,7 +5,7 @@
     isSuccessful (Boolean, to determine if its a success or error response) - statusCode (Int, the statusCode of the response)
     message (String, the message to be used in the response) - misc (Object, every remaining field for the response)
 */
-const generateRes = (isSuccessful, statusCode, message, misc) => {
+function generateRes(isSuccessful, statusCode, message, misc) {
     let successStatus;
     if (isSuccessful == true) {//This needs to be a true or false, so its requires to do type checking
         successStatus = "success";
@@ -31,7 +31,7 @@ const generateRes = (isSuccessful, statusCode, message, misc) => {
     return response;
 }
 
-const generateServerError = () => {
+function generateServerError() {
     const error = {
         "error": {
             "status": 500,
@@ -58,4 +58,4 @@ function mergeObjects(target, source) {
     return target;
 }
 
-module.exports = generateRes
+export default generateRes;
