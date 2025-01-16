@@ -9,11 +9,11 @@
     they want to try to retrieve
 */
 
-const User = require('../models/user');
-const Majors = require('../models/majors');
-const Application = require('../models/application');
-const Project = require('../models/project');
-const IndustryData = require('../models/industryData');
+import User from '../models/user.js';
+import Majors from '../models/majors.js';
+import Application from '../models/application.js';
+import Project from '../models/project.js';
+import IndustryData from '../models/industryData.js';
 
 const reqFieldName = "cachedObjs"; //name for the field where cached objects will be stored in the req object
 
@@ -137,8 +137,10 @@ const retrieveOrCacheIndustry = async (req, objectid) => {
     return tempIndustry;
 }
 
-module.exports = {
-    retrieveOrCacheMajors, retrieveOrCacheApplications,
-    retrieveOrCacheUsers, retrieveOrCacheProjects,
-    retrieveOrCacheIndustry
-}
+export {
+    retrieveOrCacheMajors,
+    retrieveOrCacheApplications,
+    retrieveOrCacheUsers,
+    retrieveOrCacheProjects,
+    retrieveOrCacheIndustry,
+};

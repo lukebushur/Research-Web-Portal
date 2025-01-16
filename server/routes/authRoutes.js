@@ -1,4 +1,5 @@
 /*  This is the file for authentication and authorization routes. These routes are account type agnostic, so they can be used by either faculty or students. */
+
 import express from 'express';
 
 import {
@@ -7,15 +8,12 @@ import {
     confirmEmailToken,
     login,
     getAvailableMajors,
-} from '../controllers/authenticate';
-
-import verifyToken from '../helpers/verifyToken';
+} from '../controllers/authenticate.js';
 
 //API MIDDLEWARE
-const rateLimiter = require('../helpers/rateLimiter');
-const { registerMajorValidation, verifiedValidation } = require('../helpers/inputValidation/accountValidation');
-
-
+import verifyToken from '../helpers/verifyToken.js';
+import rateLimiter from '../helpers/rateLimiter.js';
+import { registerMajorValidation, verifiedValidation } from '../helpers/inputValidation/accountValidation.js';
 
 //Router initialisation
 const router = express.Router();
@@ -34,6 +32,6 @@ router.post('/confirmEmail', [verifyToken], confirmEmailToken);
 router.post('/login', login);
 
 //GET Get available Majors - This route grabs the list of available majors from a university, which allows the frontend to popualte drop down boxes
-router.get('/getMajors', getAvailableMajors)
+router.get('/getMajors', getAvailableMajors);
 
 export default router;

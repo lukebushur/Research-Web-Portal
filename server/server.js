@@ -1,5 +1,6 @@
 // This is the main server file; it is the entry point for the back-end application.
 // The routes and database connection are set up here.
+
 import express from 'express';
 const app = express();
 import cors from 'cors';
@@ -7,15 +8,15 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 //These objects import the routes from their respective files
-import authRoutes from './routes/authRoutes';
-import projectRoutes from './routes/projectsRoutes';
-import applicationRoutes from './routes/applicationRoutes';
-import industryRoutes from './routes/industryRoutes';
-import adminRoutes from './routes/adminstrativeRoutes';
-import accountManagment from './routes/accountManagementRoutes';
-import searchRoutes from './routes/searchRoutes';
+import authRoutes from './routes/authRoutes.js';
+import projectRoutes from './routes/projectsRoutes.js';
+import applicationRoutes from './routes/applicationRoutes.js';
+import industryRoutes from './routes/industryRoutes.js';
+import adminRoutes from './routes/adminstrativeRoutes.js';
+import accountManagment from './routes/accountManagementRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
 
-import generateRes from './helpers/generateJSON';
+import generateRes from './helpers/generateJSON.js';
 
 app.set('trust proxy', '127.0.0.1');
 app.use(cors());
@@ -71,4 +72,4 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 
-module.exports = app;
+export default app;

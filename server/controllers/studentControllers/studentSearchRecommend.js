@@ -1,10 +1,11 @@
-const Project = require('../../models/project');
-const Applications = require('../../models/application');
-const User = require('../../models/user');
-const JWT = require('jsonwebtoken');
-const generateRes = require('../../helpers/generateJSON');
-const { search } = require('../../helpers/dataStructures/searchDataStructures');
-const { retrieveOrCacheUsers } = require('../../helpers/schemaCaching');
+import jwt from 'jsonwebtoken';
+
+import Project from '../../models/project.js';
+import Applications from '../../models/application.js';
+import User from '../../models/user.js';
+import generateRes from '../../helpers/generateJSON.js';
+import { search } from '../../helpers/dataStructures/searchDataStructures.js';
+import { retrieveOrCacheUsers } from '../../helpers/schemaCaching.js';
 
 /*  This route uses a get request and requires an access token to use. This route should return an array of relevant projects given the search criteria and query string. 
     There is no body as it is a get request however there are url parameters that effect the route. 
@@ -79,7 +80,7 @@ const searchProjects = async (req, res) => {
         let student;
         let searchResults;
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         const promises = [
             retrieveOrCacheUsers(req, decodeAccessToken.email),
@@ -106,7 +107,7 @@ const searchProjects = async (req, res) => {
             const searchTypes = [0, 0, 0, 0, 1, 1];
             const weights = [1, 1, 1, 1, 1, 1];
             //create the search object and search, then sort by score descending
-            searchEngine = new search(projects, req.query.query, fields, searchTypes, weights);
+            const searchEngine = new search(projects, req.query.query, fields, searchTypes, weights);
             projects = searchEngine.search();
             projects.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
             //grab the student's applications
@@ -141,6 +142,4 @@ const searchProjects = async (req, res) => {
     }
 }
 
-module.exports = {
-    searchProjects
-};
+export { searchProjects };

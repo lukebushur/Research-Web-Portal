@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import { SchemaType, Schema } from 'mongoose';
 
 /*  This class will be used to store the question information in the database. The data type will be called 
     question, and it will have all the information necessary to record faculty questions for their projects. 
@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 //This const array determiens what requirements are allowed and supported by the front end
 const acceptableRequirementTypes = ["text", "check box", "radio button"];
 
-class question extends mongoose.SchemaType {
+class question extends SchemaType {
     constructor(key, options) {
         super(key, options, 'questions');
     }
@@ -66,7 +66,7 @@ class question extends mongoose.SchemaType {
     }
 }
 
-mongoose.Schema.Types.question = question;
+Schema.Types.question = question;
 
 
 // HELPER METHODs BELOW
@@ -133,4 +133,4 @@ function verifyArrayField(value, fieldName, arrayType) {
     }
 }
 
-module.exports = { question, }
+export default question;

@@ -3,13 +3,14 @@
     The validation for project will ensure the listed majors match the majors available in the databas
 */
 
-const User = require('../../models/user');
-const Majors = require('../../models/majors')
-const JWT = require('jsonwebtoken');
-const generateRes = require('../generateJSON');
-const { getProject, getMajors, getDecision } = require('./validationHelpers');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers, retrieveOrCacheProjects } = require('../schemaCaching');
-const { activeProjectSchema } = require('./requestValidation');
+import jwt from 'jsonwebtoken';
+
+import User from '../../models/user.js';
+import Majors from '../../models/majors.js'
+import generateRes from '../generateJSON.js';
+import { getProject, getMajors, getDecision } from './validationHelpers.js';
+import { retrieveOrCacheMajors, retrieveOrCacheUsers, retrieveOrCacheProjects } from '../schemaCaching.js';
+import { activeProjectSchema } from './requestValidation.js';
 
 const questionsWithChoices = ["radio button", "check box"]; //This is a const array of potential options for question types that have multiple provided answers
 const statusChoices = ["Hold", "Accept", "Reject"]; //This is a const array for the options in updated an application decision
@@ -26,7 +27,7 @@ const applicationValidation = async (req, res, next) => {
     try {
         //First grab the student information, it will be needed to verify the student's GPA, and potentially to get the applications in the getProject method
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email); //Get student record
         if (student && student.userType.Type != process.env.STUDENT) { return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {})); }
 
@@ -105,7 +106,7 @@ const projectValidation = (mode = "create") => {
         try {
             //Grab information about user account information
             const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-            const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+            const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
             const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
             if (userAccount.userType.Type !== parseInt(process.env.FACULTY)) {
@@ -184,7 +185,8 @@ const decisionValidation = async (req, res, next) => {
     }
 }
 
-module.exports = {
-    applicationValidation, projectValidation,
-    decisionValidation
-}
+export {
+    applicationValidation,
+    projectValidation,
+    decisionValidation,
+};
