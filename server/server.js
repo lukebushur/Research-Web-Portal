@@ -47,13 +47,16 @@ app.use('*', function (req, res) {
 const port = process.env.PORT || 5000;
 //This code determines if the server should access the unittest collection of the mongodb server/cluster for unit testing.
 //It is determined by the arguments, which the 3rd should equal 'unitTests/**/*.js' if npm test is ran. 
-let noTest = true;
-if (process.argv[2] === 'unitTests/**/*.js') { noTest = false; } 
+
+const environment = process.env.NODE_ENV || 'production';
 
 //This code here sets up the database connection, if noTest is false it accesses the unit testing collection.
 async function dbConnect() { 
-    const db_uri = noTest ? process.env.DB_URI + process.env.DB_DEV_COLLECTION : process.env.DB_URI + process.env.DB_UNIT_TEST_COLLECTION;
-    await mongoose.connect(db_uri, {
+    const db = environment === 'production'
+        ? process.env.DB_DEV_COLLECTION
+        : process.env.DB_UNIT_TEST_COLLECTION;
+    const dbUri = process.env.DB_URI + db;
+    await mongoose.connect(dbUri, {
         autoIndex: true,
     }).then(() => {
         app.listen(port, () => {
