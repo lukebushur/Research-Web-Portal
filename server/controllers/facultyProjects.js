@@ -275,21 +275,21 @@ const getProjects = async (req, res) => {
             //Grab all the projects and put them into the allProjects array
             if (activeProjects) {
                 activeProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "active", count);
+                    const y = createProjectObj(x, "active", count);
                     count++;
                     allProjects.push(y);
                 });
             }
             if (draftProjects) {
                 draftProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "draft", count);
+                    const y = createProjectObj(x, "draft", count);
                     count++;
                     allProjects.push(y);
                 });
             }
             if (archivedProjects) {
                 archivedProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "archived", count);
+                    const y = createProjectObj(x, "archived", count);
                     count++;
                     allProjects.push(y);
                 });
@@ -585,8 +585,8 @@ const applicationDecision = async (req, res) => {
             //get the application index from the application record
             const appIndex = application.applications.findIndex(x => x.id === req.body.applicationID);
             //grabs the statuses from the project and application records
-            projectStatus = project.projects[projIndex].applications[projAppIndex].status;
-            applicationStatus = application.applications[appIndex].status;
+            const projectStatus = project.projects[projIndex].applications[projAppIndex].status;
+            const applicationStatus = application.applications[appIndex].status;
             //if the status are not pending, then the request shouldn't modify anything because the decision is already made - MIGHT CHANGE IN FUTURE!
             if ((projectStatus != "Pending" || applicationStatus != "Pending") && (projectStatus != "Hold" || applicationStatus != "Hold")) { return res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); }
             //Set status

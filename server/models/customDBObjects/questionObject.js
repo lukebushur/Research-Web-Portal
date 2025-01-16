@@ -122,7 +122,7 @@ function verifyArrayField(value, fieldName, arrayType) {
     } else if (!Array.isArray(value[fieldName])) { //Check if the value is an array, otherwise return false
         return false
     } else if (Array.isArray(value[fieldName])) {
-        returnBool = true; //boolean to track if the array has a value that is not the same as the specified string arrayType parameter
+        let returnBool = true; //boolean to track if the array has a value that is not the same as the specified string arrayType parameter
         value[fieldName].forEach(element => { //For each element in the array, if any of them are not the specified array type then set returnBool to false and return from the inner function
             if (typeof element !== arrayType) {
                 returnBool = false;

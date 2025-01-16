@@ -36,7 +36,7 @@ const modifyAccount = async (req, res) => {
                 }));
             }
             //store the original data of the student's account
-            originalData = {
+            const originalData = {
                 GPA: user.userType.GPA,
                 major: user.userType.Major,
                 universityLocation: user.universityLocation,

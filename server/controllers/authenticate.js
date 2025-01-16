@@ -260,7 +260,7 @@ const getAvailableMajors = async (req, res) => {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
         //grab majors record
-        majorsRecord = await retrieveOrCacheMajors(req, location);
+        const majorsRecord = await retrieveOrCacheMajors(req, location);
 
         if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
 
@@ -311,7 +311,7 @@ const generateExpiredToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: "2s" })
+    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1s' })
 }
 //This function generates a refresh token 
 const generateRefreshToken = (id, email, uName) => {
@@ -329,7 +329,7 @@ const generateExpiredRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: "2s" });
+    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '1s' });
 }
 
 /*  This function handles the refresh token addition to the database. This function takes a user record and a refreshtoken and adds the refreshtoken to the 
