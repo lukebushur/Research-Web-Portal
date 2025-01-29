@@ -2,18 +2,19 @@
     search related routes such as student search.
 */
 
-const express = require('express');
-const search = require('../controllers/studentControllers/studentSearchRecommend');
+import express from 'express';
+
+import { searchProjects } from '../controllers/studentControllers/studentSearchRecommend.js';
 
 //API MIDDLEWARE
-const verifyToken = require('../helpers/verifyToken');
-const { verifiedValidation } = require('../helpers/inputValidation/accountValidation');
-const rateLimiter = require('../helpers/rateLimiter');
+import verifyToken from '../helpers/verifyToken.js';
+import { verifiedValidation } from '../helpers/inputValidation/accountValidation.js';
+import rateLimiter from '../helpers/rateLimiter.js';
 
 //Router initialisation
 const router = express.Router();
 
 //GET - Search for projects  
-router.get('/searchProjects', [verifyToken, verifiedValidation], search.searchProjects);
+router.get('/searchProjects', [verifyToken, verifiedValidation], searchProjects);
 
-module.exports = router;
+export default router;

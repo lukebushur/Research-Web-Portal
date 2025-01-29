@@ -2,19 +2,18 @@
     Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
 */
 
-const chai = require('chai');
-const chaiHTTP = require('chai-http');
-const server = require('../server.js');
-const User = require('../models/user');
-const Project = require('../models/project.js');
-const Application = require('../models/application.js');
-const { unitTestVerify } = require('../controllers/authenticate.js');
-require('dotenv').config();
+import { expect, use } from 'chai';
+import { default as chaiHttp, request } from 'chai-http';
+import 'dotenv/config';
 
-server.unitTest = true;
+import server from '../server.js';
+import User from '../models/user.js';
+import Project from '../models/project.js';
+import Application from '../models/application.js';
+import { unitTestVerify } from '../controllers/authenticate.js';
 
-const expect = chai.expect;
-chai.use(chaiHTTP);
+use(chaiHttp);
+
 //variables for unit testing, to ensure future requests succeed
 let projectID, //id of the active project
     projectID2,
@@ -41,17 +40,10 @@ const randomPass = Math.random().toString(36).substring(0).repeat(2);
 const randomName = Math.random().toString(36).substring(2);
 const randomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
 
-
-//This waits for the connection to the DB to be set up before running the tests
-before(function (done) {
-    this.timeout(4000);
-    setTimeout(done, 3000);
-});
-
 //BE-REG-10 : Basic register request for the faculty, should return a success response
 describe('BE-REG-10 : POST /api/register', () => {
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
@@ -78,7 +70,7 @@ describe('BE-REG-10 : POST /api/register', () => {
 //BE-REG-8 : Student register request for student with a GPA too low to apply, should return a success response
 describe('BE-REG-8 : POST /api/register', () => {
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "ZZYYSSD" + randomEmail, "name": "a" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
@@ -105,7 +97,7 @@ describe('BE-REG-8 : POST /api/register', () => {
 //BE-REG-8 : Student register request for student with the wrong major for the project, should return a success response
 describe('BE-REG-8 : POST /api/register', () => {
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "aXAX" + randomEmail, "name": "a" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
@@ -132,7 +124,7 @@ describe('BE-REG-8 : POST /api/register', () => {
 //BE-REG-8 : Student register request, should return a success response
 describe('BE-REG-8 : POST /api/register', () => {
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "a" + randomEmail, "name": "a" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
@@ -183,7 +175,7 @@ describe('BE-REG-8 : POST /api/register', () => {
     });
 
     it('should return a second registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "z" + randomEmail, "name": "z" + randomName, "password": randomPass, "accountType": process.env.STUDENT,
@@ -210,7 +202,7 @@ describe('BE-REG-8 : POST /api/register', () => {
 //BE-GPI-6 : Unit test for the student get project route without active project record
 describe('BE-GPI-6 : POST /api/applications/getProjectInfo', () => {
     it('should return a failed project retrieval response due to invalid faculty access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -230,7 +222,7 @@ describe('BE-GPI-6 : POST /api/applications/getProjectInfo', () => {
 //Project active creation request, this should result in a success which will create a new active project record
 describe('BE-CAP-6 : POST /api/projects/createProject', () => {
     it('should return a successful active project creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -275,7 +267,7 @@ describe('BE-CAP-6 : POST /api/projects/createProject', () => {
 //2nd Project active creation request for usage with the search feature
 describe('BE-CAP-7 : POST /api/projects/createProject', () => {
     it('should return a successful active project creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -320,7 +312,7 @@ describe('BE-CAP-7 : POST /api/projects/createProject', () => {
 //Get projects unit test, expects a successful get projects response with all the previously created projects
 describe('BE-CAP-8 : GET /api/projects/getProjects', () => {
     it('should return a successful project retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/projects/getProjects')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({})
@@ -343,7 +335,7 @@ describe('BE-CAP-8 : GET /api/projects/getProjects', () => {
 //BE-SP-1 : search projects by faculty member name
 describe('BE-SP-1 : GET /api/search/searchProjects', () => {
     it('should search for projects by professor name and return 2 with scores greater than 0', (done) => {
-        chai.request(server).get('/api/search/searchProjects?query=' + randomName).set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+        request.execute(server).get('/api/search/searchProjects?query=' + randomName).set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
             expect(res.body.success.results).to.have.length(2);
             expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
             expect(res.body.success.results[1]).to.have.property('score').to.be.gt(0);
@@ -354,7 +346,7 @@ describe('BE-SP-1 : GET /api/search/searchProjects', () => {
 //BE-SP-1 : Search for projects by description
 describe('BE-SP-1 : GET /api/search/searchProjects', () => {
     it('should search for projects by description, and have the first project with a score greater than 0 and second with a score of 0', (done) => {
-        chai.request(server).get('/api/search/searchProjects?query=virtual reality').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+        request.execute(server).get('/api/search/searchProjects?query=virtual reality').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
             expect(res.body.success.results).to.have.length(2);
             expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
             expect(res.body.success.results[1]).to.have.property('score').to.equal(0);
@@ -366,7 +358,7 @@ describe('BE-SP-1 : GET /api/search/searchProjects', () => {
 //Search for projects with page specifications for one result per page
 describe('BE-SP-2 : GET /api/search/searchProjects', () => {
     it('BE-SP-2 : should search for projects with number per page field, and return only one project', (done) => {
-        chai.request(server).get('/api/search/searchProjects?query=virtual reality&npp=1').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+        request.execute(server).get('/api/search/searchProjects?query=virtual reality&npp=1').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
             expect(res.body.success.results).to.have.length(1);
             expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
             done();
@@ -377,7 +369,7 @@ describe('BE-SP-2 : GET /api/search/searchProjects', () => {
 //BE-SP-2 : Search for projects with page specifications
 describe('BE-SP-2 : GET /api/search/searchProjects', () => {
     it('should search for projects with number per page field and page number field, and return the least similar project', (done) => {
-        chai.request(server).get('/api/search/searchProjects?query=virtual reality&npp=1&pageNum=2').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+        request.execute(server).get('/api/search/searchProjects?query=virtual reality&npp=1&pageNum=2').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
             expect(res.body.success.results).to.have.length(1);
             expect(res.body.success.results[0]).to.have.property('score').to.equal(0);
             done();
@@ -387,7 +379,7 @@ describe('BE-SP-2 : GET /api/search/searchProjects', () => {
 
 describe('BE-SP-1 : GET /api/search/searchProjects', () => {
     it('BE-SP-1 : should search for projects and retrieve two searching by major', (done) => {
-        chai.request(server).get('/api/search/searchProjects?query=Computer Science').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
+        request.execute(server).get('/api/search/searchProjects?query=Computer Science').set({ "Authorization": `Bearer ${student_access_token}` }).send({}).end((err, res) => {
             expect(res.body.success.results).to.have.length(2);
             expect(res.body.success.results[0]).to.have.property('score').to.be.gt(0);
             expect(res.body.success.results[1]).to.have.property('score').to.be.gt(0);
@@ -408,7 +400,7 @@ describe('BE-SP-1 : GET /api/search/searchProjects', () => {
 //BE-SP-3 : Test the searchProjects route to see if it returns nothing when the search should not return anything
 describe('BE-SP-3 <-> 7 : GET /api/search/searchProjects', () => {
     it('should search for projects with criteria that will return no projects for majors, GPA, posted date, and deadline fields', (done) => {
-        chai.request(server).get('/api/search/searchProjects?posted=2124-01-16T16:41:59.968325&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
+        request.execute(server).get('/api/search/searchProjects?posted=2124-01-16T16:41:59.968325&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
             .send({}).end((err, res) => {
                 //search with invalid posted date 
                 expect(res).to.have.status(200); //test cases that return nothing
@@ -417,15 +409,15 @@ describe('BE-SP-3 <-> 7 : GET /api/search/searchProjects', () => {
                 expect(res.body.success.results).to.have.length(0);
 
                 //GPA too high to get responses
-                chai.request(server).get('/api/search/searchProjects?GPA=3.6&query=Matthew Im Test').set({ "Authorization": `Bearer ${student_access_token}` })
+                request.execute(server).get('/api/search/searchProjects?GPA=3.6&query=Matthew Im Test').set({ "Authorization": `Bearer ${student_access_token}` })
                     .send({}).end((err, res) => {
                         expect(res.body.success.results).to.have.length(0);
                         //deadline to high to get responses
-                        chai.request(server).get('/api/search/searchProjects?deadline=2124-01-16T16:41:59.968325&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
+                        request.execute(server).get('/api/search/searchProjects?deadline=2124-01-16T16:41:59.968325&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
                             .send({}).end((err, res) => {
                                 expect(res.body.success.results).to.have.length(0);
                                 //majors that don't exist
-                                chai.request(server).get('/api/search/searchProjects?majors=Art History,Bingus&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
+                                request.execute(server).get('/api/search/searchProjects?majors=Art History,Bingus&query=test').set({ "Authorization": `Bearer ${student_access_token}` })
                                     .send({}).end((err, res) => {
                                         expect(res.body.success.results).to.have.length(0);
                                         done();
@@ -439,7 +431,7 @@ describe('BE-SP-3 <-> 7 : GET /api/search/searchProjects', () => {
 //BE-GPI-1 : Unit test for the student get project route with no project ID
 describe('BE-GPI-1 : POST /api/applications/getProjectInfo', () => {
     it('should return a failed project retrieval response due to no projectID', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -458,7 +450,7 @@ describe('BE-GPI-1 : POST /api/applications/getProjectInfo', () => {
 //BE-GPI-2 : Unit test for the student get project route with no professorEmail
 describe('BE-GPI-2 : POST /api/applications/getProjectInfo', () => {
     it('should return a failed project retrieval response due to no professorEmail', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -477,7 +469,7 @@ describe('BE-GPI-2 : POST /api/applications/getProjectInfo', () => {
 //BE-GPI-3 : Unit test for the student get project route with no invalid projectID
 describe('BE-GPI-3 : POST /api/applications/getProjectInfo', () => {
     it('should return a failed project retrieval response due to invalid projetID', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -497,7 +489,7 @@ describe('BE-GPI-3 : POST /api/applications/getProjectInfo', () => {
 //BE-GPI-4 : Unit test for the student get project route with no invalid professorEmail
 describe('BE-GPI-4 : POST /api/applications/getProjectInfo', () => {
     it('should return a failed project retrieval response due to invalid professorEmail', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -517,7 +509,7 @@ describe('BE-GPI-4 : POST /api/applications/getProjectInfo', () => {
 //BE-GPI-5 : Unit test for the student get project route with faculty access token
 describe('BE-GPI-5 : POST /api/applications/getProjectInfo', () => {
     it('should return a failed project retrieval response due to invalid faculty access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -537,7 +529,7 @@ describe('BE-GPI-5 : POST /api/applications/getProjectInfo', () => {
 //BE-GPI-7 : Unit test for the student get project route 
 describe('BE-GPI-7 : POST /api/applications/getProjectInfo', () => {
     it('should return a successful project retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getProjectInfo')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -565,7 +557,7 @@ describe('BE-GPI-7 : POST /api/applications/getProjectInfo', () => {
 //BE-APP-1.1 : Unit test for applying to a project without a professor email, should fail
 describe('BE-APP-1.1 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to no professor email', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -602,7 +594,7 @@ describe('BE-APP-1.1 : POST /api/applications/createApplication', () => {
 //BE-APP-1.2 : Unit test for applying to a project without a project id, should fail
 describe('BE-APP-1.2 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to no project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -639,7 +631,7 @@ describe('BE-APP-1.2 : POST /api/applications/createApplication', () => {
 //BE-APP-1.3 : Unit test for applying to a project without answers to required questions
 describe('BE-APP-1.3 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due missing answers for required questions', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -674,7 +666,7 @@ describe('BE-APP-1.3 : POST /api/applications/createApplication', () => {
 //BE-APP-1.4 : Unit test for applying to a project with missing questions
 describe('BE-APP-1.4 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to missing questions', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -701,7 +693,7 @@ describe('BE-APP-1.4 : POST /api/applications/createApplication', () => {
 //BE-APP-2 : Unit test for applying to a project with a faculty access token, should fail
 describe('BE-APP-2 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to faculty access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -739,7 +731,7 @@ describe('BE-APP-2 : POST /api/applications/createApplication', () => {
 //BE-APP-3.1 : Unit test for applying to a project with an invalid project id
 describe('BE-APP-3.1 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to an invalid project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -777,7 +769,7 @@ describe('BE-APP-3.1 : POST /api/applications/createApplication', () => {
 //BE-APP-3.2 : Unit test for applying to a project with an invalid professor email
 describe('BE-APP-3.2 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to an invalid professor email', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -815,7 +807,7 @@ describe('BE-APP-3.2 : POST /api/applications/createApplication', () => {
 //BE-APP-3.3 : Unit test for applying to a project with non-matching answers
 describe('BE-APP-3.3 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to non-matching answers', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -853,7 +845,7 @@ describe('BE-APP-3.3 : POST /api/applications/createApplication', () => {
 //BE-APP-3.4 : Unit test for applying to a project with non-matching questions
 describe('BE-APP-3.4 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to non-matching questions', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -921,7 +913,7 @@ describe('BE-APP-4 : POST /api/applications/createApplication', () => {
         applicationID = apps.applications[0].id;
     });
     it('Should return a first application creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -959,7 +951,7 @@ describe('BE-APP-4 : POST /api/applications/createApplication', () => {
 //BE-APP-5 : Unit test for applying to a project that has already been applied to, should fail
 describe('BE-APP-5 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to applying to the same project', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -997,7 +989,7 @@ describe('BE-APP-5 : POST /api/applications/createApplication', () => {
 //BE-APP-7 : Unit test for applying to a project that has a GPA requirement that is too high
 describe('BE-APP-7 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to applying to the same project', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${lowGPA_student_access_token}` })
             .send({
@@ -1035,7 +1027,7 @@ describe('BE-APP-7 : POST /api/applications/createApplication', () => {
 //BE-APP-8 : Unit test for applying to a project that majors do no align
 describe('BE-APP-5 : POST /api/applications/createApplication', () => {
     it('Should return a failed application due to invalid majors', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/createApplication')
             .set({ "Authorization": `Bearer ${wrongMajor_student_access_token}` })
             .send({
@@ -1073,7 +1065,7 @@ describe('BE-APP-5 : POST /api/applications/createApplication', () => {
 //BE-APP-9 : Unit test for getting a singular applicatiom's information
 describe('BE-APP-9 : POST /api/applications/getApplication', () => {
     it('Should return the data from a singular application', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/applications/getApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({ "applicationID": applicationID })
@@ -1098,7 +1090,7 @@ describe('BE-APP-9 : POST /api/applications/getApplication', () => {
 //BE-MAI-1 : This unit test is for modification of account with invalid GPA < 0
 describe('BE-MAI-1 : POST /api/accountManagement/updateAccount', () => {
     it("Should return a failed response due to GPA < 0", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/updateAccount')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1119,7 +1111,7 @@ describe('BE-MAI-1 : POST /api/accountManagement/updateAccount', () => {
 //BE-MAI-1 : This unit test is for modification of account with invalid GPA > 0
 describe('BE-MAI-1 : POST /api/accountManagement/updateAccount', () => {
     it("Should return a failed response due to GPA > 0", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/updateAccount')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1140,7 +1132,7 @@ describe('BE-MAI-1 : POST /api/accountManagement/updateAccount', () => {
 //BE-MAI-2 : This unit test is for modification of account with invalid university Location
 describe('BE-MAI-2 : POST /api/accountManagement/updateAccount', () => {
     it("Should return a failed response due to invalid university location", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/updateAccount')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1162,7 +1154,7 @@ describe('BE-MAI-2 : POST /api/accountManagement/updateAccount', () => {
 //BE-MAI-3 : This unit test is for modification of account with invalid major
 describe('BE-MAI-3 : POST /api/accountManagement/updateAccount', () => {
     it("Should return a failed response due to invalid major", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/updateAccount')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1183,7 +1175,7 @@ describe('BE-MAI-3 : POST /api/accountManagement/updateAccount', () => {
 //BE-MAI-4 : This unit test is for modification of account with invalid name
 describe('BE-MAI-4 : POST /api/accountManagement/updateAccount', () => {
     it("Should return a failed response due to invalid name", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/updateAccount')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1204,7 +1196,7 @@ describe('BE-MAI-4 : POST /api/accountManagement/updateAccount', () => {
 //BE-MAI-5 : This unit test modifies the student's account information the changes should be reflected in their applications 
 describe('BE-MAI-5 : POST /api/accountManagement/updateAccount', () => {
     it("Should return a successful account update response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/updateAccount')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1225,7 +1217,7 @@ describe('BE-MAI-5 : POST /api/accountManagement/updateAccount', () => {
 //BE-MAI-6 : Unit test for fetching the general information of applicants
 describe('BE-MAI-6 : POST /api/projects/getApplicants', () => {
     it("Should return a successful applicants retrieval response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getApplicants')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({ "projectID": projectID })
@@ -1251,7 +1243,7 @@ describe('BE-MAI-6 : POST /api/projects/getApplicants', () => {
 //BE-MAI-6 : Unit test for fetching the detailed information of applicants
 describe('POST /api/projects/getDetailedApplicants', () => {
     it("BE-MAI-6 : Should return a successful applicants retrieval response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getDetailedApplicants')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({ "projectID": projectID })
@@ -1277,7 +1269,7 @@ describe('POST /api/projects/getDetailedApplicants', () => {
 //BE-UAPP-1 : Unit test for updating the application from the student's without giving application id, should fail
 describe('BE-UAPP-1 : PUT /api/applications/updateApplication', () => {
     it("Should return a failed update response due to no application id", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/applications/updateApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1312,7 +1304,7 @@ describe('BE-UAPP-1 : PUT /api/applications/updateApplication', () => {
 //BE-UAPP-2 : Unit test for updating the application with faculty access token, should fail
 describe('BE-UAPP-2 : PUT /api/applications/updateApplication', () => {
     it("Should return a failed update response due to using a faculty access token", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/applications/updateApplication')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1348,7 +1340,7 @@ describe('BE-UAPP-2 : PUT /api/applications/updateApplication', () => {
 //BE-UAPP-3 : Unit test for updating the application from the student's side, i.e. changing an answer
 describe('BE-UAPP-3 : PUT /api/applications/updateApplication', () => {
     it("Should return a successful application update response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/applications/updateApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1384,7 +1376,7 @@ describe('BE-UAPP-3 : PUT /api/applications/updateApplication', () => {
 //BE-MDS-1.1 : Unit test for updating application decision without project id
 describe('BE-MDS-1.1 : PUT /api/projects/application', () => {
     it("Should return a failed response due to no project id", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1404,7 +1396,7 @@ describe('BE-MDS-1.1 : PUT /api/projects/application', () => {
 //BE-MDS-1.2 : Unit test for updating application decision without applicationID
 describe('BE-MDS-1.2 : PUT /api/projects/application', () => {
     it("Should return a failed response due to no applicationID", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1424,7 +1416,7 @@ describe('BE-MDS-1.2 : PUT /api/projects/application', () => {
 //BE-MDS-1.3 : Unit test for updating application decision without decision field
 describe('BE-MDS-1.3 : PUT /api/projects/application', () => {
     it("Should return a failed response due to no decision", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1444,7 +1436,7 @@ describe('BE-MDS-1.3 : PUT /api/projects/application', () => {
 //BE-MDS-2 : Unit test for updating application decision with faculty access token
 describe('BE-MDS-2 : PUT /api/projects/application', () => {
     it("Should return a failed response due to facutly access token", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1465,7 +1457,7 @@ describe('BE-MDS-2 : PUT /api/projects/application', () => {
 //BE-MDS-3.1 : Unit test for updating application decision with invalid projectID
 describe('BE-MDS-3.1 : PUT /api/projects/application', () => {
     it("Should return a failed response due to invalid projectID", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1487,7 +1479,7 @@ describe('BE-MDS-3.1 : PUT /api/projects/application', () => {
 //BE-MDS-3.2 : Unit test for updating application decision with invalid applicationID
 describe('BE-MDS-3.2 : PUT /api/projects/application', () => {
     it("Should return a failed response due to invalid projectID", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1509,7 +1501,7 @@ describe('BE-MDS-3.2 : PUT /api/projects/application', () => {
 //BE-MDS-3.3 : Unit test for updating application decision with invalid decision
 describe('BE-MDS-3.3 : PUT /api/projects/application', () => {
     it("Should return a failed response due to invalid decision", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1530,7 +1522,7 @@ describe('BE-MDS-3.3 : PUT /api/projects/application', () => {
 //BE-MDS-5 : Unit test for updating application decision to hold status
 describe('BE-MDS-5 : PUT /api/projects/application', () => {
     it("Should return a successful project status update response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1552,7 +1544,7 @@ describe('BE-MDS-5 : PUT /api/projects/application', () => {
 //the answer of the first question for the first application has been updated to "No, I cannot eat frogs!"
 describe('BE-UAPP-4 : GET /api/applications/getApplications', () => {
     it("Should return a successful applications retrieval response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/applications/getApplications')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({})
@@ -1578,7 +1570,7 @@ describe('BE-UAPP-4 : GET /api/applications/getApplications', () => {
 //BE-MDS-4 : Unit test for updating application decision to accept status
 describe('BE-MDS-4 : PUT /api/projects/application', () => {
     it("Should return a successful project status update response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/application')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1599,7 +1591,7 @@ describe('BE-MDS-4 : PUT /api/projects/application', () => {
 //BE-MDS-6 : Unit test for get applications 
 describe('BE-MDS-6 : GET /api/applications/getApplications', () => {
     it("Should return a successful applications retrieval response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/applications/getApplications')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({})
@@ -1624,7 +1616,7 @@ describe('BE-MDS-6 : GET /api/applications/getApplications', () => {
 //BE-DAPP-1 : Delete request for the application with faculty access token
 describe('BE-DAPP-1 : DELETE /api/applications/deleteApplication', () => {
     it('should return a failed project deletion response due to faculty access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/applications/deleteApplication')
             .set({ "Authorization": `Bearer ${faculty_access_token}` })
             .send({
@@ -1643,7 +1635,7 @@ describe('BE-DAPP-1 : DELETE /api/applications/deleteApplication', () => {
 //BE-DAPP-2 : Delete request for the application with no application id
 describe('BE-DAPP-2 : DELETE /api/applications/deleteApplication', () => {
     it('should return a failed project deletion response due to no application id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/applications/deleteApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1661,7 +1653,7 @@ describe('BE-DAPP-2 : DELETE /api/applications/deleteApplication', () => {
 //BE-DAPP-3 : Delete request for the application with invalid application id
 describe('BE-DAPP-3 : DELETE /api/applications/deleteApplication', () => {
     it('should return a failed project deletion response due to invalid application id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/applications/deleteApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1680,7 +1672,7 @@ describe('BE-DAPP-3 : DELETE /api/applications/deleteApplication', () => {
 //BE-DAPP-4 : Delete request for the application
 describe('BE-DAPP-4 : DELETE /api/applications/deleteApplication', () => {
     it('should return a successful project deletion response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/applications/deleteApplication')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1698,7 +1690,7 @@ describe('BE-DAPP-4 : DELETE /api/applications/deleteApplication', () => {
 
 describe('BE-DAPP-5 : GET /api/applications/getApplications', () => {
     it("Should return a successful applications retrieval response", (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/applications/getApplications')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({})

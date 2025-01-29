@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     email: {
         type: String,
         required: true,
@@ -42,20 +42,20 @@ const userSchema = new mongoose.Schema({
         },
         FacultyProjects: { //This field holds the mongoDB ids for 3 other project records, the active, draft, and archived. These are the faculty's 
             Archived: {    //active, draft, and archived project lists
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'ProjectGroup'
             },
             Active: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'ProjectGroup'
             },
             Draft: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'ProjectGroup'
             }
         },
         studentApplications: { //This field holds the mongoDB id for the applications record (if the account type is a student account)
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'Applications'
         },
         GPA: {
@@ -67,7 +67,7 @@ const userSchema = new mongoose.Schema({
             required: false
         }],
         industryData: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'IndustryData',
         },
     },
@@ -104,6 +104,6 @@ const userSchema = new mongoose.Schema({
             },
         }
     }
-})
+});
 
-module.exports = mongoose.model('User', userSchema);
+export default model('User', userSchema);

@@ -1,7 +1,7 @@
 //  These functions in this file are the helpers methods for the other validation files such as projectValidation, requestValidation and accountValidation
 
-const generateRes = require('../generateJSON');
-const { retrieveOrCacheApplications, retrieveOrCacheProjects, retrieveOrCacheUsers } = require('../schemaCaching');
+import generateRes from '../generateJSON.js';
+import { retrieveOrCacheApplications, retrieveOrCacheProjects, retrieveOrCacheUsers } from '../schemaCaching.js';
 
 /*  This helper function is used to get the faculty project from the database records using the request object. As future use cases are added, this function should be modified to 
     grab the project using information from the new requests 
@@ -103,6 +103,8 @@ function hasField(obj, fieldName) {
 }
 
 
-module.exports = {
-    getDecision, getMajors, getProject
-}
+export {
+    getDecision,
+    getMajors,
+    getProject,
+};

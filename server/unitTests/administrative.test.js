@@ -3,31 +3,19 @@
     Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
 */
 
-const chai = require('chai');
-const chaiHTTP = require('chai-http');
-const server = require('../server.js');
-const User = require('../models/user');
-const Majors = require('../models/majors.js');
+import { expect, use } from 'chai';
+import { default as chaiHttp, request} from 'chai-http';
 
-server.unitTest = true;
+import server from '../server.js';
+import User from '../models/user.js';
+import Majors from '../models/majors.js';
 
-const expect = chai.expect;
-chai.use(chaiHTTP);
+use(chaiHttp);
+
 //variables for unit testing, to ensure future requests succeed
 let adminRecordID, //id of the admin account
     majorsLocation, //name of the university with the associated user major
     admin_access_token; //access token of admin
-
-//randomly generated password, name, and email
-const randomPass = Math.random().toString(36).substring(0).repeat(2);
-const randomName = Math.random().toString(36).substring(2);
-const randomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
-
-//This waits for the connection to the DB to be set up before running the tests
-before(function (done) {
-    this.timeout(4000);
-    setTimeout(done, 3000);
-});
 
 //Basic register request for the faculty, should return a success response
 describe('POST /api/login', () => {
@@ -37,7 +25,7 @@ describe('POST /api/login', () => {
     });
 
     it('should return a login success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({
                 "email": process.env.UNITTESTEMAIL, "password": process.env.UNITTESTPASS,
@@ -60,7 +48,7 @@ describe('POST /api/login', () => {
 //Unit test for adding majors to the major record via the admin routes
 describe('POST /api/admin/addMajor', () => {
     it('Should return a successful add major response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/admin/addMajor')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
             .send({
@@ -80,7 +68,7 @@ describe('POST /api/admin/addMajor', () => {
 //Unit test for getting the available majors
 describe('GET /api/getMajors', () => {
     it('Should return a successful majors retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/getMajors?university=' + majorsLocation)
             .end((end, res) => {
                 expect(res).to.have.status(200);
@@ -96,7 +84,7 @@ describe('GET /api/getMajors', () => {
 //Unit test for removing majors 
 describe('DELETE /api/admin/deleteMajor', () => {
     it('Should return a successful major deletion response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/admin/deleteMajor')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
             .send({
@@ -116,7 +104,7 @@ describe('DELETE /api/admin/deleteMajor', () => {
 //Unit test for getting the available majors
 describe('GET /api/getMajors', () => {
     it('Should return a successful majors retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/getMajors?university=' + majorsLocation)
             .end((end, res) => {
                 expect(res).to.have.status(200);
@@ -132,7 +120,7 @@ describe('GET /api/getMajors', () => {
 //Unit test for replacing majors in the major record via the admin routes
 describe('POST /api/admin/replaceMajors', () => {
     it('Should return a successful add major response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/admin/replaceMajors')
             .set({ "Authorization": `Bearer ${admin_access_token}` })
             .send({
@@ -151,7 +139,7 @@ describe('POST /api/admin/replaceMajors', () => {
 //This unit test ensures that the replace majors test aboved worked and actually update the database
 describe('GET /api/getMajors', () => {
     it('Should return a successful majors retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/getMajors?university=' + majorsLocation)
             .end((end, res) => {
                 expect(res).to.have.status(200);

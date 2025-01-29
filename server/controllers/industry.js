@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const IndustryData = require('../models/industryData');
-const { jobSchema } = require('../helpers/inputValidation/requestValidation');
-const generateRes = require('../helpers/generateJSON');
-const { retrieveOrCacheUsers, retrieveOrCacheIndustry } = require('../helpers/schemaCaching');
+import jwt from 'jsonwebtoken';
+
+import IndustryData from '../models/industryData.js';
+import { jobSchema } from '../helpers/inputValidation/requestValidation.js';
+import generateRes from '../helpers/generateJSON.js';
+import { retrieveOrCacheUsers, retrieveOrCacheIndustry } from '../helpers/schemaCaching.js';
 
 // Get all the jobs associated with an industry user.
 const getJobs = async (req, res) => {
@@ -399,13 +399,12 @@ const deleteAssessment = async (req, res) => {
     }
 };
 
-module.exports = {
+export {
     getJobs,
     getJob,
     createJob,
     editJob,
     deleteJob,
-
     getAssessments,
     getAssessment,
     createAssessment,

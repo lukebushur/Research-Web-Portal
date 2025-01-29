@@ -157,4 +157,4 @@ const test = () => {
     });
 }
 
-module.exports = { bm25 }
+export { bm25 };

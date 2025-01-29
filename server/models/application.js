@@ -1,20 +1,21 @@
-const mongoose = require('mongoose');
-const customObjects = require('./customDBObjects/questionObject');
+import { Schema, model } from 'mongoose';
 
-const Applications = new mongoose.Schema({
+import question from './customDBObjects/questionObject.js';
+
+const Applications = new Schema({
     user: {
         type: String,
         required: true,
     },
     applications: [
         {
-            questions: [customObjects.question],
+            questions: [question],
             opportunityRecordId: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 required: true
             },
             opportunityId: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 required: true,
             },
             status: {
@@ -34,6 +35,6 @@ const Applications = new mongoose.Schema({
             }
         }
     ]
-})
+});
 
-module.exports = mongoose.model('application', Applications);
+export default model('application', Applications);

@@ -2,14 +2,23 @@
     modification, and retrieval of application should be in this file.
 */
 
-const express = require('express');
-const applications = require('../controllers/studentControllers/studentApplications');
+import express from 'express';
+
+import {
+    createApplication,
+    deleteApplication,
+    getApplications,
+    getTopRecentApplications,
+    updateApplication,
+    getProjectData,
+    getApplication,
+} from '../controllers/studentControllers/studentApplications.js';
 
 //API MIDDLEWARE
-const verifyToken = require('../helpers/verifyToken');
-const rateLimiter = require('../helpers/rateLimiter');
-const { applicationValidation } = require('../helpers/inputValidation/projectValidation');
-const { verifiedValidation } = require('../helpers/inputValidation/accountValidation');
+import verifyToken from '../helpers/verifyToken.js';
+import rateLimiter from '../helpers/rateLimiter.js';
+import { applicationValidation } from '../helpers/inputValidation/projectValidation.js';
+import { verifiedValidation } from '../helpers/inputValidation/accountValidation.js';
 
 //Router initialisation
 const router = express.Router();
@@ -20,24 +29,24 @@ const router = express.Router();
     values. For example, it ensures the responses to multiple choice questions are the provided answers by the faculty. It also ensures that the 
     student meets the minimum requirements to apply to the project. 
 */
-router.post('/createApplication', [verifyToken, verifiedValidation, applicationValidation], applications.createApplication);
+router.post('/createApplication', [verifyToken, verifiedValidation, applicationValidation], createApplication);
 
 //DELETE Delete Application
-router.delete('/deleteApplication', [verifyToken, verifiedValidation], applications.deleteApplication);
+router.delete('/deleteApplication', [verifyToken, verifiedValidation], deleteApplication);
 
 //GET Get Applications - Grabs all applications association with the student's account
-router.get('/getApplications', [verifyToken, verifiedValidation], applications.getApplications);
+router.get('/getApplications', [verifyToken, verifiedValidation], getApplications);
 
-router.get('/getTopRecentApplications', [verifyToken, verifiedValidation], applications.getTopRecentApplications);
-router.get('/getTopRecentApplications/:num', [verifyToken, verifiedValidation], applications.getTopRecentApplications);
+router.get('/getTopRecentApplications', [verifyToken, verifiedValidation], getTopRecentApplications);
+router.get('/getTopRecentApplications/:num', [verifyToken, verifiedValidation], getTopRecentApplications);
 
 //POST Update Application - Utilizes the applicationValidation middleware which ensures the updating provides expected values for the project
-router.put('/updateApplication', [verifyToken, verifiedValidation, applicationValidation], applications.updateApplication);
+router.put('/updateApplication', [verifyToken, verifiedValidation, applicationValidation], updateApplication);
 
 //POST Get Project Info - Route to allow students to access project information without accessing information such as other applicants' names and GPAs
-router.post('/getProjectInfo', [verifyToken, verifiedValidation], applications.getProjectData);
+router.post('/getProjectInfo', [verifyToken, verifiedValidation], getProjectData);
 
 //POST Get application, grabs a specific application's information
-router.post('/getApplication', [verifyToken, verifiedValidation], applications.getApplication);
+router.post('/getApplication', [verifyToken, verifiedValidation], getApplication);
 
-module.exports = router;
+export default router;

@@ -3,18 +3,17 @@
     Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
 */
 
-const chai = require('chai');
-const chaiHTTP = require('chai-http');
-const server = require('../server.js');
-const User = require('../models/user');
-require('dotenv').config();
-const { generateExpiredToken, generateExpiredRefreshToken, addRefreshToken } = require('../controllers/authenticate.js');
-const { generateExpiredPasswordToken, generateExpiredEmailToken } = require('../controllers/accountManagment.js');
+import { expect, use } from 'chai';
+import { default as chaiHttp, request } from 'chai-http';
+import 'dotenv/config';
 
-server.unitTest = true;
+import server from '../server.js';
+import User from '../models/user.js';
+import { generateExpiredToken, generateExpiredRefreshToken, addRefreshToken } from '../controllers/authenticate.js';
+import { generateExpiredPasswordToken, generateExpiredEmailToken } from '../controllers/accountManagment.js';
 
-const expect = chai.expect;
-chai.use(chaiHTTP);
+use(chaiHttp);
+
 //These variables are used to store information needed to make successful requests to the server
 let email_reset_token, PWD_reset_token, access_token, refresh_token, removeID, emailToken, facultyRemoveID, facultyAccessToken,
     expiredToken, expiredRefreshToken;
@@ -25,14 +24,10 @@ const randomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
 const changeRandomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
 const newPassword = randomPass.substring(2, 9).repeat(2);
 
-before(function (done) { //This waits for the connection to the DB to be set up before running the tests
-    setTimeout(done, 4000);
-});
-
 //BE-REG-1 : Register unit test to test for student registeration without univeristy location 
 describe('BE-REG-1 : POST /api/register', () => {
     it('should return a registration failure response due to lack of university location', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -53,7 +48,7 @@ describe('BE-REG-1 : POST /api/register', () => {
 //BE-REG-2 : Register unit test to test for student registeration with an invalid univeristy location 
 describe('BE-REG-2 : POST /api/register', () => {
     it('should return a registration failure response due to an invalid university location', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -74,7 +69,7 @@ describe('BE-REG-2 : POST /api/register', () => {
 //BE-REG-3 : Register unit test to test for student registeration with a missing GPA field  
 describe('BE-REG-3 : POST /api/register', () => {
     it('should return a registration failure response due to a missing GPA field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -95,7 +90,7 @@ describe('BE-REG-3 : POST /api/register', () => {
 //BE-REG-3 : Register unit test to test for student registeration with a missing Major field  
 describe('BE-REG-3 : POST /api/register', () => {
     it('should return a registration failure response due to a missing Major field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "GPA": 2.5,
@@ -116,7 +111,7 @@ describe('BE-REG-3 : POST /api/register', () => {
 //BE-REG-4 : Register unit test to test for student registeration with GPA that is below 0 
 describe('BE-REG-4 : POST /api/register', () => {
     it('should return a registration failure response due to GPA < 0, invalid input', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -137,7 +132,7 @@ describe('BE-REG-4 : POST /api/register', () => {
 //BE-REG-4 : Register unit test to test for student registeration with GPA that is above 4 
 describe('BE-REG-4 : POST /api/register', () => {
     it('should return a registration failure response due to GPA > 0, invalid input', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -159,7 +154,7 @@ describe('BE-REG-4 : POST /api/register', () => {
 //BE-REG-5 : Register unit test to test for student registeration where the majors does not match the majors in the university 
 describe('BE-REG-5 : POST /api/register', () => {
     it('should return a registration failure response due to GPA > 0, invalid input', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -180,7 +175,7 @@ describe('BE-REG-5 : POST /api/register', () => {
 //BE-REG-6 : Register unit test to test for student registeration where the password is too short (less than 10 characters)
 describe('BE-REG-6 : POST /api/register', () => {
     it('should return a registration failure response due to password being too short (less than 10).', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -200,7 +195,7 @@ describe('BE-REG-6 : POST /api/register', () => {
 //BE-REG-6 : Register unit test to test for student registeration where the password is too long (greater than 255 characters)
 describe('BE-REG-6 : POST /api/register', () => {
     it('should return a registration failure response due to password being too long (greater than 255 chars).', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -222,7 +217,7 @@ describe('BE-REG-6 : POST /api/register', () => {
 //BE-REG-7 : Register unit test to test for student registeration where the email is invalid, greater than 255 characters
 describe('BE-REG-7 : POST /api/register', () => {
     it('should return a registration failure response due to email being too long (greater than 255 chars).', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA@gmail.com", "name": randomName,
@@ -243,7 +238,7 @@ describe('BE-REG-7 : POST /api/register', () => {
 //BE-REG-7 : Register unit test to test for student registeration where the email is invalid (no @ symbol)
 describe('BE-REG-7 : POST /api/register', () => {
     it('should return a registration failure response due to email scheme being invalid.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "testgmail.com", "name": randomName,
@@ -264,7 +259,7 @@ describe('BE-REG-7 : POST /api/register', () => {
 //BE-REG-7 : Register unit test to test for student registeration where the email is invalid, less than 6 characters
 describe('BE-REG-7 : POST /api/register', () => {
     it('should return a registration failure response due to email being too short (less than 6 chars).', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "a@a.c", "name": randomName,
@@ -294,7 +289,7 @@ describe('BE-REG-8 : POST /api/register', () => {
     });
 
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -323,7 +318,7 @@ describe('BE-REG-8 : POST /api/register', () => {
 //BE-REG-09 : Register unit test to test for student registeration where the email already used
 describe('BE-REG-9 : POST /api/register', () => {
     it('should return a registration failure response due to email is already in use.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName,
@@ -344,7 +339,7 @@ describe('BE-REG-9 : POST /api/register', () => {
 //BE-REG-10 : Basic register unit test for faculty, expects the response to output successful register response
 describe('BE-REG-10 : POST /api/register', () => {
     it('should return a registration success response for the faculty account.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "frog" + randomEmail, "name": randomName, "password": randomPass,
@@ -371,7 +366,7 @@ describe('BE-REG-10 : POST /api/register', () => {
 //BE-REG-11 : Unit test for registering with an invalid account type (admin)
 describe('BE-REG-11 : POST /api/register', () => {
     it('should return a registration failure response for the admin account (not allowed via http requests).', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "AAxAAA" + randomEmail, "name": randomName, "password": randomPass,
@@ -390,7 +385,7 @@ describe('BE-REG-11 : POST /api/register', () => {
 //BE-REG-12 : Unit test for registering with an email that already exists
 describe('BE-REG-12 : POST /api/register', () => {
     it('should return a registration failure for a incorrect account type.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
@@ -409,7 +404,7 @@ describe('BE-REG-12 : POST /api/register', () => {
 //BE-REG-12 : Unit test for registering with an invalid account type random number
 describe('BE-REG-12 : POST /api/register', () => {
     it('should return a registration failure for a incorrect account type.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "aaaaa" + randomEmail, "name": randomName, "password": randomPass,
@@ -428,7 +423,7 @@ describe('BE-REG-12 : POST /api/register', () => {
 //BE-REG-13 : Unit test for registering with a too short name
 describe('BE-REG-13 : POST /api/register', () => {
     it('should return a registration failure due to a name being too short.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "aaaaa" +  randomEmail, "name": "a", "password": randomPass,
@@ -447,7 +442,7 @@ describe('BE-REG-13 : POST /api/register', () => {
 //BE-REG-13 : Unit test for registering with a too long name
 describe('BE-REG-13 : POST /api/register', () => {
     it('should return a registration failure due to a name being too long.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "aaaaa" + randomEmail, "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 
@@ -466,7 +461,7 @@ describe('BE-REG-13 : POST /api/register', () => {
 //BE-LOG-1 : Login unit test where the password is not used 
 describe('BE-LOG-1 : POST /api/login', () => {
     it('should return an unsuccessful login response when no password is provided.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({ "email": randomEmail })
             .end((err, res) => {
@@ -482,7 +477,7 @@ describe('BE-LOG-1 : POST /api/login', () => {
 //BE-LOG-2 : Login unit test where the email is not provided
 describe('BE-LOG-2 : POST /api/login', () => {
     it('should return an unsuccessful login response when no email is provided.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({ "password": randomPass })
             .end((err, res) => {
@@ -498,7 +493,7 @@ describe('BE-LOG-2 : POST /api/login', () => {
 //BE-LOG-3 : Login unit test where the email is invalid
 describe('BE-LOG-3 : POST /api/login', () => {
     it('should return an unsuccessful login response with an invalid email.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({ "email": "XXX" + randomEmail, "password": randomPass })
             .end((err, res) => {
@@ -514,7 +509,7 @@ describe('BE-LOG-3 : POST /api/login', () => {
 //BE-LOG-4 : Login unit test where the password
 describe('BE-LOG-4 : POST /api/login', () => {
     it('should return an unsuccessful login response with an invalid password.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({ "email": randomEmail, "password": "XXX" + randomPass })
             .end((err, res) => {
@@ -531,7 +526,7 @@ describe('BE-LOG-4 : POST /api/login', () => {
 //BE-LOG-5 : Basic login unit test, expects a successful login response
 describe('BE-LOG-5 : POST /api/login', () => {
     it('should return a login success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({ "email": randomEmail, "password": randomPass })
             .end((err, res) => {
@@ -553,7 +548,7 @@ describe('BE-LOG-5 : POST /api/login', () => {
 //BE-CE-1 : Unit test for confirming user email with invalid email token
 describe('BE-CE-1 : POST /api/confirmEmail', () => {
     it('should return an unsuccessful response due to an invalid email token.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/confirmEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "emailToken": emailToken + "XXX" })
@@ -570,7 +565,7 @@ describe('BE-CE-1 : POST /api/confirmEmail', () => {
 //BE-CE-2 : Unit test for confirming user email with a different access token then is assigned to the email token
 describe('BE-CE-2 : POST /api/confirmEmail', () => {
     it('should return an unsuccessful response due to an invalid email token.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/confirmEmail')
             .set({ "Authorization": `Bearer ${facultyAccessToken}` })
             .send({ "emailToken": emailToken })
@@ -587,7 +582,7 @@ describe('BE-CE-2 : POST /api/confirmEmail', () => {
 //BE-CE-3 : Unit test for confirming user email without an access token
 describe('BE-CE-3 : POST /api/confirmEmail', () => {
     it('should return an unsuccessful response due to having no access token.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/confirmEmail')
             .send({ "emailToken": emailToken })
             .end((err, res) => {
@@ -604,7 +599,7 @@ describe('BE-CE-3 : POST /api/confirmEmail', () => {
 //BE-CE-4 : Unit test for confirming user email, expects a successful email confirm response
 describe('BE-CE-4 : POST /api/confirmEmail', () => {
     it('should return a confirmed email response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/confirmEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "emailToken": emailToken })
@@ -621,7 +616,7 @@ describe('BE-CE-4 : POST /api/confirmEmail', () => {
 //BE-CE-5 : Unit test for confirming user email that has already been confirmed
 describe('BE-CE-5 : POST /api/confirmEmail', () => {
     it('should return an unsuccessful response due to already having confirmed the email.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/confirmEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "emailToken": emailToken })
@@ -639,7 +634,7 @@ describe('BE-CE-5 : POST /api/confirmEmail', () => {
 //BE-GAI-1 : This unit test gets the account information and also tests for the email confirmation by checking if the emailConfirmed is changed to true
 describe('BE-GAI-1 : GET /api/accountManagement/getAccountInfo', () => {
     it('should return a the account information of the new account', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/accountManagement/getAccountInfo')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send()
@@ -662,8 +657,9 @@ describe('BE-GAI-1 : GET /api/accountManagement/getAccountInfo', () => {
 
 //BE-GAT-1 Unit test for regenerating access token with expired access token, expects a failure response
 describe('BE-GAI-1 : POST /api/token', () => {
-    it('should return a failure response due to the expired access token', (done) => {
-        chai.request(server)
+    it('should return a failure response due to the expired access token', function (done) {
+        this.timeout(1000);
+        request.execute(server)
             .post('/api/token')
             .set({ "Authorization": `Bearer ${expiredToken}` })
             .send({ "refreshToken": refresh_token })
@@ -680,7 +676,7 @@ describe('BE-GAI-1 : POST /api/token', () => {
 //BE-GAT-2 Unit test for regenerating access token with an invalid refresh token, expects a failure response
 describe('BE-GAI-2 : POST /api/token', () => {
     it('should return a failure response due to the invalid refresh token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/token')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "refreshToken": refresh_token + "XXX" })
@@ -697,7 +693,7 @@ describe('BE-GAI-2 : POST /api/token', () => {
 //BE-GAT-3 Unit test for regenerating access token with an expired refresh token, expects a failure response
 describe('BE-GAI-3 : POST /api/token', () => {
     it('should return a failure response due to the expired refresh token.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/token')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "refreshToken": expiredRefreshToken })
@@ -714,7 +710,7 @@ describe('BE-GAI-3 : POST /api/token', () => {
 //BE-GAT-4 Unit test for regenerating access token, expects a successful response with new access token
 describe('BE-GAI-4 : POST /api/token', () => {
     it('should return a success response and provide new access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/token')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "refreshToken": refresh_token })
@@ -735,7 +731,7 @@ describe('BE-GAI-4 : POST /api/token', () => {
 //BE-PR-1 : unit test for initiating password reset process but without providing email
 describe('BE-PR-1 : POST /api/accountManagement/resetPassword', () => {
     it('should return a failed password reset response due to the lack of email provided', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/resetPassword')
             .send()
             .end((err, res) => {
@@ -751,7 +747,7 @@ describe('BE-PR-1 : POST /api/accountManagement/resetPassword', () => {
 //BE-PR-2 : unit test for initiating password reset process but with an invalid email
 describe('BE-PR-2 : POST /api/accountManagement/resetPassword', () => {
     it('should return a failed password reset response because of the invalid email', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/resetPassword')
             .send({ "email": "bepisgmail.com" })
             .end((err, res) => {
@@ -767,7 +763,7 @@ describe('BE-PR-2 : POST /api/accountManagement/resetPassword', () => {
 //BE-PR-2 : unit test for initiating password reset process but with an email that is too short
 describe('BE-PR-2 : POST /api/accountManagement/resetPassword', () => {
     it('should return a failed password reset response because the email was too short', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/resetPassword')
             .send({ "email": "a@a.c" })
             .end((err, res) => {
@@ -783,7 +779,7 @@ describe('BE-PR-2 : POST /api/accountManagement/resetPassword', () => {
 //BE-PR-2 : unit test for initiating password reset process but with an email that is too long
 describe('BE-PR-2 : POST /api/accountManagement/resetPassword', () => {
     it('should return a failed password reset response because the email was too long', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/resetPassword')
             .send({ "email": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" })
             .end((err, res) => {
@@ -805,7 +801,7 @@ describe('BE-PR-3 : POST /api/accountManagement/resetPassword', () => {
     });
 
     it('should return a success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/resetPassword')
             .send({ "email": randomEmail })
             .end((err, res) => {
@@ -825,7 +821,7 @@ describe('BE-CPR-1 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to no reset token being provided.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "provisionalPassword": newPassword, "email": randomEmail })
             .end((err, res) => {
@@ -845,7 +841,7 @@ describe('BE-CPR-2 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to no new reset password being provided.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token, "email": randomEmail })
             .end((err, res) => {
@@ -865,7 +861,7 @@ describe('BE-CPR-3 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to no email being provided.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token, "provisionalPassword": newPassword })
             .end((err, res) => {
@@ -885,7 +881,7 @@ describe('BE-CPR-4 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to the password being too short.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token, "provisionalPassword": "short", "email": randomEmail })
             .end((err, res) => {
@@ -905,7 +901,7 @@ describe('BE-CPR-4 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to the password being too long.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({
                 "passwordResetToken": PWD_reset_token, "provisionalPassword": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -928,7 +924,7 @@ describe('BE-CPR-5 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to the reset token being expired.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({
                 "passwordResetToken": PWD_reset_token, "provisionalPassword": newPassword,
@@ -947,7 +943,7 @@ describe('BE-CPR-5 : POST /api/accountManagement/confirmResetPassword', () => {
 //BE-CPR-6 : Unit test for reseting user password where the reset token is invalid
 describe('BE-CPR-6 : POST /api/accountManagement/confirmResetPassword', () => {
     it('should return a failed password reset response due to the reset token being invalid.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token + "test", "provisionalPassword": newPassword, "email": randomEmail })
             .end((err, res) => {
@@ -967,7 +963,7 @@ describe('BE-CPR-7 : POST /api/accountManagement/confirmResetPassword', () => {
     });
 
     it('should return a failed password reset response due to the reset token being reset in the previous request.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token, "provisionalPassword": newPassword, "email": randomEmail })
             .end((err, res) => {
@@ -983,7 +979,7 @@ describe('BE-CPR-7 : POST /api/accountManagement/confirmResetPassword', () => {
 //BE-CPR-8 : Unit test for reseting user password, uses the previous password reset token. Expects a successfully reset password
 describe('BE-CPR-8 : POST /api/accountManagement/confirmResetPassword', () => {
     it('should return a successful reset password response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/confirmResetPassword')
             .send({ "passwordResetToken": PWD_reset_token, "provisionalPassword": newPassword, "email": randomEmail })
             .end((err, res) => {
@@ -999,7 +995,7 @@ describe('BE-CPR-8 : POST /api/accountManagement/confirmResetPassword', () => {
 //BE-CPR-9 : login unit test to ensure that the password was successfully reset
 describe('BE-CPR-9 : POST /api/login', () => {
     it('should return a login success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/login')
             .send({ "email": randomEmail, "password": newPassword })
             .end((err, res) => {
@@ -1021,7 +1017,7 @@ describe('BE-CPR-9 : POST /api/login', () => {
 //BE-RE-1 : Unit test for initiating the email change process without an access token, expects a failure response
 describe('BE-RE-1 : POST /api/accountManagement/changeEmail', () => {
     it('should return a failure response due to no access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .send({ "provisionalEmail": changeRandomEmail })
             .end((err, res) => {
@@ -1037,7 +1033,7 @@ describe('BE-RE-1 : POST /api/accountManagement/changeEmail', () => {
 //BE-RE-2 : Unit test for initiating the email change process without an email, expects a failure response
 describe('BE-RE-2 : POST /api/accountManagement/changeEmail', () => {
     it('should cause a failure response due to no provided email', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -1054,7 +1050,7 @@ describe('BE-RE-2 : POST /api/accountManagement/changeEmail', () => {
 //BE-RE-3 : Unit test for initiating the email change process with an too short email, expects a failure response
 describe('BE-RE-3 : POST /api/accountManagement/changeEmail', () => {
     it('should return a failure response due to email being too short', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "provisionalEmail": "a@a.c" })
@@ -1071,7 +1067,7 @@ describe('BE-RE-3 : POST /api/accountManagement/changeEmail', () => {
 //BE-RE-3 : Unit test for initiating the email change process with an too long email, expects a failure response
 describe('BE-RE-3 : POST /api/accountManagement/changeEmail', () => {
     it('should return a failure change email response due to email being too long', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "provisionalEmail": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" })
@@ -1088,7 +1084,7 @@ describe('BE-RE-3 : POST /api/accountManagement/changeEmail', () => {
 //BE-RE-3 : Unit test for initiating the email change process with an invalid email
 describe('BE-RE-3 : POST /api/accountManagement/changeEmail', () => {
     it('should return a failure change email response due to and invalid email', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "provisionalEmail": "bingusgmail.com" })
@@ -1110,7 +1106,7 @@ describe('BE-RE-4 : POST /api/accountManagement/changeEmail', () => {
     });
 
     it('should return a successful changeEmail response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "provisionalEmail": changeRandomEmail })
@@ -1127,7 +1123,7 @@ describe('BE-RE-4 : POST /api/accountManagement/changeEmail', () => {
 //BE-RE-5 : Unit test for initiating the email change process with an email that already exists
 describe('BE-RE-5 : POST /api/accountManagement/changeEmail', () => {
     it('should return a failure change email response due to email already existing', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmail')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "provisionalEmail": randomEmail })
@@ -1148,7 +1144,7 @@ describe('BE-CEC-1 : POST /api/accountManagement/changeEmailConfirm', () => {
     });
 
     it('should return a failed confirmed change email response due to no email token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmailConfirm')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -1169,7 +1165,7 @@ describe('BE-CEC-2 : POST /api/accountManagement/changeEmailConfirm', () => {
     });
 
     it('should return a failed confirmed change email response due to expired email token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmailConfirm')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "changeEmailToken": email_reset_token })
@@ -1186,7 +1182,7 @@ describe('BE-CEC-2 : POST /api/accountManagement/changeEmailConfirm', () => {
 //BE-CEC-3 : Unit test for confirming the email change with an invalid email token
 describe('BE-CEC-3 : POST /api/accountManagement/changeEmailConfirm', () => {
     it('should return a failed confirmed change email response due to an invalid email token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmailConfirm')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "changeEmailToken": email_reset_token + "XXX" })
@@ -1207,7 +1203,7 @@ describe('BE-CEC-4 : POST /api/accountManagement/changeEmailConfirm', () => {
     });
 
     it('should return a failed confirmed change email response due to email token not being reset', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmailConfirm')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "changeEmailToken": email_reset_token })
@@ -1224,7 +1220,7 @@ describe('BE-CEC-4 : POST /api/accountManagement/changeEmailConfirm', () => {
 //BE-CEC-5 : Unit test for confirming the email change, uses the email reset token and should return a success response
 describe('BE-CEC-5 : POST /api/accountManagement/changeEmailConfirm', () => {
     it('should return a successful confirmed change email response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/accountManagement/changeEmailConfirm')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "changeEmailToken": email_reset_token })
@@ -1254,7 +1250,7 @@ after(async () => {
 
 //method to generate a new reset token because the reset token should be set to null after each failed attempt at reseting
 const getNewResetToken = async () => {
-    await chai.request(server)
+    await request.execute(server)
         .post('/api/accountManagement/resetPassword')
         .send({ "email": randomEmail })
 
@@ -1264,7 +1260,7 @@ const getNewResetToken = async () => {
 
 //method to generate a new reset token because the reset token should be set to null after each failed attempt at reseting
 const getNewEmailToken = async () => {
-    await chai.request(server)
+    await request.execute(server)
         .post('/api/accountManagement/changeEmail')
         .set({ "Authorization": `Bearer ${access_token}` })
         .send({ "provisionalEmail": changeRandomEmail })
