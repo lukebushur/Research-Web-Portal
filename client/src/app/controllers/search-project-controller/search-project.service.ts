@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth-controller/auth.service';
-import { environment } from 'src/environments/environment';
-import { SearchOptions} from 'src/app/_models/searchOptions';
+import { environment } from 'environments/environment';
+import { SearchOptions} from 'app/_models/searchOptions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class SearchProjectService {
   apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
-  //This method is pretty simple, just fill in the fields that exist or will be used with the search or null if not. To the best of my knowledge, js/ts does 
+  //This method is pretty simple, just fill in the fields that exist or will be used with the search or null if not. To the best of my knowledge, js/ts does
   //not support named parameters so if you wanted to only serach with deadline, the correct call to this method would be searchProjectsMultipleParams(null, null, null, null, null, null, DATE PARAMETER)
   searchProjectsMultipleParams(searchOptions: SearchOptions): Observable<any> {
     const headers = this.authService.getHeaders();

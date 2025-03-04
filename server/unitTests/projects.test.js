@@ -2,18 +2,18 @@
     Information regarding what each test should achieve can be found in the RTM (Requirement Traceability Matrix) spreadsheet
 */
 
-const chai = require('chai');
-const chaiHTTP = require('chai-http');
-const server = require('../server.js');
-const User = require('../models/user');
-const Project = require('../models/project.js');
-const Majors = require('../models/majors.js');
-require('dotenv').config();
+import { expect, use } from 'chai';
+import { default as chaiHttp, request } from 'chai-http';
+import 'dotenv/config';
 
-server.unitTest = true;
+import server from '../server.js';
+import User from '../models/user.js';
+import Project from '../models/project.js';
+import Majors from '../models/majors.js';
+import { unitTestVerify } from '../controllers/authenticate.js';
 
-const expect = chai.expect;
-chai.use(chaiHTTP);
+use(chaiHttp);
+
 //variables for unit testing, to ensure future requests succeed
 let projectID, //id of the first active project
     projectID2, //id of the second active project
@@ -33,16 +33,10 @@ const randomPass = Math.random().toString(36).substring(0).repeat(2);
 const randomName = Math.random().toString(36).substring(2);
 const randomEmail = Math.random().toString(36).substring(8) + "@gmail.com";
 
-//This waits for the connection to the DB to be set up before running the tests
-before(function (done) {
-    this.timeout(4000);
-    setTimeout(done, 3000);
-});
-
 //BE-REG-10 : Basic register request, should return a success response
 describe('BE-REG-10 :  POST /api/register', () => {
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": randomEmail, "name": randomName, "password": randomPass,
@@ -68,8 +62,26 @@ describe('BE-REG-10 :  POST /api/register', () => {
 
 //BE-REG-8 : Basic register unit test for students, expects the response to output successful register response
 describe('BE-REG-8 : POST /api/register', () => {
+    after(async () => {
+        const Promises = [
+            User.findOne({ email: randomEmail }),
+            User.findOne({ email: "AXAXXA" + randomEmail}),
+        ]
+        let emailtokens = [];
+        const values = await Promise.all(Promises);
+        values.forEach(user => {
+            emailtokens.push(user.emailToken);
+        });
+    
+        const verifyPromises = [
+            unitTestVerify(access_token, emailtokens[0]),
+            unitTestVerify(student_access_token, emailtokens[1]),
+        ]
+        await Promise.all(verifyPromises);
+    });
+
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 "email": "AXAXXA" + randomEmail, "name": randomName,
@@ -97,7 +109,7 @@ describe('BE-REG-8 : POST /api/register', () => {
 //BE-CAP-1.1 : Project active creation request, this should result in a failure due to no project title
 describe('BE-CAP-1.1 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no project title', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -132,7 +144,7 @@ describe('BE-CAP-1.1 : POST /api/projects/createProject', () => {
 //BE-CAP-1.2 : Project active creation request, this should result in a failure due to no majors field
 describe('BE-CAP-1.2 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no majors field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -167,7 +179,7 @@ describe('BE-CAP-1.2 : POST /api/projects/createProject', () => {
 //BE-CAP-1.3 : Project active creation request, this should result in a failure due to no description field
 describe('BE-CAP-1.3 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no description field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -202,7 +214,7 @@ describe('BE-CAP-1.3 : POST /api/projects/createProject', () => {
 //BE-CAP-1.4 : Project active creation request, this should result in a failure due to no questions field
 describe('BE-CAP-1.4 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no questions field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -232,7 +244,7 @@ describe('BE-CAP-1.4 : POST /api/projects/createProject', () => {
 //BE-CAP-1.5 : Project active creation request, this should result in a failure due to no deadline field
 describe('BE-CAP-1.5 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no deadline field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -267,7 +279,7 @@ describe('BE-CAP-1.5 : POST /api/projects/createProject', () => {
 //BE-CAP-2 : Project active creation request, this should result in a failure due to invalid majors
 describe('BE-CAP-2 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to invalid majors', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -305,7 +317,7 @@ describe('BE-CAP-2 : POST /api/projects/createProject', () => {
 //BE-CAP-3.1 : Project active creation request, this should result in a failure due to no question in the question field
 describe('BE-CAP-3.1 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no question in the question field', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -340,7 +352,7 @@ describe('BE-CAP-3.1 : POST /api/projects/createProject', () => {
 //BE-CAP-3.2 : Project active creation request, this should result in a failure due to no required field in the question
 describe('BE-CAP-3.2 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no required field in the question ', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -375,7 +387,7 @@ describe('BE-CAP-3.2 : POST /api/projects/createProject', () => {
 //BE-CAP-3.3 : Project active creation request, this should result in a failure due to no requirementType field in the question
 describe('BE-CAP-3.3 : POST /api/projects/createProject', () => {
     it('BE-CAP-3.3 : should return a failed create project response due to no requirementType field in the question ', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -410,7 +422,7 @@ describe('BE-CAP-3.3 : POST /api/projects/createProject', () => {
 //BE-CAP-3.4 : Project active creation request, this should result in a failure due to invalid requirement type
 describe('BE-CAP-3.4 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to an invalid requirementType field in the question', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -446,7 +458,7 @@ describe('BE-CAP-3.4 : POST /api/projects/createProject', () => {
 //BE-CAP-3.5 : Project active creation request, this should result in a failure due to invalid data types in the fields
 describe('BE-CAP-3.5 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to no requirementType field in the question ', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -482,7 +494,7 @@ describe('BE-CAP-3.5 : POST /api/projects/createProject', () => {
 //BE-CAP-4 : Project active creation request, this should result in a failure due to invalid project type
 describe('BE-CAP-4 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to invalid project type', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -518,7 +530,7 @@ describe('BE-CAP-4 : POST /api/projects/createProject', () => {
 //BE-CAP-5 : Project active creation request with a student access token, this should result in a failure 
 describe('BE-CAP-5 : POST /api/projects/createProject', () => {
     it('should return a failed create project response due to a student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -554,7 +566,7 @@ describe('BE-CAP-5 : POST /api/projects/createProject', () => {
 //BE-CAP-6 : Active project creation request, this should result in a success which will create a new active project record
 describe('BE-CAP-6 : POST /api/projects/createProject', () => {
     it('should return a successful active project creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -600,7 +612,7 @@ describe('BE-CAP-6 : POST /api/projects/createProject', () => {
 //BE-CAP-7 : Second Active project creation request, this should result in a success which will create a new active project record
 describe('BE-CAP-7 : POST /api/projects/createProject', () => {
     it('should return a second successful active project creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -646,7 +658,7 @@ describe('BE-CAP-7 : POST /api/projects/createProject', () => {
 //BE-CAP-8 : Get projects unit test, expects a successful get projects response with all the previously created projects
 describe('BE-CAP-8 : GET /api/projects/getProjects', () => {
     it('should return a successful project retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/projects/getProjects')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -666,7 +678,7 @@ describe('BE-CAP-8 : GET /api/projects/getProjects', () => {
 //BE-CDP-1 : Create a draft project with student acceess token : should fail
 describe('BE-CDP-1 : POST /api/projects/createProject', () => {
     it('should return a failed draft project creation response due to student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -706,7 +718,7 @@ describe('BE-CDP-1 : POST /api/projects/createProject', () => {
 //BE-CDP-2 : Draft project creation, this creates a new draft project as well as a new draft projects record
 describe('BE-CDP-2 : POST /api/projects/createProject', () => {
     it('should return a successful draft project creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -747,7 +759,7 @@ describe('BE-CDP-2 : POST /api/projects/createProject', () => {
 //BE-CDP-3 : A second draft project creation, this creates a new draft project with empty fields
 describe('BE-CDP-3 : POST /api/projects/createProject', () => {
     it('should return a second successful draft project creation with empty fields', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -791,7 +803,7 @@ describe('BE-CDP-4 : GET /api/projects/getProjects', () => {
     });
 
     it('should return a successful project retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/projects/getProjects')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -818,7 +830,7 @@ describe('BE-CDP-4 : GET /api/projects/getProjects', () => {
 //BE-AAP-01 : Archive project request with student access token - should fail
 describe('BE-AAP-1 : PUT /api/projects/archiveProject', () => {
     it('should return a failed response due to student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -837,7 +849,7 @@ describe('BE-AAP-1 : PUT /api/projects/archiveProject', () => {
 //BE-AAP-02 : Archive project request without project id - should fail
 describe('BE-AAP-2 : PUT /api/projects/archiveProject', () => {
     it('should return a failed project archive response due to no project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -854,7 +866,7 @@ describe('BE-AAP-2 : PUT /api/projects/archiveProject', () => {
 //BE-AAP-03 : Archive project request invalid project id - should fail
 describe('BE-AAP-3 : PUT /api/projects/archiveProject', () => {
     it('should return a failed project archive response due to invalid project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": projectID + "XOXO", })
@@ -871,7 +883,7 @@ describe('BE-AAP-3 : PUT /api/projects/archiveProject', () => {
 //BE-AAP-04 : Archive project request for draft project - should fail
 describe('BE-AAP-4 : PUT /api/projects/archiveProject', () => {
     it('should return a failed project archive response due to draft project id (instead of active)', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": draftID })
@@ -894,7 +906,7 @@ describe('BE-AAP-5 : PUT /api/projects/archiveProject', () => {
     });
 
     it('should return a successful project archive response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -914,7 +926,7 @@ describe('BE-AAP-5 : PUT /api/projects/archiveProject', () => {
 //BE-AAP-06 : Archive project request for an archived project - should fail
 describe('BE-AAP-6 : PUT /api/projects/archiveProject', () => {
     it('should return a failed project archive response due to draft project id (instead of active)', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": archiveID })
@@ -935,7 +947,7 @@ describe('BE-AAP-7 : PUT /api/projects/archiveProject', () => {
     });
 
     it('should return a second successful project archive response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -955,7 +967,7 @@ describe('BE-AAP-7 : PUT /api/projects/archiveProject', () => {
 //BE-AAP-8 : Attempt to archive a project with no active project list
 describe('BE-AAP-8 : PUT /api/projects/archiveProject', () => {
     it('should return a failed response due to no active project list', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/archiveProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -974,7 +986,7 @@ describe('BE-AAP-8 : PUT /api/projects/archiveProject', () => {
 //BE-PDP-1 : Attempt to publish a draft with a student access token
 describe('BE-PDP-1 : PUT /api/projects/publishDraft', () => {
     it('Should return a failed response due to the student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({ "projectID": draftID })
@@ -991,7 +1003,7 @@ describe('BE-PDP-1 : PUT /api/projects/publishDraft', () => {
 //BE-PDP-2 : Attempt to publish a draft without an id
 describe('BE-PDP-2 : PUT /api/projects/publishDraft', () => {
     it('Should return a failed response due to no id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -1008,7 +1020,7 @@ describe('BE-PDP-2 : PUT /api/projects/publishDraft', () => {
 //BE-PDP-3 : Attempt to publish a draft without an invalid draft id
 describe('BE-PDP-3 : PUT /api/projects/publishDraft', () => {
     it('Should return a failed response due to an invalid draft id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": draftID + "XXXX" })
@@ -1025,7 +1037,7 @@ describe('BE-PDP-3 : PUT /api/projects/publishDraft', () => {
 //BE-PDP-4 : Attempt to publish a draft with an archive id
 describe('BE-PDP-4 : PUT /api/projects/publishDraft', () => {
     it('Should return a failed response due to an archive id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": archiveID })
@@ -1048,7 +1060,7 @@ describe('BE-PDP-5 : PUT /api/projects/publishDraft', () => {
     });
 
     it('Should return a successful draft publish response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": draftID })
@@ -1066,7 +1078,7 @@ describe('BE-PDP-5 : PUT /api/projects/publishDraft', () => {
 //BE-PDP-6 : Attempt to publish an active project
 describe('BE-PDP-6 : PUT /api/projects/publishDraft', () => {
     it('Should return a failed draft publish response due to using an active project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": projectID })
@@ -1087,7 +1099,7 @@ describe('BE-PDP-7 : PUT /api/projects/publishDraft', () => {
     });
 
     it('Should return a successful draft publish response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": draftID2 })
@@ -1105,7 +1117,7 @@ describe('BE-PDP-7 : PUT /api/projects/publishDraft', () => {
 //BE-PDP-8 : Attempt to publish a draft project with no draft record
 describe('BE-PDP-8 : PUT /api/projects/publishDraft', () => {
     it('Should return a failed draft publish response due to not have draft project record', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/publishDraft')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({ "projectID": draftID })
@@ -1127,7 +1139,7 @@ describe('GET /api/projects/getProjects', () => {
     });
 
     it('BE-AAP-9 + BE-PDP-9 : should return a successful project retrieval response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/projects/getProjects')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -1153,7 +1165,7 @@ describe('GET /api/projects/getProjects', () => {
 //BE-GSP-4 : Unit test for getting a singular project, this unit test grabs an active project
 describe('BE-GSP-4 : POST /api/projects/getProject', () => {
     it('Should return a successful active project retrieval reponse', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1176,7 +1188,7 @@ describe('BE-GSP-4 : POST /api/projects/getProject', () => {
 //BE-UP-1 : Update project with student access token - should fail
 describe('BE-UP-1 : PUT /api/projects/updateProject', () => {
     it('should return a failed project update response due to student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/updateProject')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1216,7 +1228,7 @@ describe('BE-UP-1 : PUT /api/projects/updateProject', () => {
 //BE-UP-2 : Update project without project id, should fail
 describe('BE-UP-2 : PUT /api/projects/updateProject', () => {
     it('should return a failed project update response due to no project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/updateProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1255,7 +1267,7 @@ describe('BE-UP-2 : PUT /api/projects/updateProject', () => {
 //BE-UP-3 : Update project without a project type
 describe('BE-UP-3 : PUT /api/projects/updateProject', () => {
     it('should return a failed project update response due to no project type', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/updateProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1294,7 +1306,7 @@ describe('BE-UP-3 : PUT /api/projects/updateProject', () => {
 //BE-UP-4 : Update project with invalid project id
 describe('BE-UP-4 : PUT /api/projects/updateProject', () => {
     it('should return a failed project update response due to an invalid project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/updateProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1334,7 +1346,7 @@ describe('BE-UP-4 : PUT /api/projects/updateProject', () => {
 //BE-UP-5 : Update project with no project record
 describe('BE-UP-5 : PUT /api/projects/updateProject', () => {
     it('should return a failed project update response due to no project record.', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/updateProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1374,7 +1386,7 @@ describe('BE-UP-5 : PUT /api/projects/updateProject', () => {
 //BE-UP-6 : Update project request, this should update the second active project to have a name of FROGS
 describe('BE-UP-6 : PUT /api/projects/updateProject', () => {
     it('should return a successful project update response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .put('/api/projects/updateProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1414,7 +1426,7 @@ describe('BE-UP-6 : PUT /api/projects/updateProject', () => {
 //BE-DP-1 : Delete request with a student access token | should fail
 describe('BE-DP-1 : DELETE /api/projects/deleteProject', () => {
     it('should fail to delete a project due to student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1434,7 +1446,7 @@ describe('BE-DP-1 : DELETE /api/projects/deleteProject', () => {
 //BE-DP-2.1 : Delete request without project type, should fail
 describe('BE-DP-2.1 : DELETE /api/projects/deleteProject', () => {
     it('should return a failed response due to no project type', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1453,7 +1465,7 @@ describe('BE-DP-2.1 : DELETE /api/projects/deleteProject', () => {
 //BE-DP-2.2 : Delete request without project id
 describe('BE-DP-2.2 : DELETE /api/projects/deleteProject', () => {
     it('should return a failed response due to no project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1472,7 +1484,7 @@ describe('BE-DP-2.2 : DELETE /api/projects/deleteProject', () => {
 //BE-DP-3.1 : Delete request with invalid project id
 describe('BE-DP-3.1 : DELETE /api/projects/deleteProject', () => {
     it('should return a failed response due to the invalid project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1492,7 +1504,7 @@ describe('BE-DP-3.1 : DELETE /api/projects/deleteProject', () => {
 //BE-DP-3.2 : Delete request with invalid project type
 describe('BE-DP-3.2 : DELETE /api/projects/deleteProject', () => {
     it('should return a failed response due to the invalid project type', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1512,7 +1524,7 @@ describe('BE-DP-3.2 : DELETE /api/projects/deleteProject', () => {
 //BE-DP-3.3 : Delete request without the project record
 describe('BE-DP-3.3 : DELETE /api/projects/deleteProject', () => {
     it('should return a failed response due to no project record', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1532,7 +1544,7 @@ describe('BE-DP-3.3 : DELETE /api/projects/deleteProject', () => {
 //BE-DP-4 : Delete request for active project
 describe('BE-DP-4 : DELETE /api/projects/deleteProject', () => {
     it('should return a successful active project deletion response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1552,7 +1564,7 @@ describe('BE-DP-4 : DELETE /api/projects/deleteProject', () => {
 //BE-GSP-5 : Retrieve a singular archived project
 describe('BE-GSP-5 : POST /api/projects/getProject', () => {
     it('Should return a successful archived project retrieval reponse', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1577,7 +1589,7 @@ describe('BE-GSP-5 : POST /api/projects/getProject', () => {
 //BE-DP-5 : Delete request for archived project
 describe('BE-DP-5 : DELETE /api/projects/deleteProject', () => {
     it('should return a successful archived project deletion response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1603,7 +1615,7 @@ describe('BE-DP-6.1 : POST /api/projects/createProject', () => {
     });
 
     it('should return a successful draft project creation response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/createProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1644,7 +1656,7 @@ describe('BE-DP-6.1 : POST /api/projects/createProject', () => {
 //BE-GSP-6 : Unit test for getting a singular project, this unit test grabs a draft project
 describe('BE-GSP-6 : POST /api/projects/getProject', () => {
     it('Should return a successful draft project retrieval reponse', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1669,7 +1681,7 @@ describe('BE-GSP-6 : POST /api/projects/getProject', () => {
 //BE-DP-6.2 : Create draft project to be deleted later
 describe('BE-DP-6.2 : DELETE /api/projects/deleteProject', () => {
     it('should return a successful archived project deletion response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete('/api/projects/deleteProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1694,7 +1706,7 @@ describe('BE-UP-7 + BE-DP- GET /api/projects/getProjects', () => {
     });
 
     it('should return a successful project retrieval response with two archived projects and no draft', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/projects/getProjects')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({})
@@ -1716,7 +1728,7 @@ describe('BE-UP-7 + BE-DP- GET /api/projects/getProjects', () => {
 //BE-GSP-1 : Retrieve a singular archived project but with a student access token
 describe('BE-GSP-5 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${student_access_token}` })
             .send({
@@ -1736,7 +1748,7 @@ describe('BE-GSP-5 : POST /api/projects/getProject', () => {
 //BE-GSP-2.1 : Retrieve a singular archived project but without project type
 describe('BE-GSP-2.1 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due no project type', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1755,7 +1767,7 @@ describe('BE-GSP-2.1 : POST /api/projects/getProject', () => {
 //BE-GSP-2.2 : Retrieve a singular archived project but without project id
 describe('BE-GSP-2.2 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due no project id', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1774,7 +1786,7 @@ describe('BE-GSP-2.2 : POST /api/projects/getProject', () => {
 //BE-GSP-3.1 : Retrieve a singular archived project but with invalid projectType
 describe('BE-GSP-2.1 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({
@@ -1794,7 +1806,7 @@ describe('BE-GSP-2.1 : POST /api/projects/getProject', () => {
 //BE-GSP-3.2 : Retrieve a singular archived project but with invalid projectID
 describe('BE-GSP-3.2 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/projects/getProject')
             .set({ "Authorization": `Bearer ${access_token}` })
             .send({

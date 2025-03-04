@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { AuthService } from '../auth-controller/auth.service';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,30 +10,13 @@ import { environment } from 'src/environments/environment';
 export class EmailService {
   private apiUrl: string = environment.apiUrl;
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  confirmEmail(): void {
+  confirmEmail(emailToken: string): Observable<any> {
     const authToken = this.authService.getHeaders();
 
-    const data = {
-      ["emailToken"]: this.getTokenFromUrl(),
-    };
+    const data = { emailToken };
 
-    this.http.post(`${this.apiUrl}/api/confirmEmail`, data, { headers: authToken })
-      .subscribe(
-        (response: any) => {
-          // TODO: Update this to the correct route
-          // this.router.navigate(['/home']);
-        },
-        (error: any) => {
-          console.error('Confirmation failed.', error);
-        }
-      );
-  }
-
-  private getTokenFromUrl(): string {
-    const href = this.router.url;
-    const token = href.split("/").pop();
-    return token || '';
+    return this.http.post(`${this.apiUrl}/confirmEmail`, data, { headers: authToken });
   }
 }

@@ -3,9 +3,9 @@
     which ensures that any changes to a student account (i.e. GPA, Name, Major) is reflected in the faculty's project record
 */
 
-const Application = require('../models/application');
-const Project = require('../models/project');
-const { retrieveOrCacheApplications } = require('./schemaCaching');
+import Application from '../models/application.js';
+import Project from '../models/project.js';
+import { retrieveOrCacheApplications } from './schemaCaching.js';
 
 /*  This helper function updates student's information in their associated application record and project record. It takes three parameters, 
     User, the user schema object of the student - modifyFields, an object with the fields that are going to be modified - originalData, an object 
@@ -76,6 +76,4 @@ const updateApplicationRecords = async (req, user, modifyFields, originalData) =
     }
 }
 
-module.exports = {
-    updateApplicationRecords,
-}
+export { updateApplicationRecords };

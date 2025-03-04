@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -19,7 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { QuestionData } from 'src/app/_models/projects/questionData';
+import { QuestionData } from 'app/_models/projects/questionData';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 
@@ -55,7 +55,6 @@ interface ApplicantData {
   selector: 'app-view-project',
   templateUrl: './view-project.component.html',
   styleUrls: ['./view-project.component.css'],
-  standalone: true,
   imports: [
     AsyncPipe,
     DatePipe,
@@ -102,7 +101,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
   // Material table sort and pginator objects
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  
+
   // This array determines the displayedd columns in the table.
   displayedColumns: string[] = ['name', 'email', 'GPA', 'majors', 'status'];
 
@@ -310,7 +309,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       this.currentQuestionType = this.questions[this.currentQuestionIndex].requirementType;
     }
   }
-  
+
   // This method checks to see if the questions provided by the faculty match
   // the student parameter's questions.
   checkAnswers(studentQuestions: any) {
@@ -322,14 +321,14 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
         if (this.facultyAnswers[x] != "" && this.facultyAnswers[x] != studentQuestions[x].answers[0]) {
           return false;
         }
-      // Check if the requirement is check box. If so, ensure the student
-      // response has all the faculty choices.
+        // Check if the requirement is check box. If so, ensure the student
+        // response has all the faculty choices.
       } else if (this.questions[x].requirementType === "check box") {
         if (!this.facultyAnswers[x].every((element: any) => studentQuestions[x].answers.includes(element))) {
           return false;
         }
-      // Check if the requirement is text. If so, then check that the input
-      // string matches the text body.
+        // Check if the requirement is text. If so, then check that the input
+        // string matches the text body.
       } else if (this.questions[x].requirementType === "text") {
         if (this.facultyAnswers[x] != "" && !studentQuestions[x].answers[0].includes(this.facultyAnswers[x])) {
           return false;
@@ -337,7 +336,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       }
     }
     // if the code reaches here, then the above checks have passed for all questions
-    return true; 
+    return true;
   }
 
   // This method updates the faculty answer for a text response then updates the table.
@@ -398,4 +397,4 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
       }
     });
   }
-} 
+}

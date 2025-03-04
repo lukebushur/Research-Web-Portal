@@ -1,10 +1,10 @@
 //  This JavaScript file will handle the necessary validation for creating accountActions such as registration and modification, any other 
 //  account related validations should be put in here.
+import jwt from 'jsonwebtoken';
 
-const JWT = require('jsonwebtoken');
-const generateRes = require('../generateJSON');
-const { getMajors } = require('./validationHelpers');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../schemaCaching');
+import generateRes from '../generateJSON.js';
+import { getMajors } from './validationHelpers.js';
+import { retrieveOrCacheMajors, retrieveOrCacheUsers } from '../schemaCaching.js';
 
 //  This middleware provides the validation required for account registering, such as ensuring that the account's major and GPA is correct (for student)
 const registerMajorValidation = async (req, res, next) => {
@@ -45,7 +45,7 @@ const accountModifyMajorValidation = async (req, res, next) => {
     try {
         //Grab information about user account information
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
         //Validate that the GPA is within normal bounds: 
         if (req.body.GPA) {
@@ -100,6 +100,26 @@ const accountModifyMajorValidation = async (req, res, next) => {
     }
 }
 
-module.exports = {
-    accountModifyMajorValidation, registerMajorValidation
+const verifiedValidation = async (req, res, next) => {
+    try {
+        const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
+
+        if(userAccount.emailConfirmed === false) {
+            res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {}));
+            return;
+        } else {
+            next();
+        }
+    } catch (error) {
+        res.status(500).json(generateRes(false, 500, "SERVER_ERROR", {}));
+        return;
+    }
 }
+
+export {
+    accountModifyMajorValidation,
+    registerMajorValidation,
+    verifiedValidation,
+};

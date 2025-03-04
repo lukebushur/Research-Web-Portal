@@ -1,10 +1,11 @@
-const Application = require('../../models/application');
-const Project = require('../../models/project');
-const User = require('../../models/user');
-const JWT = require('jsonwebtoken');
-const generateRes = require('../../helpers/generateJSON');
-const { applicationSchema } = require('../../helpers/inputValidation/requestValidation');
-const { retrieveOrCacheUsers, retrieveOrCacheProjects, retrieveOrCacheApplications } = require('../../helpers/schemaCaching');
+import jwt from 'jsonwebtoken';
+
+import Application from '../../models/application.js';
+import Project from '../../models/project.js';
+import User from '../../models/user.js';
+import generateRes from '../../helpers/generateJSON.js';
+import { applicationSchema } from '../../helpers/inputValidation/requestValidation.js';
+import { retrieveOrCacheUsers, retrieveOrCacheProjects, retrieveOrCacheApplications } from '../../helpers/schemaCaching.js';
 
 /*  This function handles the application creation for the student accounts. This function should be used with POST requests and 
     requires an access token. This function should create a new applicaiton object in the user's application record as well as create
@@ -26,7 +27,7 @@ const createApplication = async (req, res) => { //TODO ADD DEADLINE CHECKING
         }
 
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //student and faculty record
         let student;
         let faculty;
@@ -181,7 +182,7 @@ const updateApplication = async (req, res) => {
         }
 
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         let student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
@@ -220,7 +221,7 @@ const updateApplication = async (req, res) => {
 const deleteApplication = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //get the student and store applicationID in local variable
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -285,7 +286,7 @@ const deleteApplication = async (req, res) => {
 const getApplications = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -368,7 +369,7 @@ const getApplications = async (req, res) => {
 const getApplication = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -399,7 +400,7 @@ const getTopRecentApplications = async (req, res) => {
         const numApplications = req.params.num || 3;
 
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -479,7 +480,7 @@ const getProjectData = async (req, res) => {
         //ensure that the body contains the necessary fields
         if (!req.body.professorEmail || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         const promises = [ //promises to grab both accounts
             retrieveOrCacheUsers(req, decodeAccessToken.email),
@@ -533,9 +534,12 @@ const getProjectData = async (req, res) => {
     }
 }
 
-module.exports = {
-    createApplication, deleteApplication,
-    getApplications, getTopRecentApplications,
+export {
+    createApplication,
+    deleteApplication,
+    getApplications,
+    getTopRecentApplications,
     updateApplication,
-    getProjectData, getApplication
+    getProjectData,
+    getApplication,
 };

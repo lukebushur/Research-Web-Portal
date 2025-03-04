@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FacultyProjectService } from 'src/app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
-import { Application } from 'src/app/_models/applications/application';
-import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
+import { Application } from 'app/_models/applications/application';
+import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
 import { Router, provideRouter } from '@angular/router';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -163,7 +163,7 @@ describe('FacultyDashboardComponent', () => {
   });
 
   it('should update the selected index and project', () => {
-    component.updatedSelected(1, projectData[1]);    
+    component.updatedSelected(1, projectData[1]);
     component.updateProjects(1);
     expect(facultyService.getProjects).toHaveBeenCalledTimes(2);
     expect(component.selectedIndex$.getValue()).toEqual(-1);
@@ -184,7 +184,7 @@ describe('FacultyDashboardComponent', () => {
     expect(await tabs[1].getLabel()).toEqual('Draft Projects');
     expect(await tabs[2].getLabel()).toEqual('Archived Projects');
     expect(await tabs[0].isSelected()).toBeTrue();
-    
+
   });
 
   it('should navigate to the create project page after pressing the associated button', async () => {

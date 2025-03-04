@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StudentViewProjectComponent } from './student-view-project.component';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
-import { QuestionData } from 'src/app/_models/projects/questionData';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { QuestionData } from 'app/_models/projects/questionData';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { of } from 'rxjs';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -104,9 +104,8 @@ describe('StudentViewProjectComponent', () => {
           }
         }},
       ]
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     fixture = TestBed.createComponent(StudentViewProjectComponent);
     // loader for Material component testing
     loader = TestbedHarnessEnvironment.loader(fixture);

@@ -1,15 +1,16 @@
-const chai = require('chai');
-const chaiHTTP = require('chai-http');
-const server = require('../server.js');
-const chance = require('chance').Chance();
-const User = require('../models/user');
-const IndustryData = require('../models/industryData.js');
-require('dotenv').config();
+import { expect, use } from 'chai';
+import { default as chaiHttp, request } from 'chai-http';
+import Chance from 'chance';
+import 'dotenv/config';
 
-server.unitTest = true;
+import server from '../server.js';
+import User from '../models/user.js';
+import IndustryData from '../models/industryData.js';
+import { unitTestVerify } from '../controllers/authenticate.js';
 
-const expect = chai.expect;
-chai.use(chaiHTTP);
+use(chaiHttp);
+const chance = new Chance();
+
 //variables for unit testing, to ensure future requests succeed
 let industry_access_token; //access token for industry account
 let industryRecordID; //id of the industry account
@@ -40,16 +41,27 @@ const randomJobDetails = {
     endDate: chance.date({ year: 2025 }),
 };
 
-//This waits for the connection to the DB to be set up before running the tests
-before(function (done) {
-    this.timeout(4000);
-    setTimeout(done, 3000);
-});
-
 //Basic register request for the industry user, should return a success response
 describe('POST /api/register', () => {
+    after(async () => {
+        const Promises = [
+            User.findOne({ email: randomEmail }),
+        ]
+        let emailtokens = [];
+        const values = await Promise.all(Promises);
+        values.forEach(user => {
+            emailtokens.push(user.emailToken);
+        });
+
+        const verifyPromises = [
+            unitTestVerify(industry_access_token, emailtokens[0]),
+        ]
+        await Promise.all(verifyPromises);
+    });
+
+    
     it('should return a registration success response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/register')
             .send({
                 email: randomEmail,
@@ -78,7 +90,7 @@ describe('POST /api/register', () => {
 
 describe('GET /api/industry/getJobs with no jobs', () => {
     it('should return an INDUSTRY_DATA_NOT_FOUND error response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/industry/getJobs')
             .set({ "Authorization": `Bearer ${industry_access_token}` })
             .end((err, res) => {
@@ -94,7 +106,7 @@ describe('GET /api/industry/getJobs with no jobs', () => {
 
 describe('POST /api/industry/createJob', () => {
     it('should return a job successfully created response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .post('/api/industry/createJob')
             .set({ "Authorization": `Bearer ${industry_access_token}` })
             .send({
@@ -120,7 +132,7 @@ describe('POST /api/industry/createJob', () => {
 
 describe('GET /api/industry/getJobs with jobs', () => {
     it('should return a jobs successfully found response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .get('/api/industry/getJobs')
             .set({ "Authorization": `Bearer ${industry_access_token}` })
             .end((err, res) => {
@@ -154,7 +166,7 @@ describe('GET /api/industry/getJobs with jobs', () => {
 
 describe('DELETE /api/industry/deleteJob', () => {
     it('should return a job successfully deleted response', (done) => {
-        chai.request(server)
+        request.execute(server)
             .delete(`/api/industry/deleteJob/${industryDataActiveJobRecordID}`)
             .set({ "Authorization": `Bearer ${industry_access_token}` })
             .end((err, res) => {

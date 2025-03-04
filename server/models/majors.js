@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const majorsRecord = new mongoose.Schema({
+const majorsRecord = new Schema({
     location: {
         type: String,
         required: true,
@@ -9,6 +9,6 @@ const majorsRecord = new mongoose.Schema({
     majors: [{
         type: String,
     }]
-})
+});
 
-module.exports = mongoose.model('Majors', majorsRecord);
+export default model('Majors', majorsRecord);

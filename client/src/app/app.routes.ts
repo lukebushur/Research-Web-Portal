@@ -37,7 +37,7 @@ const routeConfig: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signout', component: SignoutComponent },
   // 1 route parameter for the code allowing the user to confirm the account associated with their email
-  { path: 'confirm-email/:emailtoken', component: ConfirmEmailComponent, canActivate: [AuthGuard] },
+  { path: 'confirm-email/:emailToken', component: ConfirmEmailComponent, canActivate: [AuthGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'forgot-password-submitted', component: ForgotPasswordSubmittedComponent },
   // 2 route parameters: email associated with the account & uuid associated with the reset

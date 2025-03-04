@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {} from '@angular/common/http/testing';
 
 import { FacultyProjectService } from './faculty-project.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth-controller/auth.service';
 import { of } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 
 describe('FacultyProjectService', () => {
   let service: FacultyProjectService;

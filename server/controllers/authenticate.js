@@ -1,11 +1,12 @@
-const User = require('../models/user');
-const JWT = require('jsonwebtoken');
-const { facultyRegisterSchema, studentRegisterSchema, loginSchema, emailSchema } = require('../helpers/inputValidation/requestValidation');
-const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
-const nodemailer = require('nodemailer');
-const generateRes = require('../helpers/generateJSON');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../helpers/schemaCaching');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import nodemailer from 'nodemailer';
+
+import User from '../models/user.js';
+import { facultyRegisterSchema, studentRegisterSchema, loginSchema, emailSchema } from '../helpers/inputValidation/requestValidation.js';
+import generateRes from '../helpers/generateJSON.js';
+import { retrieveOrCacheMajors, retrieveOrCacheUsers } from '../helpers/schemaCaching.js';
 
 
 /*  This function handles the login funciton, should only be used with a POST request
@@ -172,7 +173,7 @@ const token = async (req, res) => {
         const refreshToken = req.body.refreshToken;
 
         try { // Gets the email from the refresh token and validates the refreshtoken against the database
-            const decodeRefreshToken = JWT.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN);
+            const decodeRefreshToken = jwt.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN);
             const user = await retrieveOrCacheUsers(req, decodeRefreshToken.email);
             const existingTokens = user.security.tokens;
 
@@ -216,7 +217,7 @@ const confirmEmailToken = async (req, res) => {
 
         if (emailToken !== null) { //if there is no email token then do nothing
             const accessToken = req.header('Authorization').split(' ')[1];
-            const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+            const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
             //check if user exists
             const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -259,7 +260,7 @@ const getAvailableMajors = async (req, res) => {
             return res.status(400).json(generateRes(false, 400, "BAD_REQUEST", { details: 'location query parameter not given' }));
         }
         //grab majors record
-        majorsRecord = await retrieveOrCacheMajors(req, location);
+        const majorsRecord = await retrieveOrCacheMajors(req, location);
 
         if (!majorsRecord || majorsRecord.majors.length === 0) { return res.status(404).json(generateRes(true, 404, "MAJOR_LIST_NOT_FOUND")); }
 
@@ -301,7 +302,7 @@ const generateAccessToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return JWT.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
+    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
 }
 //This function generates an expired access token for unit tests
 const generateExpiredToken = (id, email, uName) => {
@@ -310,7 +311,7 @@ const generateExpiredToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return JWT.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: "2s" })
+    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1s' })
 }
 //This function generates a refresh token 
 const generateRefreshToken = (id, email, uName) => {
@@ -319,7 +320,7 @@ const generateRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return JWT.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
+    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
 }
 //This function generates an expired refresh token for unit tests
 const generateExpiredRefreshToken = (id, email, uName) => {
@@ -328,7 +329,7 @@ const generateExpiredRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return JWT.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: "2s" });
+    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '1s' });
 }
 
 /*  This function handles the refresh token addition to the database. This function takes a user record and a refreshtoken and adds the refreshtoken to the 
@@ -377,10 +378,29 @@ const addRefreshToken = async (user, refreshToken) => {
     }
 }
 
+const unitTestVerify = async (accessToken, token) => {
+    const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
-module.exports = {
-    register, token,
-    confirmEmailToken, login,
-    getAvailableMajors, generateExpiredToken,
-    generateExpiredRefreshToken, addRefreshToken
+    //check if user exists
+    const user = await User.findOne({email: decodeAccessToken.email})
+
+    if (!user.emailConfirmed) {
+        //check if provided email token matches
+        if (token === user.emailToken) {
+            await User.updateOne({ email: decodeAccessToken.email }, { $set: { emailConfirmed: true, emailToken: null } })
+        }
+    }
+}
+
+
+export {
+    register,
+    token,
+    confirmEmailToken,
+    login,
+    getAvailableMajors,
+    generateExpiredToken,
+    generateExpiredRefreshToken,
+    addRefreshToken,
+    unitTestVerify,
 };

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
-import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { ProjectFetchData } from 'src/app/_models/projects/projectFetchData';
+import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
 import { RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -12,13 +12,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-research-project-card',
   templateUrl: './research-project-card.component.html',
   styleUrls: ['./research-project-card.component.css'],
-  standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
     RouterModule,
     MatTooltipModule
-  ],
+  ]
 })
 export class ResearchProjectCardComponent {
   // project data from the faculty dashboard

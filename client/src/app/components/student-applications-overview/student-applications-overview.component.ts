@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
-import { DateConverterService } from 'src/app/controllers/date-converter-controller/date-converter.service';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -18,7 +18,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-student-applications-overview',
   templateUrl: './student-applications-overview.component.html',
   styleUrls: ['./student-applications-overview.component.css'],
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

@@ -13,7 +13,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   selector: 'app-industry-toolbar',
   templateUrl: './industry-toolbar.component.html',
   styleUrls: ['./industry-toolbar.component.css'],
-  standalone: true,
   imports: [
     MatToolbarModule,
     MatButtonModule,

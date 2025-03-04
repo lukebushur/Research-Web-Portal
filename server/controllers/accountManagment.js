@@ -1,13 +1,14 @@
-const User = require('../models/user');
-const JWT = require('jsonwebtoken');
-const generateRes = require('../helpers/generateJSON');
-const { updateApplicationRecords } = require('../helpers/dataConsistency');
-const { studentAccountModification, facultyAccountModification, emailSchema, resetPasswordSchema } = require('../helpers/inputValidation/requestValidation');
-const { v4: uuidv4 } = require('uuid');
-const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
-const moment = require('moment');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../helpers/schemaCaching');
+import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
+
+import User from '../models/user.js';
+import generateRes from '../helpers/generateJSON.js';
+import { updateApplicationRecords } from '../helpers/dataConsistency.js';
+import { studentAccountModification, facultyAccountModification, emailSchema, resetPasswordSchema } from '../helpers/inputValidation/requestValidation.js';
+import { retrieveOrCacheMajors, retrieveOrCacheUsers } from '../helpers/schemaCaching.js';
+import { addMinutes, subtractSeconds } from '../helpers/dateUtilities.js';
 
 
 /*  This controller handles the modification of accounts and is currently incomplete as it will be modified as the faculty account schema is 
@@ -21,7 +22,7 @@ const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../helpers/sche
 const modifyAccount = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab account info
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
@@ -35,7 +36,7 @@ const modifyAccount = async (req, res) => {
                 }));
             }
             //store the original data of the student's account
-            originalData = {
+            const originalData = {
                 GPA: user.userType.GPA,
                 major: user.userType.Major,
                 universityLocation: user.universityLocation,
@@ -91,7 +92,7 @@ const modifyAccount = async (req, res) => {
 const getAccountInfo = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         let accountData = {};
@@ -131,8 +132,8 @@ const resetPassword = async (req, res) => {
     try {
         //Generate Password Reset Token and expiresIn - 10 minutes
         const passwordResetToken = uuidv4();
-        const expiresIn = moment().add(10, 'm').toISOString();
-
+        const expiresIn = addMinutes(new Date(), 10).toISOString();
+        
         //Update user with password token, expiry, and provisional password
         const user = await User.findOneAndUpdate({ email: req.body.email }, {
             $set: {
@@ -220,7 +221,7 @@ const changeEmailConfirm = async (req, res) => {
     try {
         //Decode Access Token
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //get user from email in the access token
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -277,7 +278,7 @@ const changeEmail = async (req, res) => {
         if (!error) {
             //Decode Access Token
             const accessToken = req.header('Authorization').split(' ')[1];
-            const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+            const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
             //check if new Email Exists
             const emailExists = await User.findOne({ email: req.body.provisionalEmail });
@@ -285,7 +286,7 @@ const changeEmail = async (req, res) => {
             if (!emailExists) {
                 //Generate an email confirmation token
                 const changeEmailToken = uuidv4();
-                const expiresIn = moment().add(10, 'm').toISOString();
+                const expiresIn = addMinutes(new Date(), 10).toISOString();
 
                 //update user with email token
                 const user = await User.findOneAndUpdate({ email: decodeAccessToken.email }, {
@@ -390,7 +391,7 @@ const resetEmailToken = async (targetEmail) => {
 //Method used for unit testing expired tokens
 const generateExpiredPasswordToken = async (targetEmail) => {
     const passwordResetToken = uuidv4();
-    const expiresIn = moment().subtract(1, 'seconds').toISOString();
+    const expiresIn = subtractSeconds(new Date(), 1).toISOString();
 
     //Update user with password token, expiry, and provisional password
     await User.findOneAndUpdate({ email: targetEmail }, {
@@ -407,7 +408,7 @@ const generateExpiredPasswordToken = async (targetEmail) => {
 //Method used for unit testing expired tokens
 const generateExpiredEmailToken = async (targetEmail, newEmail) => {
     const changeEmailToken = uuidv4();
-    const expiresIn = moment().subtract(1, 'seconds').toISOString();
+    const expiresIn = subtractSeconds(new Date(), 1).toISOString();
 
     //update user with email token
     await User.findOneAndUpdate({ email: targetEmail }, {
@@ -423,9 +424,13 @@ const generateExpiredEmailToken = async (targetEmail, newEmail) => {
     return changeEmailToken;
 }
 
-module.exports = {
-    modifyAccount, changeEmail,
-    changeEmailConfirm, resetPassword,
-    resetPasswordConfirm, getAccountInfo,
-    generateExpiredEmailToken, generateExpiredPasswordToken
+export {
+    modifyAccount,
+    changeEmail,
+    changeEmailConfirm,
+    resetPassword,
+    resetPasswordConfirm,
+    getAccountInfo,
+    generateExpiredEmailToken,
+    generateExpiredPasswordToken,
 };

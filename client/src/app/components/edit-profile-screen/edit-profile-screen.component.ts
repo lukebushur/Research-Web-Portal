@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
-import { ProfileServiceService } from 'src/app/controllers/profile-controller/profile-service.service';
+import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { ProfileServiceService } from 'app/controllers/profile-controller/profile-service.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,7 +15,6 @@ import { SpinnerComponent } from '../spinner/spinner.component';
   selector: 'app-edit-profile-screen',
   templateUrl: './edit-profile-screen.component.html',
   styleUrls: ['./edit-profile-screen.component.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -28,7 +27,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
   ]
 })
 export class EditProfileScreenComponent implements OnInit {
-  // Set up the variables for the universityLocation dropdown 
+  // Set up the variables for the universityLocation dropdown
   universityLocations: string[] = [
     'Purdue University Fort Wayne',
     'Purdue University',
@@ -132,7 +131,7 @@ export class EditProfileScreenComponent implements OnInit {
       next: (data: any) => {
         const accountInfo = data.success.accountData;
         console.log(accountInfo);
-        
+
         this.editProfileForm.get('name')?.setValue(accountInfo.name);
         this.editProfileForm.get('GPA')?.setValue(accountInfo.GPA);
         this.editProfileForm.get('Major')?.setValue(accountInfo.Major);

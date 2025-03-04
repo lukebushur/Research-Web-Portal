@@ -2,9 +2,9 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot, CanActivateFn, Router, RouterState, RouterStateSnapshot } from '@angular/router';
 
 import { roleGuard } from './role.guard';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 import { Observable, of } from 'rxjs';
-import { AuthService } from 'src/app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/controllers/auth-controller/auth.service';
 import { AuthGuard } from '../auth-guard/auth.guard';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
@@ -28,7 +28,6 @@ const getStudentInfoResponse = {
 }
 
 describe('roleGuard', () => {
-  
   let service: any;
 
   // We want to modify AuthService to allow us to return our own "account"

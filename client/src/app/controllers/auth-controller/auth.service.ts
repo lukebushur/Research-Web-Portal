@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 import { Observable, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
-  constructor(private http: HttpClient,) { }
+
+  constructor(private http: HttpClient) { }
 
   apiUrl = environment.apiUrl;
-  
+
   getHeaders() {
     const authToken = localStorage.getItem("jwt-auth-token");
     return new HttpHeaders({

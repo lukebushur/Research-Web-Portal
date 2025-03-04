@@ -1,9 +1,10 @@
-const User = require('../../models/user');
-const JWT = require('jsonwebtoken');
-const generateRes = require('../../helpers/generateJSON');
-const Major = require('../../models/majors');
-const { adminMajors } = require('../../helpers/inputValidation/requestValidation');
-const { retrieveOrCacheMajors, retrieveOrCacheUsers } = require('../../helpers/schemaCaching');
+import jwt from 'jsonwebtoken';
+
+import User from '../../models/user.js';
+import generateRes from '../../helpers/generateJSON.js';
+import Major from '../../models/majors.js';
+import { adminMajors } from '../../helpers/inputValidation/requestValidation.js';
+import { retrieveOrCacheMajors, retrieveOrCacheUsers } from '../../helpers/schemaCaching.js';
 
 
 /*  This function handles the addition of new major(s) to the database, requires a JWT, should be used with a POST request, and should only
@@ -26,7 +27,7 @@ const addMajors = async (req, res) => {
 
         //decode the user's access token and then decodes it
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
         let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const majorsSet = new Set(req.body.majors);
@@ -76,7 +77,7 @@ const deleteMajors = async (req, res) => {
 
         //decode the user's access token and then decodes it
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
         let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         //check that the account type is an adminstrator account, other throw a authorized error response
@@ -119,7 +120,7 @@ const replaceMajors = async (req, res) => {
 
         //decode the user's access token and then decodes it
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
         //grab the adminstrator's account
         let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const majorsSet = new Set(req.body.majors);
@@ -146,7 +147,8 @@ const replaceMajors = async (req, res) => {
     }
 }
 
-module.exports = {
-    addMajors, deleteMajors,
-    replaceMajors
+export {
+    addMajors,
+    deleteMajors,
+    replaceMajors,
 };

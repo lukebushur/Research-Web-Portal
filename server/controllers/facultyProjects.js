@@ -1,13 +1,15 @@
 /*  This file handles the faculty project controllers tha are used in the projects routes. These controllers handle the logic for creating, 
     updating, deleting and accessing the project and their related information
 */
-const Project = require('../models/project');
-const Application = require('../models/application');
-const User = require('../models/user');
-const JWT = require('jsonwebtoken');
-const { activeProjectSchema, deleteProjectSchema, appDecision } = require('../helpers/inputValidation/requestValidation');
-const generateRes = require('../helpers/generateJSON');
-const { retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjects } = require('../helpers/schemaCaching');
+
+import jwt from 'jsonwebtoken';
+
+import Project from '../models/project.js';
+import Application from '../models/application.js';
+import User from '../models/user.js';
+import { activeProjectSchema, deleteProjectSchema, appDecision } from '../helpers/inputValidation/requestValidation.js';
+import generateRes from '../helpers/generateJSON.js';
+import { retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjects } from '../helpers/schemaCaching.js';
 
 /*  This function handles the faculty project creation, should only be used as a POST request, and requires and access token
     This function takes information required for creating a faculty project, creates an active project in the DB, and updates the 
@@ -26,7 +28,7 @@ const { retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProjec
 const createProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -38,7 +40,6 @@ const createProject = async (req, res) => {
 
             if (!req.body.projectDetails.project.GPA) { req.body.projectDetails.project.GPA = 0; } //If no GPA is provided, set it to 0
             if (projectType !== "Active" && projectType !== "Draft") { throw error; } //Ensure that the type is Active or Draft
-
             let existingProject = user.userType.FacultyProjects[projectType]; //Grabs existing project list
             let projectObject
             //Two seperate blocks of code are needed, one for if the project type is active and one for draft. This is because draft projects 
@@ -108,7 +109,7 @@ const createProject = async (req, res) => {
 const deleteProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -172,7 +173,7 @@ const getProject = async (req, res) => {
     try {
         if (!req.body.projectType || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -243,7 +244,7 @@ const getProject = async (req, res) => {
 const getProjects = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -274,21 +275,21 @@ const getProjects = async (req, res) => {
             //Grab all the projects and put them into the allProjects array
             if (activeProjects) {
                 activeProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "active", count);
+                    const y = createProjectObj(x, "active", count);
                     count++;
                     allProjects.push(y);
                 });
             }
             if (draftProjects) {
                 draftProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "draft", count);
+                    const y = createProjectObj(x, "draft", count);
                     count++;
                     allProjects.push(y);
                 });
             }
             if (archivedProjects) {
                 archivedProjects.projects.forEach(x => {
-                    y = createProjectObj(x, "archived", count);
+                    const y = createProjectObj(x, "archived", count);
                     count++;
                     allProjects.push(y);
                 });
@@ -320,7 +321,7 @@ const getProjects = async (req, res) => {
 const updateProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -385,7 +386,7 @@ const updateProject = async (req, res) => {
 const archiveProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -481,7 +482,7 @@ const archiveProject = async (req, res) => {
 const unarchiveProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -558,7 +559,7 @@ const applicationDecision = async (req, res) => {
         const decision = req.body.decision; //checks if the decision is valid otherwise ends the request
 
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const faculty = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -584,8 +585,8 @@ const applicationDecision = async (req, res) => {
             //get the application index from the application record
             const appIndex = application.applications.findIndex(x => x.id === req.body.applicationID);
             //grabs the statuses from the project and application records
-            projectStatus = project.projects[projIndex].applications[projAppIndex].status;
-            applicationStatus = application.applications[appIndex].status;
+            const projectStatus = project.projects[projIndex].applications[projAppIndex].status;
+            const applicationStatus = application.applications[appIndex].status;
             //if the status are not pending, then the request shouldn't modify anything because the decision is already made - MIGHT CHANGE IN FUTURE!
             if ((projectStatus != "Pending" || applicationStatus != "Pending") && (projectStatus != "Hold" || applicationStatus != "Hold")) { return res.status(401).json(generateRes(false, 401, "DECISION_ALREADY_UPDATED", {})); }
             //Set status
@@ -617,7 +618,7 @@ const applicationDecision = async (req, res) => {
 const fetchApplicant = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -692,7 +693,7 @@ const fetchApplicant = async (req, res) => {
 const fetchAllApplicants = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -734,7 +735,7 @@ const fetchAllApplicants = async (req, res) => {
 const fetchApplicantsFromProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -805,7 +806,7 @@ const fetchApplicantsFromProject = async (req, res) => {
 const publishProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = JWT.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -911,12 +912,17 @@ function createProjectObj(project, projectType, count) {
     return obj;
 }
 
-module.exports = {
-    createProject, deleteProject,
-    getProjects, updateProject,
-    archiveProject, applicationDecision,
+export {
+    createProject,
+    deleteProject,
+    getProjects,
+    updateProject,
+    archiveProject,
+    applicationDecision,
     fetchAllApplicants,
-    fetchApplicant, getProject,
+    fetchApplicant,
+    getProject,
     fetchApplicantsFromProject,
-    publishProject, unarchiveProject
+    publishProject,
+    unarchiveProject,
 };

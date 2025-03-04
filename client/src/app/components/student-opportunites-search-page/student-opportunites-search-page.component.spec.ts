@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StudentOpportunitesSearchPageComponent } from './student-opportunites-search-page.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
@@ -13,12 +13,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // Import MatNativeDa
 import { Component } from '@angular/core';
 import { of } from 'rxjs';
-import { SearchProjectService } from 'src/app/controllers/search-project-controller/search-project.service';
+import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
 
-import { StudentDashboardService } from 'src/app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
-import { QuestionData } from 'src/app/_models/projects/questionData';
-import { ProjectData } from 'src/app/_models/projects/projectData';
+import { QuestionData } from 'app/_models/projects/questionData';
+import { ProjectData } from 'app/_models/projects/projectData';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // Mock question data
 const testQuestionData: QuestionData[] = [
@@ -95,7 +96,7 @@ const getStudentInfoResponse = {
 }
 // Define a spinner subcomponent
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent {}
+class SpinnerSubComponent { }
 
 // Define the tests
 describe('StudentOpportunitesSearchPageComponent', () => {
@@ -122,7 +123,6 @@ describe('StudentOpportunitesSearchPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         FormsModule,
         MatFormFieldModule,
         CdkAccordionModule,
@@ -143,7 +143,9 @@ describe('StudentOpportunitesSearchPageComponent', () => {
         // Provide the student dashboard service
         { provide: StudentDashboardService, useValue: studentDashboardService },
         // Provide the router
-        { provide: Router, useValue: router }
+        { provide: Router, useValue: router },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
     // Create the component
@@ -189,7 +191,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     component.searchProjects();
     fixture.detectChanges();
     // Check that the project card was generated
-    const cardDebugElement = fixture.debugElement.query(debugEl => 
+    const cardDebugElement = fixture.debugElement.query(debugEl =>
       // Check if the classes is "opportunities-container"
       debugEl.classes['opportunities-container']
     );
@@ -237,7 +239,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     // Check that the opportunities are not empty
     expect(component.opportunities.length).withContext('shouldn\'t be empty').toBe(1);
 
-    // Test Name 
+    // Test Name
     component.resultFilterString = "This should be empty now"
     component.filterOpportunities();
     // Check that the opportunities are empty
@@ -246,7 +248,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     // Reset the filter and check that the opportunities are not empty
     component.filterOpportunities();
     fixture.detectChanges();
-    // Should not be empty now since it should 
+    // Should not be empty now since it should
     expect(component.opportunities.length).withContext('shouldn\'t be empty').toBe(1);
 
   })

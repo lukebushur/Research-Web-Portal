@@ -2,22 +2,29 @@
     have sweeping effects on other routes, so administrative priviledges/accounts should be distributed carefully.
 */
 
-const express = require('express');
-const majorsRoutes = require('../controllers/administrativeControllers/universityMajors');
+import express from 'express';
+
+import {
+    addMajors,
+    deleteMajors,
+    replaceMajors,
+} from '../controllers/administrativeControllers/universityMajors.js';
 
 //API MIDDLEWARE
-const verifyToken = require('../helpers/verifyToken')
-const rateLimiter = require('../helpers/rateLimiter');
+import verifyToken from '../helpers/verifyToken.js';
+import { verifiedValidation } from '../helpers/inputValidation/accountValidation.js';
+import rateLimiter from '../helpers/rateLimiter.js';
+
 //Router initialisation
 const router = express.Router();
 
 //POST add majors Route for add a major(s) to a master list
-router.post('/addMajor', [verifyToken], majorsRoutes.addMajors);
+router.post('/addMajor', [verifyToken, verifiedValidation], addMajors);
 
 //DELETE Route for removing a major(s) to a master list
-router.delete('/deleteMajor', [verifyToken], majorsRoutes.deleteMajors);
+router.delete('/deleteMajor', [verifyToken, verifiedValidation], deleteMajors);
 
 //POST for replacing majors
-router.post('/replaceMajors', [verifyToken], majorsRoutes.replaceMajors);
+router.post('/replaceMajors', [verifyToken, verifiedValidation], replaceMajors);
 
-module.exports = router;
+export default router;

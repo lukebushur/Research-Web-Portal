@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { ViewApplicationComponent } from './view-application.component';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ViewApplicationComponent', () => {
   let component: ViewApplicationComponent;
@@ -10,11 +11,8 @@ describe('ViewApplicationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        ViewApplicationComponent,
-      ],
-      providers: [provideRouter([])]
+      imports: [ViewApplicationComponent],
+      providers: [provideRouter([]), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     fixture = TestBed.createComponent(ViewApplicationComponent);
     component = fixture.componentInstance;

@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AssessmentData } from 'src/app/_models/assessments/assessmentData';
-import { AssessmentsService } from 'src/app/controllers/assessments-controller/assessments.service';
+import { AssessmentData } from 'app/_models/assessments/assessmentData';
+import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +11,6 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-assessment-card',
   templateUrl: './assessment-card.component.html',
   styleUrls: ['./assessment-card.component.css'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatDividerModule,
