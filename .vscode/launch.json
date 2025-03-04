@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ng serve",
+            "name": "Client: ng serve",
             "type": "chrome",
             "request": "launch",
             "cwd": "${workspaceFolder}/client",
@@ -11,7 +11,7 @@
             "webRoot": "${workspaceFolder}/client"
         },
         {
-            "name": "ng test",
+            "name": "Cilent: ng test",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:9876/debug.html",
@@ -20,6 +20,20 @@
             "runtimeArgs": [
                 "--headless"
             ],
+        },
+        {
+            "name": "Server: nodemon",
+            "type": "node",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "program": "${workspaceFolder}/server/server.js",
+            "cwd": "${workspaceFolder}/server",
+            "request": "launch",
+            "restart": true,
+            "runtimeExecutable": "nodemon",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
         }
     ]
 }
