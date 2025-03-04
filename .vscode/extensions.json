@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "ecmel.vscode-html-css",
+        "angular.ng-template",
+        "mrmlnc.vscode-scss",
+        "sibiraj-s.vscode-scss-formatter",
+        "dbaeumer.vscode-eslint",
+        "ms-azuretools.vscode-docker",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode"
+    ]
+}

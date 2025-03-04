@@ -5,6 +5,9 @@
             "type": "npm",
             "script": "start",
             "isBackground": true,
+            "options": {
+                "cwd": "${workspaceFolder}/client"
+            },
             "presentation": {
                 "focus": true,
                 "panel": "dedicated"
@@ -19,7 +22,7 @@
                 "applyTo": "closedDocuments",
                 "fileLocation": [
                     "relative",
-                    "${cwd}"
+                    "${cwd}/client"
                 ],
                 "pattern": "$tsc",
                 "background": {
