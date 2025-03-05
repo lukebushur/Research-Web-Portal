@@ -22,7 +22,6 @@
     "@angular/platform-browser": "^19.0.6",
     "@angular/platform-browser-dynamic": "^19.0.6",
     "@angular/router": "^19.0.6",
-    "angular-auth-oidc-client": "^16.0.1",
     "jwt-decode": "^3.1.2",
     "prettier": "^3.5.3",
     "rxjs": "^7.8.1",
@@ -41,7 +40,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.5.4",
-    "webpack-bundle-analyzer": "^4.10.1"
+    "typescript": "~5.5.4"
   }
 }
