@@ -165,7 +165,7 @@ describe('AppliedStudentTableComponent', () => {
       expect((await tableRows[i].getCellTextByIndex())[2]).toEqual(applicationsData[i].major.join(', '));
       expect((await tableRows[i].getCellTextByIndex())[3]).toEqual(applicationsData[i].email);
       expect((await tableRows[i].getCellTextByIndex())[4]).toEqual(applicationsData[i].status === 'Pending'
-        ? 'AcceptReject'
+        ? 'Accept  Reject'
         : applicationsData[i].status + 'ed'
       );
     }
@@ -189,7 +189,7 @@ describe('AppliedStudentTableComponent', () => {
     expect(tableRowText[1]).toEqual('2');
     expect(tableRowText[2]).toEqual('Computer Science, Music, Information Technology');
     expect(tableRowText[3]).toEqual('name1@email.com');
-    expect(tableRowText[4]).toEqual('AcceptReject');
+    expect(tableRowText[4]).toEqual('Accept  Reject');
   });
 
   it('should sort the table by GPA descending', async () => {
