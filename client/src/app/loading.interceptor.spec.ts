@@ -37,7 +37,7 @@ describe('LoadingInterceptor', () => {
   });
 
   // Make a mock HTTP request to send through, waits for that, then checks if it was called with true
-  it('should start loading when a request comes in', fakeAsync(() => { 
+  it('should start loading when a request comes in', fakeAsync(() => {
     const mockRequest = new HttpRequest('GET', '/test');
     const interceptor = TestBed.inject(LoadingInterceptor);
 

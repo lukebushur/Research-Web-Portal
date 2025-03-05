@@ -1,102 +1,132 @@
 <div class="page-container">
   <div class="heading">
     @if (project) {
-    <h1>{{ project.projectName }}</h1>
+      <h1>{{ project.projectName }}</h1>
     }
-    <button mat-raised-button type="button" color="warn" (click)="cancel()">Cancel</button>
+    <button mat-raised-button type="button" color="warn" (click)="cancel()">
+      Cancel
+    </button>
   </div>
 
   <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
     <mat-stepper class="item-to-center">
-      <mat-step formGroupName="details" [stepControl]="details" label="Project Details">
+      <mat-step
+        formGroupName="details"
+        [stepControl]="details"
+        label="Project Details"
+      >
         @if (project) {
-        <div class="remove-matcard-margin">
-          <mat-card>
-            <div class="infoDiv">
-              @if (project.responsibilities) {
-              <div class="descriptionDiv">
-                <mat-card-header>
-                  <mat-card-title>Description</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  <mat-card class="content-card">
-                    <p>{{project.description}}</p>
-                  </mat-card>
-                </mat-card-content>
-              </div>
+          <div class="remove-matcard-margin">
+            <mat-card>
+              <div class="infoDiv">
+                @if (project.responsibilities) {
+                  <div class="descriptionDiv">
+                    <mat-card-header>
+                      <mat-card-title>Description</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <mat-card class="content-card">
+                        <p>{{ project.description }}</p>
+                      </mat-card>
+                    </mat-card-content>
+                  </div>
 
-              <div class="responsibilitiesDiv">
+                  <div class="responsibilitiesDiv">
+                    <mat-card-header>
+                      <mat-card-title>Expected Responsibilities</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <mat-card class="content-card">
+                        <p>{{ project.responsibilities }}</p>
+                      </mat-card>
+                    </mat-card-content>
+                  </div>
+                }
                 <mat-card-header>
-                  <mat-card-title>Expected Responsibilities</mat-card-title>
+                  <mat-card-title>
+                    Project Requirements & Information
+                  </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                  <mat-card class="content-card">
-                    <p>{{project.responsibilities}}</p>
-                  </mat-card>
+                  <p>Applicable Majors: {{ project.majors.join(", ") }}</p>
+                  @if (project.categories.length > 0) {
+                    <p>
+                      Project Categories: {{ project.categories.join(", ") }}
+                    </p>
+                  }
+                  <p>GPA Requirement: {{ project.GPA }}</p>
+                  <p>Deadline: {{ dateToString(project.deadline) }}</p>
+                  <p>Date Posted: {{ dateToString(project.posted) }}</p>
                 </mat-card-content>
               </div>
-              }
-              <mat-card-header>
-                <mat-card-title>Project Requirements & Information</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                
-                  <p>Applicable Majors: {{project.majors.join(', ')}}</p>
-                  @if (project.categories.length > 0) {
-                  <p>Project Categories: {{project.categories.join(', ')}} </p>
-                  }
-                  <p>GPA Requirement: {{project.GPA}}</p>
-                  <p>Deadline: {{ dateToString(project.deadline)}}</p>
-                  <p>Date Posted: {{ dateToString(project.posted)}}</p>
-                
-              </mat-card-content>
-            </div>
-          </mat-card>
-        </div>
+            </mat-card>
+          </div>
         }
       </mat-step>
 
-      <mat-step formGroupName="questionsGroup" [stepControl]="questionsGroup" label="Application Questions">
+      <mat-step
+        formGroupName="questionsGroup"
+        [stepControl]="questionsGroup"
+        label="Application Questions"
+      >
         <div formArrayName="formQuestions">
           @for (question of questions; track question; let i = $index) {
-          <div>
-            <label id="question-label" [class.required]="question.required" style="display: inline-block;">
-              Question {{ question.questionNum }}: {{ question.question }}
-              @if (question.required) {
-              <p class="red" style="display: inline;">*</p>
-              }
-            </label>
-            @if (question.requirementType === 'radio button') {
             <div>
-              <mat-radio-group aria-labelledby="question-label" [formControlName]="i" class="radio-group">
-                @for (choice of question.choices; track choice) {
-                <mat-radio-button [value]="choice">{{ choice
-                  }}</mat-radio-button>
+              <label
+                id="question-label"
+                [class.required]="question.required"
+                style="display: inline-block"
+              >
+                Question {{ question.questionNum }}: {{ question.question }}
+                @if (question.required) {
+                  <p class="red" style="display: inline">*</p>
                 }
-              </mat-radio-group>
-            </div>
-            }
-            @if (question.requirementType === 'check box') {
-            <div class="radio-group">
-              @for (choice of question.choices; track choice) {
-              <mat-checkbox [formControl]="getCheckBoxControl(i, choice)!">{{
-                choice
-                }}</mat-checkbox>
+              </label>
+              @if (question.requirementType === "radio button") {
+                <div>
+                  <mat-radio-group
+                    aria-labelledby="question-label"
+                    [formControlName]="i"
+                    class="radio-group"
+                  >
+                    @for (choice of question.choices; track choice) {
+                      <mat-radio-button [value]="choice">{{
+                        choice
+                      }}</mat-radio-button>
+                    }
+                  </mat-radio-group>
+                </div>
+              }
+              @if (question.requirementType === "check box") {
+                <div class="radio-group">
+                  @for (choice of question.choices; track choice) {
+                    <mat-checkbox
+                      [formControl]="getCheckBoxControl(i, choice)!"
+                    >
+                      {{ choice }}
+                    </mat-checkbox>
+                  }
+                </div>
+              }
+              @if (question.requirementType === "text") {
+                <div class="text-box">
+                  <mat-form-field>
+                    <mat-label>Answer</mat-label>
+                    <textarea matInput [formControlName]="i"></textarea>
+                  </mat-form-field>
+                </div>
               }
             </div>
-            }
-            @if (question.requirementType === 'text') {
-            <div class="text-box">
-              <mat-form-field>
-                <mat-label>Answer</mat-label>
-                <textarea matInput [formControlName]="i"></textarea>
-              </mat-form-field>
-            </div>
-            }
-          </div>
           }
         </div>
-        <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="applyForm.invalid"
+        >
+          Submit
+        </button>
       </mat-step>
     </mat-stepper>
   </form>

@@ -12,13 +12,13 @@ export const roleGuard: CanActivateFn = (route, state) => {
     // tap(accountInfo => console.log(accountInfo)),
     map(accountInfo => {
       const userType = accountInfo.success.accountData.userType;
-      if(userType === 1 && route.data['expectedRole'] === 'faculty') {
+      if (userType === 1 && route.data['expectedRole'] === 'faculty') {
         //faculty
         return true;
-      } else if(userType === 0 && route.data['expectedRole'] === 'student') {
+      } else if (userType === 0 && route.data['expectedRole'] === 'student') {
         //student
         return true;
-      } else if(userType === 2  && route.data['expectedRole'] === 'industry') {
+      } else if (userType === 2 && route.data['expectedRole'] === 'industry') {
         //industry
         return true;
       } else {

@@ -3,22 +3,28 @@
     <mat-card-header>
       <mat-card-subtitle>{{ jobTypeString }}</mat-card-subtitle>
       <mat-card-title class="job-title">
-        <div [matTooltip]="jobData.title" class="max-two-lines">{{ jobData.title }}</div>
+        <div [matTooltip]="jobData.title" class="max-two-lines">
+          {{ jobData.title }}
+        </div>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="content-container">
-        <div class="field-title">Posted: </div>
+        <div class="field-title">Posted:</div>
         <div>{{ dateToString(jobData.datePosted) }}</div>
-        <div class="field-title">Deadline: </div>
+        <div class="field-title">Deadline:</div>
         <div>{{ dateToString(jobData.deadline) }}</div>
-        <div class="field-title">Location: </div>
+        <div class="field-title">Location:</div>
         <div class="field-content">
-          <div [matTooltip]="jobData.location" class="max-two-lines">{{ jobData.location }}</div>
+          <div [matTooltip]="jobData.location" class="max-two-lines">
+            {{ jobData.location }}
+          </div>
         </div>
-        <div class="field-title">Tags: </div>
+        <div class="field-title">Tags:</div>
         <div class="field-content">
-          <div [matTooltip]="tagsString()" class="max-two-lines">{{ tagsString() }}</div>
+          <div [matTooltip]="tagsString()" class="max-two-lines">
+            {{ tagsString() }}
+          </div>
         </div>
       </div>
       <mat-divider class="divider"></mat-divider>

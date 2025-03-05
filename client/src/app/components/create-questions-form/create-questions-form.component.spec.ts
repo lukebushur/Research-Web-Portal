@@ -66,13 +66,13 @@ describe('CreateQuestionsFormComponent', () => {
     // Ok now we want to make sure there isn't a choice button
     const AddChoice = await question1Div.getHarnessOrNull(MatButtonHarness.with({ text: 'Add Choice' }));
     expect(AddChoice).toBeNull();
-  })
+  });
 
   it('should show choices when selecting a single-select or multi-select question', async () => {
 
     const question1Div = await loader.getChildLoader('#Question0');
     const SelectMenu = await question1Div.getHarness(MatSelectHarness);
-    
+
     // Ok now we're going to select the text harness
     await SelectMenu.open(); // Open it
     const SingleSelectButton = (await SelectMenu.getOptions())[1]; // This is the Text option
@@ -86,10 +86,9 @@ describe('CreateQuestionsFormComponent', () => {
     const MultiSelectButton = (await SelectMenu.getOptions())[2]; // This is the Text option
     await MultiSelectButton.click();
     AddChoice = await question1Div.getHarnessOrNull(MatButtonHarness.with({ text: 'Add Choice' }));
-    
+
     expect(AddChoice).withContext('to exist too').toBeTruthy();
-    
-  })
+  });
 
   it('add question should generate a new question', async () => {
     const CreateQuestionButton = await loader.getHarness(MatButtonHarness.with({ text: 'Add Question' }));
@@ -97,7 +96,7 @@ describe('CreateQuestionsFormComponent', () => {
     // Make sure that there is a Question1 div now
     const question1Div = await loader.getChildLoader('#Question1');
     expect(question1Div).toBeTruthy();
-  })
+  });
 
   it('should remove a question when the remove button is clicked', async () => {
     const question1Div = await loader.getChildLoader('#Question0');
@@ -107,7 +106,7 @@ describe('CreateQuestionsFormComponent', () => {
     // Make sure that question 0 has been removed from questions (there is no question 0)
     // for some reason this floats between 5 questions and 1 question, so just seeing if it removed one is a good thing
     expect(component.questions.length < prevLength).toBe(true);
-  })
+  });
 
   it('should set required to false when clicking it', async () => {
     const question1Div = await loader.getChildLoader('#Question0');
@@ -115,6 +114,5 @@ describe('CreateQuestionsFormComponent', () => {
     await RequiredFalse.check();
     // Check if the question is required still
     expect(component.questions.at(0).get('required')?.value).toBe(false);
-  })
-
+  });
 });

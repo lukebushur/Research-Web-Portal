@@ -47,7 +47,7 @@ describe('roleGuard', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { },
+            snapshot: {},
           }
         },
         {
@@ -77,7 +77,7 @@ describe('roleGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     // If it's created then it's truthy so it works
     expect(guardResponse).toBeTruthy()
@@ -99,7 +99,7 @@ describe('roleGuard', () => {
     // Create the role guard pass-through
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     // Subscribe to its output
     let guardOutput = null;
@@ -108,8 +108,7 @@ describe('roleGuard', () => {
     // Make sure that it was run
     expect(guardOutput).toBeTruthy()
     expect(routerSpy).withContext('not navigate to unauthorized').not.toHaveBeenCalled();
-
-  }))
+  }));
 
   // it should return false for student - faculty
   it('it should return false for student -> faculty', fakeAsync(() => {
@@ -124,15 +123,14 @@ describe('roleGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     let guardOutput = null;
     guardResponse.subscribe(response => guardOutput = response);
 
     expect(guardOutput).toBeFalse()
     expect(routerSpy).withContext('navigate to unauthorized').toHaveBeenCalledOnceWith(['/unauthorized']);
-
-  }))
+  }));
 
   // it should return true for faculty - faculty
   it('it should return true for faculty -> faculty', fakeAsync(() => {
@@ -147,15 +145,14 @@ describe('roleGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     let guardOutput = null;
     guardResponse.subscribe(response => guardOutput = response);
 
     expect(guardOutput).toBeTrue()
     expect(routerSpy).withContext('not navigate to unauthorized').not.toHaveBeenCalled();
-
-  }))
+  }));
 
   // it should return false for faculty - student/industry (testing with student)
   it('it should return false for faculty -> student', fakeAsync(() => {
@@ -170,15 +167,14 @@ describe('roleGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     let guardOutput = null;
     guardResponse.subscribe(response => guardOutput = response);
 
     expect(guardOutput).toBeFalse()
     expect(routerSpy).withContext('navigate to unauthorized').toHaveBeenCalledOnceWith(['/unauthorized']);
-
-  }))
+  }));
 
   // it should return true for industry - industry
   it('it should return true for industry -> industry', fakeAsync(() => {
@@ -193,15 +189,14 @@ describe('roleGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     let guardOutput = null;
     guardResponse.subscribe(response => guardOutput = response);
 
     expect(guardOutput).toBeTrue()
     expect(routerSpy).withContext('not navigate to unauthorized').not.toHaveBeenCalled();
-
-  }))
+  }));
 
   // it should return false for industry - student/faculty
   it('it should return false for industry -> faculty', fakeAsync(() => {
@@ -216,14 +211,12 @@ describe('roleGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return roleGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     let guardOutput = null;
     guardResponse.subscribe(response => guardOutput = response);
 
     expect(guardOutput).toBeFalse()
     expect(routerSpy).withContext('navigate to unauthorized').toHaveBeenCalledOnceWith(['/unauthorized']);
-
-  }))
-
+  }));
 });

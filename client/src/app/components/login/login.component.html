@@ -1,30 +1,49 @@
 <div class="centerDivStyles">
   <h2>Login</h2>
-  <br>
+  <br />
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="form-field">
       <mat-label>Email </mat-label>
-      <input matInput type="email" formControlName="email" name="email" required>
-      @if (loginForm.get('email')?.invalid) {
-      <mat-error>{{ emailErrorMessage() }}</mat-error>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        name="email"
+        required
+      />
+      @if (loginForm.get("email")?.invalid) {
+        <mat-error>{{ emailErrorMessage() }}</mat-error>
       }
     </mat-form-field>
     <mat-form-field class="form-field">
       <mat-label>Password </mat-label>
-      <input matInput type="password" formControlName="password" name="password" required>
-      @if (loginForm.get('password')?.invalid) {
-      <mat-error>{{ passwordErrorMessage() }}</mat-error>
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        name="password"
+        required
+      />
+      @if (loginForm.get("password")?.invalid) {
+        <mat-error>{{ passwordErrorMessage() }}</mat-error>
       }
     </mat-form-field>
-    <br>
+    <br />
     <a routerLink="/forgot-password">Forgot password?</a>
-    <br>
-    <br>
+    <br />
+    <br />
     <a routerLink="/signup">Dont have an account? Register Now</a>
-    <br>
-    <br>
-    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid"
-      class="submit-button">Submit</button>
+    <br />
+    <br />
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loginForm.invalid"
+      class="submit-button"
+    >
+      Submit
+    </button>
   </form>
 </div>
 <app-spinner></app-spinner>

@@ -12,7 +12,7 @@ class AuthenticationGuardService {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree {
-    
+
     const authToken = localStorage.getItem("jwt-auth-token");
 
     if (authToken) {

@@ -14,13 +14,13 @@ describe('AuthGuard', () => {
   beforeEach(() => {
     // Set our account token
     localStorage.setItem("jwt-auth-token", "123456")
-    
+
     TestBed.configureTestingModule({
       providers: [
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { },
+            snapshot: {},
           }
         },
         {
@@ -46,7 +46,7 @@ describe('AuthGuard', () => {
 
     const guardResponse = TestBed.runInInjectionContext(() => {
       return AuthGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean>;
-    }) ;
+    });
 
     // If it's created then it's truthy so it works
     expect(guardResponse).toBeTruthy()
@@ -64,7 +64,7 @@ describe('AuthGuard', () => {
     // Create the role guard pass-through
     const guardResponse = TestBed.runInInjectionContext(() => {
       return AuthGuard(activatedRoute.snapshot, {} as RouterStateSnapshot) as Observable<boolean | UrlTree>;
-    }) ;
+    });
 
     // Subscribe to its output
     let guardOutput = null;
@@ -84,13 +84,13 @@ describe('AuthGuard', () => {
     // Create the role guard pass-through
     const guardResponse = TestBed.runInInjectionContext(() => {
       return AuthGuard(activatedRoute.snapshot, {} as RouterStateSnapshot);
-    }) ;
+    });
 
     // Subscribe to its output
     let guardOutput = null;
     // For some god forsaken reason this returns as a boolean not as an observable that returns a boolean
     guardOutput = guardResponse;
-    
+
     // Make sure that it was run
     expect(guardOutput).toBeTrue()
     expect(routerSpy).withContext('not navigate to signup').not.toHaveBeenCalledOnceWith('/signup');

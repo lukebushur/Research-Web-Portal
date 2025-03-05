@@ -1,9 +1,9 @@
 {
-    "recommendations": [
-        "angular.ng-template",
-        "editorconfig.editorconfig",
-        "esbenp.prettier-vscode",
-        "mrmlnc.vscode-scss",
-        "sibiraj-s.vscode-scss-formatter"
-    ]
+  "recommendations": [
+    "angular.ng-template",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "mrmlnc.vscode-scss",
+    "sibiraj-s.vscode-scss-formatter"
+  ]
 }

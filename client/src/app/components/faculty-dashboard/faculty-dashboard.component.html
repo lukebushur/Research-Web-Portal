@@ -1,55 +1,90 @@
 <div class="faculty-dashboard-page-container">
   @if (projects$ | async; as projects) {
-  <div class="faculty-dashboard-info">
-    <div class="faculty-active-projects">
-      <mat-tab-group>
-        <mat-tab label="Active Projects">
-          <div class="tab">
-            @for (project of projects.active; track $index) {
-            <app-research-project-card [project]="project"
-              [selected]="((selectedIndex$ | async) || -1) === project.number"
-              (click)="updatedSelected(project.number, project);"
-              (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
-            }
-            <button mat-fab color="primary" matTooltip="Create New Project" aria-label="Create new project button"
-              type="button" (click)="createNewProject()" class="add-icon-button">
-              <mat-icon class="add-icon">add</mat-icon>
-            </button>
-          </div>
-        </mat-tab>
-        <mat-tab label="Draft Projects">
-          <div class="tab">
-            @for (project of projects.draft; track $index) {
-            <app-research-project-card [project]="project"
-              [selected]="((selectedIndex$ | async) || -1) === project.number"
-              (click)="updatedSelected(project.number, project);"
-              (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
-            }
-            <button mat-fab color="primary" matTooltip="Create New Project" aria-label="Create new project button"
-              type="button" (click)="createNewProject()" class="add-icon-button">
-              <mat-icon class="add-icon">add</mat-icon>
-            </button>
-          </div>
-        </mat-tab>
-        <mat-tab label="Archived Projects">
-          <div class="tab">
-            @for (project of projects.archived; track $index) {
-            <app-research-project-card [project]="project"
-              [selected]="((selectedIndex$ | async) || -1) === project.number"
-              (click)="updatedSelected(project.number, project);"
-              (projectUpdateEvent)="updateProjects($event)"></app-research-project-card>
-            }
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+    <div class="faculty-dashboard-info">
+      <div class="faculty-active-projects">
+        <mat-tab-group>
+          <mat-tab label="Active Projects">
+            <div class="tab">
+              @for (project of projects.active; track $index) {
+                <app-research-project-card
+                  [project]="project"
+                  [selected]="
+                    ((selectedIndex$ | async) || -1) === project.number
+                  "
+                  (click)="updatedSelected(project.number, project)"
+                  (projectUpdateEvent)="updateProjects($event)"
+                ></app-research-project-card>
+              }
+              <button
+                mat-fab
+                color="primary"
+                matTooltip="Create New Project"
+                aria-label="Create new project button"
+                type="button"
+                (click)="createNewProject()"
+                class="add-icon-button"
+              >
+                <mat-icon class="add-icon">add</mat-icon>
+              </button>
+            </div>
+          </mat-tab>
+          <mat-tab label="Draft Projects">
+            <div class="tab">
+              @for (project of projects.draft; track $index) {
+                <app-research-project-card
+                  [project]="project"
+                  [selected]="
+                    ((selectedIndex$ | async) || -1) === project.number
+                  "
+                  (click)="updatedSelected(project.number, project)"
+                  (projectUpdateEvent)="updateProjects($event)"
+                ></app-research-project-card>
+              }
+              <button
+                mat-fab
+                color="primary"
+                matTooltip="Create New Project"
+                aria-label="Create new project button"
+                type="button"
+                (click)="createNewProject()"
+                class="add-icon-button"
+              >
+                <mat-icon class="add-icon">add</mat-icon>
+              </button>
+            </div>
+          </mat-tab>
+          <mat-tab label="Archived Projects">
+            <div class="tab">
+              @for (project of projects.archived; track $index) {
+                <app-research-project-card
+                  [project]="project"
+                  [selected]="
+                    ((selectedIndex$ | async) || -1) === project.number
+                  "
+                  (click)="updatedSelected(project.number, project)"
+                  (projectUpdateEvent)="updateProjects($event)"
+                ></app-research-project-card>
+              }
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        class="create-button"
+        (click)="createNewProject()"
+      >
+        Create New Project
+      </button>
+      <div class="faculty-project-applied-student-list">
+        <app-applied-student-table
+          [project]="selectedProject$ | async"
+          (applicationUpdateEvent)="fetchProjects($event)"
+        ></app-applied-student-table>
+      </div>
     </div>
-    <button mat-raised-button color="primary" type="button" class="create-button" (click)="createNewProject()">Create
-      New Project</button>
-    <div class="faculty-project-applied-student-list">
-      <app-applied-student-table [project]="selectedProject$ | async"
-        (applicationUpdateEvent)="fetchProjects($event)"></app-applied-student-table>
-    </div>
-  </div>
   }
   <app-spinner></app-spinner>
 </div>

@@ -79,7 +79,7 @@ const routeConfig: Routes = [
       { path: 'applications-overview', component: StudentApplicationsOverviewComponent },
       // 2 route parameters: professor email and project ID associated with a project
       // used to view an existing faculty project
-      { path: 'view-project/:professorEmail/:projectId', component: StudentViewProjectComponent, canActivate: [AuthGuard]},
+      { path: 'view-project/:professorEmail/:projectId', component: StudentViewProjectComponent, canActivate: [AuthGuard] },
       // edit a student user's details
       { path: 'edit-profile', component: EditProfileScreenComponent },
     ],

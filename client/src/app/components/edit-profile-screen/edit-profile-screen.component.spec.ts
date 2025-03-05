@@ -66,5 +66,4 @@ describe('EditProfileScreenComponent', () => {
     component.navigateToEmailResetScreen();
     expect(navigateSpy).toHaveBeenCalledWith(['/forgot-password']);
   });
-
 });

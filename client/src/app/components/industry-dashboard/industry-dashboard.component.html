@@ -2,21 +2,21 @@
   <mat-tab label="Active Jobs">
     <div class="jobs-container">
       @for (activeJob of activeJobs; track activeJob) {
-      <app-job-card [jobData]="activeJob"></app-job-card>
+        <app-job-card [jobData]="activeJob"></app-job-card>
       }
     </div>
   </mat-tab>
   <mat-tab label="Drafted Jobs">
     <div class="jobs-container">
       @for (draftedJob of draftedJobs; track draftedJob) {
-      <app-job-card [jobData]="draftedJob"></app-job-card>
+        <app-job-card [jobData]="draftedJob"></app-job-card>
       }
     </div>
   </mat-tab>
   <mat-tab label="Archived Jobs">
     <div class="jobs-container">
       @for (archivedJob of archivedJobs; track archivedJob) {
-      <app-job-card [jobData]="archivedJob"></app-job-card>
+        <app-job-card [jobData]="archivedJob"></app-job-card>
       }
     </div>
   </mat-tab>

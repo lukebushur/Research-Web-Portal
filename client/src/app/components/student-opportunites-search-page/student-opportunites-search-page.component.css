@@ -1,150 +1,150 @@
 .header {
-  background-color: #CFB991;
+    background-color: #CFB991;
 }
 
 .header > * {
-  margin-left: 2.5%;
+    margin-left: 2.5%;
 }
 
 .searchBar {
-  width: 66%;
+    width: 66%;
 }
 
 .searchBar > mat-form-field {
-  margin-top: 1%;
-  width: 33%;
+    margin-top: 1%;
+    width: 33%;
 }
 
 .search-form-field {
-  width: 25%;
+    width: 25%;
 }
 
 #searchButton {
-  margin-left: 20px; 
+    margin-left: 20px;
 }
 
 #resetButton {
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 .opportunities-container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
 }
 
 .oppExpansion {
-  max-width: 80%;
-  margin: 0.5em auto;
+    max-width: 80%;
+    margin: 0.5em auto;
 }
 
 .content-container {
-  display: grid;
-  grid-template-columns: 9em 13em;
-  gap: 10px;
-  align-items: center;
-  justify-content: start;
+    display: grid;
+    grid-template-columns: 9em 13em;
+    gap: 10px;
+    align-items: center;
+    justify-content: start;
 }
 
 .opp-card {
-  margin: 20px 10px;
-  width: 400px;
+    margin: 20px 10px;
+    width: 400px;
 }
 
 .opp-title {
-  height: 3.5em;
+    height: 3.5em;
 }
 
 .opp-subtitle {
-  height: 5.5em;
+    height: 5.5em;
 }
 
 .max-one-line {
-  overflow: hidden;
-  display: block;
-  text-overflow: ellipsis;
-  max-width: 13em;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    max-width: 13em;
 }
 
 .max-two-lines {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 .max-three-lines {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
 .field-title {
-  margin: auto 0px;
-  font-weight: 500;
+    margin: auto 0px;
+    font-weight: 500;
 }
 
 .divider {
-  margin-top: 16px;
+    margin-top: 16px;
 }
 
 .actions-container {
-  display: flex;
-  justify-content: space-between;
-  margin: 8px;
+    display: flex;
+    justify-content: space-between;
+    margin: 8px;
 }
 
 .searchFilterDiv {
-  width: 20%;
-  margin-right: 2%;
+    width: 20%;
+    margin-right: 2%;
 }
 
 .mat-form-field {
-  width: 100%;
+    width: 100%;
 }
 
 .filterMainDiv {
-  display: inline-flex;
-  width: 100%;
-  justify-content: center;
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
 }
 
-.searchFilterDiv>mat-form-field {
-  width: 100%;
+.searchFilterDiv > mat-form-field {
+    width: 100%;
 }
 
-.resultFilterDiv>* {
-  width: 100%;
+.resultFilterDiv > * {
+    width: 100%;
 }
 
 .resultFilterDiv {
-  width: 25%;
-  margin-right: 2%;
+    width: 25%;
+    margin-right: 2%;
 }
 
 #page-selector {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
 }
 
-#page-selector>p {
-  padding-left: 2%;
-  padding-right: 2%;
-  width: 7.5%;
+#page-selector > p {
+    padding-left: 2%;
+    padding-right: 2%;
+    width: 7.5%;
 }
 
-#page-selector>button {
-  width: 20%;
+#page-selector > button {
+    width: 20%;
 }
 
 .title {
-  font-weight: 500;
-  margin-bottom: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
 }

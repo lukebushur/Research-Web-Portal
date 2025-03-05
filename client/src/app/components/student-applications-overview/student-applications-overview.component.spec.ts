@@ -9,8 +9,6 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-
-
 describe('StudentApplicationsOverviewComponent', () => {
   let component: StudentApplicationsOverviewComponent;
   let fixture: ComponentFixture<StudentApplicationsOverviewComponent>;

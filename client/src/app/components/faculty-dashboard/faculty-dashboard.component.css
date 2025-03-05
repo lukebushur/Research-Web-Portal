@@ -1,24 +1,26 @@
 .tab {
-  display: flex;
-  align-items: center;
-  margin: 5px;
-  overflow-x: auto;  /* Add this line to enable horizontal scrolling */
-  white-space: nowrap; /* Prevent cards from wrapping to the next line */
-  min-height: 100px;
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    overflow-x: auto;
+    /* Add this line to enable horizontal scrolling */
+    white-space: nowrap;
+    /* Prevent cards from wrapping to the next line */
+    min-height: 100px;
 }
 
 .add-icon-button {
-  margin: 0px 75px 0px 20px;
+    margin: 0px 75px 0px 20px;
 }
 
 .add-icon {
-  transform: scale(1.25);
+    transform: scale(1.25);
 }
 
 .create-button {
-  margin: 20px 0px 0px 25px;
+    margin: 20px 0px 0px 25px;
 }
 
 .faculty-project-applied-student-list {
     margin-top: 1%;
-} 
+}

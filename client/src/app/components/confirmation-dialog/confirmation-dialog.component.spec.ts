@@ -13,8 +13,7 @@ describe('ConfirmationDialogComponent', () => {
         { provide: MatDialogRef, useValue: {} }, // Mock MatDialogRef
         { provide: MAT_DIALOG_DATA, useValue: {} } // Provide mock data for MAT_DIALOG_DATA
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmationDialogComponent);
     component = fixture.componentInstance;

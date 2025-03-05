@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'environments/environment';
-import { SearchOptions} from 'app/_models/searchOptions';
+import { SearchOptions } from 'app/_models/searchOptions';
 
 @Injectable({
   providedIn: 'root'

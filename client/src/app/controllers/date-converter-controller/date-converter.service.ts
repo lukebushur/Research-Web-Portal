@@ -16,7 +16,7 @@ export class DateConverterService {
     return localDate.toLocaleDateString() + " " + localDate.toLocaleTimeString();
   }
 
-  convertShortDate(date: Date) : String {
+  convertShortDate(date: Date): String {
     let localDate = new Date(date);
     return localDate.toLocaleDateString();
   }

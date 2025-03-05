@@ -24,8 +24,8 @@ button {
 .applicationInfo {
     margin: 0 auto;
     display: flex;
-  justify-content: center;
-  padding: 0.5em;
+    justify-content: center;
+    padding: 0.5em;
 }
 
 table {
