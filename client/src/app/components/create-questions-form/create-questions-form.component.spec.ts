@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateQuestionsFormComponent } from './create-questions-form.component';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';

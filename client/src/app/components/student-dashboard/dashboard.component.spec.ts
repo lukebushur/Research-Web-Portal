@@ -7,9 +7,8 @@ import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
 import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
-import { ProjectData } from 'app/_models/projects/projectData';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { MatCard, MatCardModule } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
@@ -26,11 +25,7 @@ describe('StudentDashboard', () => {
   let component: StudentDashboard;
   let fixture: ComponentFixture<StudentDashboard>;
   let loader: HarnessLoader;
-  let testGetProjectsResponse: Object;
-  let getProjectsSpy: jasmine.Spy;
   let navigateSpy: jasmine.Spy;
-  let getStudentInfoSpy: jasmine.Spy;
-  let searchProjectsSpy: jasmine.Spy;
 
   // Mock question data
   const testQuestionData: QuestionData[] = [
@@ -110,8 +105,8 @@ describe('StudentDashboard', () => {
 
     // Create a spy object for the student dashboard service
     const studentDashboardService = jasmine.createSpyObj('StudentDashboardService', ['getOpportunities', 'getStudentInfo']);
-    getProjectsSpy = studentDashboardService.getOpportunities.and.returnValue(of(getProjectInfoResponse));
-    getStudentInfoSpy = studentDashboardService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
+    studentDashboardService.getOpportunities.and.returnValue(of(getProjectInfoResponse));
+    studentDashboardService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
 
     // Create a spy object for the router
     const router = jasmine.createSpyObj('Router', ['navigate']);
@@ -119,7 +114,7 @@ describe('StudentDashboard', () => {
 
     // Create a spy object for the search project service
     const searchProjectService = jasmine.createSpyObj('SearchProjectService', ['searchProjectsMultipleParams']);
-    searchProjectsSpy = searchProjectService.searchProjectsMultipleParams.and.returnValue(of(getSearchResponse));
+    searchProjectService.searchProjectsMultipleParams.and.returnValue(of(getSearchResponse));
 
     // Create the test bed
     TestBed.configureTestingModule({

@@ -1,5 +1,3 @@
-import { TestBed } from '@angular/core/testing';
-
 import { TokenInterceptor } from './token-interceptor.service';
 import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';

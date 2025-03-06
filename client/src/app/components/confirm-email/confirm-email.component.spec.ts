@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EmailService } from 'app/controllers/email-controller/email.service';
 import { ConfirmEmailComponent } from './confirm-email.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthService } from 'app/controllers/auth-controller/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';

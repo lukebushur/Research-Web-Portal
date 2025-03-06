@@ -18,7 +18,6 @@ import { SearchProjectService } from 'app/controllers/search-project-controller/
 import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { ProjectData } from 'app/_models/projects/projectData';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // Mock question data
@@ -112,8 +111,8 @@ describe('StudentOpportunitesSearchPageComponent', () => {
 
   // Define spy objects for StudentDashboardService
   const studentDashboardService = jasmine.createSpyObj('StudentDashboardService', ['getOpportunities', 'getStudentInfo'])
-  let getOpportunitiesSpy = studentDashboardService.getOpportunities.and.returnValue(of(getProjectInfoResponse));;
-  let getStudentInfoSpy = studentDashboardService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
+  studentDashboardService.getOpportunities.and.returnValue(of(getProjectInfoResponse));;
+  studentDashboardService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
 
   // Define spy objects for Router
   const router = jasmine.createSpyObj('Router', ['navigate']);

@@ -1,9 +1,6 @@
-import { TestBed } from '@angular/core/testing';
-
 import { StudentDashboardService } from './student-dashboard.service';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-import { HttpClient, HttpHeaders, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'environments/environment';
 

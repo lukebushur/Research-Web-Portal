@@ -18,7 +18,6 @@ class JobCardStubComponent { @Input() jobData: JobCardData }
 describe('IndustryDashboardComponent', () => {
   let component: IndustryDashboardComponent;
   let fixture: ComponentFixture<IndustryDashboardComponent>;
-  let loader: HarnessLoader;
   let testGetJobsResponse: Object;
   let getJobsSpy: jasmine.Spy;
 
@@ -32,12 +31,12 @@ describe('IndustryDashboardComponent', () => {
               title: 'Senior Quantum Computing Engineer',
               isInternship: false,
               isFullTime: true,
-              description: `Are you passionate about pushing the boundaries of 
-computing technology? Join Quantum Innovations Co. as a Senior Quantum 
-Computing Engineer and be at the forefront of revolutionizing the world of 
-quantum computing. In this role, you will work on cutting-edge projects, 
-collaborate with a team of experts, and contribute to the development of 
-groundbreaking quantum algorithms. If you thrive in a dynamic and 
+              description: `Are you passionate about pushing the boundaries of
+computing technology? Join Quantum Innovations Co. as a Senior Quantum
+Computing Engineer and be at the forefront of revolutionizing the world of
+quantum computing. In this role, you will work on cutting-edge projects,
+collaborate with a team of experts, and contribute to the development of
+groundbreaking quantum algorithms. If you thrive in a dynamic and
 intellectually stimulating environment, apply now!`,
               location: 'Silicon Valley, CA',
               reqYearsExp: 5,
@@ -80,7 +79,6 @@ intellectually stimulating environment, apply now!`,
       ]
     });
     fixture = TestBed.createComponent(IndustryDashboardComponent);
-    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

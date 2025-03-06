@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
+import { Component, EventEmitter, Input, Output, } from '@angular/core';
 import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
 import { Router } from '@angular/router';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';

@@ -1,12 +1,10 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot, CanActivateFn, Router, RouterState, RouterStateSnapshot } from '@angular/router';
+import { TestBed, fakeAsync } from '@angular/core/testing';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
 import { roleGuard } from './role.guard';
 import { environment } from 'environments/environment';
 import { Observable, of } from 'rxjs';
 import { AuthService } from 'app/controllers/auth-controller/auth.service';
-import { AuthGuard } from '../auth-guard/auth.guard';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 const getStudentInfoResponse = {
   success: {

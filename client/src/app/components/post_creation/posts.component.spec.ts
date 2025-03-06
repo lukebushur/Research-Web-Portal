@@ -1,16 +1,16 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { PostProjectComponent } from './posts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { QuestionData } from 'app/_models/projects/questionData';
@@ -66,7 +66,7 @@ describe('PostProjectComponent', () => {
   let loader: HarnessLoader;
 
   const authService = jasmine.createSpyObj('AuthService', ['getMajors']);
-  let authSpy = authService.getMajors.and.returnValue(Promise.resolve(of(testGetMajorResponse)));
+  authService.getMajors.and.returnValue(Promise.resolve(of(testGetMajorResponse)));
 
   beforeEach(async () => {
     TestBed.configureTestingModule({

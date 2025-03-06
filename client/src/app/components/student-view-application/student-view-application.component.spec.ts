@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { StudentViewApplicationComponent } from '../student-view-application/student-view-application.component';
 import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

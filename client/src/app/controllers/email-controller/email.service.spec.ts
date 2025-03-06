@@ -1,12 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-
 import { EmailService } from './email.service';
 import { of } from 'rxjs';
 import { AuthService } from '../auth-controller/auth.service';
-import { HttpClient, HttpHeaders, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { Router } from '@angular/router';
 
 describe('EmailService', () => {
   let emailService: EmailService;

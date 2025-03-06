@@ -1,5 +1,3 @@
-import { TestBed } from '@angular/core/testing';
-
 import { FacultyProjectService } from './faculty-project.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth-controller/auth.service';

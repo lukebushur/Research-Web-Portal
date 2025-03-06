@@ -14,10 +14,8 @@ import { MatTableHarness } from '@angular/material/table/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatSortHarness } from '@angular/material/sort/testing';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
-import { MatButtonHarness } from '@angular/material/button/testing';
 import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 describe('AppliedStudentTableComponent', () => {
   let component: AppliedStudentTableComponent;

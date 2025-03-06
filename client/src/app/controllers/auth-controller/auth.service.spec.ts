@@ -1,8 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-
 import { AuthService } from './auth.service';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { HttpClient, HttpHeaders, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { environment } from 'environments/environment';
 

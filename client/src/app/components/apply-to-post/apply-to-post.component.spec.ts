@@ -10,7 +10,7 @@ import { of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { ApplyToPostService } from 'app/controllers/apply-to-post/apply-to-post.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
