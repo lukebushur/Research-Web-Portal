@@ -23,7 +23,13 @@ import { SearchOptions } from 'app/_models/searchOptions';
   ]
 })
 export class StudentDashboard {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService, private search: SearchProjectService) { }
+
+  constructor(
+    private router: Router,
+    private studentDashboardService: StudentDashboardService,
+    private dateService: DateConverterService,
+    private search: SearchProjectService
+  ) { }
 
   // This function is called when the component is loaded
   ngOnInit() {

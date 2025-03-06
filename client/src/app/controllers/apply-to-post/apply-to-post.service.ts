@@ -13,12 +13,12 @@ export class ApplyToPostService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getProjectInfo(data: any) : Observable<any> {
+  getProjectInfo(data: any): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data, { headers });
   }
 
-  createApplication(data: ApplyRequestData) : Observable<any> {
+  createApplication(data: ApplyRequestData): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.post(`${this.apiUrl}/applications/createApplication`, data, { headers });
   }

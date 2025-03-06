@@ -1,24 +1,44 @@
 <div class="page-container">
   <div class="heading">
-    <h1>{{ isCreateProject ? 'Create Project Post' : 'Update Project Post' }}</h1>
+    <h1>
+      {{ isCreateProject ? "Create Project Post" : "Update Project Post" }}
+    </h1>
     <button mat-raised-button type="button" (click)="cancel()">Cancel</button>
   </div>
   <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
     <mat-stepper class="item-to-center">
-      <mat-step formGroupName="details" [stepControl]="details" label="Fill out the project's details">
+      <mat-step
+        formGroupName="details"
+        [stepControl]="details"
+        label="Fill out the project's details"
+      >
         <mat-form-field class="block first-field">
           <mat-label>Project Name</mat-label>
-          <input matInput formControlName="projectName" type="text" name="projectName">
-          @if (details.get('projectName')?.invalid) {
-          <mat-error>{{ requiredFieldErrorMessage('projectName', 'Project Name') }}</mat-error>
+          <input
+            matInput
+            formControlName="projectName"
+            type="text"
+            name="projectName"
+          />
+          @if (details.get("projectName")?.invalid) {
+            <mat-error>{{
+              requiredFieldErrorMessage("projectName", "Project Name")
+            }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Description</mat-label>
-          <input matInput formControlName="description" type="text" name="description">
-          @if (details.get('description')?.invalid) {
-          <mat-error>{{ requiredFieldErrorMessage('description', 'Description') }}</mat-error>
+          <input
+            matInput
+            formControlName="description"
+            type="text"
+            name="description"
+          />
+          @if (details.get("description")?.invalid) {
+            <mat-error>{{
+              requiredFieldErrorMessage("description", "Description")
+            }}</mat-error>
           }
         </mat-form-field>
 
@@ -26,87 +46,147 @@
           <mat-label>Required Majors</mat-label>
           <mat-select formControlName="majors" multiple>
             @for (major of majorsList; track major) {
-            <mat-option [value]="major">{{ major }}</mat-option>
+              <mat-option [value]="major">{{ major }}</mat-option>
             }
           </mat-select>
-          @if (details.get('majors')?.invalid) {
-          <mat-error>{{ requiredFieldErrorMessage('majors', 'Majors') }}</mat-error>
+          @if (details.get("majors")?.invalid) {
+            <mat-error>{{
+              requiredFieldErrorMessage("majors", "Majors")
+            }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Categories</mat-label>
           <mat-chip-grid #chipGrid aria-label="Enter categories" required>
-            @for (category of categories.controls; track category; let i = $index) {
-            <mat-chip-row (removed)="removeCategory(i)" [editable]="true" (edited)="editCategory(i, $event)"
-              [aria-description]="'press enter to edit ' + category.value">
-              {{ category.value }}
-              <button matChipRemove [attr.aria-label]="'remove ' + category.value">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
+            @for (
+              category of categories.controls;
+              track category;
+              let i = $index
+            ) {
+              <mat-chip-row
+                (removed)="removeCategory(i)"
+                [editable]="true"
+                (edited)="editCategory(i, $event)"
+                [aria-description]="'press enter to edit ' + category.value"
+              >
+                {{ category.value }}
+                <button
+                  matChipRemove
+                  [attr.aria-label]="'remove ' + category.value"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
             }
-            <input placeholder="New category..." [matChipInputFor]="chipGrid"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-              (matChipInputTokenEnd)="addCategory($event)" (blur)="categories.markAsTouched()">
+            <input
+              placeholder="New category..."
+              [matChipInputFor]="chipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="addCategory($event)"
+              (blur)="categories.markAsTouched()"
+            />
           </mat-chip-grid>
           @if (categories.invalid) {
-          <mat-hint>There must be at least 1 category</mat-hint>
+            <mat-hint>There must be at least 1 category</mat-hint>
           }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Application Deadline</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="deadline">
+          <input matInput [matDatepicker]="picker" formControlName="deadline" />
           <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <!-- I have tried for hours to get Material form validation working correctly for this field,
             but nothing has worked. This at least lets the user know that it is required. -->
-          @if (details.get('deadline')?.invalid) {
-          <mat-error>{{ requiredFieldErrorMessage('deadline', 'Deadline') }}</mat-error>
+          @if (details.get("deadline")?.invalid) {
+            <mat-error>{{
+              requiredFieldErrorMessage("deadline", "Deadline")
+            }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Responsibilities</mat-label>
-          <input matInput formControlName="responsibilities" type="text" name="responsibilities">
+          <input
+            matInput
+            formControlName="responsibilities"
+            type="text"
+            name="responsibilities"
+          />
         </mat-form-field>
 
         <mat-form-field class="block">
           <mat-label>Minimum Required GPA</mat-label>
-          <input matInput formControlName="GPA" type="text" name="GPA">
-          @if (details.get('GPA')?.invalid) {
-          <mat-error>{{ gpaErrorMessage() }}</mat-error>
+          <input matInput formControlName="GPA" type="text" name="GPA" />
+          @if (details.get("GPA")?.invalid) {
+            <mat-error>{{ gpaErrorMessage() }}</mat-error>
           }
         </mat-form-field>
 
         <div class="buttons-container">
-          <button mat-raised-button matStepperPrevious type="button" disabled>Previous</button>
+          <button mat-raised-button matStepperPrevious type="button" disabled>
+            Previous
+          </button>
           <span class="spacer"></span>
-          <button mat-raised-button color="primary" matStepperNext type="button">Next</button>
+          <button
+            mat-raised-button
+            color="primary"
+            matStepperNext
+            type="button"
+          >
+            Next
+          </button>
         </div>
       </mat-step>
 
-      <mat-step formGroupName="questionsGroup" [stepControl]="questionsGroup" label="Add questions to ask applicants">
+      <mat-step
+        formGroupName="questionsGroup"
+        [stepControl]="questionsGroup"
+        label="Add questions to ask applicants"
+      >
         <div class="first-field">
-          <app-create-questions-form [questionsGroup]="questionsGroup"
-            [questionsData]="initialProjectData?.questions ?? undefined"></app-create-questions-form>
+          <app-create-questions-form
+            [questionsGroup]="questionsGroup"
+            [questionsData]="initialProjectData?.questions ?? undefined"
+          ></app-create-questions-form>
         </div>
 
         <div class="buttons-container">
-          <button mat-raised-button matStepperPrevious type="button">Previous</button>
+          <button mat-raised-button matStepperPrevious type="button">
+            Previous
+          </button>
           <span class="spacer"></span>
           @if (isCreateProject) {
-          <button mat-raised-button color="primary" class="first-button" type="button" (click)="onSave()">Save
-            Draft</button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="first-button"
+              type="button"
+              (click)="onSave()"
+            >
+              Save Draft
+            </button>
           }
-          @if (!isCreateProject && projectType === 'Draft') {
-          <button mat-raised-button color="primary" class="first-button" type="button"
-            (click)="convertToActive()">Create Active Project</button>
+          @if (!isCreateProject && projectType === "Draft") {
+            <button
+              mat-raised-button
+              color="primary"
+              class="first-button"
+              type="button"
+              (click)="convertToActive()"
+            >
+              Create Active Project
+            </button>
           }
-          <button mat-raised-button color="primary" type="submit">{{ isCreateProject ? 'Create Active Project' :
-            'Update'}}</button>
+          <button mat-raised-button color="primary" type="submit">
+            {{ isCreateProject ? "Create Active Project" : "Update" }}
+          </button>
         </div>
       </mat-step>
     </mat-stepper>

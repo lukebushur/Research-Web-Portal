@@ -5,7 +5,11 @@
     </button>
     <span class="title">Research Web Portal</span>
     <span class="spacer"></span>
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Account actions button">
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Account actions button"
+    >
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #menu="matMenu" xPosition="before" yPosition="below">
@@ -20,17 +24,28 @@
     </mat-menu>
   </mat-toolbar>
 
-  <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-      fixedTopGap="56">
+  <mat-sidenav-container
+    class="sidenav-container"
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+  >
+    <mat-sidenav
+      #snav
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="mobileQuery.matches"
+      fixedTopGap="56"
+    >
       <mat-nav-list>
         @for (choice of navigationChoices; track choice) {
-        <a mat-list-item [routerLink]="choice.link" routerLinkActive="active-list-item">
-          <div class="list-item-container">
-            <mat-icon>{{ choice.icon }}</mat-icon>
-            <span>{{ choice.name }}</span>
-          </div>
-        </a>
+          <a
+            mat-list-item
+            [routerLink]="choice.link"
+            routerLinkActive="active-list-item"
+          >
+            <div class="list-item-container">
+              <mat-icon>{{ choice.icon }}</mat-icon>
+              <span>{{ choice.name }}</span>
+            </div>
+          </a>
         }
       </mat-nav-list>
     </mat-sidenav>

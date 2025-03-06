@@ -55,7 +55,7 @@ describe('ConfirmEmailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-it('should confirm the email and navigate to the appropriate dashboard on success', () => {
+  it('should confirm the email and navigate to the appropriate dashboard on success', () => {
     component.ngOnInit();
 
     expect(emailServiceSpy.confirmEmail).toHaveBeenCalledWith('testToken');

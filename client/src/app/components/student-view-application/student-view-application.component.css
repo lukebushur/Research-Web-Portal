@@ -74,8 +74,8 @@ h2 {
     display: inline-block;
 }
 
-.infoDiv>p,
-.responsibilitiesDiv>p {
+.infoDiv > p,
+.responsibilitiesDiv > p {
     margin-bottom: .5%;
 }
 
@@ -83,12 +83,12 @@ h2 {
     margin-top: 1%;
 }
 
-mat-card-content>p {
+mat-card-content > p {
     padding-top: 0.5%;
 }
 
 
-.text-response>mat-form-field {
+.text-response > mat-form-field {
     width: 100%;
 }
 
@@ -97,17 +97,17 @@ mat-card-content>p {
     padding: 10px;
 }
 
-.content-card>* {
+.content-card > * {
     margin-top: 1%;
     margin-left: 1%;
     margin-right: 1%;
 }
 
-.content-card> :last-child {
+.content-card > :last-child {
     margin-bottom: 1%;
 }
 
-mat-card-actions>* {
+mat-card-actions > * {
     margin-left: 1%;
     margin-right: 1%;
 }

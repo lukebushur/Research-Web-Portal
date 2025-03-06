@@ -3,53 +3,86 @@
   <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="block">
       <mat-label>Name</mat-label>
-      <input matInput type="text" id="name" formControlName="name" name="name" required>
-      @if (editProfileForm.get('name')?.invalid) {
-      <mat-error>{{ nameErrorMessage() }}</mat-error>
+      <input
+        matInput
+        type="text"
+        id="name"
+        formControlName="name"
+        name="name"
+        required
+      />
+      @if (editProfileForm.get("name")?.invalid) {
+        <mat-error>{{ nameErrorMessage() }}</mat-error>
       }
     </mat-form-field>
     @if (accountType == 0) {
-    <mat-form-field class="block">
-      <mat-label>GPA</mat-label>
-      <input matInput type="text" id="gpa" formControlName="GPA" name="GPA" required>
-      @if (editProfileForm.get('GPA')?.invalid) {
-      <mat-error>{{ gpaErrorMessage() }}</mat-error>
-      }
-    </mat-form-field>
+      <mat-form-field class="block">
+        <mat-label>GPA</mat-label>
+        <input
+          matInput
+          type="text"
+          id="gpa"
+          formControlName="GPA"
+          name="GPA"
+          required
+        />
+        @if (editProfileForm.get("GPA")?.invalid) {
+          <mat-error>{{ gpaErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
     }
     <mat-form-field class="block">
       <mat-label>University</mat-label>
-      <mat-select id="universityLocation" formControlName="universityLocation" (selectionChange)="updateForm()"
-        required>
+      <mat-select
+        id="universityLocation"
+        formControlName="universityLocation"
+        (selectionChange)="updateForm()"
+        required
+      >
         @for (university of universityLocations; track university) {
-        <mat-option [value]="university">{{ university
-          }}</mat-option>
+          <mat-option [value]="university">{{ university }}</mat-option>
         }
       </mat-select>
-      @if (editProfileForm.get('universityLocation')?.invalid) {
-      <mat-error>{{
-        requiredFieldErrorMessage('universityLocation', 'University') }}</mat-error>
-      }
-    </mat-form-field>
-    @if (accountType == 0) {
-    <mat-form-field class="block">
-      <mat-label>Majors</mat-label>
-      <mat-select id="Major" formControlName="Major" multiple>
-        @for (major of majors; track major) {
-        <mat-option [value]="major">{{ major }}</mat-option>
-        }
-      </mat-select>
-      @if (editProfileForm.get('Major')?.invalid) {
-      <mat-error>{{ requiredFieldErrorMessage('Major', 'Majors')
+      @if (editProfileForm.get("universityLocation")?.invalid) {
+        <mat-error>{{
+          requiredFieldErrorMessage("universityLocation", "University")
         }}</mat-error>
       }
     </mat-form-field>
+    @if (accountType == 0) {
+      <mat-form-field class="block">
+        <mat-label>Majors</mat-label>
+        <mat-select id="Major" formControlName="Major" multiple>
+          @for (major of majors; track major) {
+            <mat-option [value]="major">{{ major }}</mat-option>
+          }
+        </mat-select>
+        @if (editProfileForm.get("Major")?.invalid) {
+          <mat-error>{{
+            requiredFieldErrorMessage("Major", "Majors")
+          }}</mat-error>
+        }
+      </mat-form-field>
     }
     <div class="buttons-container">
-      <button mat-raised-button color="primary" type="submit" [disabled]="editProfileForm.invalid"
-        class="submit-button">Submit Changes</button>
-      <button mat-raised-button color="accent" type="button" (click)="navigateToEmailResetScreen()"
-        class="reset-password-button">Reset Password?</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="editProfileForm.invalid"
+        class="submit-button"
+      >
+        Submit Changes
+      </button>
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="navigateToEmailResetScreen()"
+        class="reset-password-button"
+      >
+        Reset Password?
+      </button>
     </div>
   </form>
 </div>

@@ -31,8 +31,8 @@
 .custom-link {
     text-decoration: underline;
     cursor: pointer;
-  }
-  
-  .custom-link:hover {
+}
+
+.custom-link:hover {
     color: darkblue;
-  }
+}

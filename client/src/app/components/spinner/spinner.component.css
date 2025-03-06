@@ -7,9 +7,9 @@
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.7);
     z-index: 9999;
-  }
-  
-  .cssload-speeding-wheel {
+}
+
+.cssload-speeding-wheel {
     content: "";
     display: block;
     position: absolute;
@@ -27,39 +27,39 @@
     -ms-animation: cssload-spin 500ms infinite linear;
     -webkit-animation: cssload-spin 500ms infinite linear;
     -moz-animation: cssload-spin 500ms infinite linear;
-  }
-  
-  @keyframes cssload-spin {
+}
+
+@keyframes cssload-spin {
     100% {
-      transform: rotate(360deg);
-      transform: rotate(360deg);
+        transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
-  
-  @-o-keyframes cssload-spin {
+}
+
+@-o-keyframes cssload-spin {
     100% {
-      -o-transform: rotate(360deg);
-      transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
-  
-  @-ms-keyframes cssload-spin {
+}
+
+@-ms-keyframes cssload-spin {
     100% {
-      -ms-transform: rotate(360deg);
-      transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
-  
-  @-webkit-keyframes cssload-spin {
+}
+
+@-webkit-keyframes cssload-spin {
     100% {
-      -webkit-transform: rotate(360deg);
-      transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
-  
-  @-moz-keyframes cssload-spin {
+}
+
+@-moz-keyframes cssload-spin {
     100% {
-      -moz-transform: rotate(360deg);
-      transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
+}

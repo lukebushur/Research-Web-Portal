@@ -16,6 +16,6 @@ export class ProfileServiceService {
   // given data
   submitProfileChanges(data: any): Observable<any> {
     const headers = this.authService.getHeaders();
-    return this.http.post(`${this.apiUrl}/accountManagement/updateAccount`, data, { headers: headers});
+    return this.http.post(`${this.apiUrl}/accountManagement/updateAccount`, data, { headers: headers });
   }
 }

@@ -12,8 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
-
 @Component({
   selector: 'app-student-applications-overview',
   templateUrl: './student-applications-overview.component.html',

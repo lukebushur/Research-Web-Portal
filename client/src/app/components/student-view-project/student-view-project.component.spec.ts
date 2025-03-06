@@ -95,14 +95,17 @@ describe('StudentViewProjectComponent', () => {
       providers: [
         provideRouter([]),
         { provide: StudentDashboardService, useValue: studentService },
-        { provide: ActivatedRoute, useValue: {
-          snapshot: {
-            paramMap: convertToParamMap({
-              projectId: projectId,
-              professorEmail: professorEmail
-            })
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({
+                projectId: projectId,
+                professorEmail: professorEmail
+              })
+            }
           }
-        }},
+        },
       ]
     }).compileComponents();
 

@@ -1,80 +1,80 @@
 .project-card {
-  margin: 10px 20px;
-  padding: 10px;
-  width: fit-content;
-  flex-grow: 1;
+    margin: 10px 20px;
+    padding: 10px;
+    width: fit-content;
+    flex-grow: 1;
 }
 
 .project-card:hover {
-  cursor: pointer;
-  filter: brightness(95%);
+    cursor: pointer;
+    filter: brightness(95%);
 }
 
 .project-card-title {
-  margin-left: 0.5em;
+    margin-left: 0.5em;
 }
 
 .action-buttons {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .action-buttons button {
-  flex-basis: 30%;
+    flex-basis: 30%;
 }
 
 .unarchive-button {
-  flex-basis: 45% !important;
+    flex-basis: 45% !important;
 }
 
 .scroll-x {
-  overflow-x: scroll;
+    overflow-x: scroll;
 }
 
 /* Custom scrollbar for Material UI standards */
 
 /* Scrollbar Track */
 ::-webkit-scrollbar {
-  width: 8px;
-  /* Width of the scrollbar */
+    width: 8px;
+    /* Width of the scrollbar */
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #bda274;
-  /* Color when hovered */
+    background: #bda274;
+    /* Color when hovered */
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #c3aa7e;
-  /* Color of the scrollbar handle */
-  border-radius: 4px;
-  /* Rounded corners */
+    background: #c3aa7e;
+    /* Color of the scrollbar handle */
+    border-radius: 4px;
+    /* Rounded corners */
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  /* Color of the scrollbar track */
+    background: rgba(0, 0, 0, 0.1);
+    /* Color of the scrollbar track */
 }
 
 /* Handle on active state */
 ::-webkit-scrollbar-thumb:active {
-  background: #b29362
-  /* Color when active/pressed */
+    background: #b29362
+        /* Color when active/pressed */
 }
 
 /* Corner */
 ::-webkit-scrollbar-corner {
-  background: transparent;
-  /* Background color of the scrollbar corner */
+    background: transparent;
+    /* Background color of the scrollbar corner */
 }
 
 .project-name {
-  color: black;
+    color: black;
 }
 
 .project-name:hover {
-  color: purple;
+    color: purple;
 }

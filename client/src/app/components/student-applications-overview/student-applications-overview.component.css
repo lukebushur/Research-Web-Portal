@@ -44,7 +44,7 @@ h1 {
     border: solid 1px #ccc;
 }
 
-.example-accordion-item+.example-accordion-item {
+.example-accordion-item + .example-accordion-item {
     border-top: none;
 }
 

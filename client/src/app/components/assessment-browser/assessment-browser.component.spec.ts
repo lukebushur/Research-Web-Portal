@@ -10,9 +10,9 @@ describe('AssessmentBrowserComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [AssessmentBrowserComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+      imports: [AssessmentBrowserComponent],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    });
     fixture = TestBed.createComponent(AssessmentBrowserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

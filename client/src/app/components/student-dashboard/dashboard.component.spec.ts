@@ -14,6 +14,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { MatButtonHarness } from '@angular/material/button/testing';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
@@ -22,6 +25,7 @@ describe('StudentDashboard', () => {
   // Define variables for testing
   let component: StudentDashboard;
   let fixture: ComponentFixture<StudentDashboard>;
+  let loader: HarnessLoader;
   let testGetProjectsResponse: Object;
   let getProjectsSpy: jasmine.Spy;
   let navigateSpy: jasmine.Spy;
@@ -141,6 +145,7 @@ describe('StudentDashboard', () => {
     });
     // Create the component
     fixture = TestBed.createComponent(StudentDashboard);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -158,42 +163,38 @@ describe('StudentDashboard', () => {
   });
 
   // Make sure it redirects you properly
-  it('should navigate you to your applications', () => {
+  it('should navigate you to your applications', async () => {
     // Find the button we want
-    const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'See all applications'
-    )
-    buttonDebugElement.triggerEventHandler('click', null)
+    const button = await loader.getHarness(MatButtonHarness.with({ text: 'See all applications' }));
+    await button.click();
+
     // Make sure it navigates you to the right place
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/applications-overview']);
-  })
+  });
 
-  it('should navigate you to search projects', () => {
+  it('should navigate you to search projects', async () => {
     // Find the button we want
-    const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'Search projects'
-    )
-    buttonDebugElement.triggerEventHandler('click', null)
+    const button = await loader.getHarness(MatButtonHarness.with({ text: 'Search projects' }));
+    await button.click();
+
     // Make sure it navigates you to the right place
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/search-projects']);
-  })
+  });
 
-  it('should navigate you to view project', () => {
+  it('should navigate you to view project', async () => {
     // Find the button we want
-    const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'VIEW'
-    )
-    buttonDebugElement.triggerEventHandler('click', null)
+    const button = await loader.getHarness(MatButtonHarness.with({ text: 'VIEW' }));
+    await button.click();
+
     // Make sure it navigates you to the right place
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${testProjectData.professorEmail}/${testProjectData._id}`]);
-  })
+  });
 
-  it('should navigate you to apply-to-project', () => {
+  it('should navigate you to apply-to-project', async () => {
     // Find the button we want
-    const buttonDebugElement = fixture.debugElement.query(
-      debugEl => debugEl.name === 'button' && debugEl.nativeElement.textContent === 'APPLY'
-    )
-    buttonDebugElement.triggerEventHandler('click', null)
+    const button = await loader.getHarness(MatButtonHarness.with({ text: 'APPLY' }));
+    await button.click();
+
     // Make sure it navigates you to the right place
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
       queryParams: {
@@ -203,6 +204,6 @@ describe('StudentDashboard', () => {
         oppId: testProjectData._id,
       }
     });
-  })
+  });
 
 });
