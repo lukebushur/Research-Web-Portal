@@ -27,7 +27,7 @@
               }
             ],
             "styles": [
-              "src/scss/rwp-theme.scss",
+              "src/styles/rwp-theme.scss",
               "src/styles.css"
             ],
             "scripts": []
@@ -96,7 +96,7 @@
               }
             ],
             "styles": [
-              "src/scss/rwp-theme.scss",
+              "src/styles/rwp-theme.scss",
               "src/styles.css"
             ],
             "scripts": []
