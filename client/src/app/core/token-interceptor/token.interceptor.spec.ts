@@ -75,7 +75,7 @@ describe('TokenInterceptor', () => {
 
   // Verify that no unmatched requests are outstanding
   afterEach(() => {
-    TestBed.inject(HttpTestingController).verify();
+    httpTesting.verify();
   });
 
   // Restore the JWT token value
