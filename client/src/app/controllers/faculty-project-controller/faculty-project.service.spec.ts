@@ -1,20 +1,17 @@
 import { FacultyProjectService } from './faculty-project.service';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth-controller/auth.service';
 import { of } from 'rxjs';
 import { environment } from 'environments/environment';
 
 describe('FacultyProjectService', () => {
   let service: FacultyProjectService;
-  let authService: AuthService;
   let httpSpy: jasmine.SpyObj<HttpClient>;
   const apiUrl = environment.apiUrl;
 
   beforeEach(() => {
     // mock services to instantiate and test FacultyProjectService
     httpSpy = jasmine.createSpyObj('HttpClient', ['get', 'post', 'put', 'delete']);
-    authService = new AuthService(httpSpy);
-    service = new FacultyProjectService(httpSpy, authService);
+    service = new FacultyProjectService(httpSpy);
   });
 
   it('should be created', () => {
@@ -36,7 +33,7 @@ describe('FacultyProjectService', () => {
       },
       error: done.fail
     });
-    expect(httpSpy.get).toHaveBeenCalledOnceWith(`${apiUrl}/projects/getProjects`, jasmine.any(Object));
+    expect(httpSpy.get).toHaveBeenCalledOnceWith(`${apiUrl}/projects/getProjects`);
   });
 
   it('should return successful getProject response', (done: DoneFn) => {
@@ -61,7 +58,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.post).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/getProject`,
       testData,
-      jasmine.any(Object)
     );
   });
 
@@ -87,7 +83,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.delete).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/deleteProject`,
       {
-        headers: jasmine.any(Object),
         body: testData,
       }
     );
@@ -114,7 +109,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.put).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/archiveProject`,
       testData,
-      jasmine.any(Object)
     );
   });
 
@@ -139,7 +133,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.put).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/updateProject`,
       testData,
-      jasmine.any(Object)
     );
   });
 
@@ -164,7 +157,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.put).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/publishDraft`,
       testData,
-      jasmine.any(Object)
     );
   });
 
@@ -190,7 +182,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.post).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/getApplicant`,
       testData,
-      jasmine.any(Object)
     );
   });
 
@@ -217,7 +208,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.put).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/application`,
       testData,
-      jasmine.any(Object)
     );
   });
 
@@ -254,7 +244,6 @@ describe('FacultyProjectService', () => {
     expect(httpSpy.post).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/getDetailedApplicants`,
       testData,
-      jasmine.any(Object)
     );
   });
 });

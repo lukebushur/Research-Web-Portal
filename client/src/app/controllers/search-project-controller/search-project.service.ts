@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'environments/environment';
 import { SearchOptions } from 'app/_models/searchOptions';
 
@@ -10,13 +9,12 @@ import { SearchOptions } from 'app/_models/searchOptions';
 })
 
 export class SearchProjectService {
-  apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
   //This method is pretty simple, just fill in the fields that exist or will be used with the search or null if not. To the best of my knowledge, js/ts does
   //not support named parameters so if you wanted to only serach with deadline, the correct call to this method would be searchProjectsMultipleParams(null, null, null, null, null, null, DATE PARAMETER)
   searchProjectsMultipleParams(searchOptions: SearchOptions): Observable<any> {
-    const headers = this.authService.getHeaders();
     let request = "?";
     let useAndSym = false;
 
@@ -79,12 +77,10 @@ export class SearchProjectService {
       }
     }
 
-    return this.http.get(`${this.apiUrl}/search/searchProjects` + request, { headers });
+    return this.http.get(`${this.apiUrl}/search/searchProjects` + request);
   }
   //This does the same as above, but takes the query params as a string in the parameters instead of individual parameters
   searchProjectsSingleParams(queryParams: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/search/searchProjects` + queryParams, { headers });
+    return this.http.get(`${this.apiUrl}/search/searchProjects` + queryParams);
   }
 }

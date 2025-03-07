@@ -1,30 +1,44 @@
 import { AuthService } from './auth.service';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { firstValueFrom, of } from 'rxjs';
 import { environment } from 'environments/environment';
+import { TestBed } from '@angular/core/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AuthService', () => {
-  let httpClientSpy: jasmine.SpyObj<HttpClient>;
+  const API_URL = environment.apiUrl;
+
+  let httpTesting: HttpTestingController;
   let authService: AuthService;
 
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    httpClientSpy.get.and.returnValue(of(true));
-
-    authService = new AuthService(httpClientSpy);
-
-    localStorage.setItem('jwt-auth-token', "invalid")
+    TestBed.configureTestingModule({
+      providers: [
+        AuthService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
+    });
+    httpTesting = TestBed.inject(HttpTestingController);
+    authService = TestBed.inject(AuthService);
   });
 
   it('should be created', () => {
     expect(authService).toBeTruthy();
   });
 
-  it('should return headers properly with auth token', () => {
-    const res = authService.getHeaders()
+  it('should attempt to fetch accountInfo', async () => {
+    const body = 'account info';
 
-    expect(res.get('Authorization')).toEqual(`Bearer ${localStorage.getItem('jwt-auth-token')}`);
-  })
+    const accountInfo$ = authService.getAccountInfo();
+    const accountInfoPromise = firstValueFrom(accountInfo$);
+
+    const req = httpTesting.expectOne(`${API_URL}/accountManagement/getAccountInfo`);
+    expect(req.request.method).toBe('GET');
+
+    req.flush(body);
+    expect(await accountInfoPromise).toEqual(body);
+  });
 
   it('should return jwt-auth-token', () => {
     const res = authService.getAuthToken()

@@ -2,38 +2,32 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
-import { AuthService } from '../auth-controller/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssessmentsService {
-  apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   getAssessments(): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.get(`${this.apiUrl}/industry/getAssessments`, { headers });
+    return this.http.get(`${this.apiUrl}/industry/getAssessments`);
   }
 
   getAssessment(assessmentId: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.get(`${this.apiUrl}/industry/getAssessment/${assessmentId}`, { headers });
+    return this.http.get(`${this.apiUrl}/industry/getAssessment/${assessmentId}`);
   }
 
   createAssessment(data: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.post(`${this.apiUrl}/industry/createAssessment`, data, { headers });
+    return this.http.post(`${this.apiUrl}/industry/createAssessment`, data);
   }
 
   editAssessment(data: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.put(`${this.apiUrl}/industry/editAssessment`, data, { headers });
+    return this.http.put(`${this.apiUrl}/industry/editAssessment`, data);
   }
 
   deleteAssessment(assessmentId: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.delete(`${this.apiUrl}/industry/deleteAssessment/${assessmentId}`, { headers });
+    return this.http.delete(`${this.apiUrl}/industry/deleteAssessment/${assessmentId}`);
   }
 }

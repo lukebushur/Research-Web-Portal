@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
@@ -10,13 +9,11 @@ import { Observable } from 'rxjs';
 export class EmailService {
   private apiUrl: string = environment.apiUrl;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   confirmEmail(emailToken: string): Observable<any> {
-    const authToken = this.authService.getHeaders();
-
     const data = { emailToken };
 
-    return this.http.post(`${this.apiUrl}/confirmEmail`, data, { headers: authToken });
+    return this.http.post(`${this.apiUrl}/confirmEmail`, data);
   }
 }

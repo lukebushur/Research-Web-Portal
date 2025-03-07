@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
-import { AuthService } from '../auth-controller/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,33 +9,26 @@ import { AuthService } from '../auth-controller/auth.service';
 export class FacultyProjectService {
   apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   // get all faculty projects from the server
   getProjects(): Observable<any> {
-    const headers = this.authService.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/projects/getProjects`, { headers });
+    return this.http.get(`${this.apiUrl}/projects/getProjects`);
   }
   // This method accesses the getProject api route, which grabs a singular
   // project from the DB, it takes a projectid and the project type
   getProject(projectId: string, projectType: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-
     const data = {
       "projectID": projectId,
       "projectType": projectType
     }
 
-    return this.http.post(`${this.apiUrl}/projects/getProject`, data, { headers });
+    return this.http.post(`${this.apiUrl}/projects/getProject`, data);
   }
 
   // delete the project with the given project ID and project type
   deleteProject(projectId: string, projectType: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-
     const options = {
-      headers: headers,
       body: {
         "projectID": projectId,
         "projectType": projectType
@@ -49,51 +41,43 @@ export class FacultyProjectService {
   // This method takes the projectID from the webpage and then makes a
   // request to unarchive an archived project
   unarchiveProject(projectID: string): Observable<any> {
-    const headers = this.authService.getHeaders();
     const data = { "projectID": projectID }
 
-    return this.http.put(`${this.apiUrl}/projects/unarchiveProject`, data, { headers });
+    return this.http.put(`${this.apiUrl}/projects/unarchiveProject`, data);
   }
 
   // Make a request to change a project's type to archived
   archiveProject(projectId: string): Observable<any> {
-    const headers = this.authService.getHeaders();
     const data = { "projectID": projectId }
 
-    return this.http.put(`${this.apiUrl}/projects/archiveProject`, data, { headers });
+    return this.http.put(`${this.apiUrl}/projects/archiveProject`, data);
   }
   // Method to access the updateProject API route. It takes the data necessary
   // for the route which should be: projectID, projectType,
   // projectDetails{project{projectName, GPA, majors, categories, description, questions{}, deadline}}
   updateProject(data: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-
-    return this.http.put(`${this.apiUrl}/projects/updateProject`, data, { headers });
+    return this.http.put(`${this.apiUrl}/projects/updateProject`, data);
   }
 
   // Make a request to convert a draft project into an active project that
   // is visible to students
   publishDraft(projectId: string): Observable<any> {
-    const headers = this.authService.getHeaders();
     const data = { projectID: projectId };
 
-    return this.http.put(`${this.apiUrl}/projects/publishDraft`, data, { headers });
+    return this.http.put(`${this.apiUrl}/projects/publishDraft`, data);
   }
 
   // This method access the backend API for fetching a single applicant. It
   // requires the ID of the project and the application ID
   fetchApplicant(projectID: String, applicantionID: String): Observable<any> {
-    const headers = this.authService.getHeaders();
     const data = { "projectID": projectID, "applicationID": applicantionID }
 
-    return this.http.post(`${this.apiUrl}/projects/getApplicant`, data, { headers: headers });
+    return this.http.post(`${this.apiUrl}/projects/getApplicant`, data);
   }
 
   // Makes a request to accept/reject a student application for a project
   applicationDecision(data: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-
-    return this.http.put(`${this.apiUrl}/projects/application`, data, { headers });
+    return this.http.put(`${this.apiUrl}/projects/application`, data);
   }
 
   // This method either rejects or accepts the applicant based on which button
@@ -113,9 +97,8 @@ export class FacultyProjectService {
   // This method gets detailed applicant information for a specific project.
   // It also grabs the student's questions and answers from the database.
   detailedFetchApplicants(projectId: String): Observable<any> {
-    const headers = this.authService.getHeaders();
     const data = { "projectID": projectId };
 
-    return this.http.post(`${this.apiUrl}/projects/getDetailedApplicants`, data, { headers: headers });
+    return this.http.post(`${this.apiUrl}/projects/getDetailedApplicants`, data);
   }
 }

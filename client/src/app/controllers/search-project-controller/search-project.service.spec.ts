@@ -10,7 +10,11 @@ describe('SearchProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],
-      providers: [AuthService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()] // Provide any required dependencies, such as AuthService
+      providers: [
+        AuthService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     });
     service = TestBed.inject(SearchProjectService);
   });

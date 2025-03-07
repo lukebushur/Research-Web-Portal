@@ -1,17 +1,14 @@
 import { IndustryDashboardService } from './industry-dashboard.service';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { AuthService } from '../auth-controller/auth.service';
 
 describe('IndustryDashboardService', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  let authService: AuthService;
   let service: IndustryDashboardService;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'delete']);
-    authService = new AuthService(httpClientSpy);
-    service = new IndustryDashboardService(httpClientSpy, authService);
+    service = new IndustryDashboardService(httpClientSpy);
   });
 
   it('should be created', () => {
@@ -47,7 +44,7 @@ describe('IndustryDashboardService', () => {
         status: 200,
         message: 'JOB_DELETED',
       }
-    };    
+    };
 
     httpClientSpy.delete.and.returnValue(of(expectedResponse));
 

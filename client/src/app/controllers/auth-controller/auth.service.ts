@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, firstValueFrom } from 'rxjs';
 
@@ -7,29 +7,13 @@ import { Observable, firstValueFrom } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
-  apiUrl = environment.apiUrl;
-
-  getHeaders() {
-    const authToken = localStorage.getItem("jwt-auth-token");
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${authToken}`,
-    });
-  }
-
-  // Helper method to grab the auth token from local storage
-  getAuthToken(): String | null {
-    return localStorage.getItem("jwt-auth-token");
-  }
-
   // Gets account information about the user.
   getAccountInfo(): Observable<any> {
-    const headers = this.getHeaders();
-
-    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`, { headers });
+    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
   }
 
   // This function grabs all available majors from the data. It is in the auth controller

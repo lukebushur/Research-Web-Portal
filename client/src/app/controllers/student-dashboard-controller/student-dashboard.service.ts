@@ -8,20 +8,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StudentDashboardService {
-  apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   // Send request to the back-end for the applications associated with the user
   getStudentApplications(): Observable<any> {
-    const headers = this.authService.getHeaders()
-    return this.http.get(`${this.apiUrl}/applications/getApplications`, { headers });
+    return this.http.get(`${this.apiUrl}/applications/getApplications`);
   }
 
   // Send request to the back-end for all the opportunities available to students
   getOpportunities(): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.get(`${this.apiUrl}/projects/getAllProjects`, { headers })
+    return this.http.get(`${this.apiUrl}/projects/getAllProjects`)
   }
 
   // Send request to the back-end for the majors list associated with the given
@@ -32,13 +30,11 @@ export class StudentDashboardService {
 
   // Send request to the back-end for the student user's information
   getStudentInfo(): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`, { headers })
+    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`)
   }
 
   //Send a request to grab a singular application from the student perspective
   getApplication(applicationID: string): Observable<any> {
-    const headers = this.authService.getHeaders();
 
     // Data to send to the back-end
     const data = {
@@ -46,12 +42,11 @@ export class StudentDashboardService {
     }
 
     // Send the request to the back-end
-    return this.http.post(`${this.apiUrl}/applications/getApplication`, data, { headers })
+    return this.http.post(`${this.apiUrl}/applications/getApplication`, data)
   }
 
   // Get the project information for the given professor and project ID
   getProjectInfo(professorEmail: string, projectID: string): Observable<any> {
-    const headers = this.authService.getHeaders();
 
     // Generate the data to send to the back-end
     const data = {
@@ -60,13 +55,11 @@ export class StudentDashboardService {
     }
 
     // Send the request to the back-end
-    return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data, { headers })
+    return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data)
   }
 
   // To update an application pass the application ID and the questions to update
   updateApplication(applicationID: string, questions: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-
     // Data to send to the back-end
     const data = {
       "questions": questions,
@@ -74,16 +67,13 @@ export class StudentDashboardService {
     }
 
     // Send the request to the back-end
-    return this.http.put(`${this.apiUrl}/applications/updateApplication`, data, { headers })
+    return this.http.put(`${this.apiUrl}/applications/updateApplication`, data)
   }
 
   // To delete an application pass the application ID
   deleteApplication(applicationID: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-
     // Options to send to the back-end
     const options = {
-      headers: headers,
       body: {
         "applicationID": applicationID,
       }

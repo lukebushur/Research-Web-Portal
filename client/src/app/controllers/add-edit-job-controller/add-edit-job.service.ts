@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
@@ -10,20 +9,17 @@ import { Observable } from 'rxjs';
 export class AddEditJobService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   getJob(jobId: string): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.get(`${this.apiUrl}/industry/getJob/${jobId}`, { headers });
+    return this.http.get(`${this.apiUrl}/industry/getJob/${jobId}`);
   }
 
   createJob(data: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.post(`${this.apiUrl}/industry/createJob`, data, { headers: headers });
+    return this.http.post(`${this.apiUrl}/industry/createJob`, data);
   }
 
   editJob(data: any): Observable<any> {
-    const headers = this.authService.getHeaders();
-    return this.http.put(`${this.apiUrl}/industry/editJob`, data, { headers: headers });
+    return this.http.put(`${this.apiUrl}/industry/editJob`, data);
   }
 }

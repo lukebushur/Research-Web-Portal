@@ -1,18 +1,15 @@
 import { ApplyToPostService } from './apply-to-post.service';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth-controller/auth.service';
 import { of } from 'rxjs';
 import { ApplyRequestData } from 'app/_models/apply-to-post/applyRequestData';
 
 describe('ApplyToPostService', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  let authService: AuthService;
   let service: ApplyToPostService;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
-    authService = new AuthService(httpClientSpy);
-    service = new ApplyToPostService(httpClientSpy, authService);
+    service = new ApplyToPostService(httpClientSpy);
   });
 
   it('should be created', () => {

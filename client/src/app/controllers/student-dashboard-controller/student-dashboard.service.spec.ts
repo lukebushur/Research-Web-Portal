@@ -4,11 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth-controller/auth.service';
 import { environment } from 'environments/environment';
 
-const exampleHttpHeaders = new HttpHeaders({
-  'Content-Type': 'application/json',
-  Authorization: 'Bearer 123456',
-});
-
 const getStudentInfoResponse = {
   success: {
     status: 200,
@@ -42,10 +37,9 @@ describe('StudentDashboardService', () => {
     httpClientSpy.put.and.returnValue(of(true))
     httpClientSpy.delete.and.returnValue(of(true))
 
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['getHeaders', 'getMajors', 'getAccountInfo']);
-    authServiceSpy.getHeaders.and.returnValue(exampleHttpHeaders)
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['getMajors', 'getAccountInfo']);
     authServiceSpy.getAccountInfo.and.returnValue(of(getStudentInfoResponse));
-    authServiceSpy.getMajors.and.returnValue(Promise.resolve(of(true)))
+    authServiceSpy.getMajors.and.returnValue(of(true));
 
     studentDashboardService = new StudentDashboardService(httpClientSpy, authServiceSpy);
   });
@@ -59,7 +53,6 @@ describe('StudentDashboardService', () => {
   it('should call /applications/deleteApplication', () => {
     // Create the options object
     const options = {
-      headers: exampleHttpHeaders,
       body: {
         "applicationID": '123456',
       }
@@ -81,7 +74,7 @@ describe('StudentDashboardService', () => {
     // Call the function
     studentDashboardService.getApplication(data.applicationID);
     // Check that the function was called
-    expect(httpClientSpy.post).toHaveBeenCalledWith(`${environment.apiUrl}/applications/getApplication`, data, { headers: exampleHttpHeaders })
+    expect(httpClientSpy.post).toHaveBeenCalledWith(`${environment.apiUrl}/applications/getApplication`, data)
   })
 
   // service.getAvailableMajors
@@ -98,7 +91,7 @@ describe('StudentDashboardService', () => {
     studentDashboardService.getOpportunities();
     // Check that the function was called with the correct parameters
     // and that it was called once
-    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.apiUrl}/projects/getAllProjects`, { headers: exampleHttpHeaders });
+    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.apiUrl}/projects/getAllProjects`);
   })
 
   // service.getProjectInfo
@@ -111,7 +104,7 @@ describe('StudentDashboardService', () => {
     // Call the function
     studentDashboardService.getProjectInfo(data.professorEmail, data.projectID);
     // Check that the function was called with the correct parameters
-    expect(httpClientSpy.post).toHaveBeenCalledWith(`${environment.apiUrl}/applications/getProjectInfo`, data, { headers: exampleHttpHeaders })
+    expect(httpClientSpy.post).toHaveBeenCalledWith(`${environment.apiUrl}/applications/getProjectInfo`, data)
   })
 
   // service.getStudentApplications
@@ -119,7 +112,7 @@ describe('StudentDashboardService', () => {
     // Call the function
     studentDashboardService.getStudentApplications();
     // Check that the function was called with the correct parameters
-    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.apiUrl}/applications/getApplications`, { headers: exampleHttpHeaders });
+    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.apiUrl}/applications/getApplications`);
   })
 
   // service.getStudentInfo
@@ -127,7 +120,7 @@ describe('StudentDashboardService', () => {
     // Call the function
     studentDashboardService.getStudentInfo();
     // Check that the function was called with the correct parameters
-    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.apiUrl}/accountManagement/getAccountInfo`, { headers: exampleHttpHeaders });
+    expect(httpClientSpy.get).toHaveBeenCalledWith(`${environment.apiUrl}/accountManagement/getAccountInfo`);
   })
   // service.updateApplication
   it('should call /applications/updateApplication', () => {
@@ -139,6 +132,6 @@ describe('StudentDashboardService', () => {
     // Call the function
     studentDashboardService.updateApplication(data.applicationID, data.questions);
     // Check that the function was called with the correct parameters
-    expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.apiUrl}/applications/updateApplication`, data, { headers: exampleHttpHeaders })
+    expect(httpClientSpy.put).toHaveBeenCalledWith(`${environment.apiUrl}/applications/updateApplication`, data)
   })
 });

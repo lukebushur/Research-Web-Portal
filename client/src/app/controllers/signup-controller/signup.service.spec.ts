@@ -1,17 +1,14 @@
 import { SignupService } from './signup.service';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth-controller/auth.service';
 import { of } from 'rxjs';
 
 describe('SignupService', () => {
-  let authService: AuthService;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
   let service: SignupService;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
-    authService = new AuthService(httpClientSpy);
-    service = new SignupService(httpClientSpy, authService);
+    service = new SignupService(httpClientSpy);
   });
 
   it('should be created', () => {
