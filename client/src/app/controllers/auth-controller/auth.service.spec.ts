@@ -40,23 +40,45 @@ describe('AuthService', () => {
     expect(await accountInfoPromise).toEqual(body);
   });
 
-  it('should return jwt-auth-token', () => {
-    const res = authService.getAuthToken()
+  it('should fetch majors from the university retrieved from getAccountInfo', async () => {
+    const university = 'account PFW';
+    const accountInfo = {
+      success: {
+        accountData: {
+          universityLocation: university,
+        },
+      },
+    };
+    const body = 'majors from account info';
 
-    expect(res).toEqual(localStorage.getItem('jwt-auth-token'))
-  })
+    const majors$ = authService.getMajors();
+    const majorsPromise = firstValueFrom(majors$);
 
-  it('should attempt to fetch accountInfo', () => {
-    authService.getAccountInfo()
-    const args = httpClientSpy.get.calls.mostRecent().args;
+    const accountInfoReq = httpTesting.expectOne(`${API_URL}/accountManagement/getAccountInfo`);
+    accountInfoReq.flush(accountInfo);
 
-    expect(args[0]).toBe(`${environment.apiUrl}/accountManagement/getAccountInfo`)
-  })
+    const majorsReq = httpTesting.expectOne(`${API_URL}/getMajors?university=${university}`);
+    expect(majorsReq.request.method).toBe('GET');
 
-  it('should fetch majors from my university', () => {
-    authService.getMajors('Test University')
-    const args = httpClientSpy.get.calls.mostRecent().args;
+    majorsReq.flush(body);
+    expect(await majorsPromise).toEqual(body);
+  });
 
-    expect(args[0]).toBe(`${environment.apiUrl}/getMajors?university=${'Test University'}`)
-  })
+  it('should fetch majors from the given university', async () => {
+    const university = 'PFW';
+    const body = 'majors';
+
+    const majors$ = authService.getMajors(university);
+    const majorsPromise = firstValueFrom(majors$);
+
+    const req = httpTesting.expectOne(`${API_URL}/getMajors?university=${university}`);
+    expect(req.request.method).toBe('GET');
+
+    req.flush(body);
+    expect(await majorsPromise).toEqual(body);
+  });
+
+  afterEach(() => {
+    httpTesting.verify();
+  });
 });

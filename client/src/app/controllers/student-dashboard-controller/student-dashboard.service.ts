@@ -24,8 +24,8 @@ export class StudentDashboardService {
 
   // Send request to the back-end for the majors list associated with the given
   // university or the user's university
-  async getAvailableMajors(university?: string): Promise<Observable<any>> {
-    return await this.authService.getMajors(university);
+  getAvailableMajors(university?: string): Observable<any> {
+    return this.authService.getMajors(university);
   }
 
   // Send request to the back-end for the student user's information

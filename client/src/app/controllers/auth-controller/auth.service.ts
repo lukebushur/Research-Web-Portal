@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, map, mergeMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,15 +22,15 @@ export class AuthService {
   // be grabbed), it will call getAccountInfo() first to get the universityLocation
   // associated with the user. Then, it will get the majors list from the back-end using
   // the given/retrieved information
-  async getMajors(university?: string): Promise<Observable<any>> {
-    let universityLocation = university;
-    if (!universityLocation || universityLocation === '') {
-      const accountInfo$ = this.getAccountInfo();
-      const result = await firstValueFrom(accountInfo$);
-      universityLocation = result.success.accountData.universityLocation;
+  getMajors(university?: string): Observable<any> {
+    if (university) {
+      return this.http.get(`${this.apiUrl}/getMajors?university=${university}`);
     }
 
-    const headers = this.getHeaders();
-    return this.http.get(`${this.apiUrl}/getMajors?university=${universityLocation}`, { headers });
+    return this.getAccountInfo().pipe(
+      map((result) => result?.success?.accountData?.universityLocation),
+      mergeMap(universityLocation =>
+        this.http.get(`${this.apiUrl}/getMajors?university=${universityLocation}`))
+    );
   }
 }
