@@ -46,7 +46,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ]
 })
 export class StudentOpportunitesSearchPageComponent {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private search: SearchProjectService, private fb: FormBuilder) { }
+  constructor(
+    private router: Router,
+    private studentDashboardService: StudentDashboardService,
+    private search: SearchProjectService,
+    private fb: FormBuilder,
+  ) { }
 
   // This function is called when the component is loaded
   ngOnInit() {
@@ -264,9 +269,9 @@ export class StudentOpportunitesSearchPageComponent {
   }
 
   // Get the list of possible majors from the back-end
-  async getAvailableMajors() {
+  getAvailableMajors() {
     // Get the available majors
-    const getMajorsPromise = await this.studentDashboardService.getAvailableMajors();
+    const getMajorsPromise = this.studentDashboardService.getAvailableMajors();
     // Subscribe to the promise
     getMajorsPromise.subscribe({
       next: (data) => {
