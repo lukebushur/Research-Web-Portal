@@ -13,7 +13,6 @@ export class LoginService {
 
   // Login using the given data
   login(data: any): Observable<any> {
-    console.log(this.apiUrl + data);
     return this.http.post(`${this.apiUrl}/login`, data);
   }
 
