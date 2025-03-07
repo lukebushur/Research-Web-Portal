@@ -1,5 +1,5 @@
 import { Routes } from "@angular/router";
-import { AuthGuard } from "./_helpers/auth/auth-guard/auth.guard";
+import { AuthGuard } from "./core/auth-guard/auth.guard";
 import { roleGuard } from "./_helpers/auth/role-guard/role.guard";
 import { AddEditAssessmentComponent } from "./components/add-edit-assessment/add-edit-assessment.component";
 import { AddEditJobComponent } from "./components/add-edit-job/add-edit-job.component";
