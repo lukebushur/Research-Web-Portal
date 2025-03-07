@@ -1,28 +1,17 @@
-import { Injectable, inject } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router, CanActivateFn } from '@angular/router';
 
-@Injectable({
-  providedIn: 'root',
-})
-class AuthenticationGuardService {
+export const authGuard: CanActivateFn = async (route, state) => {
+  const router = inject(Router);
 
-  constructor(private router: Router) { }
+  const authToken = localStorage.getItem("jwt-auth-token");
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean | UrlTree {
-
-    const authToken = localStorage.getItem("jwt-auth-token");
-
-    if (authToken) {
-      return true;
-    } else {
-      return this.router.parseUrl('/signup');
-    }
+  if (authToken) {
+    return true;
+  } else {
+    // TODO: snackbar notifying user of not being logged-in
+    const result = router.parseUrl('/login');
+    console.log(result);
+    return result;
   }
-}
-
-export const AuthGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
-  return inject(AuthenticationGuardService).canActivate(route, state);
-}
+};

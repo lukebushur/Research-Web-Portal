@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
-import { AuthGuard } from "./core/auth-guard/auth.guard";
-import { roleGuard } from "./_helpers/auth/role-guard/role.guard";
+import { authGuard } from "./core/auth-guard/auth.guard";
+import { roleGuard } from "./core/role-guard/role.guard";
 import { AddEditAssessmentComponent } from "./components/add-edit-assessment/add-edit-assessment.component";
 import { AddEditJobComponent } from "./components/add-edit-job/add-edit-job.component";
 import { ApplyToPostComponent } from "./components/apply-to-post/apply-to-post.component";
@@ -37,7 +37,7 @@ const routeConfig: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signout', component: SignoutComponent },
   // 1 route parameter for the code allowing the user to confirm the account associated with their email
-  { path: 'confirm-email/:emailToken', component: ConfirmEmailComponent, canActivate: [AuthGuard] },
+  { path: 'confirm-email/:emailToken', component: ConfirmEmailComponent, canActivate: [authGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'forgot-password-submitted', component: ForgotPasswordSubmittedComponent },
   // 2 route parameters: email associated with the account & uuid associated with the reset
@@ -46,11 +46,11 @@ const routeConfig: Routes = [
   // FACULTY ROUTES
   // Only accessible by faculty users
   {
-    path: 'faculty', component: FacultyToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'faculty' }, children: [
-      { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [AuthGuard] },
-      { path: 'create-project', component: PostProjectComponent, canActivate: [AuthGuard] },
+    path: 'faculty', component: FacultyToolbarComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'faculty' }, children: [
+      { path: 'dashboard', component: FacultyDashboardComponent, canActivate: [authGuard] },
+      { path: 'create-project', component: PostProjectComponent, canActivate: [authGuard] },
       // 2 route parameters for type of project and project ID
-      { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [AuthGuard] },
+      { path: 'update-project/:projectType/:projectID', component: PostProjectComponent, canActivate: [authGuard] },
       // 2 route parameters for type of project and project ID
       // used to view a specific project's details and applicants
       { path: 'view-project/:projectType/:projectId', component: ViewProjectComponent },
@@ -66,12 +66,12 @@ const routeConfig: Routes = [
   // STUDENT ROUTES
   // Only accessible by student users
   {
-    path: 'student', component: StudentToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'student' }, children: [
+    path: 'student', component: StudentToolbarComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'student' }, children: [
       { path: 'dashboard', component: StudentDashboard },
       // used to search the full list of all projects available for students
       { path: 'search-projects', component: StudentOpportunitesSearchPageComponent },
       // 3 query parameters: professor name, professor email, and project ID
-      { path: 'apply-to-project', component: ApplyToPostComponent, canActivate: [AuthGuard] },
+      { path: 'apply-to-project', component: ApplyToPostComponent, canActivate: [authGuard] },
       // 1 route parameters for the application ID of the application to view
       // This route is to view a student's application to a project
       { path: 'view-application/:applicationID', component: StudentViewApplicationComponent },
@@ -79,7 +79,7 @@ const routeConfig: Routes = [
       { path: 'applications-overview', component: StudentApplicationsOverviewComponent },
       // 2 route parameters: professor email and project ID associated with a project
       // used to view an existing faculty project
-      { path: 'view-project/:professorEmail/:projectId', component: StudentViewProjectComponent, canActivate: [AuthGuard] },
+      { path: 'view-project/:professorEmail/:projectId', component: StudentViewProjectComponent, canActivate: [authGuard] },
       // edit a student user's details
       { path: 'edit-profile', component: EditProfileScreenComponent },
     ],
@@ -88,7 +88,7 @@ const routeConfig: Routes = [
   // INDUSTRY ROUTES
   // Only accessible by industry users
   {
-    path: 'industry', component: IndustryToolbarComponent, canActivate: [AuthGuard, roleGuard], data: { expectedRole: 'industry' }, children: [
+    path: 'industry', component: IndustryToolbarComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'industry' }, children: [
       { path: 'dashboard', component: IndustryDashboardComponent },
       // create a new job
       { path: 'create-job', component: AddEditJobComponent },
