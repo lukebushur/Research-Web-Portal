@@ -22,8 +22,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
         return true;
       } else {
         //route to 404 page for now
-        router.navigate(['/unauthorized']);
-        return false;
+        return router.parseUrl('/unauthorized');
       }
     })
   );
