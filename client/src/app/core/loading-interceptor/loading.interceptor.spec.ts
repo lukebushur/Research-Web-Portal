@@ -2,7 +2,7 @@ import { TestBed, fakeAsync } from '@angular/core/testing';
 
 import { LoadingInterceptor } from './loading.interceptor';
 import { Observable } from 'rxjs';
-import { LoaderService } from './controllers/load-controller/loader.service';
+import { LoaderService } from '../../controllers/load-controller/loader.service';
 import { HttpRequest } from '@angular/common/http';
 
 describe('LoadingInterceptor', () => {

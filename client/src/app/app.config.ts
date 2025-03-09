@@ -6,7 +6,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import routeConfig from "./app.routes";
 import { tokenInterceptor } from "./core/token-interceptor/token.interceptor";
-import { LoadingInterceptor } from "./loading.interceptor";
+import { LoadingInterceptor } from "./core/loading-interceptor/loading.interceptor";
 
 // configuration to use when bootstrapping the application
 export const appConfig: ApplicationConfig = {
