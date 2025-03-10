@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SpinnerComponent } from '../spinner/spinner.component';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { AppliedStudentTableComponent } from '../applied-student-table/applied-student-table.component';
 import { ResearchProjectCardComponent } from '../research-project-card/research-project-card.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
-import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { ProjectFetchData } from '../models/projectFetchData';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { Application } from 'app/_models/applications/application';

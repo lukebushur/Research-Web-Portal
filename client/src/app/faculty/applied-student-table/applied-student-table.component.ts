@@ -3,12 +3,12 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Simpl
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { FacultyProjectService } from '../../controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ProjectFetchData } from '../models/projectFetchData';
+import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 // Interface for applied students table entries

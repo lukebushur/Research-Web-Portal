@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
+import { ProjectFetchData } from 'app/faculty/models/projectFetchData';
 import { Application } from 'app/_models/applications/application';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -14,7 +14,7 @@ import { MatTableHarness } from '@angular/material/table/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatSortHarness } from '@angular/material/sort/testing';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
-import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
 
 describe('AppliedStudentTableComponent', () => {

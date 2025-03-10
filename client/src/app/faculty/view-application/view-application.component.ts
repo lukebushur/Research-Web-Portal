@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
 import { ActivatedRoute } from '@angular/router';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({

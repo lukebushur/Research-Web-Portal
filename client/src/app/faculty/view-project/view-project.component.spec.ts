@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';

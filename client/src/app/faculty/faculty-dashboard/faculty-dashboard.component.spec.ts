@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
 import { Application } from 'app/_models/applications/application';
-import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
+import { ProjectFetchData } from '../models/projectFetchData';
 import { Router, provideRouter } from '@angular/router';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';

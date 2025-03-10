@@ -3,12 +3,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { ResearchProjectCardComponent } from './research-project-card.component';
 import { Router, provideRouter } from '@angular/router';
-import { ProjectFetchData } from 'app/_models/projects/projectFetchData';
+import { ProjectFetchData } from '../models/projectFetchData';
 import { Application } from 'app/_models/applications/application';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatButtonHarness } from '@angular/material/button/testing';
-import { FacultyProjectService } from 'app/controllers/faculty-project-controller/faculty-project.service';
+import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
 import { of } from 'rxjs';
 import { MatCardHarness } from '@angular/material/card/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
