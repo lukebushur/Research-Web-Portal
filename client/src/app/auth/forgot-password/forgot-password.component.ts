@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LoginService } from 'app/auth/login-controller/login.service';
+import { AuthService } from '../auth-service/auth.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +34,7 @@ export class ForgotPasswordComponent {
 
   constructor(
     private router: Router,
-    private loginService: LoginService,
+    private authService: AuthService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -55,10 +55,10 @@ export class ForgotPasswordComponent {
   onSubmit() {
     const email = this.forgotForm.value.email!;
 
-    this.loginService.forgotPassword(email).subscribe({
+    this.authService.forgotPassword(email).subscribe({
       next: (data: any) => {
         if (data.success) {
-          this.router.navigate(['/forgot-password-submitted']);
+          this.router.navigateByUrl('/forgot-password-submitted');
         }
       },
       error: (error) => {

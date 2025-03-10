@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
-import { LoginService } from 'app/auth/login-controller/login.service';
+import { AuthService } from '../auth-service/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,11 +16,15 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { ConfirmResetPasswordBody } from '../models/request-bodies';
 
 describe('ConfirmResetPasswordComponent', () => {
   let component: ConfirmResetPasswordComponent;
   let fixture: ComponentFixture<ConfirmResetPasswordComponent>;
   let loader: HarnessLoader;
+
+  let authService: jasmine.SpyObj<AuthService>;
+  let router: jasmine.SpyObj<Router>;
 
   const routeParams = {
     email: 'testemail@email.com',
@@ -32,19 +36,17 @@ describe('ConfirmResetPasswordComponent', () => {
       paramMap: convertToParamMap(routeParams)
     }
   };
-  let confirmResetPasswordSpy: jasmine.Spy;
-  let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
-    // Spy object for LoginService. Captures the provided function calls and returns
+    // Spy object for AuthService. Captures the provided function calls and returns
     // predictable mock data instead.
-    const loginService = jasmine.createSpyObj('LoginService', ['confirmResetPassword']);
-    confirmResetPasswordSpy = loginService.confirmResetPassword.and.returnValue(of({ success: { status: 200 } }));
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['confirmResetPassword']);
+    authService.confirmResetPassword.and.returnValue(of({ success: { status: 200 } }));
 
     // Spy object for Router. Captures the provided function calls and returns
     // predictable mock data instead.
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
+    router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    router.navigateByUrl.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
       imports: [
@@ -59,7 +61,7 @@ describe('ConfirmResetPasswordComponent', () => {
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
-        { provide: LoginService, useValue: loginService },
+        { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
         { provide: ActivatedRoute, useValue: activatedRoute },
         provideHttpClient(withInterceptorsFromDi()),
@@ -93,7 +95,7 @@ describe('ConfirmResetPasswordComponent', () => {
   });
 
   it('onSubmit() should function correctly', async () => {
-    const data = {
+    const data: ConfirmResetPasswordBody = {
       email: routeParams.email,
       passwordResetToken: routeParams.id,
       provisionalPassword: 'goodPassword',
@@ -101,11 +103,15 @@ describe('ConfirmResetPasswordComponent', () => {
 
     // set form to valid values
     const emailInput = await loader.getHarness(MatInputHarness.with({ selector: '#provisionalPassword' }));
-    await emailInput.setValue(data.provisionalPassword);
+    await emailInput.setValue(data.provisionalPassword!);
     component.onSubmit();
     fixture.detectChanges();
 
-    expect(confirmResetPasswordSpy).withContext('confirmResetPassword called').toHaveBeenCalledOnceWith(data);
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/login']);
+    expect(authService.confirmResetPassword)
+      .withContext('confirmResetPassword called')
+      .toHaveBeenCalledOnceWith(data);
+    expect(router.navigateByUrl)
+      .withContext('navigate called')
+      .toHaveBeenCalledOnceWith('/login');
   });
 });

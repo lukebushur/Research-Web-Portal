@@ -14,26 +14,27 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { LoginService } from 'app/auth/login-controller/login.service';
+import { AuthService } from '../auth-service/auth.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
   let fixture: ComponentFixture<ForgotPasswordComponent>;
   let loader: HarnessLoader;
-  let forgotPasswordSpy: jasmine.Spy;
-  let navigateSpy: jasmine.Spy;
+
+  let authService: jasmine.SpyObj<AuthService>;
+  let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    // Spy object for LoginService. Captures the provided function calls and returns
+    // Spy object for AuthService. Captures the provided function calls and returns
     // predictable mock data instead.
-    const loginService = jasmine.createSpyObj('LoginService', ['forgotPassword']);
-    forgotPasswordSpy = loginService.forgotPassword.and.returnValue(of({ success: { status: 200 } }));
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['forgotPassword']);
+    authService.forgotPassword.and.returnValue(of({ success: { status: 200 } }));
 
     // Spy object for Router. Captures the provided function calls and returns
     // predictable mock data instead.
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate;
+    router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    router.navigateByUrl.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
       imports: [
@@ -48,7 +49,7 @@ describe('ForgotPasswordComponent', () => {
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
-        { provide: LoginService, useValue: loginService },
+        { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
@@ -90,7 +91,11 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
     fixture.detectChanges();
 
-    expect(forgotPasswordSpy).withContext('forgotPassword called').toHaveBeenCalledOnceWith(testEmail);
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/forgot-password-submitted']);
+    expect(authService.forgotPassword)
+      .withContext('forgotPassword called')
+      .toHaveBeenCalledOnceWith(testEmail);
+    expect(router.navigateByUrl)
+      .withContext('navigate called')
+      .toHaveBeenCalledOnceWith('/forgot-password-submitted');
   });
 });

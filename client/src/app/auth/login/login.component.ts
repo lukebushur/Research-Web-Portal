@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LoginService } from 'app/auth/login-controller/login.service';
+import { AuthService } from '../auth-service/auth.service';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoginBody } from '../models/request-bodies';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +43,7 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private loginService: LoginService,
+    private authService: AuthService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -75,12 +76,12 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    const loginData = {
+    const loginData: LoginBody = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
 
-    this.loginService.login(loginData).subscribe({
+    this.authService.login(loginData).subscribe({
       next: (response: any) => {
         const accessToken = response?.success?.accessToken;
         const refreshToken = response?.success?.refreshToken;
@@ -94,7 +95,7 @@ export class LoginComponent {
 
           // Navigate based on the account type
           if (accountType === environment.industryType) {
-            this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
+            this.router.navigateByUrl('/industry/dashboard').then((navigated: boolean) => {
               if (navigated) {
                 this.snackbar.open('Log in successful!', 'Dismiss', {
                   duration: 5000
@@ -102,7 +103,7 @@ export class LoginComponent {
               }
             });
           } else if (accountType === environment.studentType) {
-            this.router.navigate(['/student/dashboard']).then((navigated: boolean) => {
+            this.router.navigateByUrl('/student/dashboard').then((navigated: boolean) => {
               if (navigated) {
                 this.snackbar.open('Log in successful!', 'Dismiss', {
                   duration: 5000
@@ -110,7 +111,7 @@ export class LoginComponent {
               }
             });
           } else {
-            this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
+            this.router.navigateByUrl('/faculty/dashboard').then((navigated: boolean) => {
               if (navigated) {
                 this.snackbar.open('Log in successful!', 'Dismiss', {
                   duration: 5000

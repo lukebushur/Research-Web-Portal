@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginService } from 'app/auth/login-controller/login.service';
+import { AuthService } from '../auth-service/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ConfirmResetPasswordBody } from '../models/request-bodies';
 
 @Component({
   selector: 'app-confirm-reset-password',
@@ -42,7 +43,7 @@ export class ConfirmResetPasswordComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private loginService: LoginService,
+    private authService: AuthService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -53,7 +54,7 @@ export class ConfirmResetPasswordComponent {
 
     // no route parameters given -> erroneous usage of the route
     if (!this.email || !this.id) {
-      this.router.navigate(['/login']).then((navigated: boolean) => {
+      this.router.navigateByUrl('/login').then((navigated: boolean) => {
         if (navigated) {
           this.snackbar.open('Reset password failed: Invalid credentials', 'Dismiss');
         }
@@ -76,17 +77,19 @@ export class ConfirmResetPasswordComponent {
   }
 
   onSubmit(): void {
-    // attempt to confirm the password reset against the back-end
-    this.loginService.confirmResetPassword({
+    const data: ConfirmResetPasswordBody = {
       email: this.email,
       passwordResetToken: this.id,
       provisionalPassword: this.confirmForm.get('provisionalPassword')?.value,
-    }).subscribe({
+    };
+
+    // attempt to confirm the password reset against the back-end
+    this.authService.confirmResetPassword(data).subscribe({
       next: (data: any) => {
         if (data.success) {
           // on success, the password is changed, and the user is redirected to
           // the login page
-          this.router.navigate(['/login']).then((navigated: boolean) => {
+          this.router.navigateByUrl('/login').then((navigated: boolean) => {
             if (navigated) {
               this.snackbar.open('Reset password successful!', 'Dismiss');
             }
@@ -97,7 +100,7 @@ export class ConfirmResetPasswordComponent {
         // on error, the password is not changed, and the user is redirected to
         // the login page
         console.log('Error', data);
-        this.router.navigate(['/login']).then((navigated: boolean) => {
+        this.router.navigateByUrl('/login').then((navigated: boolean) => {
           if (navigated) {
             this.snackbar.open('Reset password failed: Invalid credentials', 'Dismiss');
           }

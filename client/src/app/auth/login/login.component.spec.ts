@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { LoginService } from 'app/auth/login-controller/login.service';
+import { AuthService } from '../auth-service/auth.service';
 import { Router, provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -21,24 +21,26 @@ describe('LoginComponent', () => {
 
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+
+  let router: Router;
+  let authService: jasmine.SpyObj<AuthService>;
+
   const testLoginResponse = {
     success: {
       accessToken: 'login-test-access',
       accountType: 0,
     }
   };
-  let loginSpy: jasmine.Spy;
-  let router: Router;
 
   beforeAll(() => {
     tokens = saveTokens();
   });
 
   beforeEach(() => {
-    // Create a spy to 'replace' the call to loginService's login function.
+    // Create a spy to 'replace' the call to AuthService's login function.
     // This spy returns an observable with the value of testLoginResponse.
-    const loginService = jasmine.createSpyObj('LoginService', ['login']);
-    loginSpy = loginService.login.and.returnValue(of(testLoginResponse));
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['login']);
+    authService.login.and.returnValue(of(testLoginResponse));
 
     TestBed.configureTestingModule({
       imports: [
@@ -51,7 +53,7 @@ describe('LoginComponent', () => {
       ],
       providers: [
         provideRouter([]),
-        { provide: LoginService, useValue: loginService },
+        { provide: AuthService, useValue: authService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ]
@@ -114,12 +116,18 @@ describe('LoginComponent', () => {
     expect(submitButton.disabled).toBeFalse();
   });
 
-  it('should route to the student dashboard component', () => {
-    const navigateSpy = spyOn(router, 'navigate');
-    navigateSpy.and.returnValue(Promise.resolve(false));
+  it('should route to the student dashboard component', async () => {
+    const navigateByUrl = spyOn(router, 'navigateByUrl');
+    navigateByUrl.and.returnValue(Promise.resolve(true));
+
     component.onSubmit();
-    expect(loginSpy.calls.any()).withContext('login called').toBeTrue();
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
+
+    expect(authService.login.calls.any())
+      .withContext('login called')
+      .toBeTrue();
+    expect(navigateByUrl)
+      .withContext('navigate called')
+      .toHaveBeenCalledOnceWith('/student/dashboard');
   });
 
   afterAll(() => {

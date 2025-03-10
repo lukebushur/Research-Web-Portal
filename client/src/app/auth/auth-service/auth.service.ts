@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, map, mergeMap } from 'rxjs';
+import { ConfirmResetPasswordBody, LoginBody } from '../models/request-bodies';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,21 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
   }
 
+
+  // Login using the given data
+  login(data: LoginBody): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, data);
+  }
+
+  // Send request to the back-end to initiate the forgot password process
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/accountManagement/resetPassword`, { email });
+  }
+
+  // Send request to the back-end to confirm and finish the forgot password process
+  confirmResetPassword(data: ConfirmResetPasswordBody): Observable<any> {
+    return this.http.post(`${this.apiUrl}/accountManagement/confirmResetPassword`, data);
+  }
 
   confirmEmail(userId: string, emailToken: string): Observable<any> {
     const data = { userId, emailToken };

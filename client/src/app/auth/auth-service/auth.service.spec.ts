@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ConfirmResetPasswordBody, LoginBody } from '../models/request-bodies';
 
 describe('AuthService', () => {
   const API_URL = environment.apiUrl;
@@ -25,6 +26,58 @@ describe('AuthService', () => {
 
   it('should be created', () => {
     expect(authService).toBeTruthy();
+  });
+
+  it('should send a login request', async () => {
+    const body: LoginBody = {
+      email: 'login@email.com',
+      password: 'loginPassword123',
+    };
+    const flushBody = 'login';
+
+    const loginResponse$ = authService.login(body);
+    const loginResponse = firstValueFrom(loginResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/login`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(body);
+
+    req.flush(flushBody);
+    expect(await loginResponse).toEqual(flushBody);
+  });
+
+  it('should send a forgot password request', async () => {
+    const email = 'forgotpassword@email.com';
+    const flushBody = 'forgot password';
+
+    const forgotPasswordResponse$ = authService.forgotPassword(email);
+    const forgotPasswordResponse = firstValueFrom(forgotPasswordResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/accountManagement/resetPassword`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ email });
+
+    req.flush(flushBody);
+    expect(await forgotPasswordResponse).toEqual(flushBody);
+  });
+
+  it('should send a confirm reset password request', async () => {
+    const body: ConfirmResetPasswordBody = {
+      email: 'confirmresetpassword@email.com',
+      passwordResetToken: 'resetToken',
+      provisionalPassword: 'newConfirmPassword123',
+    };
+    const flushBody = 'forgot password';
+
+    const confirmResetPasswordResponse$ = authService.confirmResetPassword(body);
+    const confirmResetPasswordResponse = firstValueFrom(confirmResetPasswordResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/accountManagement/confirmResetPassword`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(body);
+
+    req.flush(flushBody);
+    expect(await confirmResetPasswordResponse).toEqual(flushBody);
   });
 
   it('should send an email confirmation request', async () => {

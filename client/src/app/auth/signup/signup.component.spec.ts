@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { AuthService } from 'app/auth/auth-service/auth.service';
+import { AuthService } from '../auth-service/auth.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Tokens, saveTokens, restoreTokens } from 'app/helpers/testing/token-storage';
 
