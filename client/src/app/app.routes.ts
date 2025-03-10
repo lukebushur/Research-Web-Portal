@@ -6,7 +6,7 @@ import { AddEditJobComponent } from "./components/add-edit-job/add-edit-job.comp
 import { ApplyToPostComponent } from "./components/apply-to-post/apply-to-post.component";
 import { AssessmentBrowserComponent } from "./components/assessment-browser/assessment-browser.component";
 import { ConfirmEmailComponent } from "./auth/confirm-email/confirm-email.component";
-import { ConfirmResetPasswordComponent } from "./components/confirm-reset-password/confirm-reset-password.component";
+import { ConfirmResetPasswordComponent } from "./auth/confirm-reset-password/confirm-reset-password.component";
 import { EditProfileScreenComponent } from "./components/edit-profile-screen/edit-profile-screen.component";
 import { FacultyDashboardComponent } from "./components/faculty-dashboard/faculty-dashboard.component";
 import { FacultyToolbarComponent } from "./components/faculty-toolbar/faculty-toolbar.component";
