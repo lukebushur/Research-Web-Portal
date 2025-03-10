@@ -1,32 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmailService } from 'app/controllers/email-controller/email.service';
 import { ConfirmEmailComponent } from './confirm-email.component';
-import { AuthService } from 'app/controllers/auth-controller/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 describe('ConfirmEmailComponent', () => {
   let component: ConfirmEmailComponent;
   let fixture: ComponentFixture<ConfirmEmailComponent>;
+  let loader: HarnessLoader;
+
   let emailServiceSpy: jasmine.SpyObj<EmailService>;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
   let routerSpy: jasmine.SpyObj<Router>;
-  let snackbarSpy: jasmine.SpyObj<MatSnackBar>
 
   beforeEach(() => {
-    emailServiceSpy = jasmine.createSpyObj('EmailService', ['confirmEmail']);
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['getAccountInfo']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    snackbarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+    emailServiceSpy = jasmine.createSpyObj<EmailService>('EmailService', ['confirmEmail']);
+    routerSpy = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 
     emailServiceSpy.confirmEmail.and.returnValue(of({}));
-    authServiceSpy.getAccountInfo.and.returnValue(of({
-      success: {
-        accountData: { userType: 0 }
-      }
-    }));
-    routerSpy.navigate.and.returnValue(Promise.resolve(true));
+    routerSpy.navigateByUrl.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
       imports: [ConfirmEmailComponent],
@@ -34,17 +27,19 @@ describe('ConfirmEmailComponent', () => {
         {
           provide: ActivatedRoute, useValue: {
             snapshot: {
-              paramMap: new Map([['emailToken', 'testToken']])
+              paramMap: new Map([
+                ['userId', 'testId'],
+                ['emailToken', 'testToken'],
+              ])
             }
           }
         },
         { provide: Router, useValue: routerSpy },
         { provide: EmailService, useValue: emailServiceSpy },
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: MatSnackBar, useValue: snackbarSpy },
       ],
     });
     fixture = TestBed.createComponent(ConfirmEmailComponent);
+    loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -53,19 +48,18 @@ describe('ConfirmEmailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should confirm the email and navigate to the appropriate dashboard on success', () => {
+  it('should confirm the email and navigate to login', async () => {
     component.ngOnInit();
 
-    expect(emailServiceSpy.confirmEmail).toHaveBeenCalledWith('testToken');
-    expect(authServiceSpy.getAccountInfo).toHaveBeenCalled();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/student/dashboard']);
+    expect(emailServiceSpy.confirmEmail).toHaveBeenCalledWith('testId', 'testToken');
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/login');
   });
 
-  it('should handle confirmation failure and redirect to login', () => {
+  it('should handle confirmation failure and redirect to login', async () => {
     emailServiceSpy.confirmEmail.and.returnValue(throwError(() => new Error('Confirmation failed')));
 
     component.ngOnInit();
 
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/login');
   });
 });

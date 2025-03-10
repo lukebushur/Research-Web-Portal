@@ -11,7 +11,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
   } else {
     // TODO: snackbar notifying user of not being logged-in
     const result = router.parseUrl('/login');
-    console.log(result);
     return result;
   }
 };

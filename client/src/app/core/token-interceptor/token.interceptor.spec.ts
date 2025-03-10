@@ -7,7 +7,7 @@ import { environment } from 'environments/environment';
 import { tokenInterceptor } from './token.interceptor';
 import { AuthService } from 'app/controllers/auth-controller/auth.service';
 
-describe('TokenInterceptor', () => {
+describe('tokenInterceptor', () => {
   const KEY = 'jwt-auth-token';
   const TEST_URL = `${environment.apiUrl}/accountManagement/getAccountInfo`;
   let storedJwt: string | null;

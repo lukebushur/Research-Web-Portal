@@ -27,7 +27,11 @@ describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
   let loader: HarnessLoader;
-  let signupSpy: jasmine.Spy;
+
+  let router: jasmine.SpyObj<Router>;
+  let authService: jasmine.SpyObj<AuthService>;
+  let signupService: jasmine.SpyObj<SignupService>;
+
   // mock data for the signup response
   const testSignupResponse = {
     success: {
@@ -38,7 +42,6 @@ describe('SignupComponent', () => {
       }
     }
   };
-  let getMajorsSpy: jasmine.Spy;
   // mock data for the getMajors response
   const testGetMajorResponse = {
     success: {
@@ -49,26 +52,25 @@ describe('SignupComponent', () => {
       ]
     }
   };
-  let navigateSpy: jasmine.Spy;
 
   beforeAll(() => {
     tokens = saveTokens();
   });
 
   beforeEach(() => {
-    // Create a spy to 'replace' the call to SignupService's signup function.
-    // This spy returns an observable with the value of testSignupResponse.
-    const signupService = jasmine.createSpyObj('SignupService', ['signup']);
-    signupSpy = signupService.signup.and.returnValue(of(testSignupResponse));
+    // Create a spy to 'replace' the call to Router's navigateByUrl function.
+    router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    router.navigateByUrl.and.returnValue(Promise.resolve(false));
 
     // Create a spy to 'replace' the call to AuthService's getMajors function.
     // This spy returns an observable with the value of testGetMajorResponse.
-    const authService = jasmine.createSpyObj('AuthService', ['getMajors']);
-    getMajorsSpy = authService.getMajors.and.returnValue(Promise.resolve(of(testGetMajorResponse)));
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['getMajors']);
+    authService.getMajors.and.returnValue(of(testGetMajorResponse));
 
-    // Create a spy to 'replace' the call to Router's navigate function.
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate.and.returnValue(Promise.resolve(false));
+    // Create a spy to 'replace' the call to SignupService's signup function.
+    // This spy returns an observable with the value of testSignupResponse.
+    signupService = jasmine.createSpyObj<SignupService>('SignupService', ['signup']);
+    signupService.signup.and.returnValue(of(testSignupResponse));
 
     TestBed.configureTestingModule({
       imports: [
@@ -216,7 +218,7 @@ describe('SignupComponent', () => {
 
     // after setting accountType to 0, more fields appear, and the list of possible
     // majors is set utilizing the AuthService
-    expect(getMajorsSpy).withContext('getMajors called').toHaveBeenCalled();
+    expect(authService.getMajors).withContext('getMajors called').toHaveBeenCalled();
 
     // set valid student-specific values in the DOM
     const gpaInput = await loader.getHarness(MatInputHarness.with({ selector: '#gpa' }));
@@ -232,11 +234,11 @@ describe('SignupComponent', () => {
   });
 
   it('should route to the home component', () => {
-    // accounType = 0 -> student type -> onSubmit() should route to the student dashboard
     component.signupForm.get('accountType')?.setValue(0);
     component.onSubmit();
-    expect(signupSpy.calls.any()).withContext('signup called').toBeTrue();
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
+
+    expect(signupService.signup.calls.any()).withContext('signup called').toBeTrue();
+    expect(router.navigateByUrl).withContext('navigate called').toHaveBeenCalledOnceWith('/notify-confirm-email');
   });
 
   afterAll(() => {

@@ -203,7 +203,7 @@ export class SignupComponent {
   }
 
   routeToLoginPage() {
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/login');
   }
 
   onSubmit() {

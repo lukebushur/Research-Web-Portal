@@ -19,10 +19,13 @@ describe('EmailService', () => {
   });
 
   it('should send the email confirmation HttpPost', () => {
-    emailService.confirmEmail('emailToken');
+    emailService.confirmEmail('userId', 'emailToken');
 
     expect(httpClientSpy.post).toHaveBeenCalledOnceWith(
-      `${environment.apiUrl}/confirmEmail`, { emailToken: 'emailToken' }
+      `${environment.apiUrl}/confirmEmail`, {
+        userId: 'userId',
+        emailToken: 'emailToken',
+      }
     );
   })
 });
