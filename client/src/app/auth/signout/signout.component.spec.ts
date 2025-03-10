@@ -3,20 +3,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignoutComponent } from './signout.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SignoutService } from 'app/controllers/signout-controller/signout.service';
+import { AuthService } from '../auth-service/auth.service';
 
 describe('SignoutComponent', () => {
   let component: SignoutComponent;
   let fixture: ComponentFixture<SignoutComponent>;
-  let signoutSpy: jasmine.Spy;
-  let navigateSpy: jasmine.Spy;
+
+  let router: jasmine.SpyObj<Router>;
+  let authService: jasmine.SpyObj<AuthService>;
 
   beforeEach(() => {
-    const signoutService = jasmine.createSpyObj('SignoutService', ['signout']);
-    signoutSpy = signoutService.signout;
+    router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    router.navigateByUrl.and.returnValue(Promise.resolve(true));
 
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['signout']);
+    authService.signout;
 
     TestBed.configureTestingModule({
       imports: [
@@ -25,7 +26,7 @@ describe('SignoutComponent', () => {
       ],
       providers: [
         { provide: Router, useValue: router },
-        { provide: SignoutService, useValue: signoutService },
+        { provide: AuthService, useValue: authService },
       ]
     });
     fixture = TestBed.createComponent(SignoutComponent);
@@ -35,7 +36,8 @@ describe('SignoutComponent', () => {
 
   it('should create and redirect', () => {
     expect(component).toBeTruthy();
-    expect(signoutSpy).withContext('signout called').toHaveBeenCalled();
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledWith(['/login']);
+
+    expect(authService.signout).withContext('signout called').toHaveBeenCalled();
+    expect(router.navigateByUrl).withContext('navigate called').toHaveBeenCalledWith('/login');
   });
 });

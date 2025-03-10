@@ -5,12 +5,21 @@ import { environment } from 'environments/environment';
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ConfirmResetPasswordBody, LoginBody } from '../models/request-bodies';
+import { restoreTokens, saveTokens, Tokens } from 'app/helpers/testing/token-storage';
 
 describe('AuthService', () => {
   const API_URL = environment.apiUrl;
 
+  const KEY = 'jwt-auth-token';
+  let tokens: Tokens;
+  const randomToken = '1234567890';
+
   let httpTesting: HttpTestingController;
   let authService: AuthService;
+
+  beforeAll(() => {
+    tokens = saveTokens();
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -98,6 +107,14 @@ describe('AuthService', () => {
     expect(await confirmResponse).toEqual(flushBody);
   })
 
+  it('should sign out the user', () => {
+    localStorage.setItem(KEY, randomToken);
+
+    authService.signout();
+
+    expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
   it('should attempt to fetch accountInfo', async () => {
     const body = 'account info';
 
@@ -151,5 +168,9 @@ describe('AuthService', () => {
 
   afterEach(() => {
     httpTesting.verify();
+  });
+
+  afterAll(() => {
+    restoreTokens(tokens);
   });
 });

@@ -42,6 +42,11 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/confirmEmail`, data);
   }
 
+  // remove the JWT token
+  signout() {
+    localStorage.removeItem('jwt-auth-token');
+  }
+
   // This function grabs all available majors from the data. It is in the auth controller
   // because it is a shared route between all accounts and as such does not belong with
   // solely faculty or students. Unless provided with a unversity (from which majors will
