@@ -173,7 +173,7 @@ export class SignupComponent {
   // Update the form based on the selected university and accountType
   //   Student accountType -> also needs to fill out their GPA and majors
   //   Any other accountType -> GPA and majors not required
-  async updateForm(): Promise<void> {
+  updateForm(): void {
     // Any accountType other than student -> GPA and majors not required
     if (this.signupForm.get('accountType')?.value !== 0) {
       this.signupForm.get('GPA')?.disable();
@@ -186,7 +186,7 @@ export class SignupComponent {
     if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.signupForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.signupForm.get('universityLocation')?.value;
-      const getMajorsPromise = await this.authService.getMajors(this.prevSelectedUniversity ?? undefined);
+      const getMajorsPromise = this.authService.getMajors(this.prevSelectedUniversity ?? undefined);
       getMajorsPromise.subscribe({
         next: (data: any) => {
           if (data.success) {
@@ -209,44 +209,11 @@ export class SignupComponent {
   onSubmit() {
     this.signupService.signup(this.signupForm.value).subscribe({
       next: (data: any) => {
-        const authToken = data?.success?.accessToken;
-        const refreshToken = data?.success?.refreshToken;
-        const accountType = data?.success?.user.accountType;
-
-        // Check if the authentication token is present in the response
-        if (authToken) {
-          // Store the authentication token and refresh token in local storage
-          localStorage.setItem("jwt-auth-token", authToken);
-          localStorage.setItem("jwt-refr-token", refreshToken);
-
-          // Navigate based on the account type
-          if (accountType === environment.industryType) {
-            this.router.navigate(['/industry/dashboard']).then((navigated: boolean) => {
-              if (navigated) {
-                this.snackbar.open('Log in successful!', 'Dismiss', {
-                  duration: 5000
-                });
-              }
-            });
-          } else if (accountType === environment.studentType) {
-            this.router.navigate(['/student/dashboard']).then((navigated: boolean) => {
-              if (navigated) {
-                this.snackbar.open('Log in successful!', 'Dismiss', {
-                  duration: 5000
-                });
-              }
-            });
-          } else {
-            this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
-              if (navigated) {
-                this.snackbar.open('Log in successful!', 'Dismiss', {
-                  duration: 5000
-                });
-              }
-            });
-          }
+        if (data.success) {
+          // Navigate to notify the user to confirm email
+          this.router.navigateByUrl('/notify-confirm-email');
         } else {
-          console.error('Authentication token not found in the response.');
+          console.error('Error signing up', data);
         }
       },
       error: (data: any) => {

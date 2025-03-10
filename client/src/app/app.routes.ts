@@ -5,7 +5,7 @@ import { AddEditAssessmentComponent } from "./components/add-edit-assessment/add
 import { AddEditJobComponent } from "./components/add-edit-job/add-edit-job.component";
 import { ApplyToPostComponent } from "./components/apply-to-post/apply-to-post.component";
 import { AssessmentBrowserComponent } from "./components/assessment-browser/assessment-browser.component";
-import { ConfirmEmailComponent } from "./components/confirm-email/confirm-email.component";
+import { ConfirmEmailComponent } from "./auth/confirm-email/confirm-email.component";
 import { ConfirmResetPasswordComponent } from "./components/confirm-reset-password/confirm-reset-password.component";
 import { EditProfileScreenComponent } from "./components/edit-profile-screen/edit-profile-screen.component";
 import { FacultyDashboardComponent } from "./components/faculty-dashboard/faculty-dashboard.component";
@@ -27,6 +27,7 @@ import { StudentViewApplicationComponent } from "./components/student-view-appli
 import { ViewApplicationComponent } from "./components/view-application/view-application.component";
 import { ViewProjectComponent } from "./components/view-project/view-project.component";
 import { StudentViewProjectComponent } from "./components/student-view-project/student-view-project.component";
+import { NotifyConfirmEmailComponent } from "./auth/notify-confirm-email/notify-confirm-email.component";
 
 const routeConfig: Routes = [
 
@@ -36,8 +37,9 @@ const routeConfig: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signout', component: SignoutComponent },
+  { path: 'notify-confirm-email', component: NotifyConfirmEmailComponent },
   // 1 route parameter for the code allowing the user to confirm the account associated with their email
-  { path: 'confirm-email/:emailToken', component: ConfirmEmailComponent, canActivate: [authGuard] },
+  { path: 'confirm-email/:userId/:emailToken', component: ConfirmEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'forgot-password-submitted', component: ForgotPasswordSubmittedComponent },
   // 2 route parameters: email associated with the account & uuid associated with the reset

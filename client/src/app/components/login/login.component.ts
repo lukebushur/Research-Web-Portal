@@ -82,14 +82,15 @@ export class LoginComponent {
 
     this.loginService.login(loginData).subscribe({
       next: (response: any) => {
-
-        const authToken = response?.success?.accessToken;
+        const accessToken = response?.success?.accessToken;
+        const refreshToken = response?.success?.refreshToken;
         const accountType = response?.success?.accountType;
 
         // Check if the authentication token is present in the response
-        if (authToken) {
-          // Store the authentication token in local storage
-          localStorage.setItem("jwt-auth-token", authToken);
+        if (accessToken) {
+          // Store the tokens in local storage
+          localStorage.setItem('jwt-auth-token', accessToken);
+          localStorage.setItem('jwt-refr-token', refreshToken);
 
           // Navigate based on the account type
           if (accountType === environment.industryType) {

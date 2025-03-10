@@ -11,8 +11,8 @@ export class EmailService {
 
   constructor(private http: HttpClient) { }
 
-  confirmEmail(emailToken: string): Observable<any> {
-    const data = { emailToken };
+  confirmEmail(userId: string, emailToken: string): Observable<any> {
+    const data = { userId, emailToken };
 
     return this.http.post(`${this.apiUrl}/confirmEmail`, data);
   }
