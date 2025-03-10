@@ -11,21 +11,28 @@ import { LoginService } from 'app/controllers/login-controller/login.service';
 import { Router, provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { restoreTokens, saveTokens, Tokens } from 'app/helpers/testing/token-storage';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })
 class SpinnerSubComponent { }
 
 describe('LoginComponent', () => {
+  let tokens: Tokens;
+
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   const testLoginResponse = {
     success: {
-      accessToken: 'garbage',
+      accessToken: 'login-test-access',
       accountType: 0,
     }
   };
   let loginSpy: jasmine.Spy;
   let router: Router;
+
+  beforeAll(() => {
+    tokens = saveTokens();
+  });
 
   beforeEach(() => {
     // Create a spy to 'replace' the call to loginService's login function.
@@ -113,5 +120,9 @@ describe('LoginComponent', () => {
     component.onSubmit();
     expect(loginSpy.calls.any()).withContext('login called').toBeTrue();
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
+  });
+
+  afterAll(() => {
+    restoreTokens(tokens);
   });
 });

@@ -2,10 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router, RouterStateSnapshot } from '@angular/router';
 
 import { authGuard } from './auth.guard';
+import { restoreTokens, saveTokens, Tokens } from 'app/helpers/testing/token-storage';
 
 describe('authGuard', () => {
   const KEY = 'jwt-auth-token';
-  let value: string | null;
+  let tokens: Tokens;
 
   let router: Router;
   const executeGuard: CanActivateFn = (...guardParameters) =>
@@ -13,7 +14,7 @@ describe('authGuard', () => {
 
   // Save the current token if there is one
   beforeAll(() => {
-    value = localStorage.getItem(KEY);
+    tokens = saveTokens();
   });
 
   beforeEach(() => {
@@ -34,7 +35,7 @@ describe('authGuard', () => {
     const state: RouterStateSnapshot = {} as any;
 
     // Remove our account token
-    localStorage.removeItem("jwt-auth-token");
+    localStorage.removeItem(KEY);
 
     const parseUrlSpy = spyOn(router, 'parseUrl');
 
@@ -60,10 +61,6 @@ describe('authGuard', () => {
 
   // Restore the previous token
   afterAll(() => {
-    if (value) {
-      localStorage.setItem(KEY, value);
-    } else {
-      localStorage.removeItem(KEY);
-    }
+    restoreTokens(tokens);
   });
 });

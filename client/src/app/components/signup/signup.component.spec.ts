@@ -19,8 +19,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AuthService } from 'app/controllers/auth-controller/auth.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { Tokens, saveTokens, restoreTokens } from 'app/helpers/testing/token-storage';
 
 describe('SignupComponent', () => {
+  let tokens: Tokens;
+
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
   let loader: HarnessLoader;
@@ -47,6 +50,10 @@ describe('SignupComponent', () => {
     }
   };
   let navigateSpy: jasmine.Spy;
+
+  beforeAll(() => {
+    tokens = saveTokens();
+  });
 
   beforeEach(() => {
     // Create a spy to 'replace' the call to SignupService's signup function.
@@ -230,5 +237,9 @@ describe('SignupComponent', () => {
     component.onSubmit();
     expect(signupSpy.calls.any()).withContext('signup called').toBeTrue();
     expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/dashboard']);
+  });
+
+  afterAll(() => {
+    restoreTokens(tokens);
   });
 });
