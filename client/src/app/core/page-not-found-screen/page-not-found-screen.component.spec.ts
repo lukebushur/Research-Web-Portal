@@ -30,7 +30,7 @@ describe('PageNotFoundScreenComponent', () => {
     fixture.detectChanges();
 
     const errorMessage = fixture.debugElement.query(By.css('h2')).nativeElement.textContent;
-    expect(errorMessage).toContain('Oops! Page Not Found');
+    expect(errorMessage).toContain('Oops! Page Not Found!');
   });
 
 });
