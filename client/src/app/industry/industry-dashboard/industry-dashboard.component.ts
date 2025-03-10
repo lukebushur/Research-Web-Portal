@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
-import { JobCardData } from './job-card/job-card-data';
+import { JobCardData } from '../models/job-card-data';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
-import { JobCardComponent } from './job-card/job-card.component';
+import { JobCardComponent } from '../job-card/job-card.component';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({

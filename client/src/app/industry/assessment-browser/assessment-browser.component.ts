@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
-import { AssessmentData } from 'app/_models/assessments/assessmentData';
+import { AssessmentData } from '../models/assessmentData';
 import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
-import { AssessmentCardComponent } from './assessment-card/assessment-card.component';
+import { AssessmentCardComponent } from '../assessment-card/assessment-card.component';
 
 @Component({
   selector: 'app-assessment-browser',

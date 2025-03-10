@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth-guard/auth.guard';
 import { roleGuard } from './core/role-guard/role.guard';
-import { AddEditAssessmentComponent } from './components/add-edit-assessment/add-edit-assessment.component';
-import { AddEditJobComponent } from './components/add-edit-job/add-edit-job.component';
+import { AddEditAssessmentComponent } from './industry/add-edit-assessment/add-edit-assessment.component';
+import { AddEditJobComponent } from './industry/add-edit-job/add-edit-job.component';
 import { ApplyToPostComponent } from './students/apply-to-post/apply-to-post.component';
-import { AssessmentBrowserComponent } from './components/assessment-browser/assessment-browser.component';
+import { AssessmentBrowserComponent } from './industry/assessment-browser/assessment-browser.component';
 import { ConfirmEmailComponent } from './auth/confirm-email/confirm-email.component';
 import { ConfirmResetPasswordComponent } from './auth/confirm-reset-password/confirm-reset-password.component';
 import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
@@ -12,7 +12,7 @@ import { FacultyDashboardComponent } from './faculty/faculty-dashboard/faculty-d
 import { FacultyToolbarComponent } from './components/faculty-toolbar/faculty-toolbar.component';
 import { ForgotPasswordSubmittedComponent } from './auth/forgot-password-submitted/forgot-password-submitted.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
-import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
+import { IndustryDashboardComponent } from './industry/industry-dashboard/industry-dashboard.component';
 import { IndustryToolbarComponent } from './components/industry-toolbar/industry-toolbar.component';
 import { LoginComponent } from './auth/login/login.component';
 import { PageNotFoundScreenComponent } from './core/page-not-found-screen/page-not-found-screen.component';

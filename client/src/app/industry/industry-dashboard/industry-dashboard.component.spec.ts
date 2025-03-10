@@ -5,7 +5,7 @@ import { IndustryDashboardComponent } from './industry-dashboard.component';
 import { Component, Input } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { JobCardData } from './job-card/job-card-data';
+import { JobCardData } from '../models/job-card-data';
 import { of } from 'rxjs';
 import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
 import { HarnessLoader } from '@angular/cdk/testing';

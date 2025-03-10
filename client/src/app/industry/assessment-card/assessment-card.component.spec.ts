@@ -5,7 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { AssessmentData } from 'app/_models/assessments/assessmentData';
+import { AssessmentData } from '../models/assessmentData';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AssessmentCardComponent', () => {

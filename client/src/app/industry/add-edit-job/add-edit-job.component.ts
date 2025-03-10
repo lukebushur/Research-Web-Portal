@@ -6,12 +6,12 @@ import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/
 import { AddEditJobService } from 'app/controllers/add-edit-job-controller/add-edit-job.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { JobCardData } from '../industry-dashboard/job-card/job-card-data';
+import { JobCardData } from '../models/job-card-data';
 import { Location } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AssessmentChooserComponent } from './assessment-chooser/assessment-chooser.component';
+import { AssessmentChooserComponent } from '../assessment-chooser/assessment-chooser.component';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { CreateQuestionsFormComponent } from '../create-questions-form/create-questions-form.component';
+import { CreateQuestionsFormComponent } from '../../components/create-questions-form/create-questions-form.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
