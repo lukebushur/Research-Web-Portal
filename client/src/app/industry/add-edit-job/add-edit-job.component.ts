@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFor
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { AddEditJobService } from 'app/controllers/add-edit-job-controller/add-edit-job.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobCardData } from '../models/job-card-data';
@@ -76,7 +76,7 @@ export class AddEditJobComponent {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private addEditJobService: AddEditJobService,
+    private addEditJobService: IndustryService,
     private announcer: LiveAnnouncer,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,

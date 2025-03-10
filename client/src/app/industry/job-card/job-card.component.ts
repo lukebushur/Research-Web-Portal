@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { JobCardData } from '../models/job-card-data';
-import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +25,7 @@ export class JobCardComponent {
 
   constructor(
     private router: Router,
-    private industryDashboardService: IndustryDashboardService,
+    private industryService: IndustryService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -64,7 +64,7 @@ export class JobCardComponent {
   }
 
   deleteJob(): void {
-    this.industryDashboardService.deleteJob(this.jobData._id).subscribe({
+    this.industryService.deleteJob(this.jobData._id).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.snackBar.open('Job successfully deleted!', 'Close', {

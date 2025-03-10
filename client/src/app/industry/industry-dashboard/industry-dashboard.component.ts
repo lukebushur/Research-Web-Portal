@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { JobCardData } from '../models/job-card-data';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
 import { JobCardComponent } from '../job-card/job-card.component';
@@ -19,12 +19,15 @@ export class IndustryDashboardComponent {
   draftedJobs: JobCardData[];
   archivedJobs: JobCardData[];
 
-  constructor(private router: Router, private industryDashboardService: IndustryDashboardService) { }
+  constructor(
+    private router: Router,
+    private industryService: IndustryService,
+  ) { }
 
   ngOnInit(): void {
     this.timeInterval = interval(5000).pipe(
       startWith(0),
-      switchMap(() => this.industryDashboardService.getJobs())
+      switchMap(() => this.industryService.getJobs())
     ).subscribe({
       next: (data: any) => {
         if (data.success) {

@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { of } from 'rxjs';
-import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,8 +20,10 @@ describe('JobCardComponent', () => {
   let component: JobCardComponent;
   let fixture: ComponentFixture<JobCardComponent>;
   let loader: HarnessLoader;
+
+  let industryService: jasmine.SpyObj<IndustryService>;
+
   let testDeleteJobsResponse: Object;
-  let deleteJobSpy: jasmine.Spy;
 
   beforeEach(() => {
     testDeleteJobsResponse = {
@@ -31,8 +33,8 @@ describe('JobCardComponent', () => {
       },
     };
 
-    const industryDashboardService = jasmine.createSpyObj('IndustryDashboardService', ['deleteJob']);
-    deleteJobSpy = industryDashboardService.deleteJob.and.returnValue(of(testDeleteJobsResponse));
+    industryService = jasmine.createSpyObj<IndustryService>('IndustryService', ['deleteJob']);
+    industryService.deleteJob.and.returnValue(of(testDeleteJobsResponse));
 
     TestBed.configureTestingModule({
       imports: [
@@ -45,7 +47,7 @@ describe('JobCardComponent', () => {
         JobCardComponent
       ],
       providers: [
-        { provide: IndustryDashboardService, useValue: industryDashboardService },
+        { provide: IndustryService, useValue: industryService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
@@ -59,12 +61,12 @@ describe('JobCardComponent', () => {
       title: 'Senior Quantum Computing Engineer',
       isInternship: false,
       isFullTime: true,
-      description: `Are you passionate about pushing the boundaries of 
-computing technology? Join Quantum Innovations Co. as a Senior Quantum 
-Computing Engineer and be at the forefront of revolutionizing the world of 
-quantum computing. In this role, you will work on cutting-edge projects, 
-collaborate with a team of experts, and contribute to the development of 
-groundbreaking quantum algorithms. If you thrive in a dynamic and 
+      description: `Are you passionate about pushing the boundaries of
+computing technology? Join Quantum Innovations Co. as a Senior Quantum
+Computing Engineer and be at the forefront of revolutionizing the world of
+quantum computing. In this role, you will work on cutting-edge projects,
+collaborate with a team of experts, and contribute to the development of
+groundbreaking quantum algorithms. If you thrive in a dynamic and
 intellectually stimulating environment, apply now!`,
       location: 'Silicon Valley, CA',
       reqYearsExp: 5,
@@ -119,9 +121,9 @@ intellectually stimulating environment, apply now!`,
     expect(dateStrResult).toEqual('Mar 15, 2024');
   });
 
-  it('should call deleteJob() from the industryDashboardService', () => {
+  it('should call deleteJob() from the IndustryService', () => {
     component.deleteJob();
-    expect(deleteJobSpy).toHaveBeenCalledOnceWith(component.jobData._id);
+    expect(industryService.deleteJob).toHaveBeenCalledOnceWith(component.jobData._id);
   });
 
   // TODO: Unit tests for editJob()

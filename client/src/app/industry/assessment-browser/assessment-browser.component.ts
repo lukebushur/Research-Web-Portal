@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, interval, startWith, switchMap } from 'rxjs';
 import { AssessmentData } from '../models/assessmentData';
-import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { AssessmentCardComponent } from '../assessment-card/assessment-card.component';
 
 @Component({
@@ -16,12 +16,15 @@ export class AssessmentBrowserComponent {
 
   assessments: AssessmentData[];
 
-  constructor(private router: Router, private assessmentsService: AssessmentsService) { }
+  constructor(
+    private router: Router,
+    private industryService: IndustryService,
+  ) { }
 
   ngOnInit(): void {
     this.timeInterval = interval(5000).pipe(
       startWith(0),
-      switchMap(() => this.assessmentsService.getAssessments())
+      switchMap(() => this.industryService.getAssessments())
     ).subscribe({
       next: (data: any) => {
         if (data.success) {

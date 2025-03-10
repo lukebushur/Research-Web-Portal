@@ -5,11 +5,9 @@ import { IndustryDashboardComponent } from './industry-dashboard.component';
 import { Component, Input } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { JobCardData } from '../models/job-card-data';
+import { JobCardData } from '../../industry/models/job-card-data';
 import { of } from 'rxjs';
-import { IndustryDashboardService } from 'app/controllers/industry-dashboard-controller/industry-dashboard.service';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { IndustryService } from '../industry-service/industry.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({ standalone: true, selector: 'app-job-card', template: '' })
@@ -18,8 +16,10 @@ class JobCardStubComponent { @Input() jobData: JobCardData }
 describe('IndustryDashboardComponent', () => {
   let component: IndustryDashboardComponent;
   let fixture: ComponentFixture<IndustryDashboardComponent>;
+
+  let industryService: jasmine.SpyObj<IndustryService>;
+
   let testGetJobsResponse: Object;
-  let getJobsSpy: jasmine.Spy;
 
   beforeEach(() => {
     testGetJobsResponse = {
@@ -62,8 +62,8 @@ intellectually stimulating environment, apply now!`,
       }
     };
 
-    const industryDashboardService = jasmine.createSpyObj('IndustryDashboardService', ['getJobs']);
-    getJobsSpy = industryDashboardService.getJobs.and.returnValue(of(testGetJobsResponse));
+    industryService = jasmine.createSpyObj<IndustryService>('IndustryService', ['getJobs']);
+    industryService.getJobs.and.returnValue(of(testGetJobsResponse));
 
     TestBed.configureTestingModule({
       imports: [
@@ -73,7 +73,7 @@ intellectually stimulating environment, apply now!`,
         IndustryDashboardComponent
       ],
       providers: [
-        { provide: IndustryDashboardService, useValue: industryDashboardService },
+        { provide: IndustryService, useValue: industryService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ]

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssessmentData } from '../models/assessmentData';
-import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateQuestionsFormComponent } from 'app/components/create-questions-form/create-questions-form.component';
 import { MatInputModule } from '@angular/material/input';
@@ -40,7 +40,7 @@ export class AddEditAssessmentComponent {
     private router: Router,
     private location: Location,
     private fb: FormBuilder,
-    private assessmentService: AssessmentsService,
+    private industryService: IndustryService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -51,7 +51,7 @@ export class AddEditAssessmentComponent {
     }
 
     this.isCreateAssessment = false;
-    this.assessmentService.getAssessment(assessmentId).subscribe({
+    this.industryService.getAssessment(assessmentId).subscribe({
       next: (data: any) => {
         if (data.success) {
           const result = JSON.parse(data.success.assessment);
@@ -76,7 +76,7 @@ export class AddEditAssessmentComponent {
   }
 
   submitCreate(submitData: any): void {
-    this.assessmentService.createAssessment(submitData).subscribe({
+    this.industryService.createAssessment(submitData).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.router.navigate(['/industry/assessments']).then((navigated: boolean) => {
@@ -102,7 +102,7 @@ export class AddEditAssessmentComponent {
       assessmentId: this.initialAssessmentData!._id,
       assessmentDetails: submitData,
     };
-    this.assessmentService.editAssessment(editData).subscribe({
+    this.industryService.editAssessment(editData).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.router.navigate(['/industry/assessments']).then((navigated: boolean) => {

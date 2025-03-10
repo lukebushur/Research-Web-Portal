@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AssessmentData } from '../models/assessmentData';
-import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
@@ -23,7 +23,7 @@ export class AssessmentCardComponent {
 
   constructor(
     private router: Router,
-    private assessmentsService: AssessmentsService,
+    private industryService: IndustryService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -49,7 +49,7 @@ export class AssessmentCardComponent {
   }
 
   deleteAssessment(): void {
-    this.assessmentsService.deleteAssessment(this.assessmentData._id).subscribe({
+    this.industryService.deleteAssessment(this.assessmentData._id).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.snackbar.open('Assessment successfully deleted!', 'Dismiss', {

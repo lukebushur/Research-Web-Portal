@@ -3,7 +3,7 @@ import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angu
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AssessmentData } from '../models/assessmentData';
-import { AssessmentsService } from 'app/controllers/assessments-controller/assessments.service';
+import { IndustryService } from '../industry-service/industry.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -32,12 +32,12 @@ export class AssessmentChooserComponent {
 
   constructor(
     public dialogRef: MatDialogRef<AssessmentChooserComponent>,
-    private assessmentsService: AssessmentsService,
+    private industryService: IndustryService,
     private snackbar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
-    this.assessmentsService.getAssessments().subscribe({
+    this.industryService.getAssessments().subscribe({
       next: (data: any) => {
         if (data.success) {
           this.assessments = data.success.assessments;
