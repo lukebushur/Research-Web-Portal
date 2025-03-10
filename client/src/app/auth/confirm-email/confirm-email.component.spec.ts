@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EmailService } from 'app/controllers/email-controller/email.service';
+import { AuthService } from '../auth-service/auth.service';
 import { ConfirmEmailComponent } from './confirm-email.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
@@ -11,14 +11,14 @@ describe('ConfirmEmailComponent', () => {
   let fixture: ComponentFixture<ConfirmEmailComponent>;
   let loader: HarnessLoader;
 
-  let emailServiceSpy: jasmine.SpyObj<EmailService>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    emailServiceSpy = jasmine.createSpyObj<EmailService>('EmailService', ['confirmEmail']);
+    authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['confirmEmail']);
     routerSpy = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 
-    emailServiceSpy.confirmEmail.and.returnValue(of({}));
+    authServiceSpy.confirmEmail.and.returnValue(of({}));
     routerSpy.navigateByUrl.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
@@ -35,7 +35,7 @@ describe('ConfirmEmailComponent', () => {
           }
         },
         { provide: Router, useValue: routerSpy },
-        { provide: EmailService, useValue: emailServiceSpy },
+        { provide: AuthService, useValue: authServiceSpy },
       ],
     });
     fixture = TestBed.createComponent(ConfirmEmailComponent);
@@ -51,12 +51,12 @@ describe('ConfirmEmailComponent', () => {
   it('should confirm the email and navigate to login', async () => {
     component.ngOnInit();
 
-    expect(emailServiceSpy.confirmEmail).toHaveBeenCalledWith('testId', 'testToken');
+    expect(authServiceSpy.confirmEmail).toHaveBeenCalledWith('testId', 'testToken');
     expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/login');
   });
 
   it('should handle confirmation failure and redirect to login', async () => {
-    emailServiceSpy.confirmEmail.and.returnValue(throwError(() => new Error('Confirmation failed')));
+    authServiceSpy.confirmEmail.and.returnValue(throwError(() => new Error('Confirmation failed')));
 
     component.ngOnInit();
 

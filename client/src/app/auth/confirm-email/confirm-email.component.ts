@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EmailService } from 'app/controllers/email-controller/email.service';
+import { AuthService } from '../auth-service/auth.service';
 
 @Component({
   selector: 'app-confirm-email',
@@ -15,7 +15,7 @@ export class ConfirmEmailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private emailService: EmailService,
+    private authService: AuthService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -27,7 +27,7 @@ export class ConfirmEmailComponent implements OnInit {
       return this.redirectToLogin('Invalid email confirmation token');
     }
 
-    this.emailService.confirmEmail(userId, emailToken).subscribe({
+    this.authService.confirmEmail(userId, emailToken).subscribe({
       next: () => {
         this.redirectToLogin('Email successfully confirmed! Please login to continue.');
       },

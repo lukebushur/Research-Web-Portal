@@ -11,9 +11,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+
+  // TODO: Move to user-profile-service
   // Gets account information about the user.
   getAccountInfo(): Observable<any> {
     return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
+  }
+
+
+  confirmEmail(userId: string, emailToken: string): Observable<any> {
+    const data = { userId, emailToken };
+
+    return this.http.post(`${this.apiUrl}/confirmEmail`, data);
   }
 
   // This function grabs all available majors from the data. It is in the auth controller

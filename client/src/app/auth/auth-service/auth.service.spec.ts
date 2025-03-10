@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { firstValueFrom, of } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
@@ -26,6 +26,24 @@ describe('AuthService', () => {
   it('should be created', () => {
     expect(authService).toBeTruthy();
   });
+
+  it('should send an email confirmation request', async () => {
+    const body = {
+      userId: 'userId',
+      emailToken: 'emailToken',
+    };
+    const flushBody = 'confirm email';
+
+    const confirmResponse$ = authService.confirmEmail(body.userId, body.emailToken);
+    const confirmResponse = firstValueFrom(confirmResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/confirmEmail`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(body);
+
+    req.flush(flushBody);
+    expect(await confirmResponse).toEqual(flushBody);
+  })
 
   it('should attempt to fetch accountInfo', async () => {
     const body = 'account info';
