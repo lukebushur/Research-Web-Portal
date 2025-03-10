@@ -3,7 +3,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Simpl
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,7 +55,7 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private facultyProjectService: FacultyProjectService,
+    private facultyService: FacultyService,
     public dialog: MatDialog
   ) {
     // initialize table data
@@ -132,7 +132,7 @@ export class AppliedStudentTableComponent implements AfterViewInit, OnChanges {
   // make a request to the server, updating the decision and emitting an
   // application update event
   applicationDecision(app: string, decision: string) {
-    this.facultyProjectService.applicationDecide(app, this.project!.id, decision).subscribe({
+    this.facultyService.applicationDecide(app, this.project!.id, decision).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.applicationUpdateEvent.emit(this.project!.number);

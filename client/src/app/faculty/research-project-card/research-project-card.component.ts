@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, } from '@angular/core';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { Router } from '@angular/router';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +30,7 @@ export class ResearchProjectCardComponent {
 
   constructor(
     private router: Router,
-    private facultyProjectService: FacultyProjectService,
+    private facultyService: FacultyService,
     public dateConverter: DateConverterService,
   ) { }
 
@@ -43,7 +43,7 @@ export class ResearchProjectCardComponent {
   // server and emit a project update event
   buttonDeleteProject(): void {
     const upperProjectType = this.project.projectType.charAt(0).toUpperCase() + this.project.projectType.slice(1);
-    this.facultyProjectService.deleteProject(this.project.id, upperProjectType).subscribe({
+    this.facultyService.deleteProject(this.project.id, upperProjectType).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.projectUpdateEvent.emit(this.project.number);
@@ -58,7 +58,7 @@ export class ResearchProjectCardComponent {
   // if the user presses the archive button, send an archive project request to
   // the server and emit a project update event
   buttonArchiveProject(): void {
-    this.facultyProjectService.archiveProject(this.project.id).subscribe({
+    this.facultyService.archiveProject(this.project.id).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.projectUpdateEvent.emit(this.project.number);
@@ -71,7 +71,7 @@ export class ResearchProjectCardComponent {
   }
 
   buttonUnArchiveProject(): void {
-    this.facultyProjectService.unarchiveProject(this.project.id).subscribe({
+    this.facultyService.unarchiveProject(this.project.id).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.projectUpdateEvent.emit(this.project.number);

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
 import { Application } from 'app/_models/applications/application';
 import { ProjectFetchData } from '../models/projectFetchData';
@@ -14,7 +14,7 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 describe('FacultyDashboardComponent', () => {
   let component: FacultyDashboardComponent;
   let fixture: ComponentFixture<FacultyDashboardComponent>;
-  let facultyService: jasmine.SpyObj<FacultyProjectService>;
+  let facultyService: jasmine.SpyObj<FacultyService>;
   let router: Router;
   let loader: HarnessLoader;
   const applicationsData: Application[] = [
@@ -119,7 +119,7 @@ describe('FacultyDashboardComponent', () => {
   ];
 
   beforeEach(() => {
-    facultyService = jasmine.createSpyObj<FacultyProjectService>('FacultyProjectService', ['getProjects']);
+    facultyService = jasmine.createSpyObj<FacultyService>('FacultyService', ['getProjects']);
     facultyService.getProjects.and.returnValue(of({
       success: {
         projects: projectData
@@ -133,7 +133,7 @@ describe('FacultyDashboardComponent', () => {
       ],
       providers: [
         provideRouter([]),
-        { provide: FacultyProjectService, useValue: facultyService },
+        { provide: FacultyService, useValue: facultyService },
       ]
     });
     fixture = TestBed.createComponent(FacultyDashboardComponent);

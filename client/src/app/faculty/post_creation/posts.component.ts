@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PostCreationService } from '../post-creation-controller/post-creation.service';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service'
+import { FacultyService } from '../faculty-service/faculty.service'
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -79,8 +78,7 @@ export class PostProjectComponent implements OnInit {
     private location: Location,
     private fb: FormBuilder,
     private announcer: LiveAnnouncer,
-    private facultyProjectService: FacultyProjectService,
-    private postCreationService: PostCreationService,
+    private facultyService: FacultyService,
     private authService: AuthService,
     private snackbar: MatSnackBar,
   ) { }
@@ -129,7 +127,7 @@ export class PostProjectComponent implements OnInit {
 
   updateProjectInit(): void {
     // Populate the form with the current project data
-    this.facultyProjectService.getProject(this.projectID!, this.projectType!).subscribe({
+    this.facultyService.getProject(this.projectID!, this.projectType!).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.initialProjectData = {
@@ -268,7 +266,7 @@ export class PostProjectComponent implements OnInit {
     }
 
     // Make the request to create the project draft
-    this.postCreationService.createPost(this.getSubmissionData('Draft')).subscribe({
+    this.facultyService.createPost(this.getSubmissionData('Draft')).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
@@ -301,10 +299,10 @@ export class PostProjectComponent implements OnInit {
     };
 
     // TODO: make HTTP request after the backend route is made
-    this.facultyProjectService.updateProject(updateData).subscribe({
+    this.facultyService.updateProject(updateData).subscribe({
       next: (data: any) => {
         if (data.success) {
-          this.facultyProjectService.publishDraft(this.projectID!).subscribe({
+          this.facultyService.publishDraft(this.projectID!).subscribe({
             next: (data: any) => {
               if (data.success) {
                 this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
@@ -330,7 +328,7 @@ export class PostProjectComponent implements OnInit {
 
   // Make the request to create the project
   createProject(data: any): void {
-    this.postCreationService.createPost(data).subscribe({
+    this.facultyService.createPost(data).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {
@@ -354,7 +352,7 @@ export class PostProjectComponent implements OnInit {
       projectID: this.projectID!,
       ...data,
     };
-    this.facultyProjectService.updateProject(updateData).subscribe({
+    this.facultyService.updateProject(updateData).subscribe({
       next: (data: any) => {
         if (data.success) {
           this.router.navigate(['/faculty/dashboard']).then((navigated: boolean) => {

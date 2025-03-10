@@ -14,14 +14,14 @@ import { MatTableHarness } from '@angular/material/table/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatSortHarness } from '@angular/material/sort/testing';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
 
 describe('AppliedStudentTableComponent', () => {
   let component: AppliedStudentTableComponent;
   let loader: HarnessLoader;
   let fixture: ComponentFixture<AppliedStudentTableComponent>;
-  let facultyService: jasmine.SpyObj<FacultyProjectService>;
+  let facultyService: jasmine.SpyObj<FacultyService>;
   const applicationsData: Application[] = [
     {
       _id: '1',
@@ -88,7 +88,7 @@ describe('AppliedStudentTableComponent', () => {
   };
 
   beforeEach(() => {
-    facultyService = jasmine.createSpyObj<FacultyProjectService>('FacultyProjectService', ['applicationDecide']);
+    facultyService = jasmine.createSpyObj<FacultyService>('FacultyService', ['applicationDecide']);
     facultyService.applicationDecide.and.returnValue(of({
       success: {
         status: 200,
@@ -106,7 +106,7 @@ describe('AppliedStudentTableComponent', () => {
         MatInputModule,
       ],
       providers: [
-        { provide: FacultyProjectService, useValue: facultyService },
+        { provide: FacultyService, useValue: facultyService },
       ]
     });
     fixture = TestBed.createComponent(AppliedStudentTableComponent);

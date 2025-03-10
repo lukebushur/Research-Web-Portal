@@ -6,10 +6,17 @@ import { environment } from 'environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class FacultyProjectService {
+export class FacultyService {
   apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
+
+  // Send HTTP post request to the server to create the project with the given
+  // information.
+  // Returns an observable containing the result of the HTTP request.
+  createPost(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/projects/createProject`, data);
+  }
 
   // get all faculty projects from the server
   getProjects(): Observable<any> {

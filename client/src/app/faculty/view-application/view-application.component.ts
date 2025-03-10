@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { ActivatedRoute } from '@angular/router';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,7 +44,7 @@ export class ViewApplicationComponent {
 
   //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service
   //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
-  constructor(private facultyService: FacultyProjectService,
+  constructor(private facultyService: FacultyService,
     private route: ActivatedRoute,
     private dateConverter: DateConverterService,
     public dialog: MatDialog) {

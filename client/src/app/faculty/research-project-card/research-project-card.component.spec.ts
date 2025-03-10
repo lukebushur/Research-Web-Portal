@@ -8,7 +8,7 @@ import { Application } from 'app/_models/applications/application';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatButtonHarness } from '@angular/material/button/testing';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
 import { MatCardHarness } from '@angular/material/card/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -17,7 +17,7 @@ describe('ResearchProjectCardComponent', () => {
   let component: ResearchProjectCardComponent;
   let fixture: ComponentFixture<ResearchProjectCardComponent>;
   let router: Router;
-  let facultyService: jasmine.SpyObj<FacultyProjectService>;
+  let facultyService: jasmine.SpyObj<FacultyService>;
   let loader: HarnessLoader;
   const applicationsData: Application[] = [
     {
@@ -85,7 +85,7 @@ describe('ResearchProjectCardComponent', () => {
   };
 
   beforeEach(() => {
-    facultyService = jasmine.createSpyObj<FacultyProjectService>('FacultyProjectService', ['deleteProject', 'archiveProject']);
+    facultyService = jasmine.createSpyObj<FacultyService>('FacultyService', ['deleteProject', 'archiveProject']);
     facultyService.deleteProject.and.returnValue(of({
       success: {
         status: 200
@@ -101,7 +101,7 @@ describe('ResearchProjectCardComponent', () => {
       imports: [ResearchProjectCardComponent],
       providers: [
         provideRouter([]),
-        { provide: FacultyProjectService, useValue: facultyService },
+        { provide: FacultyService, useValue: facultyService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ]

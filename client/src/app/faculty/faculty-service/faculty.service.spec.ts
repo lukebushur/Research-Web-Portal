@@ -1,21 +1,46 @@
-import { FacultyProjectService } from './faculty-project.service';
+import { FacultyService } from './faculty.service';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { environment } from 'environments/environment';
 
-describe('FacultyProjectService', () => {
-  let service: FacultyProjectService;
+describe('FacultyService', () => {
+  let service: FacultyService;
   let httpSpy: jasmine.SpyObj<HttpClient>;
   const apiUrl = environment.apiUrl;
 
   beforeEach(() => {
-    // mock services to instantiate and test FacultyProjectService
+    // mock services to instantiate and test FacultyService
     httpSpy = jasmine.createSpyObj('HttpClient', ['get', 'post', 'put', 'delete']);
-    service = new FacultyProjectService(httpSpy);
+    service = new FacultyService(httpSpy);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should return successful createPost response', (done: DoneFn) => {
+    const testData = {
+      projectID: '0',
+      projectType: 'Active',
+    };
+    const response = {
+      success: {
+        status: 201,
+      }
+    };
+    httpSpy.post.and.returnValue(of(response));
+
+    service.createPost(testData).subscribe({
+      next: (data: any) => {
+        expect(data).withContext('expected response').toEqual(response);
+        done();
+      },
+      error: done.fail
+    });
+    expect(httpSpy.post).toHaveBeenCalledOnceWith(
+      `${apiUrl}/projects/createProject`,
+      testData,
+    );
   });
 
   it('should return successful getProjects response', (done: DoneFn) => {

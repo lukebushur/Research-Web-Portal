@@ -3,7 +3,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { AppliedStudentTableComponent } from '../applied-student-table/applied-student-table.component';
 import { ResearchProjectCardComponent } from '../research-project-card/research-project-card.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { ProjectFetchData } from '../models/projectFetchData';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -46,7 +46,7 @@ export class FacultyDashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private facultyService: FacultyProjectService,
+    private facultyService: FacultyService,
   ) { }
 
   ngOnInit(): void {

@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -112,7 +112,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
 
   constructor(
     private route: ActivatedRoute,
-    private facultyService: FacultyProjectService,
+    private facultyService: FacultyService,
     private _liveAnnouncer: LiveAnnouncer,
     private location: Location,
     public dialog: MatDialog

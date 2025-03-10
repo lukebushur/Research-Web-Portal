@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { FacultyProjectService } from '../faculty-project-controller/faculty-project.service';
+import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
@@ -183,12 +183,12 @@ describe('ViewProjectComponent', () => {
       status: 'Reject'
     },
   ];
-  let facultyService: jasmine.SpyObj<FacultyProjectService>;
+  let facultyService: jasmine.SpyObj<FacultyService>;
 
   beforeEach(() => {
     // Create the spy object to mock the getProjectInfo nad
     // detailedFetchApplicants methods.
-    facultyService = jasmine.createSpyObj<FacultyProjectService>('FacultyProjectService', [
+    facultyService = jasmine.createSpyObj<FacultyService>('FacultyService', [
       'getProject',
       'detailedFetchApplicants'
     ]);
@@ -220,7 +220,7 @@ describe('ViewProjectComponent', () => {
       ],
       providers: [
         provideRouter([]),
-        { provide: FacultyProjectService, useValue: facultyService },
+        { provide: FacultyService, useValue: facultyService },
         {
           provide: ActivatedRoute, useValue: {
             snapshot: {
