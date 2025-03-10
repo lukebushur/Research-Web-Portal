@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LoginService } from 'app/controllers/login-controller/login.service';
+import { LoginService } from 'app/auth/login-controller/login.service';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';

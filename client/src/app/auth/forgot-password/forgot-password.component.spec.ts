@@ -14,7 +14,7 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { LoginService } from 'app/controllers/login-controller/login.service';
+import { LoginService } from 'app/auth/login-controller/login.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ForgotPasswordComponent', () => {

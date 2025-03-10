@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { LoginService } from 'app/controllers/login-controller/login.service';
+import { LoginService } from 'app/auth/login-controller/login.service';
 import { Router, provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
