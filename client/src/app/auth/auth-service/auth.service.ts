@@ -35,6 +35,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/accountManagement/confirmResetPassword`, data);
   }
 
+  // Send request to confirm the given user's email
   confirmEmail(userId: string, emailToken: string): Observable<any> {
     const data = { userId, emailToken };
 
