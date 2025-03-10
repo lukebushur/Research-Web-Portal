@@ -1,7 +1,7 @@
 import { StudentDashboardService } from './student-dashboard.service';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../auth-controller/auth.service';
+import { AuthService } from '../../auth/auth-service/auth.service';
 import { environment } from 'environments/environment';
 
 const getStudentInfoResponse = {

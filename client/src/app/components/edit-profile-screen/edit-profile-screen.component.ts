@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/auth/auth-service/auth.service';
 import { ProfileServiceService } from 'app/controllers/profile-controller/profile-service.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';

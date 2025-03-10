@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignupService } from 'app/controllers/signup-controller/signup.service';
 import { environment } from 'environments/environment';
-import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/auth/auth-service/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';

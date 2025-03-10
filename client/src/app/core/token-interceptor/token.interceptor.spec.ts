@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from 'environments/environment';
 import { tokenInterceptor } from './token.interceptor';
-import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/auth/auth-service/auth.service';
 
 describe('tokenInterceptor', () => {
   const KEY = 'jwt-auth-token';

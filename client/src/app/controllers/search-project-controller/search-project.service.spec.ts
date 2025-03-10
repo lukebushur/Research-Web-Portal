@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing'; // Import HttpClientTestingModule
-import { AuthService } from '../auth-controller/auth.service';
+import { AuthService } from '../../auth/auth-service/auth.service';
 import { SearchProjectService } from './search-project.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 

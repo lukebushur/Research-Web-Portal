@@ -4,7 +4,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot, CanActivateFn, GuardResult, pro
 import { roleGuard } from './role.guard';
 import { environment } from 'environments/environment';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/auth/auth-service/auth.service';
 
 const getStudentInfoResponse = {
   success: {

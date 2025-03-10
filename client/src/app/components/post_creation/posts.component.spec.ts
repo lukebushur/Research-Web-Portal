@@ -22,7 +22,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { ProjectData } from 'app/_models/projects/projectData';
 import { of } from 'rxjs';
-import { AuthService } from 'app/controllers/auth-controller/auth.service';
+import { AuthService } from 'app/auth/auth-service/auth.service';
 import { MatSelectHarness } from '@angular/material/select/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
