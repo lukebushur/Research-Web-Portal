@@ -1,0 +1,13 @@
+.container {
+    margin-top: 15vh;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    max-width: max-content;
+}
+
+.card p {
+    margin-top: 8px;
+}
