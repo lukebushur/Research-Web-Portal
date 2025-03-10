@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ConfirmResetPasswordBody, LoginBody } from '../models/request-bodies';
+import { ConfirmResetPasswordBody, LoginBody, SignupBody } from '../models/request-bodies';
 import { restoreTokens, saveTokens, Tokens } from 'app/helpers/testing/token-storage';
 
 describe('AuthService', () => {
@@ -35,6 +35,45 @@ describe('AuthService', () => {
 
   it('should be created', () => {
     expect(authService).toBeTruthy();
+  });
+
+  it('should return signup successful response', async () => {
+    const body: SignupBody = {
+      name: 'signup name',
+      email: 'signup@email.com',
+      password: 'signupPassword123',
+      universityLocation: 'signup university',
+      accountType: 1,
+    };
+    const flushBody = 'signup response';
+
+    const signupResponse$ = authService.signup(body);
+    const signupResponse = firstValueFrom(signupResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/register`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(body);
+
+    req.flush(flushBody);
+    expect(await signupResponse).toEqual(flushBody);
+  });
+
+  it('should send an email confirmation request', async () => {
+    const body = {
+      userId: 'userId',
+      emailToken: 'emailToken',
+    };
+    const flushBody = 'confirm email';
+
+    const confirmResponse$ = authService.confirmEmail(body.userId, body.emailToken);
+    const confirmResponse = firstValueFrom(confirmResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/confirmEmail`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(body);
+
+    req.flush(flushBody);
+    expect(await confirmResponse).toEqual(flushBody);
   });
 
   it('should send a login request', async () => {
@@ -88,24 +127,6 @@ describe('AuthService', () => {
     req.flush(flushBody);
     expect(await confirmResetPasswordResponse).toEqual(flushBody);
   });
-
-  it('should send an email confirmation request', async () => {
-    const body = {
-      userId: 'userId',
-      emailToken: 'emailToken',
-    };
-    const flushBody = 'confirm email';
-
-    const confirmResponse$ = authService.confirmEmail(body.userId, body.emailToken);
-    const confirmResponse = firstValueFrom(confirmResponse$);
-
-    const req = httpTesting.expectOne(`${API_URL}/confirmEmail`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(body);
-
-    req.flush(flushBody);
-    expect(await confirmResponse).toEqual(flushBody);
-  })
 
   it('should sign out the user', () => {
     localStorage.setItem(KEY, randomToken);

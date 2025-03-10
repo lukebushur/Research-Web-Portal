@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, map, mergeMap } from 'rxjs';
-import { ConfirmResetPasswordBody, LoginBody } from '../models/request-bodies';
+import { ConfirmResetPasswordBody, LoginBody, SignupBody } from '../models/request-bodies';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,17 @@ export class AuthService {
   }
 
 
+  signup(data: SignupBody): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, data);
+  }
+
+  // Send request to confirm the given user's email
+  confirmEmail(userId: string, emailToken: string): Observable<any> {
+    const data = { userId, emailToken };
+
+    return this.http.post(`${this.apiUrl}/confirmEmail`, data);
+  }
+
   // Login using the given data
   login(data: LoginBody): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data);
@@ -33,13 +44,6 @@ export class AuthService {
   // Send request to the back-end to confirm and finish the forgot password process
   confirmResetPassword(data: ConfirmResetPasswordBody): Observable<any> {
     return this.http.post(`${this.apiUrl}/accountManagement/confirmResetPassword`, data);
-  }
-
-  // Send request to confirm the given user's email
-  confirmEmail(userId: string, emailToken: string): Observable<any> {
-    const data = { userId, emailToken };
-
-    return this.http.post(`${this.apiUrl}/confirmEmail`, data);
   }
 
   // remove the JWT token

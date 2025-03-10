@@ -12,7 +12,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { SignupService } from 'app/controllers/signup-controller/signup.service';
 import { Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,7 +29,6 @@ describe('SignupComponent', () => {
 
   let router: jasmine.SpyObj<Router>;
   let authService: jasmine.SpyObj<AuthService>;
-  let signupService: jasmine.SpyObj<SignupService>;
 
   // mock data for the signup response
   const testSignupResponse = {
@@ -64,13 +62,9 @@ describe('SignupComponent', () => {
 
     // Create a spy to 'replace' the call to AuthService's getMajors function.
     // This spy returns an observable with the value of testGetMajorResponse.
-    authService = jasmine.createSpyObj<AuthService>('AuthService', ['getMajors']);
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['signup', 'getMajors']);
+    authService.signup.and.returnValue(of(testSignupResponse));
     authService.getMajors.and.returnValue(of(testGetMajorResponse));
-
-    // Create a spy to 'replace' the call to SignupService's signup function.
-    // This spy returns an observable with the value of testSignupResponse.
-    signupService = jasmine.createSpyObj<SignupService>('SignupService', ['signup']);
-    signupService.signup.and.returnValue(of(testSignupResponse));
 
     TestBed.configureTestingModule({
       imports: [
@@ -84,7 +78,6 @@ describe('SignupComponent', () => {
         SignupComponent
       ],
       providers: [
-        { provide: SignupService, useValue: signupService },
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
         provideHttpClient(withInterceptorsFromDi()),
@@ -237,7 +230,7 @@ describe('SignupComponent', () => {
     component.signupForm.get('accountType')?.setValue(0);
     component.onSubmit();
 
-    expect(signupService.signup.calls.any()).withContext('signup called').toBeTrue();
+    expect(authService.signup.calls.any()).withContext('signup called').toBeTrue();
     expect(router.navigateByUrl).withContext('navigate called').toHaveBeenCalledOnceWith('/notify-confirm-email');
   });
 

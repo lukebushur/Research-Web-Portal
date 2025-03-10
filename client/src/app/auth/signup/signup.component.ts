@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignupService } from 'app/controllers/signup-controller/signup.service';
 import { AuthService } from '../auth-service/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatOptionModule } from '@angular/material/core';
@@ -12,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SignupBody } from '../models/request-bodies';
 
 interface AccountType {
   value: number;
@@ -99,7 +99,6 @@ export class SignupComponent {
 
   constructor(
     private router: Router,
-    private signupService: SignupService,
     private authService: AuthService,
     private snackbar: MatSnackBar,
   ) { }
@@ -206,7 +205,9 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    this.signupService.signup(this.signupForm.value).subscribe({
+    const data: SignupBody = this.signupForm.value;
+
+    this.authService.signup(data).subscribe({
       next: (data: any) => {
         if (data.success) {
           // Navigate to notify the user to confirm email
