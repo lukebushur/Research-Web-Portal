@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { StudentViewApplicationComponent } from '../student-view-application/student-view-application.component';
+import { StudentViewApplicationComponent } from './student-view-application.component';
 import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, provideRouter } from '@angular/router';

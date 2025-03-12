@@ -4,7 +4,7 @@ import { StudentApplicationsOverviewComponent } from './student-applications-ove
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field'; // Import MatFormFieldModule
-import { SpinnerComponent } from '../spinner/spinner.component';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';

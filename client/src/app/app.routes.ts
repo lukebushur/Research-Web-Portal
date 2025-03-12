@@ -19,14 +19,14 @@ import { PageNotFoundScreenComponent } from './core/page-not-found-screen/page-n
 import { PostProjectComponent } from './faculty/post_creation/posts.component';
 import { SignoutComponent } from './auth/signout/signout.component';
 import { SignupComponent } from './auth/signup/signup.component';
-import { StudentApplicationsOverviewComponent } from './components/student-applications-overview/student-applications-overview.component';
-import { StudentDashboard } from './components/student-dashboard/dashboard.component';
-import { StudentOpportunitesSearchPageComponent } from './components/student-opportunites-search-page/student-opportunites-search-page.component';
+import { StudentApplicationsOverviewComponent } from './students/student-applications-overview/student-applications-overview.component';
+import { StudentDashboard } from './students/student-dashboard/dashboard.component';
+import { StudentOpportunitesSearchPageComponent } from './students/student-opportunites-search-page/student-opportunites-search-page.component';
 import { StudentToolbarComponent } from './components/student-toolbar/student-toolbar.component';
-import { StudentViewApplicationComponent } from './components/student-view-application/student-view-application.component';
+import { StudentViewApplicationComponent } from './students/student-view-application/student-view-application.component';
 import { ViewApplicationComponent } from './faculty/view-application/view-application.component';
 import { ViewProjectComponent } from './faculty/view-project/view-project.component';
-import { StudentViewProjectComponent } from './components/student-view-project/student-view-project.component';
+import { StudentViewProjectComponent } from './students/student-view-project/student-view-project.component';
 import { NotifyConfirmEmailComponent } from './auth/notify-confirm-email/notify-confirm-email.component';
 
 const routeConfig: Routes = [

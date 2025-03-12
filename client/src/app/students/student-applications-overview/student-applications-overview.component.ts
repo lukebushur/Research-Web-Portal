@@ -6,7 +6,7 @@ import { StudentDashboardService } from 'app/controllers/student-dashboard-contr
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
-import { SpinnerComponent } from '../spinner/spinner.component';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
