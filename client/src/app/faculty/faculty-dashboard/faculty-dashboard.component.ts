@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { AppliedStudentTableComponent } from '../applied-student-table/applied-student-table.component';
 import { ResearchProjectCardComponent } from '../research-project-card/research-project-card.component';
 import { MatTabsModule } from '@angular/material/tabs';

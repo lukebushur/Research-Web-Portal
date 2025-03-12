@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { QuestionData } from 'app/_models/projects/questionData';
 import { StudentService } from '../student-service/student.service';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
 // interface for storing project data
 interface ProjectData {

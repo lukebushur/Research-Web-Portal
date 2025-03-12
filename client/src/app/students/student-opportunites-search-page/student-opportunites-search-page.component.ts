@@ -17,7 +17,7 @@ import { NgStyle } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { SpinnerComponent } from 'app/components/spinner/spinner.component';
+import { SpinnerComponent } from 'app/shared/spinner/spinner.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({

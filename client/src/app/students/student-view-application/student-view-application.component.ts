@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';

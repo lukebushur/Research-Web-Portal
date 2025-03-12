@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssessmentData } from '../models/assessmentData';
 import { IndustryService } from '../industry-service/industry.service';
 import { MatButtonModule } from '@angular/material/button';
-import { CreateQuestionsFormComponent } from 'app/components/create-questions-form/create-questions-form.component';
+import { CreateQuestionsFormComponent } from 'app/shared/create-questions-form/create-questions-form.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 

@@ -11,7 +11,7 @@ import { Location } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AssessmentChooserComponent } from '../assessment-chooser/assessment-chooser.component';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { CreateQuestionsFormComponent } from '../../components/create-questions-form/create-questions-form.component';
+import { CreateQuestionsFormComponent } from '../../shared/create-questions-form/create-questions-form.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
