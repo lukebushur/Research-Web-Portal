@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplyToPostService } from 'app/controllers/apply-to-post/apply-to-post.service';
+import { StudentService } from '../student-service/student.service';
 import { QuestionData } from '../../_models/projects/questionData';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplyRequestData } from '../models/applyRequestData';
@@ -55,7 +55,7 @@ export class ApplyToPostComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private applyService: ApplyToPostService,
+    private studentService: StudentService,
     private fb: FormBuilder,
     private dateService: DateConverterService,
   ) { }
@@ -107,10 +107,7 @@ export class ApplyToPostComponent implements OnInit {
     this.professorEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
     this.projectId = this.route.snapshot.queryParamMap.get('oppId')!;
 
-    this.applyService.getProjectInfo({
-      professorEmail: this.professorEmail,
-      projectID: this.projectId,
-    }).subscribe({
+    this.studentService.getProjectInfo(this.professorEmail, this.projectId).subscribe({
       next: (response: any) => {
         this.project = response.success.project;
 
@@ -206,7 +203,7 @@ export class ApplyToPostComponent implements OnInit {
       data.questions.push(question);
     }
 
-    this.applyService.createApplication(data).subscribe({
+    this.studentService.createApplication(data).subscribe({
       next: (response: any) => {
         this.router.navigate(['/student/applications-overview']).then((navigated: boolean) => {
           if (navigated) {

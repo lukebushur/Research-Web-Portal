@@ -6,6 +6,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { SearchOptions } from 'app/students/models/searchOptions';
 import { firstValueFrom, of } from 'rxjs';
 import { environment } from 'environments/environment';
+import { ApplyRequestData } from '../models/applyRequestData';
 
 describe('StudentService', () => {
   const API_URL = environment.apiUrl;
@@ -125,6 +126,31 @@ describe('StudentService', () => {
 
     req.flush(flushBody);
     expect(await projectInfo).toEqual(flushBody);
+  });
+
+  it('should send a createApplication request', async () => {
+    const reqBody: ApplyRequestData = {
+      professorEmail: 'create@application.com',
+      projectID: '470',
+      questions: [{
+        question: 'Why do you want to create an application?',
+        required: true,
+        requirementType: 'text',
+        answers: ['to do research'],
+        questionNum: 1
+      }],
+    };
+    const flushBody = 'create application';
+
+    const createResponse$ = service.createApplication(reqBody);
+    const createResponse = firstValueFrom(createResponse$);
+
+    const req = httpTesting.expectOne(`${API_URL}/applications/createApplication`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(reqBody);
+
+    req.flush(flushBody);
+    expect(await createResponse).toEqual(flushBody);
   });
 
   it('should send a getStudentApplications request', async () => {

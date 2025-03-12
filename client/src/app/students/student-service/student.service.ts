@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { SearchOptions } from 'app/students/models/searchOptions';
 import { AuthService } from 'app/auth/auth-service/auth.service';
+import { ApplyRequestData } from '../models/applyRequestData';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,11 @@ export class StudentService {
 
     // Send the request to the back-end
     return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data)
+  }
+
+  // Send request to the back end to create an application
+  createApplication(data: ApplyRequestData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/applications/createApplication`, data);
   }
 
   // Send request to the back-end for the applications associated with the user

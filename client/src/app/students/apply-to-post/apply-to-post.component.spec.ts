@@ -8,7 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { ProjectData } from 'app/_models/projects/projectData';
 import { of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
-import { ApplyToPostService } from 'app/controllers/apply-to-post/apply-to-post.service';
+import { StudentService } from '../student-service/student.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
@@ -24,7 +24,9 @@ class SpinnerSubComponent { }
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
   let fixture: ComponentFixture<ApplyToPostComponent>;
-  let getProjectInfoSpy: jasmine.Spy;
+
+  let studentService: jasmine.SpyObj<StudentService>;
+
   // Mock question data
   const testQuestionData: QuestionData[] = [
     {
@@ -76,14 +78,14 @@ describe('ApplyToPostComponent', () => {
   let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
-    // Spy object for ApplyToPostService. Captures the provided function calls and returns
+    // Spy object for StudentService. Captures the provided function calls and returns
     // predictable mock data instead.
-    const applyService = jasmine.createSpyObj('ApplyToPostService', [
+    studentService = jasmine.createSpyObj<StudentService>('StudentService', [
       'getProjectInfo',
       'createApplication',
     ]);
-    getProjectInfoSpy = applyService.getProjectInfo.and.returnValue(of(structuredClone(getProjectInfoResponse)));
-    createApplicationSpy = applyService.createApplication.and.returnValue(of(createApplicationResponse));
+    studentService.getProjectInfo.and.returnValue(of(getProjectInfoResponse));
+    studentService.createApplication.and.returnValue(of(createApplicationResponse));
 
     // Spy object for Router. Captures the provided function calls and returns
     // predictable mock data instead.
@@ -109,7 +111,7 @@ describe('ApplyToPostComponent', () => {
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
-        { provide: ApplyToPostService, useValue: applyService },
+        { provide: StudentService, useValue: studentService },
         { provide: Router, useValue: router },
         {
           provide: ActivatedRoute,
