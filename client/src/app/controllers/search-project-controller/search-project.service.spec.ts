@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { AuthService } from '../../auth/auth-service/auth.service';
 import { SearchProjectService } from './search-project.service';
 import { provideHttpClient } from '@angular/common/http';
-import { SearchOptions } from 'app/_models/searchOptions';
+import { SearchOptions } from 'app/students/models/searchOptions';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 

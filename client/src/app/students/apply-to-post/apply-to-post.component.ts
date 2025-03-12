@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApplyToPostService } from 'app/controllers/apply-to-post/apply-to-post.service';
 import { QuestionData } from '../../_models/projects/questionData';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApplyRequestData } from '../../_models/apply-to-post/applyRequestData';
+import { ApplyRequestData } from '../models/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';

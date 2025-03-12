@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentDashboardService } from '../../controllers/student-dashboard-controller/student-dashboard.service';
 import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
-import { SearchOptions } from 'app/_models/searchOptions';
+import { SearchOptions } from '../models/searchOptions';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LiveAnnouncer } from '@angular/cdk/a11y';

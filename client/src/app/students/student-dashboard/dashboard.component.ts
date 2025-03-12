@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
-import { SearchOptions } from 'app/_models/searchOptions';
+import { SearchOptions } from '../models/searchOptions';
 
 @Component({
   selector: 'student-dashboard',
