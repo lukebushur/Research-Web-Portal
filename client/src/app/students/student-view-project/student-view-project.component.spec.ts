@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StudentViewProjectComponent } from './student-view-project.component';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentService } from '../student-service/student.service';
 import { of } from 'rxjs';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -77,12 +77,12 @@ describe('StudentViewProjectComponent', () => {
     deadline: new Date(httpProjectData.deadline),
     questions: questionData,
   };
-  let studentService: jasmine.SpyObj<StudentDashboardService>
+  let studentService: jasmine.SpyObj<StudentService>
   let router: Router;
 
   beforeEach(async () => {
     // Create the spy object to mock the getProjectInfo method.
-    studentService = jasmine.createSpyObj<StudentDashboardService>('StudentDashboardService', ['getProjectInfo']);
+    studentService = jasmine.createSpyObj<StudentService>('StudentService', ['getProjectInfo']);
     // spied methods' return values are the fake data defined above
     studentService.getProjectInfo.and.returnValue(of({
       success: {
@@ -94,7 +94,7 @@ describe('StudentViewProjectComponent', () => {
       imports: [StudentViewProjectComponent],
       providers: [
         provideRouter([]),
-        { provide: StudentDashboardService, useValue: studentService },
+        { provide: StudentService, useValue: studentService },
         {
           provide: ActivatedRoute,
           useValue: {

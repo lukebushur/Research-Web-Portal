@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { StudentViewApplicationComponent } from './student-view-application.component';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentService } from '../student-service/student.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
@@ -97,11 +97,11 @@ describe('StudentViewApplicationComponent', () => {
     posted: 'Mon Feb 19 2024',
     deadline: 'Thu Jul 18 2024',
   }
-  let studentService: jasmine.SpyObj<StudentDashboardService>;
+  let studentService: jasmine.SpyObj<StudentService>;
   let router: Router;
 
   beforeEach(() => {
-    studentService = jasmine.createSpyObj<StudentDashboardService>('StudentDashboardService', [
+    studentService = jasmine.createSpyObj<StudentService>('StudentService', [
       'getApplication',
       'getProjectInfo',
       'deleteApplication'
@@ -131,8 +131,7 @@ describe('StudentViewApplicationComponent', () => {
       ],
       providers: [
         provideRouter([]),
-        StudentDashboardService,
-        { provide: StudentDashboardService, useValue: studentService },
+        { provide: StudentService, useValue: studentService },
         {
           provide: ActivatedRoute, useValue: {
             params: of({

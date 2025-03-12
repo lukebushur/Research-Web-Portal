@@ -1,0 +1,116 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'environments/environment';
+import { SearchOptions } from 'app/students/models/searchOptions';
+import { AuthService } from 'app/auth/auth-service/auth.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class StudentService {
+  private apiUrl = environment.apiUrl;
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) { }
+
+  // Send request to the back-end for the majors list associated with the given
+  // university or the user's university
+  getAvailableMajors(university?: string): Observable<any> {
+    return this.authService.getMajors(university);
+  }
+
+  // TODO: delegate to user-profile-service once it has getAccountInfo method
+  // Send request to the back-end for the student user's information
+  getStudentInfo(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
+  }
+
+  // Send request to the back-end for all the opportunities available to students
+  getOpportunities(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/projects/getAllProjects`);
+  }
+
+  // This method is pretty simple, just fill in the fields of searchOptions that
+  // you want to use when filtering.
+  // majors -> comma-separated single string
+  // posted and deadline -> toISOString()
+  searchProjectsMultipleParams(searchOptions: SearchOptions): Observable<any> {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(searchOptions)) {
+      if (value) {
+        if (key !== 'majors') {
+          if (value instanceof Date) {
+            params = params.append(key, value.toISOString());
+          } else {
+            params = params.append(key, value);
+          }
+        } else {
+          if (value.length > 0) {
+            params = params.append(key, value.join(','));
+          }
+        }
+      }
+    }
+
+    return this.http.get(`${this.apiUrl}/search/searchProjects`, { params });
+  }
+
+  // Get the project information for the given professor and project ID
+  getProjectInfo(professorEmail: string, projectID: string): Observable<any> {
+
+    // Generate the data to send to the back-end
+    const data = {
+      "professorEmail": professorEmail,
+      "projectID": projectID
+    }
+
+    // Send the request to the back-end
+    return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data)
+  }
+
+  // Send request to the back-end for the applications associated with the user
+  getStudentApplications(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/applications/getApplications`);
+  }
+
+  //Send a request to grab a singular application from the student perspective
+  getApplication(applicationID: string): Observable<any> {
+
+    // Data to send to the back-end
+    const data = {
+      "applicationID": applicationID
+    }
+
+    // Send the request to the back-end
+    return this.http.post(`${this.apiUrl}/applications/getApplication`, data)
+  }
+
+  // To update an application pass the application ID and the questions to update
+  updateApplication(applicationID: string, questions: any): Observable<any> {
+    // Data to send to the back-end
+    const data = {
+      "questions": questions,
+      "applicationID": applicationID
+    }
+
+    // Send the request to the back-end
+    return this.http.put(`${this.apiUrl}/applications/updateApplication`, data)
+  }
+
+  // To delete an application pass the application ID
+  deleteApplication(applicationID: string): Observable<any> {
+    // Options to send to the back-end
+    const options = {
+      body: {
+        "applicationID": applicationID,
+      }
+    }
+
+    // Send the request to the back-end
+    // The delete method is used to send the application ID in the body of the request
+    return this.http.delete(`${this.apiUrl}/applications/deleteApplication`, options);
+  }
+}

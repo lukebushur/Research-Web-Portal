@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { StudentDashboardService } from '../../controllers/student-dashboard-controller/student-dashboard.service';
-import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
+import { StudentService } from '../student-service/student.service';
 import { SearchOptions } from '../models/searchOptions';
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -48,8 +47,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class StudentOpportunitesSearchPageComponent {
   constructor(
     private router: Router,
-    private studentDashboardService: StudentDashboardService,
-    private search: SearchProjectService,
+    private studentService: StudentService,
     private fb: FormBuilder,
   ) { }
 
@@ -111,7 +109,7 @@ export class StudentOpportunitesSearchPageComponent {
     searchOpts.query = this.searchForm.get('projectName')?.value ?? undefined;
 
     // Send the search request to the back-end
-    this.search.searchProjectsMultipleParams(searchOpts).subscribe({
+    this.studentService.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
         // Set the opportunities to the search results
         this.allOpportunities = data.success.results;
@@ -175,7 +173,7 @@ export class StudentOpportunitesSearchPageComponent {
   // This isn't really used right now but
   // it's here in case we need it later
   getAllOpportunities() {
-    this.studentDashboardService.getOpportunities().subscribe({
+    this.studentService.getOpportunities().subscribe({
       next: (data) => {
         this.opportunities = data.success.data;
         // Filter opportunities initially
@@ -271,7 +269,7 @@ export class StudentOpportunitesSearchPageComponent {
   // Get the list of possible majors from the back-end
   getAvailableMajors() {
     // Get the available majors
-    const getMajorsPromise = this.studentDashboardService.getAvailableMajors();
+    const getMajorsPromise = this.studentService.getAvailableMajors();
     // Subscribe to the promise
     getMajorsPromise.subscribe({
       next: (data) => {
@@ -313,7 +311,7 @@ export class StudentOpportunitesSearchPageComponent {
   // Get student information
   getStudentInfo(): void {
     // Get the student information
-    this.studentDashboardService.getStudentInfo().subscribe({
+    this.studentService.getStudentInfo().subscribe({
       next: (data: any) => {
         // If the request was successful, set the student's GPA and majors
         if (data.success) {

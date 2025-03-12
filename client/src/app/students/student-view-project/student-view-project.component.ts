@@ -9,7 +9,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { QuestionData } from 'app/_models/projects/questionData';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentService } from '../student-service/student.service';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 
 // interface for storing project data
@@ -58,7 +58,7 @@ export class StudentViewProjectComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private studentService: StudentDashboardService,
+    private studentService: StudentService,
     private location: Location,
   ) {
     // assign value of URL parameters

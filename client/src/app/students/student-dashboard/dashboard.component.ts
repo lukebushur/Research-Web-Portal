@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
+import { StudentService } from '../student-service/student.service';
 import { SearchOptions } from '../models/searchOptions';
 
 @Component({
@@ -26,9 +25,8 @@ export class StudentDashboard {
 
   constructor(
     private router: Router,
-    private studentDashboardService: StudentDashboardService,
     private dateService: DateConverterService,
-    private search: SearchProjectService
+    private studentService: StudentService
   ) { }
 
   // This function is called when the component is loaded
@@ -57,7 +55,7 @@ export class StudentDashboard {
 
     searchOpts.majors = this.studentMajors ? this.studentMajors : undefined;
 
-    this.search.searchProjectsMultipleParams(searchOpts).subscribe({
+    this.studentService.searchProjectsMultipleParams(searchOpts).subscribe({
       next: (data) => {
         const opportunities = data.success.results;
 
@@ -118,7 +116,7 @@ export class StudentDashboard {
   // Get student information
   getStudentInfo(): void {
     // Get the student information
-    this.studentDashboardService.getStudentInfo().subscribe({
+    this.studentService.getStudentInfo().subscribe({
       next: (data: any) => {
         if (data.success) {
           // Set the student GPA and majors

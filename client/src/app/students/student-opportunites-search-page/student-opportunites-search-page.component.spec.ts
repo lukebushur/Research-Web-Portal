@@ -13,9 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Component } from '@angular/core';
 import { of } from 'rxjs';
-import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
-
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentService } from '../student-service/student.service';
 import { Router } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -102,17 +100,15 @@ describe('StudentOpportunitesSearchPageComponent', () => {
   let component: StudentOpportunitesSearchPageComponent;
   let fixture: ComponentFixture<StudentOpportunitesSearchPageComponent>;
 
-  // Define spy objects for SearchProjects
-  let searchSpy: jasmine.Spy;
-
-  // Define spy objects for StudentDashboardService
-  const searchProjects = jasmine.createSpyObj('SearchProjectService', ['searchProjectsMultipleParams'])
-  searchSpy = searchProjects.searchProjectsMultipleParams.and.returnValue(of(testSearchResponse));
-
-  // Define spy objects for StudentDashboardService
-  const studentDashboardService = jasmine.createSpyObj('StudentDashboardService', ['getOpportunities', 'getStudentInfo'])
-  studentDashboardService.getOpportunities.and.returnValue(of(getProjectInfoResponse));;
-  studentDashboardService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
+  // Define spy objects for StudentService
+  const studentService = jasmine.createSpyObj<StudentService>('StudentService', [
+    'getOpportunities',
+    'getStudentInfo',
+    'searchProjectsMultipleParams',
+  ])
+  studentService.searchProjectsMultipleParams.and.returnValue(of(testSearchResponse));
+  studentService.getOpportunities.and.returnValue(of(getProjectInfoResponse));;
+  studentService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
 
   // Define spy objects for Router
   const router = jasmine.createSpyObj('Router', ['navigate']);
@@ -137,10 +133,8 @@ describe('StudentOpportunitesSearchPageComponent', () => {
         SpinnerSubComponent
       ],
       providers: [
-        // Provide the search project service
-        { provide: SearchProjectService, useValue: searchProjects },
-        // Provide the student dashboard service
-        { provide: StudentDashboardService, useValue: studentDashboardService },
+        // Provide the student service
+        { provide: StudentService, useValue: studentService },
         // Provide the router
         { provide: Router, useValue: router },
         provideHttpClient(withInterceptorsFromDi()),
@@ -164,10 +158,10 @@ describe('StudentOpportunitesSearchPageComponent', () => {
       component.searchForm.get("projectName")?.setValue('Test Project');
     }
     // Reset the spy
-    searchProjects.searchProjectsMultipleParams.calls.reset();
+    studentService.searchProjectsMultipleParams.calls.reset();
     component.searchProjects();
     // Check that the function was called with the correct parameters
-    expect(searchSpy).toHaveBeenCalledOnceWith({
+    expect(studentService.searchProjectsMultipleParams).toHaveBeenCalledOnceWith({
       deadline: undefined,
       posted: undefined,
       GPA: undefined,

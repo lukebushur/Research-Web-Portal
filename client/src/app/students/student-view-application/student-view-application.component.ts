@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentService } from '../student-service/student.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
@@ -37,8 +37,12 @@ export class StudentViewApplicationComponent {
   deadline: String;
   appliedDate: String;
 
-  constructor(private studentService: StudentDashboardService, private route: ActivatedRoute, private dateConverter: DateConverterService,
-    private router: Router) {
+  constructor(
+    private studentService: StudentService,
+    private route: ActivatedRoute,
+    private dateConverter: DateConverterService,
+    private router: Router,
+  ) {
     this.route.params.subscribe(params => {
       this.applicationID = params['applicationID'];
     });

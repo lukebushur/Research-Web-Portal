@@ -5,13 +5,12 @@ import { StudentDashboard } from './dashboard.component';
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
 import { Router } from '@angular/router';
 import { QuestionData } from 'app/_models/projects/questionData';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SearchProjectService } from 'app/controllers/search-project-controller/search-project.service';
+import { StudentService } from '../student-service/student.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -25,7 +24,9 @@ describe('StudentDashboard', () => {
   let component: StudentDashboard;
   let fixture: ComponentFixture<StudentDashboard>;
   let loader: HarnessLoader;
-  let navigateSpy: jasmine.Spy;
+
+  let router: jasmine.SpyObj<Router>;
+  let studentService: jasmine.SpyObj<StudentService>;
 
   // Mock question data
   const testQuestionData: QuestionData[] = [
@@ -102,19 +103,19 @@ describe('StudentDashboard', () => {
 
   // Set up the test bed
   beforeEach(() => {
-
-    // Create a spy object for the student dashboard service
-    const studentDashboardService = jasmine.createSpyObj('StudentDashboardService', ['getOpportunities', 'getStudentInfo']);
-    studentDashboardService.getOpportunities.and.returnValue(of(getProjectInfoResponse));
-    studentDashboardService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
-
     // Create a spy object for the router
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
+    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router.navigate.and.returnValue(Promise.resolve(true));
 
     // Create a spy object for the search project service
-    const searchProjectService = jasmine.createSpyObj('SearchProjectService', ['searchProjectsMultipleParams']);
-    searchProjectService.searchProjectsMultipleParams.and.returnValue(of(getSearchResponse));
+    studentService = jasmine.createSpyObj<StudentService>('StudentService', [
+      'getOpportunities',
+      'getStudentInfo',
+      'searchProjectsMultipleParams',
+    ]);
+    studentService.searchProjectsMultipleParams.and.returnValue(of(getSearchResponse));
+    studentService.getOpportunities.and.returnValue(of(getProjectInfoResponse));
+    studentService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
 
     // Create the test bed
     TestBed.configureTestingModule({
@@ -128,12 +129,10 @@ describe('StudentDashboard', () => {
         StudentDashboard
       ],
       providers: [
-        // Provide the student dashboard service
         // Provide the router
-        // Provide the search project service
+        // Provide the student service
         { provide: Router, useValue: router },
-        { provide: StudentDashboardService, useValue: studentDashboardService },
-        { provide: SearchProjectService, useValue: searchProjectService },
+        { provide: StudentService, useValue: studentService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
@@ -164,7 +163,7 @@ describe('StudentDashboard', () => {
     await button.click();
 
     // Make sure it navigates you to the right place
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/applications-overview']);
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/applications-overview']);
   });
 
   it('should navigate you to search projects', async () => {
@@ -173,7 +172,7 @@ describe('StudentDashboard', () => {
     await button.click();
 
     // Make sure it navigates you to the right place
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/search-projects']);
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/search-projects']);
   });
 
   it('should navigate you to view project', async () => {
@@ -182,7 +181,7 @@ describe('StudentDashboard', () => {
     await button.click();
 
     // Make sure it navigates you to the right place
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${testProjectData.professorEmail}/${testProjectData._id}`]);
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith([`/student/view-project/${testProjectData.professorEmail}/${testProjectData._id}`]);
   });
 
   it('should navigate you to apply-to-project', async () => {
@@ -191,7 +190,7 @@ describe('StudentDashboard', () => {
     await button.click();
 
     // Make sure it navigates you to the right place
-    expect(navigateSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
       queryParams: {
         // Pass the opportunity information to the apply-to-project page
         profName: testProjectData.professorName,

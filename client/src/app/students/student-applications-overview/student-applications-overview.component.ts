@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { StudentDashboardService } from 'app/controllers/student-dashboard-controller/student-dashboard.service';
+import { StudentService } from '../student-service/student.service';
 import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
@@ -29,7 +29,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ]
 })
 export class StudentApplicationsOverviewComponent {
-  constructor(private router: Router, private studentDashboardService: StudentDashboardService, private dateService: DateConverterService) { }
+  constructor(
+    private router: Router,
+    private studentService: StudentService,
+    private dateService: DateConverterService,
+  ) { }
 
   ngOnInit() {
     this.getStudentApplications();
@@ -50,7 +54,7 @@ export class StudentApplicationsOverviewComponent {
   //function for the see all applications button
   //this will let you view all the things you have applied to
   getStudentApplications() {
-    this.studentDashboardService.getStudentApplications().subscribe({
+    this.studentService.getStudentApplications().subscribe({
       next: (data) => {
         this.applications = [];
         this.applicationData = [];
@@ -135,7 +139,7 @@ export class StudentApplicationsOverviewComponent {
   }
 
   rescindApplication(applicationID: string) {
-    this.studentDashboardService.deleteApplication(applicationID).subscribe({
+    this.studentService.deleteApplication(applicationID).subscribe({
       next: (data: any) => {
         this.getStudentApplications();
       },
