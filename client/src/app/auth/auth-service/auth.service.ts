@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { Observable, map, mergeMap } from 'rxjs';
+import { BehaviorSubject, Observable, map, mergeMap } from 'rxjs';
 import { ConfirmResetPasswordBody, LoginBody, SignupBody } from '../models/request-bodies';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly JWT_KEY = 'jwt-auth-token';
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  private authenticated$ = new BehaviorSubject(
+    localStorage.getItem(this.JWT_KEY) ? true : false
+  );
 
+  constructor(private http: HttpClient) { }
 
   // TODO: Move to user-profile-service
   // Gets account information about the user.
@@ -19,6 +23,13 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
   }
 
+  isAuthenticated(): Observable<boolean> {
+    return this.authenticated$.asObservable();
+  }
+
+  setAuthenticated(authenticated: boolean) {
+    this.authenticated$.next(authenticated);
+  }
 
   signup(data: SignupBody): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
@@ -49,6 +60,7 @@ export class AuthService {
   // remove the JWT token
   signout() {
     localStorage.removeItem('jwt-auth-token');
+    this.setAuthenticated(false);
   }
 
   // This function grabs all available majors from the data. It is in the auth controller

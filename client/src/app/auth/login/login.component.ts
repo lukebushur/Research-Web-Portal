@@ -93,6 +93,8 @@ export class LoginComponent {
           localStorage.setItem('jwt-auth-token', accessToken);
           localStorage.setItem('jwt-refr-token', refreshToken);
 
+          this.authService.setAuthenticated(true);
+
           // Navigate based on the account type
           if (accountType === environment.industryType) {
             this.router.navigateByUrl('/industry/dashboard').then((navigated: boolean) => {

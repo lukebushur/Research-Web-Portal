@@ -39,7 +39,7 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     // Create a spy to 'replace' the call to AuthService's login function.
     // This spy returns an observable with the value of testLoginResponse.
-    authService = jasmine.createSpyObj<AuthService>('AuthService', ['login']);
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['setAuthenticated', 'login']);
     authService.login.and.returnValue(of(testLoginResponse));
 
     TestBed.configureTestingModule({

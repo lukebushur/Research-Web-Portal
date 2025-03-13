@@ -51,3 +51,9 @@
 .active-list-item span {
     font-weight: 500;
 }
+
+.small-text {
+    margin-left: 12px;
+    margin-right: 12px;
+    font-size: 11pt;
+}
