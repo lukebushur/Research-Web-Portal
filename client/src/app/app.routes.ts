@@ -7,7 +7,7 @@ import { ApplyToPostComponent } from './students/apply-to-post/apply-to-post.com
 import { AssessmentBrowserComponent } from './industry/assessment-browser/assessment-browser.component';
 import { ConfirmEmailComponent } from './auth/confirm-email/confirm-email.component';
 import { ConfirmResetPasswordComponent } from './auth/confirm-reset-password/confirm-reset-password.component';
-import { EditProfileScreenComponent } from './components/edit-profile-screen/edit-profile-screen.component';
+import { EditProfileScreenComponent } from './core/edit-profile-screen/edit-profile-screen.component';
 import { FacultyDashboardComponent } from './faculty/faculty-dashboard/faculty-dashboard.component';
 import { ToolbarSidenavComponent } from './core/toolbar-sidenav/toolbar-sidenav.component';
 import { ForgotPasswordSubmittedComponent } from './auth/forgot-password-submitted/forgot-password-submitted.component';
