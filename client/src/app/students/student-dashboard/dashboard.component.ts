@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';

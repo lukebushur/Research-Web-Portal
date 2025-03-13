@@ -3,7 +3,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { StudentService } from '../student-service/student.service';
-import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';

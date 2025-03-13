@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { StudentService } from '../student-service/student.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { QuestionData } from 'app/_models/projects/questionData';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';

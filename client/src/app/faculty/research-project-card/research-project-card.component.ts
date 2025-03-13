@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, } from '@angular/core';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { Router } from '@angular/router';
-import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ProjectFetchData } from 'app/faculty/models/projectFetchData';

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { ActivatedRoute } from '@angular/router';
-import { DateConverterService } from 'app/controllers/date-converter-controller/date-converter.service';
+import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
