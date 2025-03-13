@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ProfileServiceService } from './profile-service.service';
+import { UserProfileService } from './user-profile.service';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,8 +12,8 @@ const exampleProfileData = {
   universityLocation: 'Purdue University Fort Wayne'
 }
 
-describe('ProfileServiceService', () => {
-  let service: ProfileServiceService;
+describe('UserProfileService', () => {
+  let service: UserProfileService;
 
   // mock post request to capture when post requests are made
   const httpService = jasmine.createSpyObj('HttpClient', ['post'])
@@ -25,7 +25,7 @@ describe('ProfileServiceService', () => {
         { provide: HttpClient, useValue: httpService },
       ]
     });
-    service = TestBed.inject(ProfileServiceService);
+    service = TestBed.inject(UserProfileService);
   });
 
   it('should be created', () => {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/auth/auth-service/auth.service';
-import { ProfileServiceService } from 'app/controllers/profile-controller/profile-service.service';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -62,7 +62,7 @@ export class EditProfileScreenComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private profileService: ProfileServiceService,
+    private userProfileService: UserProfileService,
     private snackbar: MatSnackBar
   ) { }
 
@@ -152,7 +152,7 @@ export class EditProfileScreenComponent implements OnInit {
   }
 
   onSubmit() {
-    this.profileService.submitProfileChanges(this.editProfileForm.value).subscribe({
+    this.userProfileService.submitProfileChanges(this.editProfileForm.value).subscribe({
       next: (data: any) => {
         if (data.success) {
           console.log('Profile Updated Successfully');

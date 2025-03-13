@@ -6,14 +6,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ProfileServiceService } from 'app/controllers/profile-controller/profile-service.service';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 import { Router } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EditProfileScreenComponent', () => {
   let component: EditProfileScreenComponent;
   let fixture: ComponentFixture<EditProfileScreenComponent>;
-  let profileService: ProfileServiceService;
+  let userProfileService: UserProfileService;
   let router: Router;
 
   beforeEach(waitForAsync(() => {
@@ -29,7 +29,7 @@ describe('EditProfileScreenComponent', () => {
         EditProfileScreenComponent
       ],
       providers: [
-        ProfileServiceService,
+        UserProfileService,
         Router,
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
@@ -40,7 +40,7 @@ describe('EditProfileScreenComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditProfileScreenComponent);
     component = fixture.componentInstance;
-    profileService = TestBed.inject(ProfileServiceService);
+    userProfileService = TestBed.inject(UserProfileService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
   });
