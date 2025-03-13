@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpinnerComponent } from './spinner.component';
-import { LoaderService } from 'app/controllers/load-controller/loader.service';
+import { LoaderService } from 'app/shared/load-controller/loader.service';
 
 describe('SpinnerComponent', () => {
   let component: SpinnerComponent;
@@ -36,6 +36,5 @@ describe('SpinnerComponent', () => {
   it('should call getLoading()', () => {
     returnValue = true;
     expect(loaderSpy).toHaveBeenCalled();
-  })
-
+  });
 });

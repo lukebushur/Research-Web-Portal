@@ -2,7 +2,7 @@ import { TestBed, fakeAsync } from '@angular/core/testing';
 
 import { LoadingInterceptor } from './loading.interceptor';
 import { Observable } from 'rxjs';
-import { LoaderService } from '../../controllers/load-controller/loader.service';
+import { LoaderService } from '../../shared/load-controller/loader.service';
 import { HttpRequest } from '@angular/common/http';
 
 describe('LoadingInterceptor', () => {
@@ -13,7 +13,7 @@ describe('LoadingInterceptor', () => {
       return {
         pipe: () => {
           return new Observable((sub) => {
-            sub.complete()
+            sub.complete();
           });
         }
       }
@@ -33,7 +33,7 @@ describe('LoadingInterceptor', () => {
           useValue: loaderService
         }
       ]
-    })
+    });
   });
 
   // Make a mock HTTP request to send through, waits for that, then checks if it was called with true
