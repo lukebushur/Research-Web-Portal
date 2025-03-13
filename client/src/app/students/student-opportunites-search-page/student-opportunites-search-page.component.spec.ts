@@ -15,7 +15,7 @@ import { Component } from '@angular/core';
 import { of } from 'rxjs';
 import { StudentService } from '../student-service/student.service';
 import { Router } from '@angular/router';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // Mock question data

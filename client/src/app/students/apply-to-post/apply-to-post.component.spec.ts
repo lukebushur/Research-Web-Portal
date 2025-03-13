@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { ProjectData } from 'app/_models/projects/projectData';
+import { ProjectData } from 'app/shared/models/projectData';
 import { of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { StudentService } from '../student-service/student.service';
@@ -15,7 +15,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { Component } from '@angular/core';
 
 @Component({ standalone: true, selector: 'app-spinner', template: '' })

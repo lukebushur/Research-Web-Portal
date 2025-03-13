@@ -5,7 +5,7 @@ import { StudentViewApplicationComponent } from './student-view-application.comp
 import { StudentService } from '../student-service/student.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, provideRouter } from '@angular/router';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';

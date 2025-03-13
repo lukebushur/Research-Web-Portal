@@ -1,4 +1,4 @@
-import { QuestionData } from "app/_models/projects/questionData";
+import { QuestionData } from 'app/shared/models/questionData';
 
 export interface ApplyRequestData {
   projectID: string;

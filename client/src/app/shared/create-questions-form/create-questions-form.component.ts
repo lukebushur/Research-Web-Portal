@@ -1,6 +1,6 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from '../models/questionData';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';

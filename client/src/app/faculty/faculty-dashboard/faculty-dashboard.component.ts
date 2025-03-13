@@ -7,7 +7,7 @@ import { FacultyService } from '../faculty-service/faculty.service';
 import { ProjectFetchData } from '../models/projectFetchData';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { Application } from 'app/_models/applications/application';
+import { Application } from 'app/shared/models/application';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';

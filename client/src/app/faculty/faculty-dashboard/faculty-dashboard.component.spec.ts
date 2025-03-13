@@ -3,7 +3,7 @@ import { FacultyDashboardComponent } from './faculty-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
-import { Application } from 'app/_models/applications/application';
+import { Application } from 'app/shared/models/application';
 import { ProjectFetchData } from '../models/projectFetchData';
 import { Router, provideRouter } from '@angular/router';
 import { HarnessLoader } from '@angular/cdk/testing';

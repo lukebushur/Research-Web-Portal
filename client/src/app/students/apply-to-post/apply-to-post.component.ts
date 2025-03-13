@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentService } from '../student-service/student.service';
-import { QuestionData } from '../../_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplyRequestData } from '../models/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';

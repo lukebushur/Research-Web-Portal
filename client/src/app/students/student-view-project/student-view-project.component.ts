@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { StudentService } from '../student-service/student.service';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 

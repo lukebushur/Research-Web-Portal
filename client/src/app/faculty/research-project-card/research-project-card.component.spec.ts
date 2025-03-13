@@ -4,7 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ResearchProjectCardComponent } from './research-project-card.component';
 import { Router, provideRouter } from '@angular/router';
 import { ProjectFetchData } from '../models/projectFetchData';
-import { Application } from 'app/_models/applications/application';
+import { Application } from 'app/shared/models/application';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatButtonHarness } from '@angular/material/button/testing';

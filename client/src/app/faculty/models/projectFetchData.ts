@@ -1,5 +1,5 @@
-import { Application } from "app/_models/applications/application";
-import { QuestionData } from "../../_models/projects/questionData";
+import { Application } from 'app/shared/models/application';
+import { QuestionData } from '../../shared/models/questionData';
 
 export interface ProjectFetchData {
   projectType: 'active' | 'draft' | 'archived',

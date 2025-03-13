@@ -10,7 +10,7 @@ import { JobCardData } from '../models/job-card-data';
 import { Location } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AssessmentChooserComponent } from '../assessment-chooser/assessment-chooser.component';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { CreateQuestionsFormComponent } from '../../shared/create-questions-form/create-questions-form.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';

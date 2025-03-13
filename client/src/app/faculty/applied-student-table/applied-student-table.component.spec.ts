@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ProjectFetchData } from 'app/faculty/models/projectFetchData';
-import { Application } from 'app/_models/applications/application';
+import { Application } from 'app/shared/models/application';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { SimpleChange } from '@angular/core';

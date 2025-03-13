@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StudentViewProjectComponent } from './student-view-project.component';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { StudentService } from '../student-service/student.service';
 import { of } from 'rxjs';
 import { HarnessLoader } from '@angular/cdk/testing';

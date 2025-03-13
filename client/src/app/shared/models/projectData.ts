@@ -1,4 +1,4 @@
-import { QuestionData } from "./questionData";
+import { QuestionData } from './questionData';
 
 export interface ProjectData {
   professorName: string;

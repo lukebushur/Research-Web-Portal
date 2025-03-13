@@ -5,7 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

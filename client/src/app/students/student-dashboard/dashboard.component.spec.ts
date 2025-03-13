@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';

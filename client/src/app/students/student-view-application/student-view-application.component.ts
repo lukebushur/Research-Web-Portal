@@ -3,7 +3,7 @@ import { StudentService } from '../student-service/student.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
-import { QuestionData } from 'app/_models/projects/questionData';
+import { QuestionData } from 'app/shared/models/questionData';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
