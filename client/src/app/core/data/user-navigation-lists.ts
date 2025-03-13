@@ -1,4 +1,4 @@
-import { NavChoice } from "app/_models/toolbar/navchoice";
+import { NavChoice } from "../models/navchoice";
 
 export const facultyNavList: NavChoice[] = [
   {
