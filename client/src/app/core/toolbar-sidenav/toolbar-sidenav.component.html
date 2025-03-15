@@ -41,6 +41,7 @@
   <mat-sidenav-container
     class="sidenav-container"
     [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+    [autosize]="autosize"
   >
     <mat-sidenav
       #snav
@@ -103,7 +104,8 @@
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="main-content">
-      <router-outlet></router-outlet>
+      <app-spinner />
+      <router-outlet />
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

@@ -37,6 +37,8 @@ export class ToolbarSidenavComponent implements OnInit {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
+  autosize: boolean = false;
+
   readonly facultyNavList = facultyNavList;
   readonly studentNavList = studentNavList;
   readonly industryNavList = industryNavList;
@@ -73,6 +75,10 @@ export class ToolbarSidenavComponent implements OnInit {
       next: (authenticated: boolean) => {
         if (!authenticated) {
           this.setUserType(false, false, false);
+
+          this.autosize = true;
+          setTimeout(() => this.autosize = false, 1);
+
           return;
         }
 
@@ -87,6 +93,9 @@ export class ToolbarSidenavComponent implements OnInit {
             } else if (userType === environment.industryType) {
               this.setUserType(false, false, true);
             }
+
+            this.autosize = true;
+            setTimeout(() => this.autosize = false, 1);
           }
         });
       },
