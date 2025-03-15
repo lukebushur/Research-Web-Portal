@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SKIP_LOADING } from 'app/core/loading-interceptor/loading.interceptor';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
@@ -15,8 +16,10 @@ export class IndustryService {
     return this.http.post(`${this.apiUrl}/industry/createJob`, data);
   }
 
-  getJobs(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/industry/getJobs`);
+  getJobs(skipLoad: boolean = false): Observable<any> {
+    return this.http.get(`${this.apiUrl}/industry/getJobs`, {
+      context: new HttpContext().set(SKIP_LOADING, skipLoad),
+    });
   }
 
   getJob(jobId: string): Observable<any> {

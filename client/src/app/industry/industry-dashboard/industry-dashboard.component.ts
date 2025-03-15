@@ -25,21 +25,29 @@ export class IndustryDashboardComponent {
   ) { }
 
   ngOnInit(): void {
-    this.timeInterval = interval(5000).pipe(
-      startWith(0),
-      switchMap(() => this.industryService.getJobs())
-    ).subscribe({
-      next: (data: any) => {
-        if (data.success) {
-          this.activeJobs = data.success.jobs.active;
-          this.draftedJobs = data.success.jobs.draft;
-          this.archivedJobs = data.success.jobs.archived;
-        }
-      },
+    this.industryService.getJobs().subscribe({
+      next: (data: any) => this.setJobs(data),
       error: (data: any) => {
         console.log('Get jobs failed.', data.error);
       }
     });
+
+    this.timeInterval = interval(5000).pipe(
+      switchMap(() => this.industryService.getJobs(true))
+    ).subscribe({
+      next: (data: any) => this.setJobs(data),
+      error: (data: any) => {
+        console.log('Get jobs failed.', data.error);
+      }
+    });
+  }
+
+  private setJobs(data: any) {
+    if (data.success) {
+      this.activeJobs = data.success.jobs.active;
+      this.draftedJobs = data.success.jobs.draft;
+      this.archivedJobs = data.success.jobs.archived;
+    }
   }
 
   ngOnDestroy(): void {
