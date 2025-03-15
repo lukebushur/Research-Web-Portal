@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { loadingInterceptor, SKIP_LOADING } from './loading.interceptor';
 import { firstValueFrom } from 'rxjs';
-import { LoaderService } from '../../shared/loader-service/loader.service';
+import { LoadingService } from '../loading-service/loading.service';
 import { HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from 'environments/environment';
@@ -14,22 +14,22 @@ describe('loadingInterceptor', () => {
   const interceptor: HttpInterceptorFn = (request, next) =>
     TestBed.runInInjectionContext(() => loadingInterceptor(request, next));
   let httpTesting: HttpTestingController;
-  let loaderService: jasmine.SpyObj<LoaderService>;
+  let loadingService: jasmine.SpyObj<LoadingService>;
   let industryService: IndustryService;
 
   beforeEach(() => {
-    // mock loaderService to test just whether the methods were called
-    loaderService = jasmine.createSpyObj<LoaderService>('LoaderService', [
+    // mock loadingService to test just whether the methods were called
+    loadingService = jasmine.createSpyObj<LoadingService>('LoadingService', [
       'incrementRequests',
       'decrementRequests',
     ]);
-    loaderService.incrementRequests.and.returnValue();
-    loaderService.decrementRequests.and.returnValue();
+    loadingService.incrementRequests.and.returnValue();
+    loadingService.decrementRequests.and.returnValue();
 
     TestBed.configureTestingModule({
       providers: [
         IndustryService,
-        { provide: LoaderService, useValue: loaderService },
+        { provide: LoadingService, useValue: loadingService },
         provideHttpClient(withInterceptors([interceptor])),
         provideHttpClientTesting(),
       ],
@@ -51,12 +51,12 @@ describe('loadingInterceptor', () => {
     const jobs = firstValueFrom(jobs$);
 
     const req = httpTesting.expectOne(TEST_URL);
-    expect(loaderService.incrementRequests).toHaveBeenCalledOnceWith();
+    expect(loadingService.incrementRequests).toHaveBeenCalledOnceWith();
     expect(req.request.context.get(SKIP_LOADING)).toBe(false);
 
     req.flush(body);
     expect(await jobs).toEqual(body);
-    expect(loaderService.decrementRequests).toHaveBeenCalledOnceWith();
+    expect(loadingService.decrementRequests).toHaveBeenCalledOnceWith();
   });
 
   it('should skip loading when the SKIP_LOADING token is set to true', async () => {
@@ -68,11 +68,11 @@ describe('loadingInterceptor', () => {
     const jobs = firstValueFrom(jobs$);
 
     const req = httpTesting.expectOne(TEST_URL);
-    expect(loaderService.incrementRequests).not.toHaveBeenCalledOnceWith();
+    expect(loadingService.incrementRequests).not.toHaveBeenCalledOnceWith();
     expect(req.request.context.get(SKIP_LOADING)).toBe(true);
 
     req.flush(body);
     expect(await jobs).toEqual(body);
-    expect(loaderService.decrementRequests).not.toHaveBeenCalledOnceWith();
+    expect(loadingService.decrementRequests).not.toHaveBeenCalledOnceWith();
   });
 });

@@ -1,11 +1,11 @@
 import { firstValueFrom } from 'rxjs';
-import { LoaderService } from './loader.service';
+import { LoadingService } from './loading.service';
 
-describe('LoaderService', () => {
-  let service: LoaderService;
+describe('LoadingService', () => {
+  let service: LoadingService;
 
   beforeEach(() => {
-    service = new LoaderService();
+    service = new LoadingService();
   });
 
   it('should be created and initially not loading', (done: DoneFn) => {

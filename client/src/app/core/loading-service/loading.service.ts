@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class LoaderService {
+export class LoadingService {
 
   private numRequests = 0;
   // whether an HTTP request is currently in progress

@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpinnerComponent } from './spinner.component';
-import { LoaderService } from '../loader-service/loader.service';
+import { LoadingService } from '../../core/loading-service/loading.service';
 import { of } from 'rxjs';
 
 describe('SpinnerComponent', () => {
   let component: SpinnerComponent;
   let fixture: ComponentFixture<SpinnerComponent>;
 
-  let loaderService: LoaderService;
+  let loadingService: LoadingService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SpinnerComponent],
-      providers: [LoaderService]
+      providers: [LoadingService]
     });
-    loaderService = TestBed.inject(LoaderService);
+    loadingService = TestBed.inject(LoadingService);
   });
 
   it('should create', () => {
@@ -27,7 +27,7 @@ describe('SpinnerComponent', () => {
   });
 
   it('should render spinner when getLoading observable is true', async () => {
-    const getLoadingSpy = spyOn(loaderService, 'getLoading').and.returnValue(of(true));
+    const getLoadingSpy = spyOn(loadingService, 'getLoading').and.returnValue(of(true));
     fixture = TestBed.createComponent(SpinnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -44,7 +44,7 @@ describe('SpinnerComponent', () => {
   });
 
   it('should not render spinner when getLoading observable is false', async () => {
-    const getLoadingSpy = spyOn(loaderService, 'getLoading').and.returnValue(of(false));
+    const getLoadingSpy = spyOn(loadingService, 'getLoading').and.returnValue(of(false));
     fixture = TestBed.createComponent(SpinnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
