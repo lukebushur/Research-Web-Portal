@@ -52,8 +52,13 @@
     font-weight: 500;
 }
 
+.not-auth-profile a span {
+    font-weight: 500;
+}
+
 .small-text {
     margin-left: 12px;
     margin-right: 12px;
     font-size: 11pt;
+    font-weight: normal;
 }
