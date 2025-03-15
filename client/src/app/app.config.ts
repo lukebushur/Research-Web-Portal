@@ -18,10 +18,10 @@ export const appConfig: ApplicationConfig = {
     // provide the HTTP client with the LoadingInterceptor
     provideHttpClient(
       withInterceptors([tokenInterceptor]),
-      withInterceptorsFromDi()
+      withInterceptorsFromDi(),
     ),
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     // provide browser animations
-    provideAnimations()
+    provideAnimations(),
   ]
 };
