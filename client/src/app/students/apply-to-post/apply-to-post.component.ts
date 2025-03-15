@@ -6,7 +6,6 @@ import { ApplyRequestData } from '../models/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,8 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-    SpinnerComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
   ]
 })
 export class ApplyToPostComponent implements OnInit {

@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth-service/auth.service';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +20,6 @@ import { LoginBody } from '../models/request-bodies';
     MatInputModule,
     RouterLink,
     MatButtonModule,
-    SpinnerComponent
   ]
 })
 export class LoginComponent {

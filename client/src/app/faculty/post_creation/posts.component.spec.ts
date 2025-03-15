@@ -26,9 +26,6 @@ import { AuthService } from 'app/auth/auth-service/auth.service';
 import { MatSelectHarness } from '@angular/material/select/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
-
 @Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
 class CreateQuestionsFormStubComponent {
   @Input() questionsGroup: FormGroup;
@@ -71,7 +68,6 @@ describe('PostProjectComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        SpinnerSubComponent,
         CreateQuestionsFormStubComponent,
         MatDialogModule,
         MatRadioModule,
@@ -85,7 +81,7 @@ describe('PostProjectComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        PostProjectComponent
+        PostProjectComponent,
       ],
       providers: [provideRouter([]), {
         provide: AuthService,

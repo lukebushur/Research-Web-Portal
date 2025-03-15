@@ -16,10 +16,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { QuestionData } from 'app/shared/models/questionData';
-import { Component } from '@angular/core';
-
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
 
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
@@ -96,7 +92,6 @@ describe('ApplyToPostComponent', () => {
       imports: [
         FormsModule,
         MatCardModule,
-        SpinnerSubComponent,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
@@ -107,7 +102,7 @@ describe('ApplyToPostComponent', () => {
         MatListModule,
         BrowserAnimationsModule,
         MatStepperModule,
-        ApplyToPostComponent
+        ApplyToPostComponent,
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes

@@ -1,50 +1,78 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { LoadingInterceptor } from './loading.interceptor';
-import { Observable } from 'rxjs';
+import { loadingInterceptor, SKIP_LOADING } from './loading.interceptor';
+import { firstValueFrom } from 'rxjs';
 import { LoaderService } from '../../shared/loader-service/loader.service';
-import { HttpRequest } from '@angular/common/http';
+import { HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { environment } from 'environments/environment';
+import { IndustryService } from 'app/industry/industry-service/industry.service';
 
-describe('LoadingInterceptor', () => {
-  let setLoadingSpy: jasmine.Spy;
-  // mock next variable for passing to the LoadingInterceptor
-  const next: any = {
-    handle: () => {
-      return {
-        pipe: () => {
-          return new Observable((sub) => {
-            sub.complete();
-          });
-        }
-      }
-    }
-  }
+describe('loadingInterceptor', () => {
+  const TEST_URL = `${environment.apiUrl}/industry/getJobs`;
+
+  const interceptor: HttpInterceptorFn = (request, next) =>
+    TestBed.runInInjectionContext(() => loadingInterceptor(request, next));
+  let httpTesting: HttpTestingController;
+  let loaderService: jasmine.SpyObj<LoaderService>;
+  let industryService: IndustryService;
 
   beforeEach(() => {
-    // mock setLoading function for LoaderService so that it just does nothing
-    const loaderService = jasmine.createSpyObj<LoaderService>('LoaderService', ['setLoading']);
-    setLoadingSpy = loaderService.setLoading.and.returnValue();
+    // mock loaderService to test just whether the methods were called
+    loaderService = jasmine.createSpyObj<LoaderService>('LoaderService', [
+      'incrementRequests',
+      'decrementRequests',
+    ]);
+    loaderService.incrementRequests.and.returnValue();
+    loaderService.decrementRequests.and.returnValue();
 
     TestBed.configureTestingModule({
       providers: [
-        LoadingInterceptor,
-        {
-          provide: LoaderService,
-          useValue: loaderService
-        }
-      ]
+        IndustryService,
+        { provide: LoaderService, useValue: loaderService },
+        provideHttpClient(withInterceptors([interceptor])),
+        provideHttpClientTesting(),
+      ],
     });
+    httpTesting = TestBed.inject(HttpTestingController);
+    industryService = TestBed.inject(IndustryService);
   });
 
-  // Make a mock HTTP request to send through, waits for that, then checks if it was called with true
-  it('should start loading when a request comes in', fakeAsync(() => {
-    const mockRequest = new HttpRequest('GET', '/test');
-    const interceptor = TestBed.inject(LoadingInterceptor);
+  it('should be created', () => {
+    expect(interceptor).toBeTruthy();
+  });
 
-    interceptor.intercept(mockRequest, next).subscribe({
-      complete: () => {
-        expect(setLoadingSpy).withContext('be called with true').toHaveBeenCalledWith(true);
-      }
-    });
-  }));
+  it('should load and stop loading when a request is sent and completes', async () => {
+    const body = {
+      data: 'get jobs',
+    };
+
+    const jobs$ = industryService.getJobs(false);
+    const jobs = firstValueFrom(jobs$);
+
+    const req = httpTesting.expectOne(TEST_URL);
+    expect(loaderService.incrementRequests).toHaveBeenCalledOnceWith();
+    expect(req.request.context.get(SKIP_LOADING)).toBe(false);
+
+    req.flush(body);
+    expect(await jobs).toEqual(body);
+    expect(loaderService.decrementRequests).toHaveBeenCalledOnceWith();
+  });
+
+  it('should skip loading when the SKIP_LOADING token is set to true', async () => {
+    const body = {
+      data: 'get jobs',
+    };
+
+    const jobs$ = industryService.getJobs(true);
+    const jobs = firstValueFrom(jobs$);
+
+    const req = httpTesting.expectOne(TEST_URL);
+    expect(loaderService.incrementRequests).not.toHaveBeenCalledOnceWith();
+    expect(req.request.context.get(SKIP_LOADING)).toBe(true);
+
+    req.flush(body);
+    expect(await jobs).toEqual(body);
+    expect(loaderService.decrementRequests).not.toHaveBeenCalledOnceWith();
+  });
 });

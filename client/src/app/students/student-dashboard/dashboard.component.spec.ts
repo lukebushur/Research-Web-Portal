@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { StudentDashboard } from './dashboard.component';
-import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,9 +14,6 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatButtonHarness } from '@angular/material/button/testing';
-
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
 
 describe('StudentDashboard', () => {
   // Define variables for testing
@@ -121,12 +117,11 @@ describe('StudentDashboard', () => {
     TestBed.configureTestingModule({
       imports: [
         CdkAccordionModule,
-        SpinnerSubComponent,
         MatTableModule,
         MatCardModule,
         MatDividerModule,
         MatTooltipModule,
-        StudentDashboard
+        StudentDashboard,
       ],
       providers: [
         // Provide the router
@@ -134,7 +129,7 @@ describe('StudentDashboard', () => {
         { provide: Router, useValue: router },
         { provide: StudentService, useValue: studentService },
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
       ]
     });
     // Create the component

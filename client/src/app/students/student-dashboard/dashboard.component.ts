@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
@@ -18,7 +17,6 @@ import { SearchOptions } from '../models/searchOptions';
     MatCardModule,
     MatTooltipModule,
     MatDividerModule,
-    SpinnerComponent,
   ]
 })
 export class StudentDashboard {

@@ -9,7 +9,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-edit-profile-screen',
@@ -23,7 +22,6 @@ import { SpinnerComponent } from '../../shared/spinner/spinner.component';
     MatSelectModule,
     MatOptionModule,
     MatButtonModule,
-    SpinnerComponent,
   ]
 })
 export class EditProfileScreenComponent implements OnInit {

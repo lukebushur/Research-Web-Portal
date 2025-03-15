@@ -10,7 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { QuestionData } from 'app/shared/models/questionData';
 import { StudentService } from '../student-service/student.service';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
 // interface for storing project data
 interface ProjectData {
@@ -40,7 +39,6 @@ interface ProjectData {
     MatRadioModule,
     MatCheckboxModule,
     MatButtonModule,
-    SpinnerComponent,
   ]
 })
 export class StudentViewProjectComponent implements OnInit {

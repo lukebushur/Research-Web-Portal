@@ -6,7 +6,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { AsyncPipe, DatePipe, DecimalPipe, Location } from '@angular/common';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
@@ -71,7 +70,6 @@ interface ApplicantData {
     MatSortModule,
     MatPaginatorModule,
     MatButtonModule,
-    SpinnerComponent,
     MatCardModule,
   ]
 })
@@ -115,7 +113,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
     private facultyService: FacultyService,
     private _liveAnnouncer: LiveAnnouncer,
     private location: Location,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {
     // Grab project type and project ID from the URL parameters
     this.projectType = this.route.snapshot.paramMap.get('projectType')!;

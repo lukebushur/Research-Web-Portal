@@ -1,22 +1,34 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoaderService {
 
+  private numRequests = 0;
   // whether an HTTP request is currently in progress
-  private loading: boolean = false;
+  private loadingSubject = new BehaviorSubject(false);
 
-  constructor() { }
+  // increment the number of requests currently processing
+  incrementRequests() {
+    if (this.numRequests === 0) {
+      this.loadingSubject.next(true);
+    }
 
-  // set loading to the given value
-  setLoading(loading: boolean) {
-    this.loading = loading;
+    this.numRequests++;
+  }
+
+  // decrement the number of requests currently processing
+  decrementRequests() {
+    this.numRequests--;
+    if (this.numRequests === 0) {
+      this.loadingSubject.next(false);
+    }
   }
 
   // get the current value of loading
-  getLoading(): boolean {
-    return this.loading;
+  getLoading(): Observable<boolean> {
+    return this.loadingSubject.asObservable();
   }
 }

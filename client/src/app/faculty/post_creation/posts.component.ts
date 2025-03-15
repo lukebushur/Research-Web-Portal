@@ -8,7 +8,6 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AuthService } from 'app/auth/auth-service/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
-import { SpinnerComponent } from 'app/shared/spinner/spinner.component';
 import { CreateQuestionsFormComponent } from 'app/shared/create-questions-form/create-questions-form.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,8 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatDatepickerModule,
     MatNativeDateModule,
     CreateQuestionsFormComponent,
-    SpinnerComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
   ]
 })
 export class PostProjectComponent implements OnInit {

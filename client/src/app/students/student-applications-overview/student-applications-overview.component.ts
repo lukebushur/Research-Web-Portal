@@ -6,7 +6,6 @@ import { StudentService } from '../student-service/student.service';
 import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,9 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSortModule,
     MatButtonModule,
     MatPaginatorModule,
-    SpinnerComponent,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
   ]
 })
 export class StudentApplicationsOverviewComponent {

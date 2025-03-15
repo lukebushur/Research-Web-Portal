@@ -3,8 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { StudentApplicationsOverviewComponent } from './student-applications-overview.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { MatFormFieldModule } from '@angular/material/form-field'; // Import MatFormFieldModule
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -22,7 +21,6 @@ describe('StudentApplicationsOverviewComponent', () => {
         MatInputModule,
         BrowserAnimationsModule,
         StudentApplicationsOverviewComponent,
-        SpinnerComponent
       ],
       providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });

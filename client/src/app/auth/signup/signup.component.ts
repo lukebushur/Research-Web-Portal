@@ -10,7 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 import { SignupBody } from '../models/request-bodies';
 
 interface AccountType {
@@ -32,7 +31,6 @@ interface AccountType {
     MatSelectModule,
     MatOptionModule,
     MatProgressBarModule,
-    SpinnerComponent,
   ]
 })
 export class SignupComponent {

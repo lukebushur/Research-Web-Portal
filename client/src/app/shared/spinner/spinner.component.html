@@ -1,5 +1,6 @@
-@if (this.loader.getLoading()) {
-  <div class="cssload-container">
-    <div class="cssload-speeding-wheel"></div>
+@if (loading$ | async) {
+  <div class="spinner-container">
+    <mat-spinner color="accent"></mat-spinner>
+    <h1>Loading...</h1>
   </div>
 }

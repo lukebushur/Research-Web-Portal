@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewProjectComponent } from './view-project.component';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/shared/models/questionData';
@@ -38,9 +37,6 @@ interface ApplicantData {
   lastModified: Date;
   status: 'Accept' | 'Reject' | 'Pending';
 };
-
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
 
 describe('ViewProjectComponent', () => {
   let component: ViewProjectComponent;
@@ -213,10 +209,9 @@ describe('ViewProjectComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        SpinnerSubComponent,
         MatTableModule,
         ViewProjectComponent,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
       ],
       providers: [
         provideRouter([]),

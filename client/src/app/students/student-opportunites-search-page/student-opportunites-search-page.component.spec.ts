@@ -11,7 +11,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Component } from '@angular/core';
 import { of } from 'rxjs';
 import { StudentService } from '../student-service/student.service';
 import { Router } from '@angular/router';
@@ -91,9 +90,6 @@ const getStudentInfoResponse = {
     }
   }
 }
-// Define a spinner subcomponent
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
 
 // Define the tests
 describe('StudentOpportunitesSearchPageComponent', () => {
@@ -130,7 +126,6 @@ describe('StudentOpportunitesSearchPageComponent', () => {
         MatDatepickerModule,
         MatNativeDateModule,
         StudentOpportunitesSearchPageComponent,
-        SpinnerSubComponent
       ],
       providers: [
         // Provide the student service

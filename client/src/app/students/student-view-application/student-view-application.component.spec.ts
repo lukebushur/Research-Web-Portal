@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { StudentViewApplicationComponent } from './student-view-application.component';
 import { StudentService } from '../student-service/student.service';
-import { Component } from '@angular/core';
 import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { QuestionData } from 'app/shared/models/questionData';
 import { of } from 'rxjs';
@@ -16,9 +15,6 @@ import { MatInputHarness } from '@angular/material/input/testing';
 import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
 
 describe('StudentViewApplicationComponent', () => {
   let component: StudentViewApplicationComponent;
@@ -125,9 +121,8 @@ describe('StudentViewApplicationComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        SpinnerSubComponent,
         StudentViewApplicationComponent,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
       ],
       providers: [
         provideRouter([]),

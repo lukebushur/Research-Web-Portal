@@ -9,12 +9,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { AuthService } from '../auth-service/auth.service';
 import { Router, provideRouter } from '@angular/router';
-import { Component } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { restoreTokens, saveTokens, Tokens } from 'app/helpers/testing/token-storage';
-
-@Component({ standalone: true, selector: 'app-spinner', template: '' })
-class SpinnerSubComponent { }
 
 describe('LoginComponent', () => {
   let tokens: Tokens;
@@ -44,7 +40,6 @@ describe('LoginComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        SpinnerSubComponent,
         ReactiveFormsModule,
         MatInputModule,
         MatFormFieldModule,
