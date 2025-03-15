@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, interval, startWith, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AssessmentData } from '../models/assessmentData';
 import { IndustryService } from '../industry-service/industry.service';
 import { AssessmentCardComponent } from '../assessment-card/assessment-card.component';
@@ -22,10 +22,7 @@ export class AssessmentBrowserComponent {
   ) { }
 
   ngOnInit(): void {
-    this.timeInterval = interval(5000).pipe(
-      startWith(0),
-      switchMap(() => this.industryService.getAssessments())
-    ).subscribe({
+    this.industryService.getAssessments().subscribe({
       next: (data: any) => {
         if (data.success) {
           this.assessments = data.success.assessments.map((a: any) => {
@@ -41,9 +38,5 @@ export class AssessmentBrowserComponent {
         console.log('Get jobs failed.', data.error);
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.timeInterval.unsubscribe();
   }
 }
