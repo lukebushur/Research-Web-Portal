@@ -10,7 +10,7 @@
 // Material 3 is currently not supported - may be supported in the future.
 
 // html {
-//   @include mat.all-component-themes(rwp.$light-theme);
+//     @include mat.all-component-themes(rwp.$light-theme);
 // }
 
 $pfw-primary: mat.m2-define-palette(rwp-pal.$pfw-palette-primary);
@@ -31,23 +31,3 @@ $pfw-theme: mat.m2-define-light-theme(
 );
 
 @include mat.all-component-themes($pfw-theme);
-
-// To use the following student theme, the parent tag must have class="stud"
-.elec-indi {
-    $electric-indigo-primary: mat.m2-define-palette(rwp-pal.$electric-indigo-palette);
-    $electric-indigo-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
-
-    $electric-indigo-warn: mat.m2-define-palette(mat.$m2-red-palette);
-
-    $electric-indigo-theme: mat.m2-define-light-theme(
-        (
-            color: (
-                primary: $electric-indigo-primary,
-                accent: $electric-indigo-accent,
-                warn: $electric-indigo-warn
-            )
-        )
-    );
-
-    @include mat.all-component-colors($electric-indigo-theme);
-}
