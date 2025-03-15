@@ -13,7 +13,7 @@ import { environment } from 'environments/environment';
 import { facultyNavList, industryNavList, studentNavList } from '../data/user-navigation-lists';
 import { AuthService } from 'app/auth/auth-service/auth.service';
 import { Subscription } from 'rxjs';
-import { SpinnerComponent } from 'app/shared/spinner/spinner.component';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-toolbar-sidenav',
@@ -30,7 +30,7 @@ import { SpinnerComponent } from 'app/shared/spinner/spinner.component';
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
-    SpinnerComponent,
+    LoadingSpinnerComponent,
   ]
 })
 export class ToolbarSidenavComponent implements OnInit {

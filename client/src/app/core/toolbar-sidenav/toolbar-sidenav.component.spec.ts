@@ -17,7 +17,6 @@ import { MatListModule } from '@angular/material/list';
 import { provideRouter, Router } from '@angular/router';
 import { AuthService } from 'app/auth/auth-service/auth.service';
 import { of } from 'rxjs';
-import { inject } from '@angular/core';
 
 describe('ToolbarSidenavComponent', () => {
   let component: ToolbarSidenavComponent;
