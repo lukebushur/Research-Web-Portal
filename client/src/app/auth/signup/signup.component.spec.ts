@@ -19,6 +19,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AuthService } from '../auth-service/auth.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Tokens, saveTokens, restoreTokens } from 'app/helpers/testing/token-storage';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 describe('SignupComponent', () => {
   let tokens: Tokens;
@@ -29,6 +30,7 @@ describe('SignupComponent', () => {
 
   let router: jasmine.SpyObj<Router>;
   let authService: jasmine.SpyObj<AuthService>;
+  let userProfileService: jasmine.SpyObj<UserProfileService>;
 
   // mock data for the signup response
   const testSignupResponse = {
@@ -62,9 +64,11 @@ describe('SignupComponent', () => {
 
     // Create a spy to 'replace' the call to AuthService's getMajors function.
     // This spy returns an observable with the value of testGetMajorResponse.
-    authService = jasmine.createSpyObj<AuthService>('AuthService', ['signup', 'getMajors']);
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['signup']);
     authService.signup.and.returnValue(of(testSignupResponse));
-    authService.getMajors.and.returnValue(of(testGetMajorResponse));
+
+    userProfileService = jasmine.createSpyObj<UserProfileService>('UserProfileService', ['getMajors']);
+    userProfileService.getMajors.and.returnValue(of(testGetMajorResponse));
 
     TestBed.configureTestingModule({
       imports: [
@@ -79,6 +83,7 @@ describe('SignupComponent', () => {
       ],
       providers: [
         { provide: AuthService, useValue: authService },
+        { provide: UserProfileService, useValue: userProfileService },
         { provide: Router, useValue: router },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
@@ -211,7 +216,7 @@ describe('SignupComponent', () => {
 
     // after setting accountType to 0, more fields appear, and the list of possible
     // majors is set utilizing the AuthService
-    expect(authService.getMajors).withContext('getMajors called').toHaveBeenCalled();
+    expect(userProfileService.getMajors).withContext('getMajors called').toHaveBeenCalled();
 
     // set valid student-specific values in the DOM
     const gpaInput = await loader.getHarness(MatInputHarness.with({ selector: '#gpa' }));

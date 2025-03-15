@@ -1,12 +1,12 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot, CanActivateFn, GuardResult, provideRouter, Router, RouterStateSnapshot } from '@angular/router';
 
 import { roleGuard } from './role.guard';
 import { environment } from 'environments/environment';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { AuthService } from 'app/auth/auth-service/auth.service';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 
-const getStudentInfoResponse = {
+const getAccountInfoResponse = {
   success: {
     status: 200,
     message: "ACCOUNT_FOUND",
@@ -26,17 +26,17 @@ const getStudentInfoResponse = {
 }
 
 describe('roleGuard', () => {
-  let router: Router;
   const executeGuard: CanActivateFn = (...guardParameters) =>
     TestBed.runInInjectionContext(() => roleGuard(...guardParameters));
 
+  let router: Router;
+  let userProfileService: jasmine.SpyObj<UserProfileService>;
   const state: RouterStateSnapshot = {} as any;
 
-  // We want to modify AuthService to allow us to return our own "account"
-  const authService = jasmine.createSpyObj('AuthService', ['getAccountInfo'])
-  let authSpy = authService.getAccountInfo.and.returnValue(of(getStudentInfoResponse))
-
   beforeEach(() => {
+    userProfileService = jasmine.createSpyObj<UserProfileService>('UserProfileService', ['getAccountInfo'])
+    userProfileService.getAccountInfo.and.returnValue(of(getAccountInfoResponse))
+
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
@@ -53,8 +53,8 @@ describe('roleGuard', () => {
           }
         },
         {
-          provide: AuthService,
-          useValue: authService
+          provide: UserProfileService,
+          useValue: userProfileService
         },
       ],
     });
@@ -68,7 +68,7 @@ describe('roleGuard', () => {
   // it should return true for student - student
   it('it should return true for student -> student', async () => {
     // Set our account type to student
-    getStudentInfoResponse.success.accountData.userType = environment.studentType;
+    getAccountInfoResponse.success.accountData.userType = environment.studentType;
     const route: ActivatedRouteSnapshot = {
       data: {
         expectedRole: 'student',
@@ -84,7 +84,7 @@ describe('roleGuard', () => {
 
   // it should return false for student - faculty
   it('it should return false for student -> faculty', async () => {
-    getStudentInfoResponse.success.accountData.userType = environment.studentType;
+    getAccountInfoResponse.success.accountData.userType = environment.studentType;
     const route: ActivatedRouteSnapshot = {
       data: {
         expectedRole: 'faculty',
@@ -101,7 +101,7 @@ describe('roleGuard', () => {
 
   // it should return true for faculty - faculty
   it('it should return true for faculty -> faculty', async () => {
-    getStudentInfoResponse.success.accountData.userType = environment.facultyType;
+    getAccountInfoResponse.success.accountData.userType = environment.facultyType;
     const route: ActivatedRouteSnapshot = {
       data: {
         expectedRole: 'faculty',
@@ -116,7 +116,7 @@ describe('roleGuard', () => {
 
   // it should return false for faculty - student/industry (testing with student)
   it('it should return false for faculty -> student', async () => {
-    getStudentInfoResponse.success.accountData.userType = environment.facultyType;
+    getAccountInfoResponse.success.accountData.userType = environment.facultyType;
     const route: ActivatedRouteSnapshot = {
       data: {
         expectedRole: 'student',
@@ -133,7 +133,7 @@ describe('roleGuard', () => {
 
   // it should return true for industry - industry
   it('it should return true for industry -> industry', async () => {
-    getStudentInfoResponse.success.accountData.userType = environment.industryType;
+    getAccountInfoResponse.success.accountData.userType = environment.industryType;
     const route: ActivatedRouteSnapshot = {
       data: {
         expectedRole: 'industry',
@@ -148,7 +148,7 @@ describe('roleGuard', () => {
 
   // it should return false for industry - student/faculty
   it('it should return false for industry -> faculty', async () => {
-    getStudentInfoResponse.success.accountData.userType = environment.industryType;
+    getAccountInfoResponse.success.accountData.userType = environment.industryType;
     const route: ActivatedRouteSnapshot = {
       data: {
         expectedRole: 'faculty',

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { StudentService } from '../student-service/student.service';
 import { SearchOptions } from '../models/searchOptions';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 @Component({
   selector: 'student-dashboard',
@@ -23,8 +23,8 @@ export class StudentDashboard {
 
   constructor(
     private router: Router,
-    private dateService: DateConverterService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private userProfileService: UserProfileService,
   ) { }
 
   // This function is called when the component is loaded
@@ -114,7 +114,7 @@ export class StudentDashboard {
   // Get student information
   getStudentInfo(): void {
     // Get the student information
-    this.studentService.getStudentInfo().subscribe({
+    this.userProfileService.getAccountInfo().subscribe({
       next: (data: any) => {
         if (data.success) {
           // Set the student GPA and majors

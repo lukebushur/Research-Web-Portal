@@ -14,20 +14,7 @@ export class StudentService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
   ) { }
-
-  // Send request to the back-end for the majors list associated with the given
-  // university or the user's university
-  getAvailableMajors(university?: string): Observable<any> {
-    return this.authService.getMajors(university);
-  }
-
-  // TODO: delegate to user-profile-service once it has getAccountInfo method
-  // Send request to the back-end for the student user's information
-  getStudentInfo(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
-  }
 
   // Send request to the back-end for all the opportunities available to students
   getOpportunities(): Observable<any> {

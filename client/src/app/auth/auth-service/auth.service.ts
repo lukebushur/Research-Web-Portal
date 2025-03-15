@@ -17,20 +17,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  // TODO: Move to user-profile-service
-  // Gets account information about the user.
-  getAccountInfo(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/accountManagement/getAccountInfo`);
-  }
-
+  // Get value of the authenticated subject as an observable
+  // (uneditable by the client)
   isAuthenticated(): Observable<boolean> {
     return this.authenticated$.asObservable();
   }
 
+  // set the value of the authenticated subject
   setAuthenticated(authenticated: boolean) {
     this.authenticated$.next(authenticated);
   }
 
+  // Send request to sign up the user with the given information
   signup(data: SignupBody): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
@@ -47,12 +45,12 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, data);
   }
 
-  // Send request to the back-end to initiate the forgot password process
+  // Send request to initiate the forgot password process
   forgotPassword(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/accountManagement/resetPassword`, { email });
   }
 
-  // Send request to the back-end to confirm and finish the forgot password process
+  // Send request to confirm and finish the forgot password process
   confirmResetPassword(data: ConfirmResetPasswordBody): Observable<any> {
     return this.http.post(`${this.apiUrl}/accountManagement/confirmResetPassword`, data);
   }
@@ -61,23 +59,5 @@ export class AuthService {
   signout() {
     localStorage.removeItem('jwt-auth-token');
     this.setAuthenticated(false);
-  }
-
-  // This function grabs all available majors from the data. It is in the auth controller
-  // because it is a shared route between all accounts and as such does not belong with
-  // solely faculty or students. Unless provided with a unversity (from which majors will
-  // be grabbed), it will call getAccountInfo() first to get the universityLocation
-  // associated with the user. Then, it will get the majors list from the back-end using
-  // the given/retrieved information
-  getMajors(university?: string): Observable<any> {
-    if (university) {
-      return this.http.get(`${this.apiUrl}/getMajors?university=${university}`);
-    }
-
-    return this.getAccountInfo().pipe(
-      map((result) => result?.success?.accountData?.universityLocation),
-      mergeMap(universityLocation =>
-        this.http.get(`${this.apiUrl}/getMajors?university=${universityLocation}`))
-    );
   }
 }

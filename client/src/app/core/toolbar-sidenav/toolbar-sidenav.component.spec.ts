@@ -17,6 +17,7 @@ import { MatListModule } from '@angular/material/list';
 import { provideRouter, Router } from '@angular/router';
 import { AuthService } from 'app/auth/auth-service/auth.service';
 import { of } from 'rxjs';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 
 describe('ToolbarSidenavComponent', () => {
   let component: ToolbarSidenavComponent;
@@ -25,21 +26,23 @@ describe('ToolbarSidenavComponent', () => {
 
   let router: Router;
   let authService: jasmine.SpyObj<AuthService>;
+  let userProfileService: jasmine.SpyObj<UserProfileService>;
 
   beforeEach(() => {
     authService = jasmine.createSpyObj<AuthService>('AuthService', [
-      'getAccountInfo',
       'isAuthenticated',
       'signout',
     ]);
-    authService.getAccountInfo.and.returnValue(of({
+    authService.isAuthenticated.and.returnValue(of(true));
+
+    userProfileService = jasmine.createSpyObj<UserProfileService>('UserProfileService', ['getAccountInfo']);
+    userProfileService.getAccountInfo.and.returnValue(of({
       success: {
         accountData: {
           userType: 0,
         },
       },
     }));
-    authService.isAuthenticated.and.returnValue(of(true));
 
     TestBed.configureTestingModule({
       imports: [
@@ -54,6 +57,7 @@ describe('ToolbarSidenavComponent', () => {
       providers: [
         provideRouter([]),
         { provide: AuthService, useValue: authService },
+        { provide: UserProfileService, useValue: userProfileService },
       ]
     });
     fixture = TestBed.createComponent(ToolbarSidenavComponent);

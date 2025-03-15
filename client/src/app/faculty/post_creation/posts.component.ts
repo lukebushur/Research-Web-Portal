@@ -5,7 +5,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule
 import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { AuthService } from 'app/auth/auth-service/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
 import { CreateQuestionsFormComponent } from 'app/shared/create-questions-form/create-questions-form.component';
@@ -17,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 @Component({
   selector: 'app-posts',
@@ -77,7 +77,7 @@ export class PostProjectComponent implements OnInit {
     private fb: FormBuilder,
     private announcer: LiveAnnouncer,
     private facultyService: FacultyService,
-    private authService: AuthService,
+    private userProfileService: UserProfileService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -93,10 +93,9 @@ export class PostProjectComponent implements OnInit {
     return this.details.get('categories') as FormArray;
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     // Populate the majors list (for the dropdown menu)
-    const getMajorsPromise = await this.authService.getMajors();
-    getMajorsPromise.subscribe({
+    this.userProfileService.getMajors().subscribe({
       next: (data: any) => {
         if (data.success) {
           this.majorsList = data.success.majors.toSorted();

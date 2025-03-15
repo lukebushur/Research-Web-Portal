@@ -1,14 +1,14 @@
 import { CanActivateFn } from '@angular/router';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/auth/auth-service/auth.service';
 import { inject } from '@angular/core';
 import { map } from 'rxjs';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 
 export const roleGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const userProfileService = inject(UserProfileService);
   const router = inject(Router);
 
-  return authService.getAccountInfo().pipe(
+  return userProfileService.getAccountInfo().pipe(
     map(accountInfo => {
       const userType = accountInfo.success.accountData.userType;
       if (userType === 1 && route.data['expectedRole'] === 'faculty') {

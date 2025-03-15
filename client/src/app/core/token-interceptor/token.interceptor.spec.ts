@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from 'environments/environment';
 import { tokenInterceptor } from './token.interceptor';
-import { AuthService } from 'app/auth/auth-service/auth.service';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 
 describe('tokenInterceptor', () => {
   const KEY = 'jwt-auth-token';
@@ -14,8 +14,9 @@ describe('tokenInterceptor', () => {
 
   const interceptor: HttpInterceptorFn = (request, next) =>
     TestBed.runInInjectionContext(() => tokenInterceptor(request, next));
+
   let httpTesting: HttpTestingController;
-  let authService: AuthService;
+  let userProfileService: UserProfileService;
 
   // Store the previously set JWT token if one was set
   beforeAll(() => {
@@ -26,13 +27,13 @@ describe('tokenInterceptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        AuthService,
+        UserProfileService,
         provideHttpClient(withInterceptors([interceptor])),
         provideHttpClientTesting(),
       ],
     });
     httpTesting = TestBed.inject(HttpTestingController);
-    authService = TestBed.inject(AuthService);
+    userProfileService = TestBed.inject(UserProfileService);
   });
 
   // Test that the tokenInterceptor is created
@@ -47,7 +48,7 @@ describe('tokenInterceptor', () => {
     const body = 'header set';
     localStorage.setItem(KEY, value);
 
-    const accountInfo$ = authService.getAccountInfo();
+    const accountInfo$ = userProfileService.getAccountInfo();
     const accountInfoPromise = firstValueFrom(accountInfo$);
 
     const req = httpTesting.expectOne(TEST_URL);
@@ -63,7 +64,7 @@ describe('tokenInterceptor', () => {
     const body = 'header not set';
     localStorage.removeItem(KEY);
 
-    const accountInfo$ = authService.getAccountInfo();
+    const accountInfo$ = userProfileService.getAccountInfo();
     const accountInfoPromise = firstValueFrom(accountInfo$);
 
     const req = httpTesting.expectOne(TEST_URL);

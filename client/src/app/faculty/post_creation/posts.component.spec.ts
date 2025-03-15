@@ -22,9 +22,9 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { ProjectData } from 'app/shared/models/projectData';
 import { of } from 'rxjs';
-import { AuthService } from 'app/auth/auth-service/auth.service';
 import { MatSelectHarness } from '@angular/material/select/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 @Component({ standalone: true, selector: 'app-create-questions-form', template: '' })
 class CreateQuestionsFormStubComponent {
@@ -62,10 +62,14 @@ describe('PostProjectComponent', () => {
 
   let loader: HarnessLoader;
 
-  const authService = jasmine.createSpyObj('AuthService', ['getMajors']);
-  authService.getMajors.and.returnValue(Promise.resolve(of(testGetMajorResponse)));
+  let userProfileService: jasmine.SpyObj<UserProfileService>;
 
   beforeEach(async () => {
+    userProfileService = jasmine.createSpyObj<UserProfileService>('UserProfileService', [
+      'getMajors',
+    ]);
+    userProfileService.getMajors.and.returnValue(of(testGetMajorResponse));
+
     TestBed.configureTestingModule({
       imports: [
         CreateQuestionsFormStubComponent,
@@ -83,10 +87,12 @@ describe('PostProjectComponent', () => {
         BrowserAnimationsModule,
         PostProjectComponent,
       ],
-      providers: [provideRouter([]), {
-        provide: AuthService,
-        useValue: authService
-      }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [
+        provideRouter([]),
+        { provide: UserProfileService, useValue: userProfileService },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ]
     });
     fixture = TestBed.createComponent(PostProjectComponent);
     component = fixture.componentInstance;

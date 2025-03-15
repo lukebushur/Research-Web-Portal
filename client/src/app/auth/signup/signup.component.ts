@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SignupBody } from '../models/request-bodies';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 interface AccountType {
   value: number;
@@ -98,6 +99,7 @@ export class SignupComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private userProfileService: UserProfileService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -182,8 +184,10 @@ export class SignupComponent {
     if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.signupForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.signupForm.get('universityLocation')?.value;
-      const getMajorsPromise = this.authService.getMajors(this.prevSelectedUniversity ?? undefined);
-      getMajorsPromise.subscribe({
+
+      this.userProfileService.getMajors(
+        this.prevSelectedUniversity ?? undefined
+      ).subscribe({
         next: (data: any) => {
           if (data.success) {
             this.majors = data.success.majors.toSorted();

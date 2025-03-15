@@ -18,6 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 @Component({
   selector: 'app-student-opportunites-search-page',
@@ -46,6 +47,7 @@ export class StudentOpportunitesSearchPageComponent {
   constructor(
     private router: Router,
     private studentService: StudentService,
+    private userProfileService: UserProfileService,
     private fb: FormBuilder,
   ) { }
 
@@ -267,9 +269,7 @@ export class StudentOpportunitesSearchPageComponent {
   // Get the list of possible majors from the back-end
   getAvailableMajors() {
     // Get the available majors
-    const getMajorsPromise = this.studentService.getAvailableMajors();
-    // Subscribe to the promise
-    getMajorsPromise.subscribe({
+    this.userProfileService.getMajors().subscribe({
       next: (data) => {
         // Set the available majors
         this.availableMajors = data.success.majors;
@@ -309,7 +309,7 @@ export class StudentOpportunitesSearchPageComponent {
   // Get student information
   getStudentInfo(): void {
     // Get the student information
-    this.studentService.getStudentInfo().subscribe({
+    this.userProfileService.getAccountInfo().subscribe({
       next: (data: any) => {
         // If the request was successful, set the student's GPA and majors
         if (data.success) {

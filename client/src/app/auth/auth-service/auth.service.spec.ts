@@ -136,57 +136,6 @@ describe('AuthService', () => {
     expect(localStorage.getItem(KEY)).toBeNull();
   });
 
-  it('should attempt to fetch accountInfo', async () => {
-    const body = 'account info';
-
-    const accountInfo$ = authService.getAccountInfo();
-    const accountInfoPromise = firstValueFrom(accountInfo$);
-
-    const req = httpTesting.expectOne(`${API_URL}/accountManagement/getAccountInfo`);
-    expect(req.request.method).toBe('GET');
-
-    req.flush(body);
-    expect(await accountInfoPromise).toEqual(body);
-  });
-
-  it('should fetch majors from the university retrieved from getAccountInfo', async () => {
-    const university = 'account PFW';
-    const accountInfo = {
-      success: {
-        accountData: {
-          universityLocation: university,
-        },
-      },
-    };
-    const body = 'majors from account info';
-
-    const majors$ = authService.getMajors();
-    const majorsPromise = firstValueFrom(majors$);
-
-    const accountInfoReq = httpTesting.expectOne(`${API_URL}/accountManagement/getAccountInfo`);
-    accountInfoReq.flush(accountInfo);
-
-    const majorsReq = httpTesting.expectOne(`${API_URL}/getMajors?university=${university}`);
-    expect(majorsReq.request.method).toBe('GET');
-
-    majorsReq.flush(body);
-    expect(await majorsPromise).toEqual(body);
-  });
-
-  it('should fetch majors from the given university', async () => {
-    const university = 'PFW';
-    const body = 'majors';
-
-    const majors$ = authService.getMajors(university);
-    const majorsPromise = firstValueFrom(majors$);
-
-    const req = httpTesting.expectOne(`${API_URL}/getMajors?university=${university}`);
-    expect(req.request.method).toBe('GET');
-
-    req.flush(body);
-    expect(await majorsPromise).toEqual(body);
-  });
-
   afterEach(() => {
     httpTesting.verify();
   });

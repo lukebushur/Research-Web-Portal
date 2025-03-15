@@ -16,6 +16,7 @@ import { StudentService } from '../student-service/student.service';
 import { Router } from '@angular/router';
 import { QuestionData } from 'app/shared/models/questionData';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 // Mock question data
 const testQuestionData: QuestionData[] = [
@@ -73,7 +74,7 @@ const testSearchResponse = {
 }
 
 // Mock student info response
-const getStudentInfoResponse = {
+const getAccountInfoResponse = {
   success: {
     status: 200,
     message: "ACCOUNT_FOUND",
@@ -96,22 +97,30 @@ describe('StudentOpportunitesSearchPageComponent', () => {
   let component: StudentOpportunitesSearchPageComponent;
   let fixture: ComponentFixture<StudentOpportunitesSearchPageComponent>;
 
-  // Define spy objects for StudentService
-  const studentService = jasmine.createSpyObj<StudentService>('StudentService', [
-    'getOpportunities',
-    'getStudentInfo',
-    'searchProjectsMultipleParams',
-  ])
-  studentService.searchProjectsMultipleParams.and.returnValue(of(testSearchResponse));
-  studentService.getOpportunities.and.returnValue(of(getProjectInfoResponse));;
-  studentService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
+  // Define spy objects
+  let router: jasmine.SpyObj<Router>;
+  let studentService: jasmine.SpyObj<StudentService>;
+  let userProfileService: jasmine.SpyObj<UserProfileService>;
 
   // Define spy objects for Router
-  const router = jasmine.createSpyObj('Router', ['navigate']);
-  let routerSpy = router.navigate.and.returnValue(Promise.resolve(true));
 
   // Set up the test bed
   beforeEach(() => {
+    studentService = jasmine.createSpyObj<StudentService>('StudentService', [
+      'getOpportunities',
+      'searchProjectsMultipleParams',
+    ])
+    studentService.searchProjectsMultipleParams.and.returnValue(of(testSearchResponse));
+    studentService.getOpportunities.and.returnValue(of(getProjectInfoResponse));;
+
+    userProfileService = jasmine.createSpyObj<UserProfileService>('UserProfileService', [
+      'getAccountInfo',
+    ]);
+    userProfileService.getAccountInfo.and.returnValue(of(getAccountInfoResponse));
+
+    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router.navigate.and.returnValue(Promise.resolve(true));
+
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -128,9 +137,8 @@ describe('StudentOpportunitesSearchPageComponent', () => {
         StudentOpportunitesSearchPageComponent,
       ],
       providers: [
-        // Provide the student service
         { provide: StudentService, useValue: studentService },
-        // Provide the router
+        { provide: UserProfileService, useValue: userProfileService },
         { provide: Router, useValue: router },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
@@ -200,7 +208,7 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     // Click the button
     buttonDebugElement.triggerEventHandler('click', null)
     // Check that the function was called with the correct parameters
-    expect(routerSpy).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
       queryParams: {
         // Pass the opportunity information to the apply-to-project page
         profName: testProjectData.professorName,

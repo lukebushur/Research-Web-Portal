@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/auth/auth-service/auth.service';
 import { UserProfileService } from '../user-profile-service/user-profile.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
@@ -59,7 +58,6 @@ export class EditProfileScreenComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     private userProfileService: UserProfileService,
     private snackbar: MatSnackBar
   ) { }
@@ -109,12 +107,14 @@ export class EditProfileScreenComponent implements OnInit {
     return '';
   }
 
-  async updateForm(): Promise<void> {
+  updateForm(): void {
     if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.editProfileForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.editProfileForm.get('universityLocation')?.value;
-      const getMajorsPromise = await this.authService.getMajors(this.prevSelectedUniversity ?? undefined);
-      getMajorsPromise.subscribe({
+
+      this.userProfileService.getMajors(
+        this.prevSelectedUniversity ?? undefined
+      ).subscribe({
         next: (data: any) => {
           if (data.success) {
             this.majors = data.success.majors.toSorted();
@@ -125,7 +125,8 @@ export class EditProfileScreenComponent implements OnInit {
         },
       });
     }
-    this.authService.getAccountInfo().subscribe({
+
+    this.userProfileService.getAccountInfo().subscribe({
       next: (data: any) => {
         const accountInfo = data.success.accountData;
         console.log(accountInfo);

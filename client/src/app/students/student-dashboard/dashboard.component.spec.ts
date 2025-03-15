@@ -14,6 +14,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatButtonHarness } from '@angular/material/button/testing';
+import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
 
 describe('StudentDashboard', () => {
   // Define variables for testing
@@ -23,6 +24,7 @@ describe('StudentDashboard', () => {
 
   let router: jasmine.SpyObj<Router>;
   let studentService: jasmine.SpyObj<StudentService>;
+  let userProfileService: jasmine.SpyObj<UserProfileService>;
 
   // Mock question data
   const testQuestionData: QuestionData[] = [
@@ -79,7 +81,7 @@ describe('StudentDashboard', () => {
     }
   };
   // Mock student info response
-  const getStudentInfoResponse = {
+  const getAccountInfoResponse = {
     success: {
       status: 200,
       message: "ACCOUNT_FOUND",
@@ -106,12 +108,15 @@ describe('StudentDashboard', () => {
     // Create a spy object for the search project service
     studentService = jasmine.createSpyObj<StudentService>('StudentService', [
       'getOpportunities',
-      'getStudentInfo',
       'searchProjectsMultipleParams',
     ]);
     studentService.searchProjectsMultipleParams.and.returnValue(of(getSearchResponse));
     studentService.getOpportunities.and.returnValue(of(getProjectInfoResponse));
-    studentService.getStudentInfo.and.returnValue(of(getStudentInfoResponse));
+
+    userProfileService = jasmine.createSpyObj<UserProfileService>('UserProfileService', [
+      'getAccountInfo',
+    ]);
+    userProfileService.getAccountInfo.and.returnValue(of(getAccountInfoResponse));
 
     // Create the test bed
     TestBed.configureTestingModule({
@@ -124,10 +129,9 @@ describe('StudentDashboard', () => {
         StudentDashboard,
       ],
       providers: [
-        // Provide the router
-        // Provide the student service
         { provide: Router, useValue: router },
         { provide: StudentService, useValue: studentService },
+        { provide: UserProfileService, useValue: userProfileService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ]

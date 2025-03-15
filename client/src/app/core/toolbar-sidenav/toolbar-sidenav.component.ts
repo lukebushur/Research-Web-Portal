@@ -14,6 +14,7 @@ import { facultyNavList, industryNavList, studentNavList } from '../data/user-na
 import { AuthService } from 'app/auth/auth-service/auth.service';
 import { Subscription } from 'rxjs';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { UserProfileService } from '../user-profile-service/user-profile.service';
 
 @Component({
   selector: 'app-toolbar-sidenav',
@@ -58,6 +59,7 @@ export class ToolbarSidenavComponent implements OnInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private authService: AuthService,
+    private userProfileService: UserProfileService,
   ) {
     // Keeps track of the max-width of the browser that the web portal is running
     // in. If it is less than 600px, then the mobile view is in use where the
@@ -82,7 +84,7 @@ export class ToolbarSidenavComponent implements OnInit {
           return;
         }
 
-        this.authService.getAccountInfo().subscribe({
+        this.userProfileService.getAccountInfo().subscribe({
           next: (value) => {
             const userType = value.success?.accountData?.userType;
 
