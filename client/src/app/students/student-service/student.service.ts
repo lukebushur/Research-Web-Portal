@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { SearchOptions } from 'app/students/models/searchOptions';
-import { AuthService } from 'app/auth/auth-service/auth.service';
 import { ApplyRequestData } from '../models/applyRequestData';
 
 @Injectable({

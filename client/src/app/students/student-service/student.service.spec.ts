@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { StudentService } from './student.service';
 import { provideHttpClient } from '@angular/common/http';
 import { SearchOptions } from 'app/students/models/searchOptions';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { ApplyRequestData } from '../models/applyRequestData';
 
