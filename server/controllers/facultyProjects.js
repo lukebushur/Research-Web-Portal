@@ -333,12 +333,15 @@ const updateProject = async (req, res) => {
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
             switch (req.body.projectType) {
                 case "Active":
+                case "active":
                     recordID = user.userType.FacultyProjects.Active;
                     break;
                 case "Archived":
+                case "archived":
                     recordID = user.userType.FacultyProjects.Archived;
                     break;
                 case "Draft":
+                case "draft":
                     recordID = user.userType.FacultyProjects.Draft;
                     break;
                 default:
