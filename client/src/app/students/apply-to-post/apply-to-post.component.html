@@ -1,75 +1,36 @@
-<div class="page-container">
-  <div class="heading">
+<main class="page-container">
+  <header>
     @if (project) {
-      <h1>{{ project.projectName }}</h1>
+      <h1>Apply to Project</h1>
     }
-    <button mat-raised-button type="button" color="warn" (click)="cancel()">
+    <button mat-stroked-button type="button" color="warn" (click)="cancel()">
       Cancel
     </button>
-  </div>
+  </header>
 
   <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
     <mat-stepper class="item-to-center">
       <mat-step
         formGroupName="details"
         [stepControl]="details"
-        label="Project Details"
+        label="Review Project Details"
       >
         @if (project) {
-          <div class="remove-matcard-margin">
-            <mat-card>
-              <div class="infoDiv">
-                @if (project.responsibilities) {
-                  <div class="descriptionDiv">
-                    <mat-card-header>
-                      <mat-card-title>Description</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                      <mat-card class="content-card">
-                        <p>{{ project.description }}</p>
-                      </mat-card>
-                    </mat-card-content>
-                  </div>
-
-                  <div class="responsibilitiesDiv">
-                    <mat-card-header>
-                      <mat-card-title>Expected Responsibilities</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                      <mat-card class="content-card">
-                        <p>{{ project.responsibilities }}</p>
-                      </mat-card>
-                    </mat-card-content>
-                  </div>
-                }
-                <mat-card-header>
-                  <mat-card-title>
-                    Project Requirements & Information
-                  </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                  <p>Applicable Majors: {{ project.majors.join(", ") }}</p>
-                  @if (project.categories.length > 0) {
-                    <p>
-                      Project Categories: {{ project.categories.join(", ") }}
-                    </p>
-                  }
-                  <p>GPA Requirement: {{ project.GPA }}</p>
-                  <p>Deadline: {{ dateToString(project.deadline) }}</p>
-                  <p>Date Posted: {{ dateToString(project.posted) }}</p>
-                </mat-card-content>
-              </div>
-            </mat-card>
-          </div>
+          <section class="stepper-section">
+            <app-student-project-description
+              [professorEmail]="professorEmail"
+              [project]="project"
+            />
+          </section>
         }
       </mat-step>
 
       <mat-step
         formGroupName="questionsGroup"
         [stepControl]="questionsGroup"
-        label="Application Questions"
+        label="Complete Application Questions"
       >
-        <div formArrayName="formQuestions">
+        <section formArrayName="formQuestions" class="stepper-section">
           @for (question of questions; track question; let i = $index) {
             <div>
               <label
@@ -118,7 +79,7 @@
               }
             </div>
           }
-        </div>
+        </section>
         <button
           mat-raised-button
           color="primary"
@@ -130,4 +91,4 @@
       </mat-step>
     </mat-stepper>
   </form>
-</div>
+</main>

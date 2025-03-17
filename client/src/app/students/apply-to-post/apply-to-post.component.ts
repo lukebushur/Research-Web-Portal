@@ -5,7 +5,6 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { ApplyRequestData } from '../models/applyRequestData';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -13,6 +12,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
+import { StudentProjectInfo } from '../models/student-project-info';
+import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
 
 @Component({
   selector: 'app-to-post',
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    StudentProjectDescriptionComponent,
   ]
 })
 export class ApplyToPostComponent implements OnInit {
@@ -38,9 +40,8 @@ export class ApplyToPostComponent implements OnInit {
   professorEmail: string;
   projectId: string;
 
-  project: any;
+  project: StudentProjectInfo;
   questions: Array<QuestionData>;
-
 
   applyForm = this.fb.group({
     details: this.fb.group({}),
@@ -55,7 +56,6 @@ export class ApplyToPostComponent implements OnInit {
     private snackBar: MatSnackBar,
     private studentService: StudentService,
     private fb: FormBuilder,
-    private dateService: DateConverterService,
   ) { }
 
   get details() {
@@ -106,8 +106,8 @@ export class ApplyToPostComponent implements OnInit {
     this.projectId = this.route.snapshot.queryParamMap.get('oppId')!;
 
     this.studentService.getProjectInfo(this.professorEmail, this.projectId).subscribe({
-      next: (response: any) => {
-        this.project = response.success.project;
+      next: (project: StudentProjectInfo) => {
+        this.project = project;
 
         this.questions = this.project.questions;
 
@@ -140,36 +140,6 @@ export class ApplyToPostComponent implements OnInit {
     });
   }
 
-  categoriesString(): string {
-    if (!this.project.categories || this.project.categories.length === 0) {
-      return 'None';
-    }
-    let str = this.project.categories[0];
-    for (let i = 1; i < this.project.categories.length; i++) {
-      str += ', ' + this.project.categories[i];
-    }
-    return str;
-  }
-
-  majorsString(): string {
-    if (!this.project.majors || this.project.majors.length === 0) {
-      return 'None';
-    }
-    let str = this.project.majors[0];
-    for (let i = 1; i < this.project.majors.length; i++) {
-      str += ', ' + this.project.majors[i];
-    }
-    return str;
-  }
-
-  formatGPA(): string {
-    return (Math.round(this.project.GPA * 100) / 100).toFixed(2);
-  }
-
-  dateToString(dateString: string): String {
-    let date = new Date(dateString);
-    return this.dateService.convertShortDate(date);
-  }
 
   onSubmit() {
     const data: ApplyRequestData = {
