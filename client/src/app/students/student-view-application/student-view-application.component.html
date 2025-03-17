@@ -7,7 +7,7 @@
           <div class="infoDiv">
             <p>Professor Name: {{ projectInfo.professorName }}</p>
             <p></p>
-            <p>Created: {{ posted }}</p>
+            <p>Created: {{ projectInfo.posted | date: "longDate" }}</p>
           </div>
           <p id="description">{{ projectInfo.description }}</p>
           <div class="align-between">
@@ -71,7 +71,10 @@
             <mat-card-content>
               <mat-card class="content-card">
                 <p>GPA Requirement: {{ projectInfo.GPA }}</p>
-                <p>Application Deadline: {{ deadline }}</p>
+                <p>
+                  Application Deadline:
+                  {{ projectInfo.deadline | date: "medium" }}
+                </p>
                 @if (projectInfo.majors) {
                   <p>
                     Applicable Majors:

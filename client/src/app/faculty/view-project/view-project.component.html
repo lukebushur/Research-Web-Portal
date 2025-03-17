@@ -30,7 +30,7 @@
               <h2>Posted:</h2>
               <p>{{ project.posted | date: "longDate" }}</p>
               <h2>Deadline:</h2>
-              <p>{{ project.deadline | date: "longDate" }}</p>
+              <p>{{ project.deadline | date: "medium" }}</p>
               @if (project.GPA) {
                 <h2>Minimum Required GPA:</h2>
                 <p>{{ project.GPA | number: "1.2-2" }}</p>
