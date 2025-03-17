@@ -506,14 +506,12 @@ const getProjectData = async (req, res) => {
                 //get the project that matches the projectID
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) { //IMPORTANT : Ensure that applicant data is never returned through this method, as that data should be private
-                    const deadline = new Date(project.deadline);
-                    const posted = new Date(project.posted);
                     let returnProject = {
                         projectName: project.projectName,
                         questions: project.questions,
                         description: project.description,
-                        posted: posted.toDateString(),
-                        deadline: deadline.toDateString(),
+                        posted: project.posted.toISOString(),
+                        deadline: project.deadline.toISOString(),
                         professorId: profID,
                         categories: project.categories,
                         majors: project.majors,

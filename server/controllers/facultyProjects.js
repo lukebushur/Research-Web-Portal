@@ -207,10 +207,10 @@ const getProject = async (req, res) => {
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
                     const deadline = project.deadline // if there exists a project deadline, convert it to date string otherwise null
-                        ? (new Date(project.deadline)).toDateString()
+                        ? (new Date(project.deadline)).toISOString()
                         : null;
                     const posted = project.posted // if there exists a project posted date, convert it to a date string, otherwise its null
-                        ? (new Date(project.posted)).toDateString()
+                        ? (new Date(project.posted)).toISOString()
                         : null;
                     let returnProject = {
                         projectName: project.projectName,
