@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { QuestionData } from 'app/shared/models/questionData';
 import { StudentService } from '../student-service/student.service';
+import { StudentProjectInfo } from '../models/student-project-info';
+import { StudentProjectDescriptionComponent } from "../student-project-description/student-project-description.component";
 
 // interface for storing project data
 interface ProjectData {
@@ -31,14 +33,13 @@ interface ProjectData {
   styleUrl: './student-view-project.component.css',
   imports: [
     AsyncPipe,
-    DatePipe,
-    DecimalPipe,
     MatExpansionModule,
     MatIconModule,
     MatCardModule,
     MatRadioModule,
     MatCheckboxModule,
     MatButtonModule,
+    StudentProjectDescriptionComponent,
   ]
 })
 export class StudentViewProjectComponent implements OnInit {
@@ -47,7 +48,7 @@ export class StudentViewProjectComponent implements OnInit {
   // and it emits the current value to any new subscribers.
   // It is used with the async pipe in the template (HTML) to load the page
   // content only when the data is loaded (after HTTP request finishes).
-  projectData$ = new BehaviorSubject<ProjectData | null>(null);
+  projectData$ = new BehaviorSubject<StudentProjectInfo | null>(null);
 
   // URL parameters
   projectId: string;
@@ -73,14 +74,6 @@ export class StudentViewProjectComponent implements OnInit {
       this.professorEmail,
       this.projectId
     ).pipe(
-      map((data: any) => {
-        const projectData = data.success.project;
-        return <ProjectData>{
-          ...projectData,
-          posted: new Date(projectData.posted),
-          deadline: new Date(projectData.deadline),
-        };
-      }),
       catchError((error: any) => {
         console.log(error);
         return of(null);
