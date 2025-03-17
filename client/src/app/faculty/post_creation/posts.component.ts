@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
 import { CreateQuestionsFormComponent } from 'app/shared/create-questions-form/create-questions-form.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule, MatTimepickerOption } from '@angular/material/timepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -34,6 +35,7 @@ import { UserProfileService } from 'app/core/user-profile-service/user-profile.s
     MatChipsModule,
     MatIconModule,
     MatDatepickerModule,
+    MatTimepickerModule,
     MatNativeDateModule,
     CreateQuestionsFormComponent,
     MatSnackBarModule,
@@ -52,7 +54,8 @@ export class PostProjectComponent implements OnInit {
       description: ['', [Validators.required]],
       majors: [[], [Validators.required]],
       categories: this.fb.array([], [Validators.required]),
-      deadline: this.fb.control<Date | null>(null, [Validators.required]),
+      deadlineDate: this.fb.control<Date | null>(null, [Validators.required]),
+      deadlineTime: this.fb.control<Date | null>(null, [Validators.required]),
       responsibilities: [''],
       GPA: ['', [
         Validators.min(0),
@@ -93,6 +96,27 @@ export class PostProjectComponent implements OnInit {
     return this.details.get('categories') as FormArray;
   }
 
+  get deadline() {
+    const deadlineDate: Date | null = this.details.get('deadlineDate')!.value;
+    const deadlineTime: Date | null = this.details.get('deadlineTime')!.value;
+
+    if (!deadlineDate) {
+      return null;
+    }
+
+    if (!deadlineTime) {
+      return deadlineDate;
+    }
+
+    const deadline = new Date(deadlineDate.valueOf());
+    deadline.setHours(
+      deadlineTime.getHours(),
+      deadlineTime.getMinutes(),
+    );
+
+    return deadline;
+  }
+
   ngOnInit(): void {
     // Populate the majors list (for the dropdown menu)
     this.userProfileService.getMajors().subscribe({
@@ -127,12 +151,25 @@ export class PostProjectComponent implements OnInit {
     this.facultyService.getProject(this.projectID!, this.projectType!).subscribe({
       next: (data: any) => {
         if (data.success) {
+          const deadlineDate = data.success.project.deadline
+            ? new Date(data.success.project.deadline)
+            : null;
+          let deadlineTime = null;
+          if (deadlineDate) {
+            deadlineTime = new Date();
+            deadlineTime.setHours(
+              deadlineDate.getHours(),
+              deadlineDate.getMinutes(),
+              deadlineDate.getSeconds(),
+              deadlineDate.getMilliseconds(),
+            );
+          }
+
           this.initialProjectData = {
             ...data.success.project,
             // manually set deadline, since data has it as a string (or undefined)
-            deadline: data.success.project.deadline
-              ? new Date(data.success.project.deadline)
-              : null,
+            deadlineDate,
+            deadlineTime,
           }
 
           // Set values in the projectForm
@@ -142,7 +179,8 @@ export class PostProjectComponent implements OnInit {
           for (const category of this.initialProjectData.categories) {
             this.categories.push(this.fb.control(category));
           }
-          this.details.get('deadline')?.setValue(this.initialProjectData.deadline || null);
+          this.details.get('deadlineDate')?.setValue(this.initialProjectData.deadlineDate);
+          this.details.get('deadlineTime')?.setValue(this.initialProjectData.deadlineDate);
           this.details.get('responsibilities')?.setValue(this.initialProjectData.responsibilities || '');
           this.details.get('GPA')?.setValue(this.initialProjectData.GPA ? '' + this.initialProjectData.GPA : '');
         }
@@ -209,6 +247,48 @@ export class PostProjectComponent implements OnInit {
     }
   }
 
+  getTimeOptions(): MatTimepickerOption<Date>[] {
+    const options: MatTimepickerOption<Date>[] = [];
+
+    const date = new Date();
+    date.setHours(23, 59);
+    options.push({
+      label: '11:59 PM',
+      value: date
+    })
+
+    for (let h = 23; h >= 0; h--) {
+      for (let m = 30; m >= 0; m -= 30) {
+        const date = new Date();
+        date.setHours(h, m);
+
+        options.push({
+          label: this.timeToString(h, m),
+          value: date,
+        });
+      }
+    }
+
+    return options;
+  }
+
+  private timeToString(hours: number, minutes: number) {
+    const hmod12 = hours % 12;
+    const hourStr = hmod12 ? hmod12 : 12;
+
+    const minuteStr = String(minutes).padStart(2, '0');
+
+    const period = hours < 12 ? 'AM' : 'PM';
+
+    return `${hourStr}:${minuteStr} ${period}`;
+  }
+
+  checkTime() {
+    console.log(this.details.get('deadlineDate')?.value);
+    console.log(this.details.get('deadlineTime')?.value);
+    console.log(this.deadline);
+  }
+
   // Navigate to the previous page
   cancel(): void {
     this.location.back();
@@ -221,6 +301,7 @@ export class PostProjectComponent implements OnInit {
       projectDetails: {
         project: {
           ...this.details.value,
+          deadline: this.deadline,
           ...this.questionsGroup.value,
         },
       },
@@ -228,7 +309,7 @@ export class PostProjectComponent implements OnInit {
 
     // Remove falsy fields
     for (const [key, value] of Object.entries(data.projectDetails.project)) {
-      if (!value) {
+      if (!value || key === 'deadlineDate' || key === 'deadlineTime') {
         delete data.projectDetails.project[key];
       }
     }

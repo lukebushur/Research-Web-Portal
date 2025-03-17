@@ -93,23 +93,40 @@
           }
         </mat-form-field>
 
-        <mat-form-field class="block">
-          <mat-label>Application Deadline</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="deadline" />
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <!-- I have tried for hours to get Material form validation working correctly for this field,
-            but nothing has worked. This at least lets the user know that it is required. -->
-          @if (details.get("deadline")?.invalid) {
-            <mat-error>{{
-              requiredFieldErrorMessage("deadline", "Deadline")
-            }}</mat-error>
-          }
-        </mat-form-field>
+        <div class="deadline-fields">
+          <mat-form-field class="deadline-field">
+            <mat-label>Application Deadline Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="datepicker"
+              formControlName="deadlineDate"
+            />
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker #datepicker />
+            <mat-datepicker-toggle matIconSuffix [for]="datepicker" />
+            @if (details.get("deadlineDate")!.invalid) {
+              <mat-error>{{
+                requiredFieldErrorMessage("deadlineDate", "Deadline Date")
+              }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="deadline-field">
+            <mat-label>Application Deadline Time</mat-label>
+            <input
+              matInput
+              [matTimepicker]="timepicker"
+              formControlName="deadlineTime"
+            />
+            <mat-timepicker [options]="getTimeOptions()" #timepicker />
+            <mat-timepicker-toggle matIconSuffix [for]="timepicker" />
+            @if (details.get("deadlineTime")!.invalid) {
+              <mat-error>{{
+                requiredFieldErrorMessage("deadlineTime", "Deadline Time")
+              }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
 
         <mat-form-field class="block">
           <mat-label>Responsibilities</mat-label>
