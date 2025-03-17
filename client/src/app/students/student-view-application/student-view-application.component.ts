@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { StudentProjectInfo } from '../models/student-project-info';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-student-view-application',
@@ -21,6 +23,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    DatePipe,
   ]
 })
 export class StudentViewApplicationComponent {
@@ -49,12 +52,14 @@ export class StudentViewApplicationComponent {
   ngOnInit(): void {
     this.studentService.getApplication(this.applicationID).subscribe({
       next: (data) => {
-        this.studentService.getProjectInfo(data.success.application.professorEmail, data.success.application.opportunityId).subscribe({
-          next: (data1) => {
-            this.projectInfo = data1.success.project;
+        this.studentService.getProjectInfo(
+          data.success.application.professorEmail,
+          data.success.application.opportunityId
+        ).subscribe({
+          next: (project: StudentProjectInfo) => {
+            this.projectInfo = project;
             this.deadline = this.dateConverter.convertShortDate(this.projectInfo.deadline);
             this.posted = this.dateConverter.convertShortDate(this.projectInfo.posted);
-            // console.log('Project', this.projectInfo);
           },
           error: (error) => {
             this.projectInfo = null;
@@ -66,8 +71,6 @@ export class StudentViewApplicationComponent {
         this.applicationData = data.success.application;
         this.appliedDate = this.dateConverter.convertShortDate(this.applicationData.appliedDate);
         this.questions = this.applicationData.questions;
-        // console.log('Application', this.applicationData);
-        // console.log('Questions', this.questions);
       },
       error: (error) => {
         console.error('Error fetching projects', error);
