@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { SearchOptions } from 'app/students/models/searchOptions';
 import { ApplyRequestData } from '../models/applyRequestData';
+import { StudentProjectInfo, SuccessStudentProjectInfo } from '../models/student-project-info';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,7 @@ export class StudentService {
   }
 
   // Get the project information for the given professor and project ID
-  getProjectInfo(professorEmail: string, projectID: string): Observable<any> {
+  getProjectInfo(professorEmail: string, projectID: string): Observable<StudentProjectInfo> {
 
     // Generate the data to send to the back-end
     const data = {
@@ -55,7 +56,17 @@ export class StudentService {
     }
 
     // Send the request to the back-end
-    return this.http.post(`${this.apiUrl}/applications/getProjectInfo`, data)
+    return this.http.post<SuccessStudentProjectInfo>(`${this.apiUrl}/applications/getProjectInfo`, data).pipe(
+      map((value: SuccessStudentProjectInfo) => {
+        const project = value.success.project;
+
+        return <StudentProjectInfo>{
+          ...project,
+          posted: new Date(project.posted),
+          deadline: new Date(project.deadline),
+        };
+      })
+    );
   }
 
   // Send request to the back end to create an application

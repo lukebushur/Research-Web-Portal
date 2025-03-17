@@ -6,6 +6,7 @@ import { SearchOptions } from 'app/students/models/searchOptions';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { ApplyRequestData } from '../models/applyRequestData';
+import { StudentProjectInfo } from '../models/student-project-info';
 
 describe('StudentService', () => {
   const API_URL = environment.apiUrl;
@@ -76,7 +77,7 @@ describe('StudentService', () => {
       professorEmail: 'projectInfo@email.com',
       projectID: '849',
     };
-    const flushBody = 'get project info';
+    const flushBody = {} as StudentProjectInfo;
 
     const projectInfo$ = service.getProjectInfo(
       reqBody.professorEmail,
