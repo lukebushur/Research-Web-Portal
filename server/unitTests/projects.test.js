@@ -1584,7 +1584,7 @@ describe('BE-GSP-5 : POST /api/projects/getProject', () => {
                 expect(res.body.success.project).to.have.property('projectName').to.equal("Bioinformatics Project");
                 expect(res.body.success.project).to.have.property('questions');
                 expect(res.body.success.project).to.have.property('description').to.equal("We will be eating frogs!");
-                expect(res.body.success.project).to.have.property('deadline').to.equal("Thu Jan 18 2024");
+                expect(res.body.success.project).to.have.property('deadline').to.equal("2024-01-18T05:00:00.000Z");
                 done();
             })
     });
@@ -1731,7 +1731,7 @@ describe('BE-UP-7 + BE-DP- GET /api/projects/getProjects', () => {
 });
 
 //BE-GSP-1 : Retrieve a singular archived project but with a student access token
-describe('BE-GSP-5 : POST /api/projects/getProject', () => {
+describe('BE-GSP-1 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
         request.execute(server)
             .post('/api/projects/getProject')
@@ -1789,7 +1789,7 @@ describe('BE-GSP-2.2 : POST /api/projects/getProject', () => {
 });
 
 //BE-GSP-3.1 : Retrieve a singular archived project but with invalid projectType
-describe('BE-GSP-2.1 : POST /api/projects/getProject', () => {
+describe('BE-GSP-3.1 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
         request.execute(server)
             .post('/api/projects/getProject')
