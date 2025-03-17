@@ -496,7 +496,7 @@ const getProjectData = async (req, res) => {
 
         //check if user type is a student
         if (student.userType.Type == process.env.STUDENT) {
-            const profID = faculty._id; //store faculty id for later use
+            const profID = faculty._id.toString(); //store faculty id for later use
 
             let recordID = faculty.userType.FacultyProjects.Active; //recordID will be taken from the user's record depending on the projectType field in the request
 
