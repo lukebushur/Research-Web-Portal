@@ -7,6 +7,7 @@ import { StudentService } from '../student-service/student.service';
 import { of } from 'rxjs';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { StudentProjectInfo } from '../models/student-project-info';
 
 interface ProjectData {
   projectName: string;
@@ -65,7 +66,8 @@ describe('StudentViewProjectComponent', () => {
   };
   // fake project data from the HTTP request after being transformed to match
   // the ProjectData interface
-  const projectData: ProjectData = {
+  const projectData: StudentProjectInfo = {
+    professorId: '123',
     projectName: 'Test Name',
     professorName: 'Test Prof',
     description: 'Test description',
@@ -84,11 +86,7 @@ describe('StudentViewProjectComponent', () => {
     // Create the spy object to mock the getProjectInfo method.
     studentService = jasmine.createSpyObj<StudentService>('StudentService', ['getProjectInfo']);
     // spied methods' return values are the fake data defined above
-    studentService.getProjectInfo.and.returnValue(of({
-      success: {
-        project: httpProjectData
-      }
-    }));
+    studentService.getProjectInfo.and.returnValue(of(projectData));
 
     await TestBed.configureTestingModule({
       imports: [StudentViewProjectComponent],

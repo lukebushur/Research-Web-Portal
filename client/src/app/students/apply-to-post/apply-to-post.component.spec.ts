@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { ProjectData } from 'app/shared/models/projectData';
 import { of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { StudentService } from '../student-service/student.service';
@@ -16,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { QuestionData } from 'app/shared/models/questionData';
+import { StudentProjectInfo } from '../models/student-project-info';
 
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
@@ -43,28 +43,21 @@ describe('ApplyToPostComponent', () => {
       required: true,
     },
   ];
+  const professorEmail = 'testemail@email.com';
+  const projectId = '1234';
   // Mock project data
-  const testProjectData: ProjectData = {
+  const testProjectData: StudentProjectInfo = {
     professorName: 'Test Professor',
-    professorEmail: 'testemail@email.com',
-    projectID: '123',
+    professorId: '123',
     projectName: 'Test Project',
     description: 'This project is for testing.',
     categories: ['Technology', 'Documentation', 'Writing'],
     GPA: 2.0,
     majors: ['Computer Science', 'Theatre'],
-    posted: 'Fri Feb 16 2024',
-    deadline: 'Sun Mar 17 2024',
+    posted: new Date('Fri Feb 16 2024'),
+    deadline: new Date('Sun Mar 17 2024'),
     questions: testQuestionData,
   };
-  const getProjectInfoResponse = {
-    success: {
-      project: {
-        ...testProjectData
-      }
-    }
-  };
-  let createApplicationSpy: jasmine.Spy;
   const createApplicationResponse = {
     success: {
       status: 200,
@@ -80,7 +73,7 @@ describe('ApplyToPostComponent', () => {
       'getProjectInfo',
       'createApplication',
     ]);
-    studentService.getProjectInfo.and.returnValue(of(getProjectInfoResponse));
+    studentService.getProjectInfo.and.returnValue(of(testProjectData));
     studentService.createApplication.and.returnValue(of(createApplicationResponse));
 
     // Spy object for Router. Captures the provided function calls and returns
@@ -114,8 +107,8 @@ describe('ApplyToPostComponent', () => {
             snapshot: {
               queryParamMap: convertToParamMap({
                 profName: testProjectData.professorName,
-                profEmail: testProjectData.professorEmail,
-                oppId: testProjectData.projectID,
+                profEmail: professorEmail,
+                oppId: projectId,
               })
             }
           }

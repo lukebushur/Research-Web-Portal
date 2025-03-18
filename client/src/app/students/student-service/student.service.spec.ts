@@ -6,7 +6,7 @@ import { SearchOptions } from 'app/students/models/searchOptions';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { ApplyRequestData } from '../models/applyRequestData';
-import { StudentProjectInfo } from '../models/student-project-info';
+import { StudentProjectInfo, SuccessStudentProjectInfo } from '../models/student-project-info';
 
 describe('StudentService', () => {
   const API_URL = environment.apiUrl;
@@ -77,7 +77,17 @@ describe('StudentService', () => {
       professorEmail: 'projectInfo@email.com',
       projectID: '849',
     };
-    const flushBody = {} as StudentProjectInfo;
+    const project = {
+      posted: new Date(2025, 2, 1),
+      deadline: new Date(2025, 3, 1),
+    } as StudentProjectInfo;
+    const flushBody: SuccessStudentProjectInfo = {
+      success: {
+        status: 200,
+        message: 'PROJECT_FOUND',
+        project: project,
+      }
+    };
 
     const projectInfo$ = service.getProjectInfo(
       reqBody.professorEmail,
@@ -90,7 +100,7 @@ describe('StudentService', () => {
     expect(req.request.body).toEqual(reqBody);
 
     req.flush(flushBody);
-    expect(await projectInfo).toEqual(flushBody);
+    expect(await projectInfo).toEqual(project);
   });
 
   it('should send a createApplication request', async () => {

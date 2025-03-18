@@ -155,7 +155,7 @@ describe('PostProjectComponent', () => {
   it('should expect GPA to be valid', async () => {
     // use harness here
     const AllInputHarnesses = await loader.getAllHarnesses(MatInputHarness);
-    const Input = AllInputHarnesses[4];
+    const Input = AllInputHarnesses[5];
     expect(Input).withContext('should exist').toBeTruthy();
     await Input?.setValue('2.0');
     expect(component.projectForm.get("details")?.get("GPA")?.value).toBe('2.0');

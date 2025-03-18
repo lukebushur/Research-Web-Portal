@@ -15,6 +15,7 @@ import { MatInputHarness } from '@angular/material/input/testing';
 import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { StudentProjectInfo } from '../models/student-project-info';
 
 describe('StudentViewApplicationComponent', () => {
   let component: StudentViewApplicationComponent;
@@ -72,7 +73,7 @@ describe('StudentViewApplicationComponent', () => {
     opportunityId: '124',
     opportunityRecordId: '125',
   };
-  const projectData = {
+  const projectData: StudentProjectInfo = {
     projectName: 'Test Project Name',
     professorName: 'First Last',
     professorId: '126',
@@ -90,8 +91,8 @@ describe('StudentViewApplicationComponent', () => {
       'Mathematics',
       'Biology',
     ],
-    posted: 'Mon Feb 19 2024',
-    deadline: 'Thu Jul 18 2024',
+    posted: new Date('Mon Feb 19 2024'),
+    deadline: new Date('Thu Jul 18 2024'),
   }
   let studentService: jasmine.SpyObj<StudentService>;
   let router: Router;
@@ -107,11 +108,7 @@ describe('StudentViewApplicationComponent', () => {
         application: applicationData
       }
     }));
-    studentService.getProjectInfo.and.returnValue(of({
-      success: {
-        project: projectData
-      }
-    }));
+    studentService.getProjectInfo.and.returnValue(of(projectData));
     studentService.deleteApplication.and.returnValue(of({
       success: {
         status: 200,
@@ -159,7 +156,7 @@ describe('StudentViewApplicationComponent', () => {
     const projectText = await cards[0].getText();
 
     expect(projectText).toContain('Professor Name: ' + projectData.professorName);
-    expect(projectText).toContain('Created: ' + (new Date(projectData.posted)).toLocaleDateString());
+    expect(projectText).toContain('Created: February 19, 2024');
     expect(projectText).toContain(projectData.description);
     expect(projectText).toContain('Applied: ' + (new Date(applicationData.appliedDate)).toLocaleDateString());
     expect(projectText).toContain(applicationData.status);
@@ -170,7 +167,7 @@ describe('StudentViewApplicationComponent', () => {
     expect(await cards[1].getText()).toContain('Expected Responsibilities');
 
     const responsibilitiesCard = await cards[1].getHarness(MatCardHarness);
-    expect(await responsibilitiesCard.getText()).toEqual(projectData.responsibilities);
+    expect(await responsibilitiesCard.getText()).toEqual(projectData.responsibilities!);
   });
 
   it('should render project details 2nd card', async () => {
@@ -180,7 +177,7 @@ describe('StudentViewApplicationComponent', () => {
     const projectDetailsCard = (await cards[1].getAllHarnesses(MatCardHarness))[1];
     const projectText = await projectDetailsCard.getText();
     expect(projectText).toContain('GPA Requirement: ' + projectData.GPA);
-    expect(projectText).toContain('Application Deadline: ' + (new Date(projectData.deadline).toLocaleDateString()));
+    expect(projectText).toContain('Application Deadline: Jul 18, 2024, 12:00:00 AM');
     expect(projectText).toContain('Applicable Majors: ' + projectData.majors.join(', '));
     expect(projectText).toContain('Project Categories: ' + projectData.categories.join(', '));
   });
