@@ -9,13 +9,32 @@ import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { MatCardHarness } from '@angular/material/card/testing';
-import { MatRadioGroupHarness } from '@angular/material/radio/testing';
-import { MatInputHarness } from '@angular/material/input/testing';
-import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { StudentProjectInfo } from '../models/student-project-info';
+import { Component, input } from '@angular/core';
+import { MatAccordionHarness } from '@angular/material/expansion/testing';
+import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { QuestionCardComponent } from 'app/shared/question-card/question-card.component';
+
+@Component({
+  selector: 'app-student-project-description',
+  template: '<h1>Project Information Component</h1>'
+})
+class StudentProjectDescriptionStubComponent {
+  readonly professorEmail = input.required<string>();
+  readonly project = input.required<StudentProjectInfo>();
+}
+
+@Component({
+  selector: 'app-question-card',
+  template: '<h1>Question Card Component</h1>'
+})
+class QuestionCardStubComponent {
+  readonly questionNum = input.required<number>();
+  readonly questionData = input.required<QuestionData>();
+  readonly showAnswer = input<boolean>(false);
+}
 
 describe('StudentViewApplicationComponent', () => {
   let component: StudentViewApplicationComponent;
@@ -126,14 +145,29 @@ describe('StudentViewApplicationComponent', () => {
         { provide: StudentService, useValue: studentService },
         {
           provide: ActivatedRoute, useValue: {
-            params: of({
-              applicationID: applicationId,
-            })
+            snapshot: {
+              paramMap: new Map([
+                ['applicationID', applicationId],
+              ]),
+            }
           }
         },
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
       ]
+    }).overrideComponent(StudentViewApplicationComponent, {
+      remove: {
+        imports: [
+          StudentProjectDescriptionComponent,
+          QuestionCardComponent,
+        ]
+      },
+      add: {
+        imports: [
+          StudentProjectDescriptionStubComponent,
+          QuestionCardStubComponent,
+        ]
+      },
     });
     fixture = TestBed.createComponent(StudentViewApplicationComponent);
     router = TestBed.inject(Router);
@@ -144,65 +178,45 @@ describe('StudentViewApplicationComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(component.projectInfo).toEqual(projectData);
+    expect(component.projectInfo$.value).toEqual(projectData);
     expect(studentService.getProjectInfo).toHaveBeenCalledOnceWith(applicationData.professorEmail, applicationData.opportunityId);
-    expect(component.applicationData).toEqual(applicationData);
+    expect(component.applicationData$.value).toEqual(applicationData);
     expect(studentService.getApplication).toHaveBeenCalledOnceWith(applicationId);
-    expect(component.questions).toEqual(questionsData);
+    expect(component.applicationData$.value.questions).toEqual(questionsData);
   });
 
-  it('should render project details 1st card', async () => {
-    const cards = await loader.getAllHarnesses(MatCardHarness);
-    const projectText = await cards[0].getText();
+  it('should render project information component expansion panel', async () => {
+    const expansionPanels = await loader.getAllHarnesses(MatAccordionHarness);
+    expect(expansionPanels.length).toEqual(1);
 
-    expect(projectText).toContain('Professor Name: ' + projectData.professorName);
-    expect(projectText).toContain('Created: February 19, 2024');
-    expect(projectText).toContain(projectData.description);
-    expect(projectText).toContain('Applied: ' + (new Date(applicationData.appliedDate)).toLocaleDateString());
-    expect(projectText).toContain(applicationData.status);
+    const expansionPanel = expansionPanels[0];
+    const projectInfo = (await expansionPanel.getExpansionPanels())[0];
+    expect(await projectInfo.getTitle()).toEqual('Project Information');
+    expect(await projectInfo.getTextContent()).toEqual('Project Information Component');
   });
 
-  it('should render project responsibilities', async () => {
-    const cards = await loader.getAllHarnesses(MatCardHarness);
-    expect(await cards[1].getText()).toContain('Expected Responsibilities');
+  it('should render application status expansion panel', async () => {
+    const expansionPanels = await loader.getAllHarnesses(MatAccordionHarness);
+    expect(expansionPanels.length).toEqual(1);
 
-    const responsibilitiesCard = await cards[1].getHarness(MatCardHarness);
-    expect(await responsibilitiesCard.getText()).toEqual(projectData.responsibilities!);
-  });
+    const expansionPanel = expansionPanels[0];
+    const applicationStatus = (await expansionPanel.getExpansionPanels())[1];
+    expect(await applicationStatus.getTitle()).toEqual('Application Status');
 
-  it('should render project details 2nd card', async () => {
-    const cards = await loader.getAllHarnesses(MatCardHarness);
-    expect(await cards[1].getText()).toContain('Project Requirements & Information');
-
-    const projectDetailsCard = (await cards[1].getAllHarnesses(MatCardHarness))[1];
-    const projectText = await projectDetailsCard.getText();
-    expect(projectText).toContain('GPA Requirement: ' + projectData.GPA);
-    expect(projectText).toContain('Application Deadline: Jul 18, 2024, 12:00:00 AM');
-    expect(projectText).toContain('Applicable Majors: ' + projectData.majors.join(', '));
-    expect(projectText).toContain('Project Categories: ' + projectData.categories.join(', '));
+    const textContent = await applicationStatus.getTextContent();
+    expect(textContent).toContain('Application Status');
+    expect(textContent).toContain('Pending');
+    expect(textContent).toContain('Applied On');
   });
 
   it('should render project details 2nd card', async () => {
-    const cards = await loader.getAllHarnesses(MatCardHarness);
-    expect(await cards[1].getText()).toContain('Application Questions');
+    const expansionPanels = await loader.getAllHarnesses(MatAccordionHarness);
+    expect(expansionPanels.length).toEqual(1);
 
-    const applicationCard = (await cards[1].getAllHarnesses(MatCardHarness))[2];
-    const applicationText = await applicationCard.getText();
-
-    expect(applicationText).toContain('Question 1: ' + questionsData[0].question);
-    const q1RadioGroup = await applicationCard.getHarness(MatRadioGroupHarness);
-    expect(await q1RadioGroup.getCheckedValue()).toEqual(questionsData[0].answers![0]);
-
-    expect(applicationText).toContain('Question 2: ' + questionsData[1].question);
-    const q2TextArea = await applicationCard.getHarness(MatInputHarness);
-    expect(await q2TextArea.getValue()).toEqual(questionsData[1].answers![0]);
-
-    expect(applicationText).toContain('Question 3: ' + questionsData[2].question);
-    const q3CheckGroups = await applicationCard.getAllHarnesses(MatCheckboxHarness);
-    for (let i = 0; i < q3CheckGroups.length; i++) {
-      expect(await q3CheckGroups[i].getLabelText()).toEqual(questionsData[2].choices![i]);
-      expect(await q3CheckGroups[i].isChecked()).toEqual(questionsData[2].answers!.includes(questionsData[2].choices![i]));
-    }
+    const expansionPanel = expansionPanels[0];
+    const projectInfo = (await expansionPanel.getExpansionPanels())[2];
+    expect(await projectInfo.getTitle()).toEqual('Application Answers');
+    expect(await projectInfo.getTextContent()).toContain('Question Card Component');
   });
 
   it('should display a button for application modification', async () => {
@@ -218,6 +232,6 @@ describe('StudentViewApplicationComponent', () => {
     expect(rescindButton).toBeTruthy();
     await rescindButton.click();
     expect(studentService.deleteApplication).toHaveBeenCalledOnceWith(applicationData._id);
-    expect(navigateSpy).toHaveBeenCalledWith(['/student/applications-overview'], {});
+    expect(navigateSpy).toHaveBeenCalledWith(['/student/applications-overview']);
   });
 });
