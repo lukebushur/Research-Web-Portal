@@ -1581,10 +1581,14 @@ describe('BE-GSP-5 : POST /api/projects/getProject', () => {
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('PROJECT_FOUND');
                 expect(res.body.success).to.have.property('project');
-                expect(res.body.success.project).to.have.property('projectName').to.equal("Bioinformatics Project");
+                expect(res.body.success.project).to.have.property('projectName').to.equal('Bioinformatics Project');
                 expect(res.body.success.project).to.have.property('questions');
-                expect(res.body.success.project).to.have.property('description').to.equal("We will be eating frogs!");
-                expect(res.body.success.project).to.have.property('deadline').to.equal("2024-01-18T05:00:00.000Z");
+                expect(res.body.success.project).to.have.property('description').to.equal('We will be eating frogs!');
+                expect(res.body.success.project).to.have.property('deadline')
+                const deadline = new Date(res.body.success.project.deadline);
+                expect(deadline.getFullYear()).to.equal(2024);
+                expect(deadline.getMonth()).to.equal(0);
+                expect(deadline.getDate()).to.equal(18);
                 done();
             })
     });

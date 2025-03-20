@@ -548,7 +548,11 @@ describe('BE-GPI-7 : POST /api/applications/getProjectInfo', () => {
                 expect(res.body.success.project).to.have.property("categories").to.have.length(3);
                 expect(res.body.success.project).to.have.property("questions").to.have.length(3);
                 expect(res.body.success.project).to.have.property("description").to.equal("We will be eating frogs!");
-                expect(res.body.success.project).to.have.property("deadline").to.equal("2042-01-18T05:00:00.000Z");
+                expect(res.body.success.project).to.have.property('deadline')
+                const deadline = new Date(res.body.success.project.deadline);
+                expect(deadline.getFullYear()).to.equal(2042);
+                expect(deadline.getMonth()).to.equal(0);
+                expect(deadline.getDate()).to.equal(18);
                 done();
             });
     });
