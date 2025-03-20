@@ -12,6 +12,7 @@ import { QuestionData } from 'app/shared/models/questionData';
 import { StudentService } from '../student-service/student.service';
 import { StudentProjectInfo } from '../models/student-project-info';
 import { StudentProjectDescriptionComponent } from "../student-project-description/student-project-description.component";
+import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
 
 // interface for storing project data
 interface ProjectData {
@@ -40,6 +41,7 @@ interface ProjectData {
     MatCheckboxModule,
     MatButtonModule,
     StudentProjectDescriptionComponent,
+    QuestionCardComponent,
   ]
 })
 export class StudentViewProjectComponent implements OnInit {
@@ -78,7 +80,13 @@ export class StudentViewProjectComponent implements OnInit {
         console.log(error);
         return of(null);
       }),
-    ).subscribe(this.projectData$);
+    ).subscribe({
+      next: (value: StudentProjectInfo | null) => {
+        if (value) {
+          this.projectData$.next(value);
+        }
+      },
+    });
   }
 
   // Return a more understandable string for displaying what the given question

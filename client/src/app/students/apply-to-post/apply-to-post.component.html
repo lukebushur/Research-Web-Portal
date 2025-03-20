@@ -16,12 +16,12 @@
         label="Review Project Details"
       >
         @if (project) {
-          <section class="stepper-section">
+          <article class="stepper-section">
             <app-student-project-description
               [professorEmail]="professorEmail"
               [project]="project"
             />
-          </section>
+          </article>
         }
       </mat-step>
 

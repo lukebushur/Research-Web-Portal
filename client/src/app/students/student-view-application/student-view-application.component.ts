@@ -1,81 +1,77 @@
 import { Component } from '@angular/core';
 import { StudentService } from '../student-service/student.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
-import { QuestionData } from 'app/shared/models/questionData';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { StudentProjectInfo } from '../models/student-project-info';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
 
 @Component({
   selector: 'app-student-view-application',
   templateUrl: './student-view-application.component.html',
   styleUrls: ['./student-view-application.component.css'],
   imports: [
+    MatExpansionModule,
+    MatIconModule,
     MatCardModule,
     MatRadioModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    AsyncPipe,
     DatePipe,
+    StudentProjectDescriptionComponent,
+    QuestionCardComponent,
   ]
 })
 export class StudentViewApplicationComponent {
 
-  applicationID: string;
-  applicationData: any = -1;
-  projectInfo: any = -1;
+  applicationId: string;
 
-  questions: QuestionData[];
-
-  posted: String;
-  deadline: String;
-  appliedDate: String;
+  professorEmail$ = new BehaviorSubject<string | null>(null);
+  applicationData$ = new BehaviorSubject<any | null>(null);
+  projectInfo$ = new BehaviorSubject<StudentProjectInfo | null>(null);
 
   constructor(
     private studentService: StudentService,
-    private route: ActivatedRoute,
-    private dateConverter: DateConverterService,
+    route: ActivatedRoute,
     private router: Router,
   ) {
-    this.route.params.subscribe(params => {
-      this.applicationID = params['applicationID'];
-    });
+    this.applicationId = route.snapshot.paramMap.get('applicationID')!;
   }
 
   ngOnInit(): void {
-    this.studentService.getApplication(this.applicationID).subscribe({
+    this.studentService.getApplication(this.applicationId).subscribe({
       next: (data) => {
+        this.professorEmail$.next(data.success.application.professorEmail);
+
         this.studentService.getProjectInfo(
           data.success.application.professorEmail,
           data.success.application.opportunityId
         ).subscribe({
           next: (project: StudentProjectInfo) => {
-            this.projectInfo = project;
-            this.deadline = this.dateConverter.convertShortDate(this.projectInfo.deadline);
-            this.posted = this.dateConverter.convertShortDate(this.projectInfo.posted);
+            this.projectInfo$.next(project);
           },
           error: (error) => {
-            this.projectInfo = null;
-            this.router.navigate(['/student/applications-overview'], {
-            });
+            this.router.navigate(['/student/applications-overview']);
           }
         })
 
-        this.applicationData = data.success.application;
-        this.appliedDate = this.dateConverter.convertShortDate(this.applicationData.appliedDate);
-        this.questions = this.applicationData.questions;
+        this.applicationData$.next(data.success.application);
       },
       error: (error) => {
         console.error('Error fetching projects', error);
-        this.router.navigate(['/student/applications-overview'], {
-        });
+        this.router.navigate(['/student/applications-overview']);
       },
     })
   }
@@ -83,8 +79,7 @@ export class StudentViewApplicationComponent {
   rescindApplication(applicationID: string) {
     this.studentService.deleteApplication(applicationID).subscribe({
       next: (data: any) => {
-        this.router.navigate(['/student/applications-overview'], {
-        });
+        this.router.navigate(['/student/applications-overview']);
       },
       error: (data: any) => {
         console.log('Error', data);

@@ -2,22 +2,14 @@
     margin: 20px 15%;
 }
 
+h1 {
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
 .align-headers .mat-expansion-panel-header-description {
     justify-content: space-between;
     align-items: center;
-}
-
-h2,
-h3 {
-    font-weight: 500;
-}
-
-.single-question-container p {
-    margin-bottom: 10px;
-}
-
-p.question-text {
-    font-size: medium;
 }
 
 .mat-expansion-panel {
@@ -25,17 +17,11 @@ p.question-text {
 }
 
 .content-card {
-    margin-bottom: 3%;
-}
-
-.content-card > * {
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 1%;
+    margin-bottom: 12px;
 }
 
 .buttons-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 20px;
 }

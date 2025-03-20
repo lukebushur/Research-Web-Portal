@@ -1,4 +1,4 @@
-.project-information-container {
+.card-container {
     line-height: 2em;
 }
 
@@ -11,30 +11,24 @@ h3 {
     margin-bottom: 12px;
 }
 
-h3.inline {
-    display: inline;
+div.professor {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: 4px;
+}
+
+p {
+    line-height: 1.5em;
 }
 
 h3.larger {
     font-size: 1.5em;
 }
 
-div.professor {
-    display: flex;
-    align-items: baseline;
-    column-gap: 4px;
-}
-
 div.date {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     column-gap: 4px;
-}
-
-.content-card {
-    margin-bottom: 3%;
-}
-
-.content-card > * {
-    margin: 8px;
 }
