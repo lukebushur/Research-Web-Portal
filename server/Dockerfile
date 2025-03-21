@@ -1,6 +1,6 @@
 # Build base image using node
 FROM node:lts-alpine
-WORKDIR /app
+WORKDIR /server
 
 # Install modules and copy environment
 COPY package*.json .
