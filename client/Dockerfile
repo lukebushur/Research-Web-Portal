@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # Install modules
 COPY ./client/package*.json .
-RUN npm ci
+RUN npm install
 
 # Build application
 COPY . .
