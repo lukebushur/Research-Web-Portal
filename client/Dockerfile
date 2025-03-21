@@ -4,12 +4,10 @@ WORKDIR /usr/src/app
 
 # Install modules
 COPY ./client/package*.json .
-COPY ./client/tsconfig*.json .
-COPY ./client/angular.json .
 RUN npm install
 
 # Build application
-COPY . .
+COPY ./client .
 RUN npm run build
 
 # Build base for subsequent instructions using nginx image
