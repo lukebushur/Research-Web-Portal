@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 # Install modules
 COPY ./client/package*.json .
+COPY ./client/tsconfig*.json .
+COPY ./client/angular.json .
 RUN npm install
 
 # Build application
