@@ -5,7 +5,7 @@ WORKDIR /app
 # Install modules and copy environment
 COPY package*.json .
 # COPY .env .
-RUN npm ci
+RUN npm install
 
 # Copy server files to the container
 COPY . .
