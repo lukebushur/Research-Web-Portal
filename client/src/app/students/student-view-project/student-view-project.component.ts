@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, DecimalPipe, Location } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,26 +7,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, catchError, map, of } from 'rxjs';
-import { QuestionData } from 'app/shared/models/questionData';
+import { BehaviorSubject, catchError, of } from 'rxjs';
 import { StudentService } from '../student-service/student.service';
 import { StudentProjectInfo } from '../models/student-project-info';
 import { StudentProjectDescriptionComponent } from "../student-project-description/student-project-description.component";
 import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
-
-// interface for storing project data
-interface ProjectData {
-  projectName: string;
-  professorName: string;
-  description: string;
-  responsibilities: string;
-  categories: string[];
-  posted: Date;
-  GPA: number;
-  majors: string[];
-  deadline: Date;
-  questions: QuestionData[];
-}
 
 @Component({
   selector: 'app-student-view-project',

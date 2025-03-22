@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { StudentViewApplicationComponent } from './student-view-application.component';
 import { StudentService } from '../student-service/student.service';
