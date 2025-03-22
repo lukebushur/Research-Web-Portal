@@ -1,30 +1,51 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ApplyToPostComponent } from './apply-to-post.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { StudentService } from '../student-service/student.service';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { QuestionData } from 'app/shared/models/questionData';
 import { StudentProjectInfo } from '../models/student-project-info';
+import { Component, input } from '@angular/core';
+import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { MatStepperHarness } from '@angular/material/stepper/testing';
+import { MatCardHarness } from '@angular/material/card/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
+import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
+import { MatRadioGroupHarness } from '@angular/material/radio/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
+
+@Component({
+  selector: 'app-student-project-description',
+  template: '<h1 id="projInfo">Project Information Component</h1>'
+})
+class StudentProjectDescriptionStubComponent {
+  readonly professorEmail = input.required<string>();
+  readonly project = input.required<StudentProjectInfo>();
+}
 
 describe('ApplyToPostComponent', () => {
   let component: ApplyToPostComponent;
   let fixture: ComponentFixture<ApplyToPostComponent>;
+  let loader: HarnessLoader;
 
   let studentService: jasmine.SpyObj<StudentService>;
+  let router: jasmine.SpyObj<Router>;
 
   // Mock question data
-  const testQuestionData: QuestionData[] = [
+  const questionData: QuestionData[] = [
     {
       question: 'Choose any of the following.',
       requirementType: 'check box',
@@ -34,7 +55,7 @@ describe('ApplyToPostComponent', () => {
     {
       question: 'Which one is correct?',
       requirementType: 'radio button',
-      required: true,
+      required: false,
       choices: ['option1', 'option2', 'option3'],
     },
     {
@@ -56,7 +77,7 @@ describe('ApplyToPostComponent', () => {
     majors: ['Computer Science', 'Theatre'],
     posted: new Date('Fri Feb 16 2024'),
     deadline: new Date('Sun Mar 17 2024'),
-    questions: testQuestionData,
+    questions: questionData,
   };
   const createApplicationResponse = {
     success: {
@@ -64,7 +85,6 @@ describe('ApplyToPostComponent', () => {
       message: 'APPLICATION_CREATED',
     }
   };
-  let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
     // Spy object for StudentService. Captures the provided function calls and returns
@@ -78,11 +98,12 @@ describe('ApplyToPostComponent', () => {
 
     // Spy object for Router. Captures the provided function calls and returns
     // predictable mock data instead.
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    navigateSpy = router.navigate.and.returnValue(Promise.resolve(true));
+    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router.navigate.and.returnValue(Promise.resolve(true));
 
     TestBed.configureTestingModule({
       imports: [
+        ApplyToPostComponent,
         FormsModule,
         MatCardModule,
         ReactiveFormsModule,
@@ -90,16 +111,13 @@ describe('ApplyToPostComponent', () => {
         MatInputModule,
         MatCheckboxModule,
         MatRadioModule,
-        MatSnackBarModule,
         MatSidenavModule,
         MatListModule,
-        BrowserAnimationsModule,
         MatStepperModule,
-        ApplyToPostComponent,
+        NoopAnimationsModule,
       ],
       providers: [
         // Use Jasmine spy objects instead of the actual services/classes
-        { provide: StudentService, useValue: studentService },
         { provide: Router, useValue: router },
         {
           provide: ActivatedRoute,
@@ -113,138 +131,195 @@ describe('ApplyToPostComponent', () => {
             }
           }
         },
+        { provide: StudentService, useValue: studentService },
       ],
+    }).overrideComponent(ApplyToPostComponent, {
+      remove: { imports: [StudentProjectDescriptionComponent] },
+      add: { imports: [StudentProjectDescriptionStubComponent] },
     });
     fixture = TestBed.createComponent(ApplyToPostComponent);
     component = fixture.componentInstance;
+    loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  })
+  });
 
-  // it('should create and initialize project data', () => {
-  //   expect(component).toBeTruthy();
-  //   // Expect the project to be set correctly after ngOnInit
-  //   expect(component.project).toEqual({
-  //     ...testProjectData,
-  //     questions: testQuestionData.map((question, i) => {
-  //       return {
-  //         ...question,
-  //         questionNum: i + 1,
-  //       };
-  //     }),
-  //   });
-  //   // Expect the form values to be set correctly after ngOnInit
-  //   expect(component.formQuestions.value).toEqual([
-  //     // Question 1 Answers
-  //     {
-  //       item1: false,
-  //       item2: false,
-  //       item3: false,
-  //     },
-  //     // Question 2 Answers
-  //     '',
-  //     // Question 3 Answers
-  //     '',
-  //   ]);
-  //   expect(getProjectInfoSpy).withContext('getProjectInfo() called with test data').toHaveBeenCalledOnceWith({
-  //     professorEmail: testProjectData.professorEmail,
-  //     projectID: testProjectData.projectID,
-  //   });
-  // });
+  it('should create and initialize project data', () => {
+    // Expect the project to be set correctly after ngOnInit
+    expect(component.project).toEqual({
+      ...testProjectData,
+      questions: questionData.map((question, i) => {
+        return {
+          ...question,
+          questionNum: i + 1,
+        };
+      }),
+    });
 
-  // // it('getCheckBoxControl() should function correctly', () => {
-  // //   // valid function call
-  // //   expect(component.getCheckBoxControl(0, 'item1')!.value).toBeFalse();
-  // //   // invalid index (not a checkbox question)
-  // //   expect(component.getCheckBoxControl(1, 'item1')).toBeNull();
-  // //   // invalid value (not a possible choice)
-  // //   expect(component.getCheckBoxControl(0, 'none')).toBeUndefined();
-  // // });
+    // Expect the form values to be set correctly after ngOnInit
+    expect(component.formQuestions.value).toEqual([
+      // Question 1 Answers
+      {
+        item1: false,
+        item2: false,
+        item3: false,
+      },
+      // Question 2 Answers
+      '',
+      // Question 3 Answers
+      '',
+    ]);
+    expect(studentService.getProjectInfo)
+      .withContext('getProjectInfo() called with test data')
+      .toHaveBeenCalledOnceWith(professorEmail, projectId);
+  });
 
-  // // it('requireCheckboxesToBeChecked() should function correctly', () => {
-  // //   const checkboxGroup = new FormGroup({
-  // //     'one': new FormControl(false),
-  // //     'two': new FormControl(false),
-  // //     'three': new FormControl(false),
-  // //   });
-  // //   const checkboxValidator = component.requireCheckboxesToBeChecked(1);
-  // //   let checkboxValidatorResult = checkboxValidator(checkboxGroup);
-  // //   // should not pass validation, as all checkbox controls are false
-  // //   expect(checkboxValidatorResult).toEqual({ requireCheckboxesToBeChecked: true });
-  // //   checkboxGroup.get('two')?.setValue(true);
-  // //   checkboxValidatorResult = checkboxValidator(checkboxGroup);
-  // //   // should pass validation, as at least one checkbox control is true
-  // //   expect(checkboxValidatorResult).toBeNull();
-  // // });
+  it('getCheckBoxControl() should function correctly', () => {
+    // valid function call
+    expect(component.getCheckBoxControl(0, 'item1')!.value).toBeFalse();
+    // invalid index (not a checkbox question)
+    expect(component.getCheckBoxControl(1, 'item1')).toBeNull();
+    // invalid value (not a possible choice)
+    expect(component.getCheckBoxControl(0, 'none')).toBeUndefined();
+  });
 
-  // // it('categoriesString() should function correctly', () => {
-  // //   expect(component.categoriesString()).toEqual('Technology, Documentation, Writing');
-  // // });
+  it('requireCheckboxesToBeChecked() should function correctly', () => {
+    const checkboxGroup = new FormGroup({
+      'one': new FormControl(false),
+      'two': new FormControl(false),
+      'three': new FormControl(false),
+    });
+    const checkboxValidator = component.requireCheckboxesToBeChecked(1);
+    let checkboxValidatorResult = checkboxValidator(checkboxGroup);
 
-  // // it('majorsString() should function correctly', () => {
-  // //   expect(component.majorsString()).toEqual('Computer Science, Theatre');
-  // // });
+    // should not pass validation, as all checkbox controls are false
+    expect(checkboxValidatorResult).toEqual({ requireCheckboxesToBeChecked: true });
 
-  // it('formatGPA() should function correctly', () => {
-  //   expect(component.formatGPA()).toEqual('2.00');
-  // });
+    checkboxGroup.get('two')?.setValue(true);
+    checkboxValidatorResult = checkboxValidator(checkboxGroup);
 
-  // it('dateToString() should function correctly', () => {
-  //   // no date given
-  //   const dateStr = component.project.deadline;
-  //   // with date given
-  //   expect(component.dateToString(dateStr)).toEqual('Mar 17, 2024');
-  // });
+    // should pass validation, as at least one checkbox control is true
+    expect(checkboxValidatorResult).toBeNull();
+  });
 
-  // it('submitApp() should function correctly', (done: DoneFn) => {
-  //   // set applyForm to valid values
-  //   component.formQuestions.at(0).get('item1')!.setValue(true);
-  //   component.formQuestions.at(0).get('item3')!.setValue(true);
-  //   component.formQuestions.at(1).setValue('option2');
-  //   component.formQuestions.at(2).setValue('Some test details.');
-  //   component.onSubmit();
-  //   fixture.detectChanges();
+  it('onSubmit() should function correctly', async () => {
+    // set applyForm to valid values
+    component.formQuestions.at(0).get('item1')!.setValue(true);
+    component.formQuestions.at(0).get('item3')!.setValue(true);
+    component.formQuestions.at(1).setValue('option2');
+    component.formQuestions.at(2).setValue('Some test details.');
+    component.onSubmit();
 
-  //   expect(createApplicationSpy).withContext('createApplication() called').toHaveBeenCalledOnceWith({
-  //     projectID: testProjectData.projectID,
-  //     professorEmail: testProjectData.professorEmail,
-  //     questions: [
-  //       {
-  //         ...testQuestionData[0],
-  //         answers: ['item1', 'item3'],
-  //       },
-  //       {
-  //         ...testQuestionData[1],
-  //         answers: ['option2'],
-  //       },
-  //       {
-  //         ...testQuestionData[2],
-  //         answers: ['Some test details.'],
-  //       },
-  //     ],
-  //   });
-  //   expect(navigateSpy).withContext('navigate() called').toHaveBeenCalledOnceWith(['/student/dashboard']);
-  //   done();
-  // });
+    const expectedData = {
+      projectID: projectId,
+      professorEmail: professorEmail,
+      questions: [
+        {
+          ...questionData[0],
+          answers: ['item1', 'item3'],
+        },
+        {
+          ...questionData[1],
+          answers: ['option2'],
+        },
+        {
+          ...questionData[2],
+          answers: ['Some test details.'],
+        },
+      ],
+    };
+    for (const question of expectedData.questions) {
+      delete question.questionNum;
+    }
 
-  // it('HTML should include correct information', () => {
-  //   const applyElement: HTMLElement = fixture.nativeElement;
-  //   expect(applyElement.textContent).toContain('Test Project');
-  //   expect(applyElement.textContent).toContain('2.00');
-  //   const checkBoxes = applyElement.querySelectorAll('mat-checkbox');
-  //   expect(checkBoxes.length).toEqual(3);
-  //   for (let i = 0; i < checkBoxes.length; i++) {
-  //     expect(checkBoxes.item(i).textContent).toEqual('item' + (i + 1));
-  //   }
-  //   const radioButtons = applyElement.querySelectorAll('mat-radio-button');
-  //   expect(radioButtons.length).toEqual(3);
-  //   for (let i = 0; i < radioButtons.length; i++) {
-  //     expect(radioButtons.item(i).textContent).toEqual('option' + (i + 1));
-  //   }
-  //   const textArea = applyElement.querySelector('textarea');
-  //   expect(textArea).toBeTruthy();
-  // });
+    expect(studentService.createApplication)
+      .withContext('createApplication() called')
+      .toHaveBeenCalledOnceWith(expectedData);
+    expect(router.navigate)
+      .withContext('navigate() called')
+      .toHaveBeenCalledOnceWith(['/student/applications-overview']);
+
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+    expect(await snackBar.getMessage()).toBe('Application submitted!');
+  });
+
+  it('should dispay a stepper with project details in the first step', async () => {
+    const stepper = await loader.getHarness(MatStepperHarness);
+    const steps = await stepper.getSteps();
+
+    expect(steps.length).toEqual(2);
+    expect(await steps[0].isSelected()).toBeTrue();
+    expect(await steps[0].getLabel()).toEqual('Review Project Details');
+    expect(await steps[1].getLabel()).toEqual('Complete Application Questions');
+
+    const applyElement: HTMLElement = fixture.nativeElement;
+    const projectInformation = applyElement.querySelector('#projInfo')!;
+    expect(projectInformation.textContent).toEqual('Project Information Component');
+  });
+
+  it('should display application questions in the second step', async () => {
+    const stepper = await loader.getHarness(MatStepperHarness);
+    const steps = await stepper.getSteps();
+    await steps[1].select();
+    const questionCards = await loader.getAllHarnesses(MatCardHarness);
+
+    expect(questionCards.length).toEqual(3);
+
+    const checkCard = questionCards[0];
+    const checkContent = await checkCard.getText();
+
+    expect(await checkCard.getTitleText()).toEqual(`1. ${questionData[0].question} *`);
+    for (const choice of questionData[0].choices!) {
+      expect(checkContent).toContain(choice);
+    }
+
+    const radioCard = questionCards[1];
+    const radioContent = await radioCard.getText();
+
+    expect(await radioCard.getTitleText()).toEqual(`2. ${questionData[1].question}`);
+    for (const choice of questionData[1].choices!) {
+      expect(radioContent).toContain(choice);
+    }
+
+    const textCard = questionCards[2];
+    expect(await textCard.getTitleText()).toEqual(`3. ${questionData[2].question} *`);
+    expect((await textCard.getAllHarnesses(MatInputHarness)).length).toEqual(1);
+  });
+
+  it('should complete the application, calling createApplication and redirecting', async () => {
+    const stepper = await loader.getHarness(MatStepperHarness);
+    const steps = await stepper.getSteps();
+    await steps[1].select();
+    const questionCards = await loader.getAllHarnesses(MatCardHarness);
+
+    const checkCard = questionCards[0];
+    const checkBoxes = await checkCard.getAllHarnesses(MatCheckboxHarness);
+    expect(checkBoxes.length).toEqual(3);
+    await checkBoxes[0].check();
+    await checkBoxes[2].check();
+
+    const radioCard = questionCards[1];
+    const radioGroup = await radioCard.getHarness(MatRadioGroupHarness);
+    const radioButtons = await radioGroup.getRadioButtons();
+    expect(radioButtons.length).toEqual(3);
+    await radioButtons[1].check();
+
+    const textCard = questionCards[2];
+    const textarea = await textCard.getHarness(MatInputHarness);
+    await textarea.setValue('My answer.');
+
+    const buttons = await loader.getAllHarnesses(MatButtonHarness);
+    expect(buttons.length).toEqual(4);
+    const submitButton = buttons[3];
+    await submitButton.click();
+
+    expect(studentService.createApplication).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledOnceWith(['/student/applications-overview']);
+
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+    expect(await snackBar.getMessage()).toBe('Application submitted!');
+  });
 });

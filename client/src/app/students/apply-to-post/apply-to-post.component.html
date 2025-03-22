@@ -1,28 +1,29 @@
-<main class="page-container">
+<main>
   <header>
     @if (project) {
       <h1>Apply to Project</h1>
     }
-    <button mat-stroked-button type="button" color="warn" (click)="cancel()">
-      Cancel
-    </button>
+    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
   </header>
 
   <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
-    <mat-stepper class="item-to-center">
+    <mat-stepper class="stepper">
       <mat-step
         formGroupName="details"
         [stepControl]="details"
         label="Review Project Details"
       >
         @if (project) {
-          <article class="stepper-section">
+          <article class="space-above">
             <app-student-project-description
               [professorEmail]="professorEmail"
               [project]="project"
             />
           </article>
         }
+        <div class="details-buttons">
+          <button mat-raised-button type="button" matStepperNext>Next</button>
+        </div>
       </mat-step>
 
       <mat-step
@@ -30,64 +31,69 @@
         [stepControl]="questionsGroup"
         label="Complete Application Questions"
       >
-        <section formArrayName="formQuestions" class="stepper-section">
+        <section formArrayName="formQuestions" class="space-above">
           @for (question of questions; track question; let i = $index) {
-            <div>
-              <label
-                id="question-label"
-                [class.required]="question.required"
-                style="display: inline-block"
-              >
-                Question {{ question.questionNum }}: {{ question.question }}
-                @if (question.required) {
-                  <p class="red" style="display: inline">*</p>
-                }
-              </label>
-              @if (question.requirementType === "radio button") {
-                <div>
-                  <mat-radio-group
-                    aria-labelledby="question-label"
-                    [formControlName]="i"
-                    class="radio-group"
-                  >
-                    @for (choice of question.choices; track choice) {
-                      <mat-radio-button [value]="choice">{{
-                        choice
-                      }}</mat-radio-button>
-                    }
-                  </mat-radio-group>
-                </div>
-              }
-              @if (question.requirementType === "check box") {
-                <div class="radio-group">
-                  @for (choice of question.choices; track choice) {
-                    <mat-checkbox
-                      [formControl]="getCheckBoxControl(i, choice)!"
+            <article class="question-card">
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>
+                    <h2 class="question-title">
+                      {{ question.questionNum }}. {{ question.question }}
+                      @if (question.required) {
+                        <span class="red">*</span>
+                      }
+                    </h2>
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @if (question.requirementType === "radio button") {
+                    <mat-radio-group
+                      ariaLabel="{{ question.questionNum }}. {{
+                        question.question
+                      }} {{ question.required ? '*' : '' }}"
+                      [formControlName]="i"
+                      class="radio-group"
                     >
-                      {{ choice }}
-                    </mat-checkbox>
+                      @for (choice of question.choices; track choice) {
+                        <mat-radio-button [value]="choice">{{
+                          choice
+                        }}</mat-radio-button>
+                      }
+                    </mat-radio-group>
+                  } @else if (question.requirementType === "check box") {
+                    <section class="checkbox-group">
+                      @for (choice of question.choices; track choice) {
+                        <mat-checkbox
+                          [formControl]="getCheckBoxControl(i, choice)!"
+                        >
+                          {{ choice }}
+                        </mat-checkbox>
+                      }
+                    </section>
+                  } @else {
+                    <mat-form-field class="text-response">
+                      <mat-label>Answer</mat-label>
+                      <textarea matInput [formControlName]="i"></textarea>
+                    </mat-form-field>
                   }
-                </div>
-              }
-              @if (question.requirementType === "text") {
-                <div class="text-box">
-                  <mat-form-field>
-                    <mat-label>Answer</mat-label>
-                    <textarea matInput [formControlName]="i"></textarea>
-                  </mat-form-field>
-                </div>
-              }
-            </div>
+                </mat-card-content>
+              </mat-card>
+            </article>
           }
         </section>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="applyForm.invalid"
-        >
-          Submit
-        </button>
+        <div class="buttons">
+          <button mat-raised-button type="button" matStepperPrevious>
+            Previous
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="applyForm.invalid"
+          >
+            Submit
+          </button>
+        </div>
       </mat-step>
     </mat-stepper>
   </form>

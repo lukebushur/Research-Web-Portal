@@ -48,7 +48,7 @@ export class ApplyToPostComponent implements OnInit {
     questionsGroup: this.fb.group({
       formQuestions: this.fb.array([]),
     }),
-  })
+  });
 
   constructor(
     private router: Router,
@@ -175,18 +175,14 @@ export class ApplyToPostComponent implements OnInit {
       next: (response: any) => {
         this.router.navigate(['/student/applications-overview']).then((navigated: boolean) => {
           if (navigated) {
-            this.snackBar.open('Application submitted!', 'Close', {
-              duration: 5000,
-            });
+            this.snackBar.open('Application submitted!', 'Close');
           } else {
             console.log('Problem navigating');
           }
         });
       },
       error: (response: any) => {
-        this.snackBar.open('Error submitting application.', 'Close', {
-          duration: 5000,
-        });
+        this.snackBar.open('Error submitting application.', 'Close');
         console.log('Error', response);
       },
     });
