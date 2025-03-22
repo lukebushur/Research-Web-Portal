@@ -252,7 +252,7 @@ describe('ApplyToPostComponent', () => {
 
     expect(steps.length).toEqual(2);
     expect(await steps[0].isSelected()).toBeTrue();
-    expect(await steps[0].getLabel()).toEqual('Review Project Details');
+    expect(await steps[0].getLabel()).toEqual('Review Project Information');
     expect(await steps[1].getLabel()).toEqual('Complete Application Questions');
 
     const applyElement: HTMLElement = fixture.nativeElement;
