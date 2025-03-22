@@ -8,6 +8,30 @@ import { of } from 'rxjs';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { StudentProjectInfo } from '../models/student-project-info';
+import { Component, input } from '@angular/core';
+import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { QuestionCardComponent } from 'app/shared/question-card/question-card.component';
+import { MatAccordionHarness } from '@angular/material/expansion/testing';
+import { Location } from '@angular/common';
+
+@Component({
+  selector: 'app-student-project-description',
+  template: '<h1>Project Information Component</h1>'
+})
+class StudentProjectDescriptionStubComponent {
+  readonly professorEmail = input.required<string>();
+  readonly project = input.required<StudentProjectInfo>();
+}
+
+@Component({
+  selector: 'app-question-card',
+  template: '<h1>Question Card Component</h1>'
+})
+class QuestionCardStubComponent {
+  readonly questionNum = input.required<number>();
+  readonly questionData = input.required<QuestionData>();
+  readonly showAnswer = input<boolean>(false);
+}
 
 interface ProjectData {
   projectName: string;
@@ -81,6 +105,7 @@ describe('StudentViewProjectComponent', () => {
   };
   let studentService: jasmine.SpyObj<StudentService>
   let router: Router;
+  let location: Location;
 
   beforeEach(async () => {
     // Create the spy object to mock the getProjectInfo method.
@@ -105,6 +130,19 @@ describe('StudentViewProjectComponent', () => {
           }
         },
       ]
+    }).overrideComponent(StudentViewProjectComponent, {
+      remove: {
+        imports: [
+          StudentProjectDescriptionComponent,
+          QuestionCardComponent,
+        ]
+      },
+      add: {
+        imports: [
+          StudentProjectDescriptionStubComponent,
+          QuestionCardStubComponent,
+        ]
+      },
     }).compileComponents();
 
     fixture = TestBed.createComponent(StudentViewProjectComponent);
@@ -112,6 +150,7 @@ describe('StudentViewProjectComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
     // inject router so that it can later be spied on
     router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -122,20 +161,10 @@ describe('StudentViewProjectComponent', () => {
     expect(component.projectData$.getValue()).toEqual(projectData);
   });
 
-  it('displayRequirementType() return the correct results for each question type', () => {
-    const reqTypes = [
-      'text',
-      'radio button',
-      'check box'
-    ];
-    expect(component.displayRequirementType(reqTypes[0])).toEqual('Text Response');
-    expect(component.displayRequirementType(reqTypes[1])).toEqual('Single Select');
-    expect(component.displayRequirementType(reqTypes[2])).toEqual('Multiple Select');
-  });
-
-  it('Apply buttons should navigate to the apply page', () => {
+  it('apply button should navigate to the apply page', () => {
     const navigateSpy = spyOn(router, 'navigate');
     component.apply();
+
     expect(navigateSpy).toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
       queryParams: {
         profName: projectData.professorName,
@@ -145,5 +174,19 @@ describe('StudentViewProjectComponent', () => {
     });
   });
 
-  // TODO: Figure out how to test the DOM when the content depends on AsyncPipe
+  it('back button should navigate back', () => {
+    const backSpy = spyOn(location, 'back');
+    component.back();
+
+    expect(backSpy).toHaveBeenCalledOnceWith();
+  });
+
+  it('should create an accordion with two expansion panels', async () => {
+    const accordion = await loader.getHarness(MatAccordionHarness);
+    const panels = await accordion.getExpansionPanels()
+
+    expect(panels.length).toEqual(2);
+    expect(await panels[0].getTextContent()).toEqual('Project Information Component');
+    expect(await panels[1].getTextContent()).toMatch(/(Question Card Component){3}/);
+  });
 });

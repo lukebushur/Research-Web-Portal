@@ -89,19 +89,6 @@ export class StudentViewProjectComponent implements OnInit {
     });
   }
 
-  // Return a more understandable string for displaying what the given question
-  // requirementType is
-  displayRequirementType(reqType: string): string {
-    if (reqType === 'text') {
-      return 'Text Response';
-    } else if (reqType === 'radio button') {
-      return 'Single Select';
-    } else if (reqType === 'check box') {
-      return 'Multiple Select';
-    }
-    return 'Invalid Question Type';
-  }
-
   // After clicking the apply button, navigate to the apply-to-project page
   // with the corresponding query parameters.
   apply() {
