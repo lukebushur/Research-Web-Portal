@@ -18,6 +18,7 @@ import { MatChipsModule } from '@angular/material/chips';
   styleUrl: './student-project-description.component.css'
 })
 export class StudentProjectDescriptionComponent {
-  readonly professorEmail = input.required<string>();
+  readonly showProfessor = input<boolean>(true);
+  readonly professorEmail = input<string>();
   readonly project = input.required<StudentProjectInfo>();
 }

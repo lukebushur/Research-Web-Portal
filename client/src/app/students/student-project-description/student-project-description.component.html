@@ -5,15 +5,17 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="professor space-after">
-      <h3>Professor:</h3>
-      <p>
-        {{ project().professorName }} (<a
-          [href]="'mailto:' + professorEmail()"
-          >{{ professorEmail() }}</a
-        >)
-      </p>
-    </div>
+    @if (showProfessor()) {
+      <div class="professor space-after">
+        <h3>Professor:</h3>
+        <p>
+          {{ project().professorName }} (<a
+            [href]="'mailto:' + professorEmail()"
+            >{{ professorEmail() }}</a
+          >)
+        </p>
+      </div>
+    }
 
     <div class="date">
       <mat-icon>calendar_month</mat-icon>
