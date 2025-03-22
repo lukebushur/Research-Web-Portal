@@ -1,5 +1,9 @@
 .page-container {
-    margin: 20px 15%;
+    margin: 0 15%;
+}
+
+.page-title {
+    margin: 20px 0;
 }
 
 h1,
@@ -55,7 +59,7 @@ div.date {
 }
 
 .buttons-container {
-    margin-top: 12px;
+    margin: 20px 0;
     display: flex;
     justify-content: space-between;
 }

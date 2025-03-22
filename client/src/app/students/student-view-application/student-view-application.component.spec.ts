@@ -209,24 +209,23 @@ describe('StudentViewApplicationComponent', () => {
     expect(textContent).toContain('Applied On');
   });
 
-  it('should render project details 2nd card', async () => {
+  it('should render application answers expansion panel', async () => {
     const expansionPanels = await loader.getAllHarnesses(MatAccordionHarness);
     expect(expansionPanels.length).toEqual(1);
 
     const expansionPanel = expansionPanels[0];
     const projectInfo = (await expansionPanel.getExpansionPanels())[2];
     expect(await projectInfo.getTitle()).toEqual('Application Answers');
-    expect(await projectInfo.getTextContent()).toContain('Question Card Component');
+    expect(await projectInfo.getTextContent()).toMatch(/(Question Card Component){3}/);
   });
 
   it('should display a button for application modification', async () => {
     const modifyButton = await loader.getHarness(MatButtonHarness.with({ text: 'Modify Application' }));
     expect(modifyButton).toBeTruthy();
-    await modifyButton.click();
     //TODO: Test this functionality once it is implemented
   });
 
-  it('should display a button for rescinding and application', async () => {
+  it('should display a button for rescinding an application', async () => {
     const navigateSpy = spyOn(router, 'navigate');
     const rescindButton = await loader.getHarness(MatButtonHarness.with({ text: 'Rescind Application' }));
     expect(rescindButton).toBeTruthy();
