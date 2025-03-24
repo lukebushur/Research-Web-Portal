@@ -9,15 +9,30 @@ describe('LargeApplicationStatusComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LargeApplicationStatusComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LargeApplicationStatusComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create with input "Accept"', () => {
+    fixture.componentRef.setInput('status', 'Accept')
+    fixture.detectChanges();
+
+    expect(component).toBeTruthy();
+  });
+
+  it('should create with input "Reject"', () => {
+    fixture.componentRef.setInput('status', 'Reject')
+    fixture.detectChanges();
+
+    expect(component).toBeTruthy();
+  });
+
+  it('should create with input "Pending"', () => {
+    fixture.componentRef.setInput('status', 'Pending')
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
   });
 });
