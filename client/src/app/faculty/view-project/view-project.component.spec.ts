@@ -252,16 +252,5 @@ describe('ViewProjectComponent', () => {
     expect(component.dataSource.data).toEqual(applicationsData);
   });
 
-  it('displayRequirementType() return the correct results for each question type', () => {
-    const reqTypes = [
-      'text',
-      'radio button',
-      'check box'
-    ];
-    expect(component.displayRequirementType(reqTypes[0])).toEqual('Text Response');
-    expect(component.displayRequirementType(reqTypes[1])).toEqual('Single Select');
-    expect(component.displayRequirementType(reqTypes[2])).toEqual('Multiple Select');
-  });
-
   // TODO: finish unit tests
 });

@@ -1,11 +1,11 @@
 import { AfterContentInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
-import { AsyncPipe, DatePipe, DecimalPipe, Location } from '@angular/common';
+import { AsyncPipe, DecimalPipe, Location } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +20,10 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionData } from 'app/shared/models/questionData';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { StudentProjectDescriptionComponent } from "../../students/student-project-description/student-project-description.component";
+import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ApplicantStatusComponent } from "../../shared/applicant-status/applicant-status.component";
 
 
 // interface for storing project data
@@ -56,8 +60,6 @@ interface ApplicantData {
   styleUrls: ['./view-project.component.css'],
   imports: [
     AsyncPipe,
-    DatePipe,
-    DecimalPipe,
     MatExpansionModule,
     MatIconModule,
     MatRadioModule,
@@ -71,6 +73,12 @@ interface ApplicantData {
     MatPaginatorModule,
     MatButtonModule,
     MatCardModule,
+    StudentProjectDescriptionComponent,
+    QuestionCardComponent,
+    RouterLink,
+    MatTooltipModule,
+    ApplicantStatusComponent,
+    DecimalPipe,
   ]
 })
 
@@ -101,7 +109,7 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   // This array determines the displayedd columns in the table.
-  displayedColumns: string[] = ['name', 'email', 'GPA', 'majors', 'status'];
+  displayedColumns: string[] = ['name', 'email', 'GPA', 'majors', 'status', 'actions'];
 
   // Variables holding the minimum and maximum values currently reflected by
   // the GPA slider on the page. This is used for filtering applicants.
@@ -198,19 +206,6 @@ export class ViewProjectComponent implements OnInit, AfterContentInit {
         return of(emptyApplicants);
       })
     );
-  }
-
-  // Return a more understandable string for displaying what the given question
-  // requirementType is
-  displayRequirementType(reqType: string): string {
-    if (reqType === 'text') {
-      return 'Text Response';
-    } else if (reqType === 'radio button') {
-      return 'Single Select';
-    } else if (reqType === 'check box') {
-      return 'Multiple Select';
-    }
-    return 'Invalid Question Type';
   }
 
   // called whenever the user uses the text field right above the table to
