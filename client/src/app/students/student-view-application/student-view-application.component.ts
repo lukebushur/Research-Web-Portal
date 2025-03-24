@@ -14,6 +14,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
 import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
+import { LargeApplicationStatusComponent } from "../../shared/large-application-status/large-application-status.component";
 
 @Component({
   selector: 'app-student-view-application',
@@ -32,6 +33,7 @@ import { QuestionCardComponent } from "../../shared/question-card/question-card.
     DatePipe,
     StudentProjectDescriptionComponent,
     QuestionCardComponent,
+    LargeApplicationStatusComponent,
   ]
 })
 export class StudentViewApplicationComponent {

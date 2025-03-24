@@ -32,23 +32,7 @@
             <mat-card>
               <mat-card-header>
                 <mat-card-title>
-                  <h2 class="application-title">
-                    Application Status:
-                    <span
-                      class="status-text"
-                      [class.accept]="application.status === 'Accept'"
-                      [class.pending]="application.status === 'Pending'"
-                      [class.reject]="application.status === 'Reject'"
-                    >
-                      @if (application.status === "Accept") {
-                        Accepted!
-                      } @else if (application.status === "Reject") {
-                        Rejected
-                      } @else {
-                        Pending
-                      }
-                    </span>
-                  </h2>
+                  <app-large-application-status [status]="application.status"/>
                 </mat-card-title>
               </mat-card-header>
               <mat-card-content>

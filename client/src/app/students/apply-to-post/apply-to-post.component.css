@@ -42,17 +42,17 @@ h2 {
     color: red;
 }
 
-.text-response {
-    margin-top: 20px;
-    width: 100%;
-}
-
 .radio-group,
 .checkbox-group {
     margin-top: 12px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+}
+
+.text-response {
+    margin-top: 20px;
+    width: 100%;
 }
 
 .buttons {

@@ -56,6 +56,7 @@ div.date {
     align-items: center;
     flex-wrap: wrap;
     column-gap: 4px;
+    margin-top: 20px;
 }
 
 .buttons-container {
