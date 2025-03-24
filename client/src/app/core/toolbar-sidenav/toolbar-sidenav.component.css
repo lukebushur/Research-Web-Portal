@@ -62,3 +62,9 @@
     font-size: 11pt;
     font-weight: normal;
 }
+
+.main-content {
+    position: relative;
+    min-height: 100%;
+    height: auto;
+}

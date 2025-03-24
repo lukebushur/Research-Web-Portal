@@ -103,9 +103,11 @@
         }
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content class="main-content">
-      <app-loading-spinner />
-      <router-outlet />
+    <mat-sidenav-content>
+      <div class="main-content">
+        <app-loading-spinner />
+        <router-outlet />
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
