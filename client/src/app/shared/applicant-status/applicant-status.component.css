@@ -1,0 +1,22 @@
+.status {
+    font-weight: 500;
+    padding: 4px;
+    border-radius: 4px;
+    color: black;
+    border: 2px solid black;
+}
+
+.pending {
+    color: goldenrod;
+    border-color: goldenrod;
+}
+
+.accept {
+    color: green;
+    border-color: green;
+}
+
+.reject {
+    color: red;
+    border-color: red;
+}
