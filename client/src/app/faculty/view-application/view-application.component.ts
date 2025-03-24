@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { ActivatedRoute } from '@angular/router';
-import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,77 +10,69 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
+import { ApplicantData, ApplicantProjectData } from '../models/view-applicant';
+import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { StudentProjectDescriptionComponent } from "../../students/student-project-description/student-project-description.component";
+import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
+import { LargeApplicationStatusComponent } from "../../shared/large-application-status/large-application-status.component";
 
+// This component is for faculty to view information about a specific applicant
+// for a project.
 @Component({
   selector: 'app-view-application',
   templateUrl: './view-application.component.html',
   styleUrls: ['./view-application.component.css'],
   imports: [
+    AsyncPipe,
+    DatePipe,
+    DecimalPipe,
+    MatExpansionModule,
+    MatIconModule,
     MatCardModule,
     MatDividerModule,
     MatRadioModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    StudentProjectDescriptionComponent,
+    QuestionCardComponent,
+    LargeApplicationStatusComponent,
   ]
 })
+export class ViewApplicationComponent implements OnInit {
+  projectId: string; // the ID for the project record
+  applicantionId: string; // the ID for the application
 
-//This component is for faculty to view information about a specific applicant for a project
-export class ViewApplicationComponent {
-  projectID: String; //the db id for the project record
-  applicantionID: String; //the db object id for the application stored in the project object
-  responseData: any = -1; //the object that will store the response data
-  answersArray: any[];
+  projectData$ = new BehaviorSubject<ApplicantProjectData | null>(null);
+  applicantData$ = new BehaviorSubject<ApplicantData | null>(null);
 
-  //these are the String representations of posted, deadline, and applied time. This is necessary because the format is originally date,
-  //and needs to be converted with a service, so storing them as seperate variables makes the html cleaner.
-  posted: String;
-  deadline: String;
-  appliedDate: String;
-
-  applicationStatus = "Pending";
-
-  //This constructor currently takes three services, faculty service for requests, activatedRoute to get the url parameters, and dateCoverter service
-  //to convert the dates into local time. The constructor body grabs the projectID and applicationID from the url parameters.
-  constructor(private facultyService: FacultyService,
+  // This constructor currently takes two services:
+  //   FacultyService for requests,
+  //   ActivatedRoute to get the url parameters.
+  // The constructor body grabs the projectId and applicationId from the url
+  // parameters.
+  constructor(
+    private facultyService: FacultyService,
     private route: ActivatedRoute,
-    private dateConverter: DateConverterService,
-    public dialog: MatDialog) {
-    this.route.params.subscribe(params => {
-      this.projectID = params['projectID'];
-      this.applicantionID = params['applicationID'];
-    });
+    public dialog: MatDialog,
+  ) {
+    this.projectId = this.route.snapshot.paramMap.get('projectID')!;
+    this.applicantionId = this.route.snapshot.paramMap.get('applicationID')!;
   }
 
-  //This init makes a request to the server to get the data about a specific applicant, it then modifies the dates to the local time
+  // makes a request to the server to get the data about a specific applicant.
   ngOnInit(): void {
-    this.facultyService.fetchApplicant(this.projectID, this.applicantionID).subscribe({
+    this.facultyService.fetchApplicant(
+      this.projectId,
+      this.applicantionId
+    ).subscribe({
       next: (data) => {
-        this.responseData = data.success.responseData;
-        this.posted = this.dateConverter.convertShortDate(this.responseData.projectData.posted);
-        this.deadline = this.dateConverter.convertShortDate(this.responseData.projectData.deadline);
-        this.appliedDate = this.dateConverter.convertShortDate(this.responseData.applicantData.appliedDate);
-        this.answersArray = [];
-
-        this.applicationStatus = this.responseData.applicantData.status == 'Accept' ? "Accepted" : (this.responseData.applicantData.status == "Reject" ? "Rejected" : "Pending")
-
-        for (let i = 0; i < this.responseData.applicantData.answers.length; i++) {
-          if (this.responseData.applicantData.answers[i].requirementType == "text") {
-            this.answersArray.push(this.responseData.applicantData.answers[i].answers[0]);
-          } else {
-            let tempArr = [];
-            for (let j = 0; j < this.responseData.applicantData.answers[i].choices.length; j++) {
-              tempArr.push({
-                question: this.responseData.applicantData.answers[i].choices[j],
-                answer: this.getChoice(this.responseData.applicantData.answers[i], j)
-              });
-            }
-            this.answersArray.push(tempArr);
-          }
-        }
-
-        console.log(this.answersArray);
+        this.projectData$.next(data.projectData);
+        this.applicantData$.next(data.applicantData);
       },
       error: (error) => {
         console.error('Error fetching projects', error);
@@ -89,14 +80,20 @@ export class ViewApplicationComponent {
     });
   }
 
-  //This applicationDecision method is used to first update a students status for an application, then fetch the updated information
-  applicationDecision(app: any, projectID: any, decision: string) {
-    this.facultyService.applicationDecide(app, projectID, decision).subscribe({ //make request to server to update status
-      next: (data) => {
-        this.facultyService.fetchApplicant(this.projectID, this.applicantionID).subscribe({ //make request to server to receive updated information
-          next: (response) => {
-            this.responseData = response.success.responseData;
-            this.applicationStatus = this.responseData.applicantData.status == 'Accept' ? "Accepted" : (this.responseData.applicantData.status == "Reject" ? "Rejected" : "Pending")
+  // first, update a student's status for an application;
+  // second, fetch the updated information
+  applicationDecision(app: any, projectID: any, decision: string): void {
+    // make request to server to update status
+    this.facultyService.applicationDecide(app, projectID, decision).subscribe({
+      next: () => {
+        // make request to server to receive updated information
+        this.facultyService.fetchApplicant(
+          this.projectId,
+          this.applicantionId
+        ).subscribe({
+          next: (data) => {
+            this.projectData$.next(data.projectData);
+            this.applicantData$.next(data.applicantData);
           },
           error: (error) => {
             console.error('Error fetching applicant', error);
@@ -109,14 +106,17 @@ export class ViewApplicationComponent {
     });
   }
 
-  getChoice(answer: any, index: number) {
-    let index1 = answer.answers.findIndex((element: string) => element == answer.choices[index]);
-    if (index1 !== -1) { return true; }
-    return false;
-  }
-
-  openConfirmationDialog(app: string, projectID: any, decision: string, sentence: string): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, { data: { message: sentence } });
+  openConfirmationDialog(
+    app: string,
+    projectID: string,
+    decision: string,
+    sentence: string
+  ): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: sentence,
+      },
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {

@@ -1,161 +1,124 @@
-@if (responseData !== -1) {
-  <div class="container" id="applicantData">
-    <div class="applicationInfo">
-      <mat-card class="billboard">
-        <mat-card-header>
-          <mat-card-title>{{
-            responseData.projectData.projectName
-          }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <mat-divider></mat-divider>
-          <br />
-          <mat-card-subtitle>Project Description</mat-card-subtitle>
-          <p>{{ responseData.projectData.description }}</p>
-          <br />
-          <mat-divider></mat-divider>
-          <br />
-          <table>
-            <tr class="dates">
-              <td>
-                <mat-card-subtitle>Posted</mat-card-subtitle>
-                <p>{{ posted }}</p>
-              </td>
-              <td>
-                <mat-card-subtitle>Deadline</mat-card-subtitle>
-                <p>{{ deadline }}</p>
-              </td>
-              <td>
-                <mat-card-subtitle>Applied on</mat-card-subtitle>
-                <p>{{ appliedDate }}</p>
-              </td>
-            </tr>
-            <br />
-            <tr>
-              <td>
-                <mat-card-subtitle>GPA Requirement</mat-card-subtitle>
-                <p>{{ responseData.projectData.GPA }}</p>
-              </td>
-              <td>
-                <mat-card-subtitle>Applicant GPA</mat-card-subtitle>
-                <p>{{ responseData.applicantData.GPA }}</p>
-              </td>
-            </tr>
-          </table>
-          <br />
-          <mat-divider></mat-divider>
-          <br />
-        </mat-card-content>
-        <mat-card-content class="application">
-          @for (
-            question of responseData.applicantData.answers;
-            track question;
-            let i = $index
-          ) {
-            <div>
-              <label id="question-label">
-                Question {{ i + 1 }}:
-                <br />
-                {{ question.question }}
-              </label>
-              @if (question.requirementType === "radio button") {
-                <div>
-                  @for (
-                    choice of question.choices;
-                    track choice;
-                    let j = $index
-                  ) {
-                    <mat-radio-button
-                      [checked]="answersArray[i][j].answer"
-                      [disabled]="true"
-                    >
-                      {{ choice }}
-                    </mat-radio-button>
-                  }
-                </div>
-              }
-              @if (question.requirementType === "check box") {
-                <div class="radio-group">
-                  @for (
-                    choice of question.choices;
-                    track choice;
-                    let j = $index
-                  ) {
-                    <mat-checkbox
-                      [checked]="answersArray[i][j].answer"
-                      [disabled]="true"
-                    >
-                      {{ choice }}
-                    </mat-checkbox>
-                  }
-                </div>
-              }
-              @if (question.requirementType === "text") {
-                <div>
-                  <mat-form-field style="width: 100%">
-                    <mat-label>Answer</mat-label>
-                    <textarea matInput readonly style="width: 100%">{{
-                      answersArray[i]
-                    }}</textarea>
-                  </mat-form-field>
-                </div>
-              }
-            </div>
-          }
-          <p>
-            Status:
-            <span
-              [class.accept-status-text]="
-                responseData.applicantData.status === 'Accept'
-              "
-              [class.reject-status-text]="
-                responseData.applicantData.status === 'Reject'
-              "
-              [class.pending-status-text]="
-                responseData.applicantData.status === 'Pending'
-              "
-              class="status-text"
-            >
-              {{ applicationStatus }}
-            </span>
-          </p>
-          <div class="buttons-container">
-            @if (responseData.applicantData.status === "Pending") {
-              <button
-                mat-raised-button
-                color="primary"
-                (click)="
-                  openConfirmationDialog(
-                    responseData.applicantData.application,
-                    projectID,
-                    'Accept',
-                    'accept this user?'
-                  )
-                "
-                class="accept-button"
-              >
-                Accept
-              </button>
-            }
-            @if (responseData.applicantData.status === "Pending") {
-              <button
-                mat-raised-button
-                color="warn"
-                (click)="
-                  openConfirmationDialog(
-                    responseData.applicantData.application,
-                    projectID,
-                    'Reject',
-                    'reject this user?'
-                  )
-                "
-              >
-                Reject
-              </button>
-            }
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-}
+<main class="page-container">
+  <header class="page-heading">
+    <h1>View Application</h1>
+    @if (applicantData$ | async; as applicant) {
+      <app-large-application-status [status]="applicant.status" />
+    }
+  </header>
+  <mat-accordion class="align-headers" multi>
+    <mat-expansion-panel #projectExpPanel expanded="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Project Information</mat-panel-title>
+        <mat-panel-description>
+          Click to {{ projectExpPanel.expanded ? "close" : "open" }}
+          <mat-icon>description</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <article class="content-card">
+        @if (projectData$ | async; as project) {
+          <app-student-project-description
+            [showProfessor]="false"
+            [project]="project"
+          />
+        }
+      </article>
+    </mat-expansion-panel>
+    @if (applicantData$ | async; as applicant) {
+      <mat-expansion-panel #applicantExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Applicant Information</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ applicantExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>assignment_ind</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <article class="content-card applicant-info">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <h2 class="applicant-title">{{ applicant.name }}</h2>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="applicant-icon-field space-after">
+                <mat-icon>mail</mat-icon>
+                <h3>Email:</h3>
+                <a href="mailto:{{ applicant.email }}">{{ applicant.email }}</a>
+              </div>
+
+              <div class="applicant-icon-field space-after">
+                <mat-icon>assignment_turned_in</mat-icon>
+                <h3>Applied On</h3>
+                <p>{{ applicant.appliedDate | date: "medium" }}</p>
+              </div>
+
+              <h3 class="larger">GPA:</h3>
+              <p class="space-after">{{ applicant.GPA | number: "1.2-2" }}</p>
+
+              <h3 class="larger">Major(s):</h3>
+              <p>{{ applicant.major.join(", ") }}</p>
+            </mat-card-content>
+          </mat-card>
+        </article>
+      </mat-expansion-panel>
+      <mat-expansion-panel #answersExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Application Answers</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ answersExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>quiz</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        @for (question of applicant.answers; track $index; let i = $index) {
+          <article class="content-card">
+            <app-question-card
+              [questionNum]="i + 1"
+              [questionData]="question"
+              [showAnswer]="true"
+            />
+          </article>
+        }
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+  @if (applicantData$ | async; as applicant) {
+    <section class="application-status">
+      @if (applicant.status === "Pending") {
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="
+            openConfirmationDialog(
+              applicant.application,
+              projectId,
+              'Accept',
+              'accept this user?'
+            )
+          "
+          class="accept-button"
+        >
+          Accept
+        </button>
+      }
+      <div class="bottom-status">
+        <app-large-application-status [status]="applicant.status" />
+      </div>
+      @if (applicant.status === "Pending") {
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="
+            openConfirmationDialog(
+              applicant.application,
+              projectId,
+              'Reject',
+              'reject this user?'
+            )
+          "
+        >
+          Reject
+        </button>
+      }
+    </section>
+  }
+</main>

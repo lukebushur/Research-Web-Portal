@@ -186,27 +186,44 @@ describe('FacultyService', () => {
   });
 
   it('should return successful fetchApplicant response', (done: DoneFn) => {
-    const testData = {
-      projectID: '0',
-      applicationID: '1',
+    const projectID = '0';
+    const applicationID = '1';
+    const processedResponse = {
+      projectData: {
+        posted: new Date(),
+        deadline: new Date(),
+      },
+      applicantData: {
+        appliedDate: new Date(),
+      },
     };
     const response = {
       success: {
         status: 200,
+        responseData: {
+          projectData: {
+            posted: processedResponse.projectData.posted.toISOString(),
+            deadline: processedResponse.projectData.deadline.toISOString(),
+          },
+          applicantData: {
+            appliedDate: processedResponse.applicantData.appliedDate.toISOString(),
+          },
+        }
       }
     };
+
     httpSpy.post.and.returnValue(of(response));
 
-    service.fetchApplicant(testData.projectID, testData.applicationID).subscribe({
+    service.fetchApplicant(projectID, applicationID).subscribe({
       next: (data: any) => {
-        expect(data).withContext('expected response').toEqual(response);
+        expect(data).withContext('expected response').toEqual(processedResponse);
         done();
       },
       error: done.fail
     });
     expect(httpSpy.post).toHaveBeenCalledOnceWith(
       `${apiUrl}/projects/getApplicant`,
-      testData,
+      { projectID, applicationID },
     );
   });
 

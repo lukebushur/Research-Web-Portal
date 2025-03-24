@@ -1,64 +1,66 @@
-.status-text {
-    padding: 0.2em 0.4em;
+.page-container {
+    margin: 0 15% 20px;
+}
+
+.page-heading {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1,
+h2,
+h3 {
     font-weight: 500;
-    letter-spacing: 0.08em;
-    max-width: fit-content;
-    border-radius: 5px;
 }
 
-.container {
-    width: 100%;
+.mat-expansion-panel {
+    background-color: #eee;
 }
 
-.billboard {
-    max-width: 100%;
-    padding: 0.2em;
-    width: 55%;
+.align-headers .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
 }
 
-button {
-    margin-top: 1%;
-    margin-right: 2%;
+.content-card {
+    margin-bottom: 12px;
 }
 
-.applicationInfo {
+article.applicant-info {
+    line-height: 2em;
+}
+
+article.applicant-info p {
+    line-height: 1.5em;
+}
+
+.applicant-title {
+    margin-bottom: 12px;
+}
+
+.applicant-icon-field {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 4px;
+}
+
+.space-after {
+    margin-bottom: 12px;
+}
+
+h3.larger {
+    font-size: 1.5em;
+}
+
+.application-status {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bottom-status {
     margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    padding: 0.5em;
-}
-
-table {
-    text-align: center;
-    width: 100%;
-}
-
-.application > * {
-    padding: 0.5em;
-}
-
-.dates {
-    padding: 0.5em 0.4em;
-}
-
-.accept-status-text {
-    color: green;
-    border: 1px solid green;
-}
-
-.reject-status-text {
-    color: red;
-    border: 1px solid red;
-}
-
-.pending-status-text {
-    color: white;
-    background-color: goldenrod;
-    border: 1px solid goldenrod;
-    margin-left: 5px;
-}
-
-.buttons-container {
-    display: flex;
-    justify-content: space-around;
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'environments/environment';
+import { ApplicantData, ApplicantProjectData } from '../models/view-applicant';
 
 @Injectable({
   providedIn: 'root'
@@ -76,10 +77,35 @@ export class FacultyService {
 
   // This method access the backend API for fetching a single applicant. It
   // requires the ID of the project and the application ID
-  fetchApplicant(projectID: String, applicantionID: String): Observable<any> {
+  fetchApplicant(projectID: String, applicantionID: String) {
     const data = { "projectID": projectID, "applicationID": applicantionID }
 
-    return this.http.post(`${this.apiUrl}/projects/getApplicant`, data);
+    return this.http.post(`${this.apiUrl}/projects/getApplicant`, data).pipe(
+      map((value: any) => {
+        if (!value.success) {
+          throw value.error;
+        }
+
+        const data = value.success.responseData;
+        const applicantData: ApplicantData = {
+          ...data.applicantData,
+          appliedDate: new Date(data.applicantData.appliedDate),
+        };
+        const projectData: ApplicantProjectData = {
+          ...data.projectData,
+          posted: new Date(data.projectData.posted),
+          deadline: new Date(data.projectData.deadline),
+        };
+
+        return {
+          applicantData,
+          projectData
+        };
+      }),
+      catchError((err: any) => {
+        throw err;
+      })
+    );
   }
 
   // Makes a request to accept/reject a student application for a project
