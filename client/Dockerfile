@@ -1,23 +1,29 @@
 # Build base image using node
 FROM node:lts-alpine AS build
-WORKDIR /usr/src/app
 
-# Install modules
-COPY ./client/package*.json .
+# Change container working directory
+WORKDIR /dist/src/app
+
+# Force clean npm cache
+RUN npm cache clean --force
+
+# Copy Angular project filels
+COPY . .
+
+# Install dependencies
 RUN npm install
 
 # Build application
-COPY ./client .
 RUN npm run build
 
 # Build base for subsequent instructions using nginx image
-FROM nginx:stable-alpine
+FROM nginx:latest AS ngi
 
-# Copy config file
-COPY ./client/nginx.conf /etc/nginx/nginx.conf
+# Copy Angular build files to nginx serving directory
+COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html
 
-# Copy build files from earlier to directory used by nginx
-COPY --from=build /usr/src/app/dist/client /usr/share/nginx/html
+# # Copy nginx config file
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # front-end server listens on port 80
-EXPOSE 4200
+EXPOSE 80
