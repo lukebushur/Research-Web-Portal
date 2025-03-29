@@ -12,7 +12,7 @@ phases:
       - echo Building server image...
       - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG -f server/Dockerfile .
       - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:latest
-      
+
       - echo Building client image...
       - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG -f client/Dockerfile ./client
       - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:latest
@@ -24,3 +24,26 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:latest
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:latest
+
+      # Create or update ECS task definition using a template (task-definition-template.json)
+      - echo Creating or updating the ECS task definition...
+      # - sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" task-definition-template.json > task-definition.json
+      - sed -e "s|<CLIENT_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG|g" task-definition.json > final-task-definition.json
+
+      # Register the updated task definition with ECS
+      - aws ecs register-task-definition --family front-end --cli-input-json file://final-task-definition.json
+
+      # Update the ECS service to use the new task definition
+      - echo Updating ECS service...
+      - ecs_service_name="TestService"
+      - ecs_cluster_name="TestCluster"
+      - new_task_revision=$(aws ecs describe-task-definition --task-definition front-end --query "taskDefinition.revision" --output text)
+      - aws ecs update-service \
+        --cluster $ecs_cluster_name \
+        --service $ecs_service_name \
+        --task-definition front-end:$new_task_revision
+
+artifacts:
+  files:
+    - task-definition.json
+    - final-task-definition.json
