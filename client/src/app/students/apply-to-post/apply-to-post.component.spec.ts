@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { QuestionData } from 'app/shared/models/questionData';
 import { StudentProjectInfo } from '../models/student-project-info';
 import { Component, input } from '@angular/core';
-import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { MatStepperHarness } from '@angular/material/stepper/testing';
@@ -28,10 +28,10 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 
 @Component({
-  selector: 'app-student-project-description',
+  selector: 'app-project-info-card',
   template: '<h1 id="projInfo">Project Information Component</h1>'
 })
-class StudentProjectDescriptionStubComponent {
+class ProjectInfoCardStubComponent {
   readonly professorEmail = input.required<string>();
   readonly project = input.required<StudentProjectInfo>();
 }
@@ -134,8 +134,8 @@ describe('ApplyToPostComponent', () => {
         { provide: StudentService, useValue: studentService },
       ],
     }).overrideComponent(ApplyToPostComponent, {
-      remove: { imports: [StudentProjectDescriptionComponent] },
-      add: { imports: [StudentProjectDescriptionStubComponent] },
+      remove: { imports: [ProjectInfoCardComponent] },
+      add: { imports: [ProjectInfoCardStubComponent] },
     });
     fixture = TestBed.createComponent(ApplyToPostComponent);
     component = fixture.componentInstance;

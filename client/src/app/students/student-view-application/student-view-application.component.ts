@@ -12,7 +12,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
-import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
 import { LargeApplicationStatusComponent } from "../../shared/large-application-status/large-application-status.component";
 
@@ -31,7 +31,7 @@ import { LargeApplicationStatusComponent } from "../../shared/large-application-
     MatButtonModule,
     AsyncPipe,
     DatePipe,
-    StudentProjectDescriptionComponent,
+    ProjectInfoCardComponent,
     QuestionCardComponent,
     LargeApplicationStatusComponent,
   ]

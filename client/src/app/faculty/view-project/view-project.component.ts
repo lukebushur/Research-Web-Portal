@@ -20,7 +20,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionData } from 'app/shared/models/questionData';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { StudentProjectDescriptionComponent } from "../../students/student-project-description/student-project-description.component";
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApplicantStatusComponent } from "../../shared/applicant-status/applicant-status.component";
@@ -73,7 +73,7 @@ interface ApplicantData {
     MatPaginatorModule,
     MatButtonModule,
     MatCardModule,
-    StudentProjectDescriptionComponent,
+    ProjectInfoCardComponent,
     QuestionCardComponent,
     RouterLink,
     MatTooltipModule,

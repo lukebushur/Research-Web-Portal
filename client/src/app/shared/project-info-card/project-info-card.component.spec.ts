@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StudentProjectDescriptionComponent } from './student-project-description.component';
-import { StudentProjectInfo } from '../models/student-project-info';
+import { ProjectInfoCardComponent } from './project-info-card.component';
+import { StudentProjectInfo } from '../../students/models/student-project-info';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { MatCardHarness } from '@angular/material/card/testing';
 
-describe('StudentProjectDescriptionComponent', () => {
-  let component: StudentProjectDescriptionComponent;
-  let fixture: ComponentFixture<StudentProjectDescriptionComponent>;
+describe('ProjectInfoCardComponent', () => {
+  let component: ProjectInfoCardComponent;
+  let fixture: ComponentFixture<ProjectInfoCardComponent>;
   let loader: HarnessLoader;
 
   const professorEmail = 'professor@email.com';
@@ -32,11 +32,11 @@ describe('StudentProjectDescriptionComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        StudentProjectDescriptionComponent,
+        ProjectInfoCardComponent,
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StudentProjectDescriptionComponent);
+    fixture = TestBed.createComponent(ProjectInfoCardComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('professorEmail', professorEmail);

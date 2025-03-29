@@ -19,7 +19,7 @@ interface ProjectInformation {
 }
 
 @Component({
-  selector: 'app-student-project-description',
+  selector: 'app-project-info-card',
   imports: [
     MatCardModule,
     MatIconModule,
@@ -27,10 +27,10 @@ interface ProjectInformation {
     DatePipe,
     DecimalPipe,
   ],
-  templateUrl: './student-project-description.component.html',
-  styleUrl: './student-project-description.component.css'
+  templateUrl: './project-info-card.component.html',
+  styleUrl: './project-info-card.component.css'
 })
-export class StudentProjectDescriptionComponent {
+export class ProjectInfoCardComponent {
   readonly showProfessor = input<boolean>(true);
   readonly professorEmail = input<string>();
   readonly project = input.required<ProjectInformation>();

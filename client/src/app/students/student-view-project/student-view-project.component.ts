@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { StudentService } from '../student-service/student.service';
 import { StudentProjectInfo } from '../models/student-project-info';
-import { StudentProjectDescriptionComponent } from "../student-project-description/student-project-description.component";
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
 
 @Component({
@@ -25,7 +25,7 @@ import { QuestionCardComponent } from "../../shared/question-card/question-card.
     MatRadioModule,
     MatCheckboxModule,
     MatButtonModule,
-    StudentProjectDescriptionComponent,
+    ProjectInfoCardComponent,
     QuestionCardComponent,
   ]
 })

@@ -9,16 +9,16 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { StudentProjectInfo } from '../models/student-project-info';
 import { Component, input } from '@angular/core';
-import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 import { QuestionCardComponent } from 'app/shared/question-card/question-card.component';
 import { MatAccordionHarness } from '@angular/material/expansion/testing';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-student-project-description',
+  selector: 'app-project-info-card',
   template: '<h1>Project Information Component</h1>'
 })
-class StudentProjectDescriptionStubComponent {
+class ProjectInfoCardStubComponent {
   readonly professorEmail = input.required<string>();
   readonly project = input.required<StudentProjectInfo>();
 }
@@ -133,13 +133,13 @@ describe('StudentViewProjectComponent', () => {
     }).overrideComponent(StudentViewProjectComponent, {
       remove: {
         imports: [
-          StudentProjectDescriptionComponent,
+          ProjectInfoCardComponent,
           QuestionCardComponent,
         ]
       },
       add: {
         imports: [
-          StudentProjectDescriptionStubComponent,
+          ProjectInfoCardStubComponent,
           QuestionCardStubComponent,
         ]
       },

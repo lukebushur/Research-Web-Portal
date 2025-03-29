@@ -11,10 +11,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <article class="content-card">
-          <app-student-project-description
-            [showProfessor]="false"
-            [project]="project"
-          />
+          <app-project-info-card [showProfessor]="false" [project]="project" />
         </article>
       </mat-expansion-panel>
       <mat-expansion-panel #questionsExpPanel expanded>

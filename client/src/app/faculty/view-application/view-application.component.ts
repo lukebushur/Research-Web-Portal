@@ -15,7 +15,7 @@ import { ApplicantData, ApplicantProjectData } from '../models/view-applicant';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
-import { StudentProjectDescriptionComponent } from "../../students/student-project-description/student-project-description.component";
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 import { QuestionCardComponent } from "../../shared/question-card/question-card.component";
 import { LargeApplicationStatusComponent } from "../../shared/large-application-status/large-application-status.component";
 
@@ -38,7 +38,7 @@ import { LargeApplicationStatusComponent } from "../../shared/large-application-
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    StudentProjectDescriptionComponent,
+    ProjectInfoCardComponent,
     QuestionCardComponent,
     LargeApplicationStatusComponent,
   ]

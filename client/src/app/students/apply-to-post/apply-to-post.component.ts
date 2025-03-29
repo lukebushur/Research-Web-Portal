@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { StudentProjectInfo } from '../models/student-project-info';
-import { StudentProjectDescriptionComponent } from '../student-project-description/student-project-description.component';
+import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-info-card.component';
 
 @Component({
   selector: 'app-to-post',
@@ -30,7 +30,7 @@ import { StudentProjectDescriptionComponent } from '../student-project-descripti
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
-    StudentProjectDescriptionComponent,
+    ProjectInfoCardComponent,
   ]
 })
 export class ApplyToPostComponent implements OnInit {
