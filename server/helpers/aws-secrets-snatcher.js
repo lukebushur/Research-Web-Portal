@@ -14,8 +14,6 @@ async function envExampleParser() {
     return keys;
 }
 
-// envExampleParser();
-
 function getAwsSecret(key) {
     const client = new SecretsManagerClient({
         region: "us-east-2",
@@ -71,5 +69,3 @@ export default async function snatchSecrets() {
 
     fs.writeFile('./.env', envData);
 }
-
-snatchSecrets();
