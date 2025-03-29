@@ -14,7 +14,7 @@ phases:
       - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:latest
       
       - echo Building client image...
-      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG -f client/Dockerfile .
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG -f client/Dockerfile ./client
       - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:latest
 
   post_build:
