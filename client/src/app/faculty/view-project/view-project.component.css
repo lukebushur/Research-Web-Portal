@@ -1,0 +1,94 @@
+.page-container {
+    margin: 20px 15%;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 500;
+}
+
+.align-headers .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mat-expansion-panel {
+    background-color: #eee;
+}
+
+.content-card {
+    margin-bottom: 12px;
+}
+
+.question-title {
+    font-size: 1.25em;
+}
+
+.radio-group,
+.checkbox-group {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.text-response {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-filters-container {
+    padding: 12px;
+    margin-bottom: 12px;
+    background-color: white;
+    box-shadow: var(--mdc-elevated-card-container-elevation);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 12px;
+}
+
+.text-filter {
+    width: 100%;
+}
+
+.gpa-filter-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.table-container {
+    max-width: 100%;
+    overflow: auto;
+}
+
+.column-sticky {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.mat-mdc-table-sticky-border-elem-right {
+    border-left: 1px solid var(--mat-table-row-item-outline-color);
+}
+
+.paginator-sticky {
+    left: 0;
+    position: sticky;
+}
+
+.green {
+    color: green;
+}

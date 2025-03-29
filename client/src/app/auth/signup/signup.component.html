@@ -1,0 +1,155 @@
+<div class="root-container">
+  <div class="centerDivStyles">
+    <h2>Sign Up</h2>
+    <br />
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field class="form-field">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          type="text"
+          id="name"
+          formControlName="name"
+          name="name"
+          required
+        />
+        @if (signupForm.get("name")?.invalid) {
+          <mat-error>{{ nameErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          id="email"
+          formControlName="email"
+          name="email"
+          required
+        />
+        @if (signupForm.get("email")?.invalid) {
+          <mat-error>{{ emailErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          id="password"
+          formControlName="password"
+          name="password"
+          required
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hide = !hide"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+        @if (signupForm.get("password")?.invalid) {
+          <mat-error>{{ passwordErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>University</mat-label>
+        <mat-select
+          id="universityLocation"
+          formControlName="universityLocation"
+          (selectionChange)="updateForm()"
+          required
+        >
+          @for (university of universityLocations; track university) {
+            <mat-option [value]="university">{{ university }}</mat-option>
+          }
+        </mat-select>
+        @if (signupForm.get("universityLocation")?.invalid) {
+          <mat-error>{{
+            requiredFieldErrorMessage("universityLocation", "University")
+          }}</mat-error>
+        }
+      </mat-form-field>
+      <br />
+      <!--[==[
+          Handle the AccountType
+          This will take automatically expand based on the list of account-types in "accountTypes" interface
+          ]==]-->
+      <mat-form-field class="form-field">
+        <mat-label>Account Type</mat-label>
+        <mat-select
+          placeholder="Select"
+          id="accountType"
+          formControlName="accountType"
+          (selectionChange)="updateForm()"
+          required
+        >
+          <mat-option [value]="null">Clear</mat-option>
+          @for (option of accountTypes; track option) {
+            <mat-option [value]="option.value">{{ option.text }}</mat-option>
+          }
+        </mat-select>
+        @if (signupForm.get("accountType")?.invalid) {
+          <mat-error>{{
+            requiredFieldErrorMessage("accountType", "Account Type")
+          }}</mat-error>
+        }
+      </mat-form-field>
+      @if (signupForm.get("accountType")?.value === 0) {
+        <div>
+          @if (majors.length > 0) {
+            <div>
+              <mat-form-field class="form-field">
+                <mat-label>GPA</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  id="gpa"
+                  formControlName="GPA"
+                  name="GPA"
+                  required
+                />
+                @if (signupForm.get("GPA")?.invalid) {
+                  <mat-error>{{ gpaErrorMessage() }}</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field class="form-field">
+                <mat-label>Majors</mat-label>
+                <mat-select id="Major" formControlName="Major" multiple>
+                  @for (major of majors; track major) {
+                    <mat-option [value]="major">{{ major }}</mat-option>
+                  }
+                </mat-select>
+                @if (signupForm.get("Major")?.invalid) {
+                  <mat-error>{{
+                    requiredFieldErrorMessage("Major", "Majors")
+                  }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          } @else {
+            <mat-progress-bar mode="determinate"></mat-progress-bar>
+          }
+        </div>
+      }
+      <br />
+      <a class="custom-link" (click)="routeToLoginPage()"
+        >Already have an account? Login Now</a
+      >
+      <br />
+      <br />
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="signupForm.invalid"
+        class="submit-button"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<main class="page-container">
+  <h1>View Project</h1>
+  @if (projectData$ | async; as project) {
+    <mat-accordion class="align-headers" multi>
+      <mat-expansion-panel #projectExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Project Information</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ projectExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>description</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <article class="content-card">
+          <app-project-info-card
+            [professorEmail]="professorEmail"
+            [project]="project"
+          />
+        </article>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel #questionsExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Project Questions</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ questionsExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>quiz</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        @for (question of project.questions; track question; let i = $index) {
+          <article class="content-card">
+            <app-question-card
+              [questionNum]="i + 1"
+              [questionData]="question"
+            />
+          </article>
+        }
+      </mat-expansion-panel>
+    </mat-accordion>
+    <section class="buttons-container">
+      <button mat-raised-button (click)="back()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="apply()">Apply</button>
+    </section>
+  }
+</main>

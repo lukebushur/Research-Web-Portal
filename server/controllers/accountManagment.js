@@ -6,7 +6,7 @@ import nodemailer from 'nodemailer';
 import User from '../models/user.js';
 import generateRes from '../helpers/generateJSON.js';
 import { updateApplicationRecords } from '../helpers/dataConsistency.js';
-import { studentAccountModification, facultyAccountModification, emailSchema, resetPasswordSchema } from '../helpers/inputValidation/requestValidation.js';
+import { studentAccountModification, facultyAccountModification, emailSchema, resetPasswordSchema, industryAccountModification } from '../helpers/inputValidation/requestValidation.js';
 import { retrieveOrCacheMajors, retrieveOrCacheUsers } from '../helpers/schemaCaching.js';
 import { addMinutes, subtractSeconds } from '../helpers/dateUtilities.js';
 
@@ -78,7 +78,24 @@ const modifyAccount = async (req, res) => {
                 user.universityLocation = req.body.universityLocation;
             }
             await user.save();
+        } else if (user.userType.Type === parseInt(process.env.INDUSTRY)) {
+            const { error } = industryAccountModification.validate(req.body);
+            if (error) {
+                return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {
+                    errors: error.details,
+                    original: error._original
+                }));
+            }
 
+            if (req.body.name) {
+                user.name = req.body.name;
+            }
+
+            if (req.body.universityLocation) {
+                user.universityLocation = req.body.universityLocation;
+            }
+
+            await user.save();
         } else {
             return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", { "details": "Invalid account type for this route." }));
         }
@@ -133,7 +150,7 @@ const resetPassword = async (req, res) => {
         //Generate Password Reset Token and expiresIn - 10 minutes
         const passwordResetToken = uuidv4();
         const expiresIn = addMinutes(new Date(), 10).toISOString();
-        
+
         //Update user with password token, expiry, and provisional password
         const user = await User.findOneAndUpdate({ email: req.body.email }, {
             $set: {

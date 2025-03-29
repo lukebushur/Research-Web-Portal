@@ -96,7 +96,7 @@ const searchProjects = async (req, res) => {
         // if (student.userType.Type != process.env.STUDENT || student.userType.Type != process.env.FACULTY) { return res.status(401).json(generateRes(false, 401, "ACCESS_DENIED", { details: "Invalid account type for this operation." })); }
 
         //do the results filtering / decision in this block, that way the ram is freed after it is finished.
-        if (searchResults.length > 1) { //if there exists results, do the filtering
+        if (searchResults.length > 0) { //if there exists results, do the filtering
             for (let project of searchResults) { //add the name and email to each array element
                 project.projects.professorName = project.professorName;
                 project.projects.professorEmail = project.professorEmail;

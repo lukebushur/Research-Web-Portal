@@ -26,7 +26,7 @@ router.post('/register', [registerMajorValidation], register);
 router.post('/token', [verifyToken, verifiedValidation], token);
 
 //POST Confirm Email 
-router.post('/confirmEmail', [verifyToken], confirmEmailToken);
+router.post('/confirmEmail', confirmEmailToken);
 
 //POST Login
 router.post('/login', login);

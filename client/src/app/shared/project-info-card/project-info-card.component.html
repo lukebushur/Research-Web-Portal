@@ -1,0 +1,67 @@
+<mat-card class="card-container">
+  <mat-card-header>
+    <mat-card-title>
+      <h2 class="space-after">{{ project().projectName }}</h2>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (showProfessor()) {
+      <div class="professor space-after">
+        <h3>Professor:</h3>
+        <p>
+          {{ project().professorName }} (<a
+            [href]="'mailto:' + professorEmail()"
+            >{{ professorEmail() }}</a
+          >)
+        </p>
+      </div>
+    }
+
+    <div class="date">
+      <mat-icon>calendar_month</mat-icon>
+      <h3>Posted On</h3>
+      <p>{{ project().posted | date: "longDate" }}</p>
+    </div>
+
+    <div class="date space-after">
+      <mat-icon>timer</mat-icon>
+      <h3>Available Until</h3>
+      <p>{{ project().deadline | date: "medium" }}</p>
+    </div>
+
+    <h3 class="larger">Description:</h3>
+    <p class="space-after">{{ project().description }}</p>
+
+    <h3 class="larger">Responsibilities:</h3>
+    @if (project().responsibilities) {
+      <p class="space-after">{{ project().responsibilities }}</p>
+    } @else {
+      <p class="space-after">(Empty)</p>
+    }
+
+    <h3 class="larger">Categories:</h3>
+    @if (project().categories && project().categories.length > 0) {
+      <mat-chip-set class="space-after">
+        @for (category of project().categories; track $index) {
+          <mat-chip highlighted>{{ category }}</mat-chip>
+        }
+      </mat-chip-set>
+    } @else {
+      <p class="space-after">(Empty)</p>
+    }
+
+    <h3 class="larger">Minimum Required GPA:</h3>
+    @if (project().GPA) {
+      <p class="space-after">{{ project().GPA | number: "1.2-2" }}</p>
+    } @else {
+      <p class="space-after">No requirement</p>
+    }
+
+    <h3 class="larger">Applicable Major(s):</h3>
+    @if (project().majors && project().majors.length > 0) {
+      <p class="space-after">{{ project().majors.join(", ") }}</p>
+    } @else {
+      <p class="space-after">Any</p>
+    }
+  </mat-card-content>
+</mat-card>

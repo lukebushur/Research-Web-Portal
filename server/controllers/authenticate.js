@@ -213,20 +213,21 @@ const token = async (req, res) => {
 */ 
 const confirmEmailToken = async (req, res) => {
     try {
+        const userId = req.body.userId;
         const emailToken = req.body.emailToken;
 
-        if (emailToken !== null) { //if there is no email token then do nothing
-            const accessToken = req.header('Authorization').split(' ')[1];
-            const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
-
+        if (emailToken && userId) { //if there is no email token nor user ID then do nothing
             //check if user exists
-            const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
+            const user = await User.findById(userId);
 
             //check if email is already confirmed
-            if (!user.emailConfirmed) {
+            if (!user?.emailConfirmed) {
                 //check if provided email token matches
                 if (emailToken === user.emailToken) {
-                    await User.updateOne({ email: decodeAccessToken.email }, { $set: { emailConfirmed: true, emailToken: null } })
+                    user.emailConfirmed = true;
+                    user.emailToken = null;
+                    await user.save();
+
                     res.status(200).json(generateRes(true, 200, "EMAIL_CONFIRMED", {}));
                     return;
                 } else {
@@ -286,7 +287,8 @@ const sendEmailConfirmation = async (user) => {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: 'Confirmation Email',
-        text: `Click link to confirm your email: http://${process.env.FRONT_END_IP}/confirm-email/${user.emailToken}`
+        text: 'Click the following link to confirm your email:\n' +
+            `http://${process.env.FRONT_END_IP}/confirm-email/${user._id}/${user.emailToken}`
     };
 
     await transport.sendMail(mailOptions, function (error, info) {

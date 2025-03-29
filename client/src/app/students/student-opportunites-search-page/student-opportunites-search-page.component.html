@@ -1,0 +1,288 @@
+<div class="student-opportunites-search-page-container">
+  <div class="header" style="padding: 0.5em 0.5em">
+    <h1 class="title">Search Projects</h1>
+    <!-- Search input for opportunities -->
+    <div class="searchForm">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearchButtonClick()">
+        <mat-form-field class="search-form-field">
+          <input
+            matInput
+            type="text"
+            placeholder="Search..."
+            formControlName="projectName"
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          type="submit"
+          id="searchButton"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+  </div>
+  <mat-accordion class="oppExpansion">
+    <mat-expansion-panel
+      (opened)="searchfilters = true"
+      (closed)="searchfilters = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> Search Filters </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="filterMainDiv">
+        <div class="searchFilterDiv">
+          <mat-form-field type="majors" class="example-chip-list" required>
+            <mat-label>Majors</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Enter majors">
+              @for (major of majors; track major; let i = $index) {
+                <mat-chip-row
+                  [ngStyle]="{
+                    'background-color': isEven(i) ? '#CFB991' : '#999',
+                  }"
+                  (removed)="remove(major)"
+                  [editable]="true"
+                  (edited)="edit(major, $event)"
+                >
+                  {{ major }}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+              <input
+                placeholder="Add major or leave blank for all"
+                [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)"
+              />
+            </mat-chip-grid>
+          </mat-form-field>
+        </div>
+
+        <div class="searchFilterDiv">
+          <mat-form-field>
+            <mat-label>Posted on or after</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              placeholder="Choose a date"
+              name="posted"
+              [(ngModel)]="posted"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="searchFilterDiv">
+          <mat-form-field>
+            <mat-label>Deadline on or after</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              placeholder="Choose a date"
+              name="deadline"
+              [(ngModel)]="deadline"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="searchFilterDiv">
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="GPA"
+              name="GPA"
+              [(ngModel)]="GPA"
+              [pattern]="gpaPattern"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-accordion class="oppExpansion">
+    <mat-expansion-panel
+      (opened)="resultFilters = true"
+      (closed)="resultFilters = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> Result Filters </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="filterMainDiv">
+        <div class="resultFilterDiv">
+          <mat-form-field>
+            <mat-label>Select Major</mat-label>
+            <mat-select
+              multiple
+              [(ngModel)]="selectedMajors"
+              (selectionChange)="onCheckboxChange($event)"
+            >
+              @for (major of availableMajors; track major) {
+                <mat-option [value]="major">
+                  {{ major }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="resultFilterDiv">
+          <mat-form-field>
+            <mat-label>GPA</mat-label>
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="filterGPA"
+              (ngModelChange)="onSliderChange()"
+              [pattern]="gpaPattern"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="resultFilterDiv">
+          <mat-form-field>
+            <mat-label>Filter Results</mat-label>
+            <input
+              matInput
+              [(ngModel)]="resultFilterString"
+              (ngModelChange)="onTextInputChange()"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div id="resetButton">
+        <button mat-raised-button color="primary" (click)="resetFilters()">
+          Reset Filters
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- filtered opportunities -->
+  <div class="opportunities-container">
+    @for (opportunity of opportunities; track opportunity; let f = $first) {
+      <div [id]="f ? 'firstOpp' : ''">
+        <mat-card class="opp-card">
+          <mat-card-header>
+            <mat-card-title class="opp-title">
+              <div
+                [matTooltip]="opportunity.projectName"
+                matTooltipShowDelay="1000"
+                class="max-two-lines"
+              >
+                {{ opportunity.projectName }}
+              </div>
+            </mat-card-title>
+            <mat-card-subtitle class="opp-subtitle">
+              <span
+                [matTooltip]="opportunity.description"
+                matTooltipShowDelay="1000"
+                class="max-three-lines"
+              >
+                Description: {{ opportunity.description }}
+              </span>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="content-container">
+              <div class="field-title">Professor:</div>
+              <div>
+                <div
+                  [matTooltip]="opportunity.professorName"
+                  matTooltipShowDelay="1000"
+                  class="max-one-line"
+                >
+                  {{ opportunity.professorName }}
+                </div>
+                <a
+                  [href]="'mailto:' + opportunity.professorEmail"
+                  [matTooltip]="opportunity.professorEmail"
+                  matTooltipShowDelay="1000"
+                  class="max-one-line"
+                >
+                  {{ opportunity.professorEmail }}
+                </a>
+              </div>
+              <div class="field-title">Posted:</div>
+              <div>{{ dateToString(opportunity.posted) }}</div>
+              <div class="field-title">GPA Requirement:</div>
+              <div>{{ opportunity.GPA ? opportunity.GPA : "N/A" }}</div>
+              <div class="field-title">Applicable Major(s):</div>
+              <div
+                [matTooltip]="opportunity.majors.join(', ')"
+                matTooltipShowDelay="1000"
+                class="max-two-lines"
+              >
+                {{ opportunity.majors.join(", ") }}
+              </div>
+            </div>
+            <mat-divider class="divider"></mat-divider>
+          </mat-card-content>
+          <mat-card-actions class="actions-container">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="applyToOpportunity(opportunity)"
+              [disabled]="!meetRequirements(opportunity) || opportunity.applied"
+            >
+              {{
+                !meetRequirements(opportunity)
+                  ? "CANNOT APPLY: INELIGIBLE"
+                  : opportunity.applied
+                    ? "ALREADY APPLIED"
+                    : "APPLY"
+              }}
+            </button>
+            <button
+              mat-raised-button
+              color="secondary"
+              (click)="viewProject(opportunity)"
+            >
+              VIEW
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    }
+    <br />
+    @if (allOpportunities) {
+      <div id="page-selector">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!hasPrevPage()"
+          class="activeButton"
+          (click)="prevPage()"
+        >
+          Previous Page
+        </button>
+        @if (pageNum != 0) {
+          <p id="pageNum">Page: {{ pageNum }}</p>
+        }
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!hasNextPage()"
+          class="activeButton"
+          (click)="nextPage()"
+        >
+          Next Page
+        </button>
+      </div>
+    }
+  </div>
+</div>

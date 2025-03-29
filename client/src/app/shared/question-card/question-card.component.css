@@ -1,0 +1,39 @@
+h2,
+h3 {
+    font-weight: 500;
+}
+
+h2.question-title {
+    margin-bottom: 12px;
+    font-size: 1.25em;
+}
+
+.red {
+    color: red;
+}
+
+.space-below {
+    margin-bottom: 12px;
+}
+
+p.question-text {
+    font-size: medium;
+}
+
+ul.choices {
+    margin-top: 8px;
+}
+
+li.choice {
+    margin-left: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    list-style-type: none;
+}
+
+.text-response {
+    width: 100%;
+    margin-top: 8px;
+}

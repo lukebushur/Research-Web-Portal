@@ -1,0 +1,89 @@
+<main class="page-container">
+  <h1 class="page-title">View Application</h1>
+  @if (projectInfo$ | async; as project) {
+    <mat-accordion class="align-headers" multi>
+      <mat-expansion-panel #projectExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Project Information</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ projectExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>description</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        @if (professorEmail$ | async; as professorEmail) {
+          <article class="content-card">
+            <app-project-info-card
+              [professorEmail]="professorEmail"
+              [project]="project"
+            />
+          </article>
+        }
+      </mat-expansion-panel>
+      @if (applicationData$ | async; as application) {
+        <mat-expansion-panel #applicationExpPanel expanded>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Application Status</mat-panel-title>
+            <mat-panel-description>
+              Click to {{ applicationExpPanel.expanded ? "close" : "open" }}
+              <mat-icon>pending</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <article class="content-card">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <app-large-application-status [status]="application.status" />
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="date">
+                  <mat-icon>assignment_turned_in</mat-icon>
+                  <h3>Applied On</h3>
+                  <p>{{ application.appliedDate | date: "medium" }}</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </article>
+        </mat-expansion-panel>
+        <mat-expansion-panel #answersExpPanel expanded>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Application Answers</mat-panel-title>
+            <mat-panel-description>
+              Click to {{ answersExpPanel.expanded ? "close" : "open" }}
+              <mat-icon>quiz</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          @for (
+            question of application.questions;
+            track $index;
+            let i = $index
+          ) {
+            <article class="content-card">
+              <app-question-card
+                [questionNum]="i + 1"
+                [questionData]="question"
+                [showAnswer]="true"
+              />
+            </article>
+          }
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+    @if (applicationData$ | async; as application) {
+      <section class="buttons-container">
+        @if (application.status === "Pending") {
+          <button mat-raised-button color="primary" class="accept-button">
+            Modify Application
+          </button>
+        }
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="rescindApplication(application._id)"
+        >
+          Rescind Application
+        </button>
+      </section>
+    }
+  }
+</main>

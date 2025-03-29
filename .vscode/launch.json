@@ -19,21 +19,15 @@
       "webRoot": "${workspaceFolder}/client",
       "runtimeArgs": [
         "--headless"
-      ],
+      ]
     },
     {
-      "name": "Server: nodemon",
+      "name": "Server: attach to nodemon",
       "type": "node",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "program": "${workspaceFolder}/server/server.js",
+      "request": "attach",
       "cwd": "${workspaceFolder}/server",
-      "request": "launch",
-      "restart": true,
-      "runtimeExecutable": "nodemon",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "processId": "${command:PickProcess}",
+      "restart": true
     }
   ]
 }

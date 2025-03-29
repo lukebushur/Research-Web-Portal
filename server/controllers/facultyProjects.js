@@ -207,10 +207,10 @@ const getProject = async (req, res) => {
                 const project = projectRecord.projects.find(x => x.id === req.body.projectID);
                 if (project) {
                     const deadline = project.deadline // if there exists a project deadline, convert it to date string otherwise null
-                        ? (new Date(project.deadline)).toDateString()
+                        ? (new Date(project.deadline)).toISOString()
                         : null;
                     const posted = project.posted // if there exists a project posted date, convert it to a date string, otherwise its null
-                        ? (new Date(project.posted)).toDateString()
+                        ? (new Date(project.posted)).toISOString()
                         : null;
                     let returnProject = {
                         projectName: project.projectName,
@@ -333,12 +333,15 @@ const updateProject = async (req, res) => {
             let recordID; //recordID will be taken from the user's record depending on the projectType field in the request
             switch (req.body.projectType) {
                 case "Active":
+                case "active":
                     recordID = user.userType.FacultyProjects.Active;
                     break;
                 case "Archived":
+                case "archived":
                     recordID = user.userType.FacultyProjects.Archived;
                     break;
                 case "Draft":
+                case "draft":
                     recordID = user.userType.FacultyProjects.Draft;
                     break;
                 default:

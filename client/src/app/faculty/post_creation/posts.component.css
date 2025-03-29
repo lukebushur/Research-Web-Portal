@@ -1,0 +1,53 @@
+.page-container {
+    margin: 0px 18%;
+    padding: 20px;
+    height: max-content;
+    background-color: white;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 12%;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+.item-to-center {
+    display: block;
+    margin: 0em 12% 1em 12%;
+}
+
+.block {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.first-field {
+    margin-top: 1em;
+}
+
+.deadline-fields {
+    display: flex;
+    column-gap: 16px;
+    margin-bottom: 10px;
+}
+
+.deadline-field {
+    width: 100%;
+}
+
+.buttons-container {
+    display: flex;
+}
+
+.first-button {
+    margin-right: 20px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}

@@ -1,0 +1,13 @@
+.container {
+    padding-top: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    max-width: max-content;
+}
+
+.card p {
+    margin-top: 8px;
+}
