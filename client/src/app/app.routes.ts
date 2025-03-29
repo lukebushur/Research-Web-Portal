@@ -29,7 +29,6 @@ import { ViewProjectComponent } from "./components/view-project/view-project.com
 import { StudentViewProjectComponent } from "./components/student-view-project/student-view-project.component";
 
 const routeConfig: Routes = [
-
   // AUTHENTICATION ROUTES
   // Not specific to a user type
   { path: '', redirectTo: 'login', pathMatch: 'full' },
