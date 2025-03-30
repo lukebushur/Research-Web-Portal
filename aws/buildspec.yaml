@@ -29,11 +29,11 @@ phases:
 
       # Create or update ECS task definition using a template (task-definition-template.json)
       - echo Creating or updating the ECS task definition...
-      # - sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" task-definition-template.json > task-definition.json
-      - sed -e "s|<CLIENT_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG|g" task-definition-template.json > final-task-definition.json
+      # - sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" aws/task-definition-template.json > aws/task-definition.json
+      - sed -e "s|<CLIENT_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG|g" aws/task-definition-template.json > aws/final-task-definition.json
 
       # Register the updated task definition with ECS
-      - aws ecs register-task-definition --family front-end --cli-input-json file://final-task-definition.json
+      - aws ecs register-task-definition --family front-end --cli-input-json file://aws/final-task-definition.json
 
       # Update the ECS service to use the new task definition
       - echo Updating ECS service...
@@ -48,5 +48,5 @@ phases:
 artifacts:
   files:
     # - task-definition.json
-    - task-definition-template.json
-    - final-task-definition.json
+    - aws/task-definition-template.json
+    - aws/final-task-definition.json
