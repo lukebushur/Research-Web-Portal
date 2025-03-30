@@ -38,12 +38,15 @@ phases:
       # Update the ECS service to use the new task definition
       - echo Updating ECS service...
       - ecs_service_name="TestService"
+
+      - echo $ecs_service_name
+
       - ecs_cluster_name="TestCluster"
+
+      - echo $ecs_cluster_name
+
       - new_task_revision=$(aws ecs describe-task-definition --task-definition front-end --query "taskDefinition.revision" --output text)
-      - aws ecs update-service \
-        --cluster $ecs_cluster_name \
-        --service $ecs_service_name \
-        --task-definition front-end:$new_task_revision
+      - aws ecs update-service --cluster $ecs_cluster_name --service $ecs_service_name --task-definition front-end:$new_task_revision
 
 artifacts:
   files:
