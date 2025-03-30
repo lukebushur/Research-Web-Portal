@@ -25,8 +25,6 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:latest
 
-      - ls -al
-
       # Create or update ECS task definition using a template (task-definition-template.json)
       - echo Creating or updating the ECS task definition...
       # - sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" aws/task-definition-template.json > aws/task-definition.json
@@ -38,15 +36,19 @@ phases:
       # Update the ECS service to use the new task definition
       - echo Updating ECS service...
       - ecs_service_name="TestService"
-
-      - echo $ecs_service_name
-
       - ecs_cluster_name="TestCluster"
+      # - new_task_revision=$(aws ecs describe-task-definition --task-definition front-end --query "taskDefinition.revision" --output text)
+      # - aws ecs update-service --cluster $ecs_cluster_name --service $ecs_service_name --task-definition front-end:$new_task_revision
 
-      - echo $ecs_cluster_name
-
-      - new_task_revision=$(aws ecs describe-task-definition --task-definition front-end --query "taskDefinition.revision" --output text)
-      - aws ecs update-service --cluster $ecs_cluster_name --service $ecs_service_name --task-definition front-end:$new_task_revision
+      - echo Checking if ECS service exists...
+      - if aws ecs describe-services --cluster $ecs_cluster_name --services $ecs_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
+          echo "Service exists. Updating service...";
+          new_task_revision=$(aws ecs describe-task-definition --task-definition front-end --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ecs_cluster_name --service $ecs_service_name --task-definition front-end:$new_task_revision;
+        else
+          echo "Service does not exist. Creating new service...";
+          aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_service_name --task-definition front-end --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+        fi
 
 artifacts:
   files:
