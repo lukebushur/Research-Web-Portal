@@ -1,5 +1,5 @@
 # Build base image using node
-FROM node:lts-alpine AS build
+FROM public.ecr.aws/docker/library/node:lts-alpine AS build
 
 # Change container working directory
 WORKDIR /dist/src/app
@@ -17,7 +17,7 @@ RUN npm install
 RUN npm run build
 
 # Build base for subsequent instructions using nginx image
-FROM nginx:latest AS ngi
+FROM public.ecr.aws/nginx/nginx:latest
 
 # Copy Angular build files to nginx serving directory
 COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html

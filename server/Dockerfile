@@ -1,5 +1,5 @@
 # Build base image using node
-FROM node:lts-alpine
+FROM public.ecr.aws/docker/library/node:lts-alpine AS build
 WORKDIR /app
 
 # Install modules and copy environment
