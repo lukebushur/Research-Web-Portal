@@ -45,5 +45,6 @@ phases:
 
 artifacts:
   files:
-    - task-definition.json
+    # - task-definition.json
+    - task-definition-template.json
     - final-task-definition.json
