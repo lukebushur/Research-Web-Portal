@@ -10,7 +10,7 @@ phases:
   build:
     commands:
       - echo Building server image...
-      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG -f server/Dockerfile .
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG -f server/Dockerfile ./server
       - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:latest
 
       - echo Building client image...

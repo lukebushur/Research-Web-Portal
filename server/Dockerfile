@@ -3,7 +3,7 @@ FROM public.ecr.aws/docker/library/node:lts-alpine AS build
 WORKDIR /app
 
 # Install modules and copy environment
-COPY ./server/package*.json .
+COPY ./package*.json .
 # COPY .env .
 RUN npm install
 
