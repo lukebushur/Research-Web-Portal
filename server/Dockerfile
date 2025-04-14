@@ -1,15 +1,20 @@
 # Build base image using node
 FROM public.ecr.aws/docker/library/node:lts-alpine AS build
+
+# Change container working directory
 WORKDIR /app
 
-# Install modules and copy environment
+# Copy package.json and package-lock.json to container
 COPY ./package*.json .
-# COPY .env .
+
+# Install dependencies
 RUN npm install
 
-# Copy server files to the container
+# Copy server files to container
 COPY . .
 
-# Run back-end server, which listens on port 8000
+# Run back-end server, which listens on port 5000
 EXPOSE 5000
+
+# Start the server
 CMD npm start
