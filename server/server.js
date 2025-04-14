@@ -6,9 +6,6 @@ const app = express();
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import snatchSecrets from './helpers/aws-secrets-snatcher.js';
-await snatchSecrets();
-
 import 'dotenv/config';
 
 //These objects import the routes from their respective files
