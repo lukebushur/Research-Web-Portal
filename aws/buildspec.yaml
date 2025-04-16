@@ -29,10 +29,20 @@ phases:
       - echo Creating or updating the ECS task definition...
       - |
         sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" \
+            -e "s|<REGION>|$AWS_REGION|g" \
+            -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
             -e "s|<SECRET_ENV_PATH>|$AWS_SECRET_ENV_PATH|g" \
+            -e "s|<TASK_ROLE>|$AWS_TASK_ROLE|g" \
+            -e "s|<EXECUTION_ROLE>|$AWS_EXECUTION_ROLE|g" \
             aws/backend-task-definition-template.json > aws/backend-final-task-definition.json
       - cat aws/backend-final-task-definition.json
-      - sed -e "s|<CLIENT_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG|g" aws/frontend-task-definition-template.json > aws/frontend-final-task-definition.json
+      - |
+        sed -e "s|<CLIENT_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG|g" \
+            -e "s|<REGION>|$AWS_REGION|g" \
+            -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
+            -e "s|<EXECUTION_ROLE>|$AWS_EXECUTION_ROLE|g" \
+            aws/frontend-task-definition-template.json > aws/frontend-final-task-definition.json
+      - cat aws/frontend-final-task-definition.json
 
       # Register the updated task definitions with ECS
       - aws ecs register-task-definition --family back-end --cli-input-json file://aws/backend-final-task-definition.json

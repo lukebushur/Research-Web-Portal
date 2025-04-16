@@ -22,71 +22,71 @@
       "secrets": [
         {
           "name": "ACCESS_TOKEN_EXPIRY",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:ACCESS_TOKEN_EXPIRY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ACCESS_TOKEN_EXPIRY::"
         },
         {
           "name": "ADMIN",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:ADMIN::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ADMIN::"
         },
         {
           "name": "DB_DEV_COLLECTION",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
         },
         {
           "name": "DB_UNIT_TEST_COLLECTION",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:DB_UNIT_TEST_COLLECTION::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_UNIT_TEST_COLLECTION::"
         },
         {
           "name": "DB_URI",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:DB_URI::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_URI::"
         },
         {
           "name": "EMAIL_PASSWORD",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:EMAIL_PASSWORD::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:EMAIL_PASSWORD::"
         },
         {
           "name": "EMAIL_USER",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:EMAIL_USER::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:EMAIL_USER::"
         },
         {
           "name": "FACULTY",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:FACULTY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FACULTY::"
         },
         {
           "name": "FRONT_END_IP",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:FRONT_END_IP::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FRONT_END_IP::"
         },
         {
           "name": "INDUSTRY",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:INDUSTRY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:INDUSTRY::"
         },
         {
           "name": "PORT",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:PORT::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:PORT::"
         },
         {
           "name": "REFRESH_TOKEN_EXPIRY",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_EXPIRY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_EXPIRY::"
         },
         {
           "name": "SECRET_ACCESS_TOKEN",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:SECRET_ACCESS_TOKEN::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:SECRET_ACCESS_TOKEN::"
         },
         {
           "name": "SECRET_REFRESH_TOKEN",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:SECRET_REFRESH_TOKEN::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:SECRET_REFRESH_TOKEN::"
         },
         {
           "name": "STUDENT",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:STUDENT::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:STUDENT::"
         },
         {
           "name": "UNITTESTEMAIL",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:UNITTESTEMAIL::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:UNITTESTEMAIL::"
         },
         {
           "name": "UNITTESTPASS",
-          "valueFrom": "arn:aws:secretsmanager:us-east-2:603246038799:secret:<SECRET_ENV_PATH>:UNITTESTPASS::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:UNITTESTPASS::"
         }
       ],
       "logConfiguration": {
@@ -96,7 +96,7 @@
           "mode": "non-blocking",
           "awslogs-create-group": "true",
           "max-buffer-size": "25m",
-          "awslogs-region": "us-east-2",
+          "awslogs-region": "<REGION>",
           "awslogs-stream-prefix": "ecs"
         }
       },
@@ -109,8 +109,8 @@
       "value": "ECS Back-End Task"
     }
   ],
-  "taskRoleArn": "arn:aws:iam::603246038799:role/ECSBackEndTaskSecretManager",
-  "executionRoleArn": "arn:aws:iam::603246038799:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<TASK_ROLE>",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION_ROLE>",
   "networkMode": "awsvpc",
   "volumes": [],
   "placementConstraints": [],
