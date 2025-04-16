@@ -5,6 +5,7 @@ import express from 'express';
 const app = express();
 import cors from 'cors';
 import mongoose from 'mongoose';
+
 import 'dotenv/config';
 
 //These objects import the routes from their respective files
