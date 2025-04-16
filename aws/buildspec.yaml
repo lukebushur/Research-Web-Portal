@@ -27,7 +27,10 @@ phases:
 
       # Create or update ECS task definitions using templates (<CLIENT OR SERVER>-task-definition-template.json)
       - echo Creating or updating the ECS task definition...
-      - sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" aws/backend-task-definition-template.json > aws/backend-final-task-definition.json
+      - sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/server:$IMAGE_TAG|g" \
+            -e "s|<SECRET_ENV_PATH>|$AWS_SECRET_ENV_PATH|g" \
+            aws/backend-task-definition-template.json > aws/backend-final-task-definition.json
+      - cat aws/backend-final-task-definition.json
       - sed -e "s|<CLIENT_IMAGE_TAG>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/research-web-portal/client:$IMAGE_TAG|g" aws/frontend-task-definition-template.json > aws/frontend-final-task-definition.json
 
       # Register the updated task definitions with ECS
