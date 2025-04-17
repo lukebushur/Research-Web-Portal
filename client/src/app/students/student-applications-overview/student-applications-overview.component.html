@@ -12,10 +12,10 @@
       mat-table
       [dataSource]="dataSource"
       matSort
-      (matSortChange)="sortData($event)"
+      (matSortChange)="announceSortChange($event)"
     >
       <!-- Name Column -->
-      <ng-container matColumnDef="project-title">
+      <ng-container matColumnDef="projectName">
         <th
           mat-header-cell
           *matHeaderCellDef
@@ -29,7 +29,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="project-sponsor">
+      <ng-container matColumnDef="projectSponsor">
         <th
           mat-header-cell
           *matHeaderCellDef
@@ -44,7 +44,7 @@
       </ng-container>
 
       <!-- Weight Column -->
-      <ng-container matColumnDef="gpa-req">
+      <ng-container matColumnDef="GPAREQ">
         <th
           mat-header-cell
           *matHeaderCellDef
@@ -59,7 +59,7 @@
       </ng-container>
 
       <!-- Symbol Column -->
-      <ng-container matColumnDef="applied">
+      <ng-container matColumnDef="appliedDate">
         <th
           mat-header-cell
           *matHeaderCellDef
@@ -108,7 +108,7 @@
           <div class="column-sticky">
             <a
               mat-icon-button
-              [routerLink]="'/student/view-application/' + application.id"
+              [routerLink]="'/student/view-application/' + application.applicationID"
               matTooltip="View Application"
               aria-label="View application"
             >
@@ -118,7 +118,7 @@
               [disabled]="application.status !== 'Pending'"
               mat-icon-button
               color="black"
-              (click)="modifyApplication(application.id)"
+              (click)="modifyApplication(application.applicationID)"
               matTooltip="Modify Application"
             >
               <mat-icon>edit</mat-icon>
@@ -126,7 +126,7 @@
             <button
               mat-icon-button
               color="warn"
-              (click)="rescindApplication(application.id)"
+              (click)="rescindApplication(application.applicationID)"
               matTooltip="Rescind Application"
             >
               <mat-icon>delete_forever</mat-icon>

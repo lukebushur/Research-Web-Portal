@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from 'environments/environment';
 import { ApplyRequestData } from '../models/applyRequestData';
 import { StudentProjectInfo, SuccessStudentProjectInfo } from '../models/student-project-info';
+import { OverviewApplication } from '../models/applications-overview';
 
 describe('StudentService', () => {
   const API_URL = environment.apiUrl;
@@ -129,7 +130,11 @@ describe('StudentService', () => {
   });
 
   it('should send a getStudentApplications request', async () => {
-    const flushBody = 'get student applications';
+    const flushBody = {
+      success: {
+        applications: [] as OverviewApplication[],
+      }
+    };
 
     const studentApplications$ = service.getStudentApplications();
     const studentApplications = firstValueFrom(studentApplications$);
@@ -138,7 +143,7 @@ describe('StudentService', () => {
     expect(req.request.method).toBe('GET');
 
     req.flush(flushBody);
-    expect(await studentApplications).toEqual(flushBody);
+    expect(await studentApplications).toEqual(flushBody.success.applications);
   });
 
   it('should send a getApplication request', async () => {

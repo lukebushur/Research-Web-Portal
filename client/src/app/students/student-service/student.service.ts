@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { SearchOptions } from 'app/students/models/searchOptions';
 import { ApplyRequestData } from '../models/applyRequestData';
 import { StudentProjectInfo, SuccessStudentProjectInfo } from '../models/student-project-info';
+import { OverviewApplication } from '../models/applications-overview';
 
 @Injectable({
   providedIn: 'root'
@@ -75,8 +76,26 @@ export class StudentService {
   }
 
   // Send request to the back-end for the applications associated with the user
-  getStudentApplications(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/applications/getApplications`);
+  getStudentApplications(): Observable<OverviewApplication[]> {
+    return this.http.get(`${this.apiUrl}/applications/getApplications`).pipe(
+      map((value: any) => {
+        if (!value.success) {
+          throw value.error;
+        }
+
+        const data: any[] = value.success.applications;
+
+        return data.map((application: any) => <OverviewApplication>{
+          ...application,
+          posted: new Date(application.posted),
+          deadline: new Date(application.deadline),
+          appliedDate: new Date(application.appliedDate),
+        });
+      }),
+      catchError((err: any) => {
+        throw err;
+      })
+    );
   }
 
   //Send a request to grab a singular application from the student perspective

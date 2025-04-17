@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { Router, RouterLink } from '@angular/router';
@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ApplicantStatusComponent } from "../../shared/applicant-status/applicant-status.component";
+import { OverviewApplication } from '../models/applications-overview';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-student-applications-overview',
@@ -31,52 +33,42 @@ import { ApplicantStatusComponent } from "../../shared/applicant-status/applican
     ApplicantStatusComponent,
   ]
 })
-export class StudentApplicationsOverviewComponent {
-  constructor(
-    private router: Router,
-    private studentService: StudentService,
-  ) { }
-
-  ngOnInit() {
-    this.getStudentApplications();
-  }
+export class StudentApplicationsOverviewComponent implements AfterViewInit {
+  // Contains the data to be displayed in the table
+  dataSource = new MatTableDataSource<OverviewApplication>([]);
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  applications: any[] = [];
-  applicationData: any[] = [];
-  opportunities: any[] = [];
-  majorOpportunities: { [major: string]: any[] } = {};
-  majors: string[] = [];
+  // This array determines the displayed columns in the table.
+  displayedColumns: string[] = [
+    'projectName',
+    'projectSponsor',
+    'GPAREQ',
+    'appliedDate',
+    'deadline',
+    'status',
+    'actions'
+  ];
 
-  displayedColumns: string[] = ['project-title', 'project-sponsor', 'gpa-req', 'applied', 'deadline', 'status', 'actions']; //This array determines the displayedd columns in the table
-  dataSource = new MatTableDataSource(this.applicationData);
+  constructor(
+    private router: Router,
+    private studentService: StudentService,
+    private _liveAnnouncer: LiveAnnouncer,
+  ) { }
 
-  //function for the see all applications button
-  //this will let you view all the things you have applied to
-  getStudentApplications() {
+  // After the table is loaded in the DOM, then the table sort and paginator
+  // will be set. Thus, the table values and functionality can be initialized.
+  ngAfterViewInit(): void {
+    this.getStudentApplications();
+  }
+
+  // Update the student's applications, sort, and paginator after getting data
+  // from the server
+  getStudentApplications(): void {
     this.studentService.getStudentApplications().subscribe({
-      next: (data) => {
-        this.applications = [];
-        this.applicationData = [];
-        this.dataSource = new MatTableDataSource(this.applicationData);
-
-        this.applications = data.success.applications;
-        this.applications.forEach((element) => {
-          const obj = {
-            status: element.status,
-            appliedDate: new Date(element.appliedDate),
-            deadline: new Date(element.deadline),
-            projectName: element.projectName,
-            GPAREQ: element.GPAREQ,
-            projectSponsor: element.projectSponsor,
-            id: element.applicationID,
-          };
-          this.applicationData.push(obj);
-        });
-
-        this.dataSource = new MatTableDataSource(this.applicationData); //set up the datasource for the mat table
+      next: (applications: OverviewApplication[]) => {
+        this.dataSource.data = applications;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
@@ -86,61 +78,39 @@ export class StudentApplicationsOverviewComponent {
     });
   }
 
-  applyToOpportunity(opportunity: any): void {
-    this.router.navigate(['/student/apply-to-project'], {
-      queryParams: {
-        profName: opportunity.professorName,
-        profEmail: opportunity.professorEmail,
-        oppId: opportunity.projectID,
-      }
-    });
-  }
+  // Apply the filter to the table, only showing rows that contain the text in
+  // the input
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-  //This method is used to sort the table whenever the table's sort functionality is clicked.
-  sortData(sort: Sort) {
-    const data = this.applicationData.slice(); //grabs the data from the student data array
-    if (!sort.active || sort.direction === '') {
-      this.applicationData = data;
-      return;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
-
-    this.applicationData = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc'; //Checks if the sorting is done ascending if true, otherwise false. This will be used in the compare method
-      console.log(sort.active);
-      switch (sort.active) {
-        case this.displayedColumns[0]:
-          return this.compare(a.projectName, b.projectName, isAsc); // Use projectName instead of name
-        case this.displayedColumns[1]:
-          return this.compare(a.projectSponsor, b.projectSponsor, isAsc); // Use projectSponsor instead of GPA
-        case this.displayedColumns[4]:
-          return this.compareDate(a.deadline, b.deadline, isAsc);
-        case this.displayedColumns[3]:
-          return this.compareDate(a.appliedDate, b.appliedDate, isAsc);
-        case this.displayedColumns[5]:
-          return this.compare(a.status, b.status, isAsc);
-        case this.displayedColumns[2]:
-          return this.compare(a.GPAREQ, b.GPAREQ, isAsc);
-        default:
-          return 0;
-      }
-    });
-  }
-  //This method is used as the logic behind the sorting of the table. It takes a date, number, or string for a and b, then isAsc as a boolean.
-  //It will return -1 if a is less than b and the table is ascending and also returns -1 if a is greater than b and the table is not ascending (descending).
-  //otherwise it returns 1. This is used in the above sort method to sort the table
-  compare(a: number | String | Date, b: number | String | Date, isAsc: boolean) {
-    console.log(a);
-    console.log((a < b ? -1 : 1));
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
-  compareDate(a: string, b: string, isAsc: boolean) {
-    let dateA = new Date(a);
-    let dateB = new Date(b);
-    return (dateA < dateB ? -1 : 1) * (isAsc ? 1 : -1);
+  // Necessary method for sorting the table with the material UI tables;
+  // announces sorting changes to screen readers
+  announceSortChange(sortState: Sort): void {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 
-  rescindApplication(applicationID: string) {
+  // Redirect to ApplyToPost page for updating application
+  // Not implemented yet - does nothing right now
+  modifyApplication(applicationID: string): void {
+    // this.router.navigate(['/student/apply-to-project'], {
+    //   queryParams: {
+    //     applicationID: applicationID,
+    //   }
+    // });
+  }
+
+  // Rescind the application and refresh the student's applications afterwards
+  rescindApplication(applicationID: string): void {
     this.studentService.deleteApplication(applicationID).subscribe({
       next: (data: any) => {
         this.getStudentApplications();
@@ -149,22 +119,5 @@ export class StudentApplicationsOverviewComponent {
         console.log('Error', data);
       },
     });
-  }
-
-  modifyApplication(applicationID: string) {
-    // this.router.navigate(['/student/apply-to-project'], {
-    //   queryParams: {
-    //     applicationID: applicationID,
-    //   }
-    // });
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 }
