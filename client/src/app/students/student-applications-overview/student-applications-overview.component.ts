@@ -3,13 +3,13 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { Router, RouterLink } from '@angular/router';
 import { StudentService } from '../student-service/student.service';
-import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-student-applications-overview',
@@ -25,13 +25,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatTooltipModule,
     RouterLink,
+    DatePipe,
   ]
 })
 export class StudentApplicationsOverviewComponent {
   constructor(
     private router: Router,
     private studentService: StudentService,
-    private dateService: DateConverterService,
   ) { }
 
   ngOnInit() {
@@ -61,10 +61,10 @@ export class StudentApplicationsOverviewComponent {
 
         this.applications = data.success.applications;
         this.applications.forEach((element) => {
-          let obj = {
+          const obj = {
             status: element.status,
-            appliedDate: this.dateService.convertShortDate(element.appliedDate),
-            deadline: this.dateService.convertShortDate(element.deadline),
+            appliedDate: new Date(element.appliedDate),
+            deadline: new Date(element.deadline),
             projectName: element.projectName,
             GPAREQ: element.GPAREQ,
             projectSponsor: element.projectSponsor,

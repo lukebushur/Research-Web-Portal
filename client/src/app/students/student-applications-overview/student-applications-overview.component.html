@@ -69,7 +69,7 @@
           Applied Date
         </th>
         <td mat-cell *matCellDef="let application">
-          {{ application.appliedDate }}
+          {{ application.appliedDate | date: "shortDate" }}
         </td>
       </ng-container>
 
@@ -84,7 +84,7 @@
           Deadline
         </th>
         <td mat-cell *matCellDef="let application">
-          {{ application.deadline }}
+          {{ application.deadline | date: "short" }}
         </td>
       </ng-container>
 
