@@ -1,8 +1,7 @@
 {
-  "name": "web-portal-server",
+  "name": "server",
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
   "main": "server.js",
   "scripts": {
     "startServer": "node server.js",
@@ -10,8 +9,8 @@
     "debug": "nodemon --inspect server.js",
     "test": "cross-env NODE_ENV=test mocha unitTests/**/*.js --recursive --exit --timeout 10000"
   },
-  "author": "Sean Tierney",
-  "license": "ISC",
+  "license": "UNLICENSED",
+  "private": true,
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
