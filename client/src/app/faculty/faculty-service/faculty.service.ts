@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'environments/environment';
 import { ApplicantData, ApplicantProjectData } from '../models/view-applicant';
+import { ProjectFetchData } from '../models/projectFetchData';
+import { Application } from 'app/shared/models/application';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +22,28 @@ export class FacultyService {
   }
 
   // get all faculty projects from the server
-  getProjects(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/projects/getProjects`);
+  getProjects(): Observable<ProjectFetchData[]> {
+    return this.http.get(`${this.apiUrl}/projects/getProjects`).pipe(
+      map((value: any) => {
+        if (!value.success) {
+          throw value.error;
+        }
+
+        const data: any[] = value.success.projects;
+        return data.map((project: any) => <ProjectFetchData>{
+          ...project,
+          posted: project.posted ? new Date(project.posted) : null,
+          deadline: project.deadline ? new Date(project.deadline) : null,
+          applications: project.applications.map((application: any) => <Application>{
+            ...application,
+            appliedDate: new Date(application.appliedDate),
+          }),
+        });
+      }),
+      catchError((err: any) => {
+        throw err;
+      })
+    );
   }
   // This method accesses the getProject api route, which grabs a singular
   // project from the DB, it takes a projectid and the project type

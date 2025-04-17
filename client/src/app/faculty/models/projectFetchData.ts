@@ -4,14 +4,13 @@ import { QuestionData } from '../../shared/models/questionData';
 export interface ProjectFetchData {
   projectType: 'active' | 'draft' | 'archived',
   applications: Application[],
-  deadline: Date,
+  deadline: Date | null,
   description: string,
   majors: string[],
   projectName: string,
-  professorId: string,
   id: string,
   questions: QuestionData[]
-  posted: Date,
+  posted: Date | null,
   GPA: number,
   number: number,
   numApp: number,

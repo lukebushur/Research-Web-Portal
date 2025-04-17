@@ -6,7 +6,6 @@ import { FacultyService } from '../faculty-service/faculty.service';
 import { ProjectFetchData } from '../models/projectFetchData';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { Application } from 'app/shared/models/application';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,46 +53,31 @@ export class FacultyDashboardComponent implements OnInit {
   // fetch projects from the server and update the subject's value
   fetchProjects(selectedIndex?: number): void {
     this.facultyService.getProjects().subscribe({
-      next: (data: any) => {
-        if (data.success) {
-          const projects: ProjectFetchData[] = data.success.projects.map((project: any) => {
-            const projectResult: ProjectFetchData = {
-              ...project,
-              posted: new Date(project.posted),
-              deadline: new Date(project.deadline),
-              applications: project.applications.map((application: any) => {
-                return <Application>{
-                  ...application,
-                  appliedDate: new Date(application.appliedDate),
-                };
-              }),
-            };
-            // if an initial selected index is specified, update the subjects with
-            // the corresponding data
-            if (selectedIndex && selectedIndex === project.number) {
-              this.updatedSelected(selectedIndex, projectResult);
-            }
-            return projectResult;
-          });
+      next: (projects: ProjectFetchData[]) => {
+        // construct the object with the project data
+        const projectsObj: ProjectsObj = {
+          active: [],
+          draft: [],
+          archived: []
+        };
 
-          // construct the object with the project data
-          const projectsObj: ProjectsObj = {
-            active: [],
-            draft: [],
-            archived: []
-          };
-          for (const project of projects) {
-            if (project.projectType === 'active') {
-              projectsObj.active.push(project);
-            } else if (project.projectType === 'draft') {
-              projectsObj.draft.push(project);
-            } else {
-              projectsObj.archived.push(project);
-            }
+        for (const project of projects) {
+          // if an initial selected index is specified, update the subjects with
+          // the corresponding data
+          if (selectedIndex && selectedIndex === project.number) {
+            this.updatedSelected(selectedIndex, project);
           }
-          // Update the subject with the new data
-          this.projects$.next(projectsObj);
+
+          if (project.projectType === 'active') {
+            projectsObj.active.push(project);
+          } else if (project.projectType === 'draft') {
+            projectsObj.draft.push(project);
+          } else {
+            projectsObj.archived.push(project);
+          }
         }
+        // Update the subject with the new data
+        this.projects$.next(projectsObj);
       },
       error: (error) => {
         console.error('Error fetching projects', error);

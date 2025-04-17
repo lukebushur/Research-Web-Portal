@@ -78,7 +78,6 @@ describe('ResearchProjectCardComponent', () => {
     numApp: applicationsData.length,
     number: 0,
     posted: new Date(2024, 2, 2),
-    professorId: '00',
     projectName: 'Test Project Name',
     projectType: 'active',
     questions: [],

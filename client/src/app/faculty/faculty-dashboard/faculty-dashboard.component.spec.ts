@@ -77,7 +77,6 @@ describe('FacultyDashboardComponent', () => {
       numApp: applicationsData.length,
       number: 0,
       posted: new Date(2024, 2, 2),
-      professorId: '00',
       projectName: 'Test Project Name',
       projectType: 'active',
       questions: [],
@@ -94,7 +93,6 @@ describe('FacultyDashboardComponent', () => {
       numApp: applicationsData.length,
       number: 1,
       posted: new Date(2024, 2, 2),
-      professorId: '00',
       projectName: 'Test Project Name',
       projectType: 'draft',
       questions: [],
@@ -111,7 +109,6 @@ describe('FacultyDashboardComponent', () => {
       numApp: applicationsData.length,
       number: 2,
       posted: new Date(2024, 2, 2),
-      professorId: '00',
       projectName: 'Test Project Name',
       projectType: 'archived',
       questions: [],
@@ -120,11 +117,7 @@ describe('FacultyDashboardComponent', () => {
 
   beforeEach(() => {
     facultyService = jasmine.createSpyObj<FacultyService>('FacultyService', ['getProjects']);
-    facultyService.getProjects.and.returnValue(of({
-      success: {
-        projects: projectData
-      }
-    }));
+    facultyService.getProjects.and.returnValue(of(projectData));
 
     TestBed.configureTestingModule({
       imports: [

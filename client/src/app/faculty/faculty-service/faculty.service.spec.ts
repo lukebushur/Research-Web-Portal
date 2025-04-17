@@ -2,6 +2,7 @@ import { FacultyService } from './faculty.service';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { environment } from 'environments/environment';
+import { ProjectFetchData } from '../models/projectFetchData';
 
 describe('FacultyService', () => {
   let service: FacultyService;
@@ -47,13 +48,14 @@ describe('FacultyService', () => {
     const response = {
       success: {
         status: 200,
+        projects: [] as ProjectFetchData[],
       }
     }
     httpSpy.get.and.returnValue(of(response));
 
     service.getProjects().subscribe({
       next: (data: any) => {
-        expect(data).withContext('expected response').toEqual(response);
+        expect(data).withContext('expected response').toEqual([]);
         done();
       },
       error: done.fail
