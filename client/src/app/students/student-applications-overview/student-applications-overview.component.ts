@@ -9,7 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { ApplicantStatusComponent } from "../../shared/applicant-status/applicant-status.component";
 
 @Component({
   selector: 'app-student-applications-overview',
@@ -26,6 +27,8 @@ import { DatePipe } from '@angular/common';
     MatTooltipModule,
     RouterLink,
     DatePipe,
+    DecimalPipe,
+    ApplicantStatusComponent,
   ]
 })
 export class StudentApplicationsOverviewComponent {
