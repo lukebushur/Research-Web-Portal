@@ -14,11 +14,16 @@
     </a>
   </mat-card-title>
   <mat-card-content>
-    <p>Posted Date: {{ dateConverter.convertShortDate(project.posted) }}</p>
-    <p>
-      Application Deadline:
-      {{ dateConverter.convertShortDate(project.deadline) }}
-    </p>
+    @if (project.posted) {
+      <p>Posted: {{ project.posted | date: "short" }}</p>
+    } @else {
+      <p>Posted: TBD</p>
+    }
+    @if (project.deadline) {
+      <p>Deadline: {{ project.deadline | date: "short" }}</p>
+    } @else {
+      <p>Deadline: TBD</p>
+    }
     <p>Number of Applicants: {{ project.numApp }}</p>
   </mat-card-content>
   <mat-card-actions>

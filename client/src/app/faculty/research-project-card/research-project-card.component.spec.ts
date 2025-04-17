@@ -142,8 +142,8 @@ describe('ResearchProjectCardComponent', () => {
     const projectCard = await loader.getHarness(MatCardHarness);
     expect(await projectCard.getTitleText()).toEqual(projectData.projectName);
     const projectContent = await projectCard.getText();
-    expect(projectContent).toContain('Posted Date: 3/2/2024');
-    expect(projectContent).toContain('Application Deadline: 7/6/2024');
+    expect(projectContent).toContain('Posted: 3/2/24, 12:00 AM');
+    expect(projectContent).toContain('Deadline: 7/6/24, 12:00 AM');
     expect(projectContent).toContain('Number of Applicants: 3');
     const cardButtons = await projectCard.getAllHarnesses(MatButtonHarness);
     expect(cardButtons.length).toEqual(3);

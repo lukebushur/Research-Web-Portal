@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output, } from '@angular/core';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { Router } from '@angular/router';
-import { DateConverterService } from 'app/shared/date-converter-controller/date-converter.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ProjectFetchData } from 'app/faculty/models/projectFetchData';
 import { RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-research-project-card',
@@ -16,7 +16,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatCardModule,
     RouterModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DatePipe,
   ]
 })
 export class ResearchProjectCardComponent {
@@ -31,7 +32,6 @@ export class ResearchProjectCardComponent {
   constructor(
     private router: Router,
     private facultyService: FacultyService,
-    public dateConverter: DateConverterService,
   ) { }
 
   // if the user presses the update button, navigate to the update project page
