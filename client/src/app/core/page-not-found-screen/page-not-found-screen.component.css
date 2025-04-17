@@ -1,0 +1,22 @@
+h1, h2 {
+    font-weight: 500;
+}
+
+main {
+    padding-top: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    max-width: max-content;
+}
+
+.card h2 {
+    margin-top: 20px;
+}

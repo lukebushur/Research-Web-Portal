@@ -1,0 +1,27 @@
+.page-container {
+    margin: 20px 15%;
+}
+
+h1 {
+    font-weight: 500;
+    margin: 20px 0;
+}
+
+.align-headers .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mat-expansion-panel {
+    background-color: #eee;
+}
+
+.content-card {
+    margin-bottom: 12px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}

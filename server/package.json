@@ -7,6 +7,7 @@
   "scripts": {
     "startServer": "node server.js",
     "dev": "nodemon server.js",
+    "debug": "nodemon --inspect server.js",
     "test": "cross-env NODE_ENV=test mocha unitTests/**/*.js --recursive --exit --timeout 10000"
   },
   "author": "Sean Tierney",

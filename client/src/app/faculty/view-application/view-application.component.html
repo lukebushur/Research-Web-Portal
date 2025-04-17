@@ -1,0 +1,121 @@
+<main class="page-container">
+  <header class="page-heading">
+    <h1>View Application</h1>
+    @if (applicantData$ | async; as applicant) {
+      <app-large-application-status [status]="applicant.status" />
+    }
+  </header>
+  <mat-accordion class="align-headers" multi>
+    <mat-expansion-panel #projectExpPanel expanded="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Project Information</mat-panel-title>
+        <mat-panel-description>
+          Click to {{ projectExpPanel.expanded ? "close" : "open" }}
+          <mat-icon>description</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <article class="content-card">
+        @if (projectData$ | async; as project) {
+          <app-project-info-card [showProfessor]="false" [project]="project" />
+        }
+      </article>
+    </mat-expansion-panel>
+    @if (applicantData$ | async; as applicant) {
+      <mat-expansion-panel #applicantExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Applicant Information</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ applicantExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>assignment_ind</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <article class="content-card applicant-info">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <h2 class="applicant-title">{{ applicant.name }}</h2>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="applicant-icon-field space-after">
+                <mat-icon>mail</mat-icon>
+                <h3>Email:</h3>
+                <a href="mailto:{{ applicant.email }}">{{ applicant.email }}</a>
+              </div>
+
+              <div class="applicant-icon-field space-after">
+                <mat-icon>assignment_turned_in</mat-icon>
+                <h3>Applied On</h3>
+                <p>{{ applicant.appliedDate | date: "medium" }}</p>
+              </div>
+
+              <h3 class="larger">GPA:</h3>
+              <p class="space-after">{{ applicant.GPA | number: "1.2-2" }}</p>
+
+              <h3 class="larger">Major(s):</h3>
+              <p>{{ applicant.major.join(", ") }}</p>
+            </mat-card-content>
+          </mat-card>
+        </article>
+      </mat-expansion-panel>
+      <mat-expansion-panel #answersExpPanel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Application Answers</mat-panel-title>
+          <mat-panel-description>
+            Click to {{ answersExpPanel.expanded ? "close" : "open" }}
+            <mat-icon>quiz</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        @for (question of applicant.answers; track $index; let i = $index) {
+          <article class="content-card">
+            <app-question-card
+              [questionNum]="i + 1"
+              [questionData]="question"
+              [showAnswer]="true"
+            />
+          </article>
+        }
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+  @if (applicantData$ | async; as applicant) {
+    <section class="application-status">
+      @if (applicant.status === "Pending") {
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="
+            openConfirmationDialog(
+              applicant.application,
+              projectId,
+              'Accept',
+              'accept this user?'
+            )
+          "
+          class="accept-button"
+        >
+          Accept
+        </button>
+      }
+      <div class="bottom-status">
+        <app-large-application-status [status]="applicant.status" />
+      </div>
+      @if (applicant.status === "Pending") {
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="
+            openConfirmationDialog(
+              applicant.application,
+              projectId,
+              'Reject',
+              'reject this user?'
+            )
+          "
+        >
+          Reject
+        </button>
+      }
+    </section>
+  }
+</main>

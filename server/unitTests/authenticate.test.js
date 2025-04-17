@@ -15,8 +15,8 @@ import { generateExpiredPasswordToken, generateExpiredEmailToken } from '../cont
 use(chaiHttp);
 
 //These variables are used to store information needed to make successful requests to the server
-let email_reset_token, PWD_reset_token, access_token, refresh_token, removeID, emailToken, facultyRemoveID, facultyAccessToken,
-    expiredToken, expiredRefreshToken;
+let email_reset_token, PWD_reset_token, access_token, refresh_token, removeID, emailToken, studentUserId, facultyRemoveID,
+facultyAccessToken, expiredToken, expiredRefreshToken;
 //Generate random information for account registration
 const randomPass = Math.random().toString(36).substring(0).repeat(2);
 const randomName = Math.random().toString(36).substring(2);
@@ -283,6 +283,7 @@ describe('BE-REG-8 : POST /api/register', () => {
     after(async () => {
         expiredRefreshToken = generateExpiredRefreshToken(removeID, randomEmail, randomName);
         const user = await User.findOne({ email: randomEmail });
+        studentUserId = user._id; // store user ID for email confirmation
         emailToken = user.emailToken; //store email token for email confirmation
         expiredToken = generateExpiredToken(removeID, randomEmail, randomName);
         addRefreshToken(user, expiredRefreshToken)
@@ -547,11 +548,13 @@ describe('BE-LOG-5 : POST /api/login', () => {
 
 //BE-CE-1 : Unit test for confirming user email with invalid email token
 describe('BE-CE-1 : POST /api/confirmEmail', () => {
-    it('should return an unsuccessful response due to an invalid email token.', (done) => {
+    it('should return an unsuccessful response due to an invalid email token', (done) => {
         request.execute(server)
             .post('/api/confirmEmail')
-            .set({ "Authorization": `Bearer ${access_token}` })
-            .send({ "emailToken": emailToken + "XXX" })
+            .send({
+                "userId": studentUserId,
+                "emailToken": emailToken + "XXX",
+            })
             .end((err, res) => {
                 expect(res).to.have.status(401);
                 expect(res.body).to.have.property('error');
@@ -562,13 +565,15 @@ describe('BE-CE-1 : POST /api/confirmEmail', () => {
     });
 });
 
-//BE-CE-2 : Unit test for confirming user email with a different access token then is assigned to the email token
+//BE-CE-2 : Unit test for confirming user email with a different user ID than is assigned to the email token
 describe('BE-CE-2 : POST /api/confirmEmail', () => {
-    it('should return an unsuccessful response due to an invalid email token.', (done) => {
+    it('should return an unsuccessful response due to mismatching user ID and email token', (done) => {
         request.execute(server)
             .post('/api/confirmEmail')
-            .set({ "Authorization": `Bearer ${facultyAccessToken}` })
-            .send({ "emailToken": emailToken })
+            .send({
+                "userId": facultyRemoveID,
+                "emailToken": emailToken,
+            })
             .end((err, res) => {
                 expect(res).to.have.status(401);
                 expect(res.body).to.have.property('error');
@@ -579,17 +584,17 @@ describe('BE-CE-2 : POST /api/confirmEmail', () => {
     });
 });
 
-//BE-CE-3 : Unit test for confirming user email without an access token
+//BE-CE-3 : Unit test for confirming user email without a user ID
 describe('BE-CE-3 : POST /api/confirmEmail', () => {
-    it('should return an unsuccessful response due to having no access token.', (done) => {
+    it('should return an unsuccessful response due to having no user ID', (done) => {
         request.execute(server)
             .post('/api/confirmEmail')
             .send({ "emailToken": emailToken })
             .end((err, res) => {
-                expect(res).to.have.status(401);
+                expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
-                expect(res.body.error).to.have.property('status').to.equal(401);
-                expect(res.body.error).to.have.property('message').to.equal('ACCESS_DENIED');
+                expect(res.body.error).to.have.property('status').to.equal(400);
+                expect(res.body.error).to.have.property('message').to.equal('BAD_REQUEST');
                 done();
             });
     });
@@ -601,8 +606,10 @@ describe('BE-CE-4 : POST /api/confirmEmail', () => {
     it('should return a confirmed email response', (done) => {
         request.execute(server)
             .post('/api/confirmEmail')
-            .set({ "Authorization": `Bearer ${access_token}` })
-            .send({ "emailToken": emailToken })
+            .send({
+                "userId": studentUserId,
+                "emailToken": emailToken,
+            })
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('success');
@@ -618,8 +625,10 @@ describe('BE-CE-5 : POST /api/confirmEmail', () => {
     it('should return an unsuccessful response due to already having confirmed the email.', (done) => {
         request.execute(server)
             .post('/api/confirmEmail')
-            .set({ "Authorization": `Bearer ${access_token}` })
-            .send({ "emailToken": emailToken })
+            .send({
+                "userId": studentUserId,
+                "emailToken": emailToken,
+            })
             .end((err, res) => {
                 expect(res).to.have.status(401);
                 expect(res.body).to.have.property('error');
