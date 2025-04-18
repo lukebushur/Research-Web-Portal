@@ -108,21 +108,31 @@
           <div class="column-sticky">
             <a
               mat-icon-button
-              [routerLink]="'/student/view-application/' + application.applicationID"
+              [routerLink]="
+                '/student/view-application/' + application.applicationID
+              "
               matTooltip="View Application"
               aria-label="View application"
             >
               <mat-icon>visibility</mat-icon>
             </a>
-            <button
-              [disabled]="application.status !== 'Pending'"
+            <a
               mat-icon-button
               color="black"
-              (click)="modifyApplication(application.applicationID)"
+              [disabled]="application.status !== 'Pending'"
+              [routerLink]="
+                '/student/modify-application/' + application.applicationID
+              "
+              [queryParams]="{
+                profName: application.projectSponsor,
+                profEmail: application.professorEmail,
+                oppId: application.opportunityId,
+              }"
               matTooltip="Modify Application"
+              aria-label="Modify application"
             >
               <mat-icon>edit</mat-icon>
-            </button>
+            </a>
             <button
               mat-icon-button
               color="warn"

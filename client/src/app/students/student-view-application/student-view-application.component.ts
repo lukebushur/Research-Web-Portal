@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { StudentService } from '../student-service/student.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -34,6 +34,7 @@ import { LargeApplicationStatusComponent } from "../../shared/large-application-
     ProjectInfoCardComponent,
     QuestionCardComponent,
     LargeApplicationStatusComponent,
+    RouterLink,
   ]
 })
 export class StudentViewApplicationComponent {
