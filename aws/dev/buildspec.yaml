@@ -34,17 +34,17 @@ phases:
             -e "s|<SECRET_ENV_PATH>|$AWS_SECRET_ENV_PATH|g" \
             -e "s|<TASK_ROLE>|$AWS_TASK_ROLE|g" \
             -e "s|<EXECUTION_ROLE>|$AWS_EXECUTION_ROLE|g" \
-            aws/dev/backend-task-definition-template.json > aws/dev/backend-final-task-definition.json
+            aws/dev/backend-dev-task-definition-template.json > aws/dev/backend-dev-final-task-definition.json
       - |
         sed -e "s|<CLIENT_IMAGE_TAG>|public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:$IMAGE_TAG|g" \
             -e "s|<REGION>|$AWS_REGION|g" \
             -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
             -e "s|<EXECUTION_ROLE>|$AWS_EXECUTION_ROLE|g" \
-            aws/dev/frontend-task-definition-template.json > aws/dev/frontend-final-task-definition.json
+            aws/dev/frontend-dev-task-definition-template.json > aws/dev/frontend-dev-final-task-definition.json
 
       # Register the updated task definitions with ECS
-      - aws ecs register-task-definition --family back-end-dev --cli-input-json file://aws/dev/backend-final-task-definition.json
-      - aws ecs register-task-definition --family front-end-dev --cli-input-json file://aws/dev/frontend-final-task-definition.json
+      - aws ecs register-task-definition --family back-end-dev --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
+      - aws ecs register-task-definition --family front-end-dev --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
 
       # Update the ECS services to use the new task definitions
       - echo Updating ECS service...
@@ -76,7 +76,7 @@ phases:
 
 artifacts:
   files:
-    - aws/dev/backend-task-definition-template.json
-    - aws/dev/backend-final-task-definition.json
-    - aws/dev/frontend-task-definition-template.json
-    - aws/dev/frontend-final-task-definition.json
+    - aws/dev/backend-dev-task-definition-template.json
+    - aws/dev/backend-dev-final-task-definition.json
+    - aws/dev/frontend-dev-task-definition-template.json
+    - aws/dev/frontend-dev-final-task-definition.json
