@@ -4,14 +4,15 @@
 }
 
 .centerDivStyles {
-    margin: 70px auto;
+    margin: 70px auto 0;
     padding: 20px;
     width: 300px;
-    max-width: 80%;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
     background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 20em;
+    max-width: 80%;
     text-align: center;
 }
 
