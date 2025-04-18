@@ -123,10 +123,9 @@ describe('ApplyToPostComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              queryParamMap: convertToParamMap({
-                profName: testProjectData.professorName,
-                profEmail: professorEmail,
-                oppId: projectId,
+              paramMap: convertToParamMap({
+                professorEmail: professorEmail,
+                projectId: projectId,
               })
             }
           }
@@ -154,7 +153,6 @@ describe('ApplyToPostComponent', () => {
       questions: questionData.map((question, i) => {
         return {
           ...question,
-          questionNum: i + 1,
         };
       }),
     });

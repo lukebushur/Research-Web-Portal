@@ -34,11 +34,12 @@ import { ProjectInfoCardComponent } from 'app/shared/project-info-card/project-i
   ]
 })
 export class ApplyToPostComponent implements OnInit {
-  //For side-nav opening
-  opened = false;
+  isCreate: boolean = true;
 
   professorEmail: string;
   projectId: string;
+
+  applicationId: string | null;
 
   project: StudentProjectInfo;
   questions: Array<QuestionData>;
@@ -101,37 +102,33 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   ngOnInit() {
-    const profName = this.route.snapshot.queryParamMap.get('profName')!;
-    this.professorEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
-    this.projectId = this.route.snapshot.queryParamMap.get('oppId')!;
+    this.professorEmail = this.route.snapshot.paramMap.get('professorEmail')!;
+    this.projectId = this.route.snapshot.paramMap.get('projectId')!;
 
+    this.applicationId = this.route.snapshot.paramMap.get('applicationId');
+    this.isCreate = !this.applicationId;
+
+    this.applyInit();
+  }
+
+  private applyInit(): void {
     this.studentService.getProjectInfo(this.professorEmail, this.projectId).subscribe({
       next: (project: StudentProjectInfo) => {
         this.project = project;
 
-        this.questions = this.project.questions;
-
-        for (let i = 0; i < this.questions.length; i++) {
-          this.questions[i].questionNum = i + 1;
-          if (this.questions[i].requirementType === 'check box') {
-            let checkControls = {};
-            for (let choice of this.questions[i].choices!) {
-              checkControls = {
-                ...checkControls,
-                [choice]: new FormControl(false)
-              };
+        if (this.isCreate) {
+          this.questions = this.project.questions;
+          this.loadQuestions(this.questions);
+        } else {
+          this.studentService.getApplication(this.applicationId!).subscribe({
+            next: (data: any) => {
+              this.questions = data.success.application.questions;
+              this.loadQuestions(this.questions, true);
+            },
+            error: (err: any) => {
+              console.log(err);
             }
-            const checkGroup = (this.questions[i].required)
-              ? new FormGroup(checkControls, [this.requireCheckboxesToBeChecked(1)])
-              : new FormGroup(checkControls);
-            this.formQuestions.push(checkGroup);
-          } else {
-            const control = (this.questions[i].required)
-              ? new FormControl('', [Validators.required])
-              : new FormControl('');
-            this.formQuestions.push(control);
-          }
-
+          });
         }
       },
       error: (response: any) => {
@@ -140,13 +137,56 @@ export class ApplyToPostComponent implements OnInit {
     });
   }
 
+  private loadQuestions(
+    questions: QuestionData[],
+    includeAnswers = false
+  ): void {
+    for (let i = 0; i < questions.length; i++) {
+      if (this.questions[i].requirementType === 'check box') {
+        let checkControls = {};
+        for (let choice of this.questions[i].choices!) {
+          const value = includeAnswers
+            ? this.questions[i].answers?.includes(choice) ?? false
+            : false;
 
-  onSubmit() {
-    const data: ApplyRequestData = {
-      projectID: this.projectId,
-      professorEmail: this.professorEmail,
-      questions: [],
-    };
+          checkControls = {
+            ...checkControls,
+            [choice]: new FormControl(value)
+          };
+        }
+        const checkGroup = (this.questions[i].required)
+          ? new FormGroup(checkControls, [this.requireCheckboxesToBeChecked(1)])
+          : new FormGroup(checkControls);
+        this.formQuestions.push(checkGroup);
+      } else {
+        const value = includeAnswers
+          ? this.questions[i].answers?.at(0) ?? ''
+          : '';
+
+        const control = (this.questions[i].required)
+          ? new FormControl(value, [Validators.required])
+          : new FormControl(value);
+        this.formQuestions.push(control);
+      }
+    }
+  }
+
+  onSubmit(): void {
+    if (this.isCreate) {
+      const data: ApplyRequestData = {
+        projectID: this.projectId,
+        professorEmail: this.professorEmail,
+        questions: this.getAnswers(),
+      };
+
+      this.createApplication(data);
+    } else {
+      this.modifyApplication(this.applicationId, this.getAnswers());
+    }
+  }
+
+  private getAnswers(): QuestionData[] {
+    const data: QuestionData[] = [];
     for (let i = 0; i < this.questions.length; i++) {
       let question: QuestionData;
       if (this.questions[i].requirementType === 'check box') {
@@ -159,7 +199,7 @@ export class ApplyToPostComponent implements OnInit {
         }
         question = {
           ...this.questions[i],
-          answers: answersArray
+          answers: answersArray,
         };
       } else {
         question = {
@@ -167,24 +207,45 @@ export class ApplyToPostComponent implements OnInit {
           answers: [this.formQuestions.at(i).value]
         };
       }
-      delete question.questionNum;
-      data.questions.push(question);
+      data.push(question);
     }
 
+    return data;
+  }
+
+  private createApplication(data: ApplyRequestData): void {
     this.studentService.createApplication(data).subscribe({
-      next: (response: any) => {
+      next: (value: any) => {
         this.router.navigate(['/student/applications-overview']).then((navigated: boolean) => {
           if (navigated) {
-            this.snackBar.open('Application submitted!', 'Close');
+            this.snackBar.open('Application submitted!', 'Dismiss');
           } else {
             console.log('Problem navigating');
           }
         });
       },
-      error: (response: any) => {
-        this.snackBar.open('Error submitting application.', 'Close');
-        console.log('Error', response);
+      error: (err: any) => {
+        this.snackBar.open('Error submitting application.', 'Dismiss');
+        console.log('Error', err);
       },
+    });
+  }
+
+  private modifyApplication(applicationId: any, questions: QuestionData[]): void {
+    this.studentService.updateApplication(applicationId, questions).subscribe({
+      next: (value: any) => {
+        this.router.navigate(['/student/applications-overview']).then((navigated: boolean) => {
+          if (navigated) {
+            this.snackBar.open('Application modified!', 'Dismiss');
+          } else {
+            console.log('Problem navigating');
+          }
+        });
+      },
+      error: (err: any) => {
+        this.snackBar.open('Error submitting application', 'Dismiss');
+        console.log('Error', err);
+      }
     });
   }
 

@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { StudentService } from '../student-service/student.service';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
@@ -52,7 +52,6 @@ export class StudentApplicationsOverviewComponent implements AfterViewInit {
   ];
 
   constructor(
-    private router: Router,
     private studentService: StudentService,
     private _liveAnnouncer: LiveAnnouncer,
   ) { }
@@ -97,16 +96,6 @@ export class StudentApplicationsOverviewComponent implements AfterViewInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
-  }
-
-  // Redirect to ApplyToPost page for updating application
-  // Not implemented yet - does nothing right now
-  modifyApplication(applicationID: string): void {
-    // this.router.navigate(['/student/apply-to-project'], {
-    //   queryParams: {
-    //     applicationID: applicationID,
-    //   }
-    // });
   }
 
   // Rescind the application and refresh the student's applications afterwards
