@@ -1,0 +1,60 @@
+{
+  "family": "front-end-dev",
+  "containerDefinitions": [
+    {
+      "name": "client-dev",
+      "image": "<CLIENT_IMAGE_TAG>",
+      "cpu": 256,
+      "memory": 512,
+      "memoryReservation": 512,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/front-end-dev",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
+          "awslogs-region": "<REGION>",
+          "awslogs-stream-prefix": "ecs"
+        },
+        "secretOptions": []
+      },
+      "systemControls": []
+    }
+  ],
+  "tags": [
+    {
+      "key": "billingResource",
+      "value": "RWP Task Definition - Front End Dev"
+    }
+  ],
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION_ROLE>",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "ephemeralStorage": {
+    "sizeInGiB": 21
+  },
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "enableFaultInjection": false
+}
