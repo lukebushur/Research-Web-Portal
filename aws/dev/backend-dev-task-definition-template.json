@@ -1,0 +1,130 @@
+{
+  "family": "back-end-dev",
+  "containerDefinitions": [
+    {
+      "name": "back-end-dev",
+      "image": "<SERVER_IMAGE_TAG>",
+      "cpu": 256,
+      "memory": 512,
+      "portMappings": [
+        {
+          "name": "server",
+          "containerPort": 5000,
+          "hostPort": 5000,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "secrets": [
+        {
+          "name": "ACCESS_TOKEN_EXPIRY",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ACCESS_TOKEN_EXPIRY::"
+        },
+        {
+          "name": "ADMIN",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ADMIN::"
+        },
+        {
+          "name": "DB_DEV_COLLECTION",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
+        },
+        {
+          "name": "DB_UNIT_TEST_COLLECTION",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_UNIT_TEST_COLLECTION::"
+        },
+        {
+          "name": "DB_URI",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_URI::"
+        },
+        {
+          "name": "EMAIL_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:EMAIL_PASSWORD::"
+        },
+        {
+          "name": "EMAIL_USER",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:EMAIL_USER::"
+        },
+        {
+          "name": "FACULTY",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FACULTY::"
+        },
+        {
+          "name": "FRONT_END_IP",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FRONT_END_IP::"
+        },
+        {
+          "name": "INDUSTRY",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:INDUSTRY::"
+        },
+        {
+          "name": "PORT",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:PORT::"
+        },
+        {
+          "name": "REFRESH_TOKEN_EXPIRY",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_EXPIRY::"
+        },
+        {
+          "name": "SECRET_ACCESS_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:SECRET_ACCESS_TOKEN::"
+        },
+        {
+          "name": "SECRET_REFRESH_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:SECRET_REFRESH_TOKEN::"
+        },
+        {
+          "name": "STUDENT",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:STUDENT::"
+        },
+        {
+          "name": "UNITTESTEMAIL",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:UNITTESTEMAIL::"
+        },
+        {
+          "name": "UNITTESTPASS",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:UNITTESTPASS::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/back-end-dev",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
+          "awslogs-region": "<REGION>",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "systemControls": []
+    }
+  ],
+  "tags": [
+    {
+      "key": "billingResource",
+      "value": "ECS Back-End Dev Task"
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<TASK_ROLE>",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION_ROLE>",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "ephemeralStorage": {
+    "sizeInGiB": 21
+  },
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "enableFaultInjection": false
+}
