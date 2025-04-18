@@ -3,8 +3,12 @@ import { inject } from '@angular/core';
 import { LoadingService } from '../loading-service/loading.service';
 import { finalize } from 'rxjs/operators';
 
+// token to set if the HTTP request should not cause the loading spinner to
+// activate
 export const SKIP_LOADING = new HttpContextToken<boolean>(() => false);
 
+// interceptor that increments a number in the loading service for every
+// request and then decrements the same number once the request completes
 export const loadingInterceptor: HttpInterceptorFn = (request, next) => {
   const loadingService = inject(LoadingService);
 

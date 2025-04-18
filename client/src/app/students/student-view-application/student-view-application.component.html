@@ -72,9 +72,18 @@
     @if (applicationData$ | async; as application) {
       <section class="buttons-container">
         @if (application.status === "Pending") {
-          <button mat-raised-button color="primary" class="accept-button">
+          <a
+            mat-raised-button
+            color="primary"
+            [routerLink]="[
+              '/student/modify-application',
+              application.professorEmail,
+              application.opportunityId,
+              application._id,
+            ]"
+          >
             Modify Application
-          </button>
+          </a>
         }
         <button
           mat-raised-button

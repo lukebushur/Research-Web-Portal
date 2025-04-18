@@ -165,13 +165,11 @@ describe('StudentViewProjectComponent', () => {
     const navigateSpy = spyOn(router, 'navigate');
     component.apply();
 
-    expect(navigateSpy).toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
-      queryParams: {
-        profName: projectData.professorName,
-        profEmail: professorEmail,
-        oppId: projectId
-      }
-    });
+    expect(navigateSpy).toHaveBeenCalledOnceWith([
+      '/student/apply-to-project',
+      professorEmail,
+      projectId,
+    ]);
   });
 
   it('back button should navigate back', () => {

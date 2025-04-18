@@ -36,6 +36,7 @@ export class EditProfileScreenComponent implements OnInit {
 
   accountType: number = 1;
 
+  // FormGroup that shows the inputs that will be on the page along with the validators
   editProfileForm = new FormGroup({
     name: new FormControl('', [
       Validators.required,
@@ -62,10 +63,12 @@ export class EditProfileScreenComponent implements OnInit {
     private snackbar: MatSnackBar
   ) { }
 
+  // initialize the form with the user's previously-entered profile information
   ngOnInit(): void {
     this.updateForm();
   }
 
+  // navigate to the forgot-password page
   navigateToEmailResetScreen() {
     this.router.navigate(['/forgot-password']);
   }
@@ -107,7 +110,12 @@ export class EditProfileScreenComponent implements OnInit {
     return '';
   }
 
+  // update the form, including possible university majors and profile information
   updateForm(): void {
+    // Majors offered is dependent on university. Therefore, whenever the
+    // selected university changes, and the selected university is different
+    // from the previously selected unversity, make a request to update the
+    // dropdown list of possible majors that the user can choose from.
     if (!this.prevSelectedUniversity || this.prevSelectedUniversity !== this.editProfileForm.get('universityLocation')?.value) {
       this.majors = [];
       this.prevSelectedUniversity = this.editProfileForm.get('universityLocation')?.value;
@@ -126,6 +134,8 @@ export class EditProfileScreenComponent implements OnInit {
       });
     }
 
+    // get the user's profile information and update the form initial values
+    // based on the retrieved data
     this.userProfileService.getAccountInfo().subscribe({
       next: (data: any) => {
         const accountInfo = data.success.accountData;
@@ -150,6 +160,7 @@ export class EditProfileScreenComponent implements OnInit {
     });
   }
 
+  // submit profile changes through request to the back end
   onSubmit() {
     this.userProfileService.submitProfileChanges(this.editProfileForm.value).subscribe({
       next: (data: any) => {

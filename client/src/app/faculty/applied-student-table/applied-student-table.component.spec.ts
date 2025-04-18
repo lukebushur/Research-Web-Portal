@@ -16,6 +16,9 @@ import { MatSortHarness } from '@angular/material/sort/testing';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
 import { FacultyService } from '../faculty-service/faculty.service';
 import { of } from 'rxjs';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
+import { MatDialogHarness } from '@angular/material/dialog/testing';
 
 describe('AppliedStudentTableComponent', () => {
   let component: AppliedStudentTableComponent;
@@ -109,7 +112,7 @@ describe('AppliedStudentTableComponent', () => {
       ]
     });
     fixture = TestBed.createComponent(AppliedStudentTableComponent);
-    loader = TestbedHarnessEnvironment.loader(fixture);
+    loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
     component = fixture.componentInstance;
     component.project = null;
     fixture.detectChanges();
@@ -276,32 +279,41 @@ describe('AppliedStudentTableComponent', () => {
     }
   });
 
-  // it('should open ConfirmationDialogComponent', async () => {
-  //   component.project = projectData;
-  //   component.ngOnChanges({
-  //     project: new SimpleChange(null, projectData, false),
-  //   });
-  //   // const outputSpy = spyOn(component.applicationUpdateEvent, 'emit');
-  //   spyOn(component.dialog, 'open').and.callThrough();
+  it('should open ConfirmationDialogComponent', async () => {
+    component.project = projectData;
+    component.ngOnChanges({
+      project: new SimpleChange(null, projectData, false),
+    });
 
-  //   const table = await loader.getHarness(MatTableHarness);
-  //   const tableRows = await table.getRows();
-  //   const pendingAppCells = await tableRows[0].getCells();
-  //   // expect(await pendingAppCells[4].hasHarness(MatButtonHarness)).toBeTrue();
-  //   // const acceptAppButton = await pendingAppCells[4].getHarness(MatButtonHarness);
+    spyOn(component.dialog, 'open').and.callThrough();
 
-  // await acceptAppButton.click();
-  //   expect(facultyService.applicationDecide).toHaveBeenCalledOnceWith(
-  //     projectData.applications[0].application,
-  //     projectData.id,
-  //     'Accept'
-  //   );
-  //   expect(outputSpy).toHaveBeenCalledOnceWith(projectData.number);
+    const table = await loader.getHarness(MatTableHarness);
+    const tableRows = await table.getRows();
+    const pendingAppCells = await tableRows[0].getCells();
 
-  //await acceptAppButton.click();
-  // expect(component.dialog.open).toHaveBeenCalledOnceWith(ConfirmationDialogComponent, {
-  // data: {
-  //    message: 'accept this user?'
-  //  }
-  // });
+    expect(await pendingAppCells[4].hasHarness(MatButtonHarness)).toBeTrue();
+    const acceptAppButton = await pendingAppCells[4].getHarness(MatButtonHarness);
+    await acceptAppButton.click();
+
+    expect(component.dialog.open).toHaveBeenCalledOnceWith(ConfirmationDialogComponent, {
+      data: {
+        message: 'accept this user?'
+      }
+    });
+
+    const dialog = await loader.getHarness(MatDialogHarness);
+    expect(await dialog.getContentText()).toContain('accept this user?');
+
+    const dialogButtons = await dialog.getAllHarnesses(MatButtonHarness);
+    expect(dialogButtons.length).toBe(2)
+
+    const confirmButton = dialogButtons[0];
+    await confirmButton.click();
+
+    expect(facultyService.applicationDecide).toHaveBeenCalledOnceWith(
+      projectData.applications[0].application,
+      projectData.id,
+      'Accept'
+    );
+  });
 });

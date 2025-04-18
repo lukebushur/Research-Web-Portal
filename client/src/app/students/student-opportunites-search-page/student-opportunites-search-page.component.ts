@@ -188,15 +188,11 @@ export class StudentOpportunitesSearchPageComponent {
   // Apply to opportunity
   applyToOpportunity(opportunity: any): void {
     // Navigate the student to the apply-to-project page
-    this.router.navigate(['/student/apply-to-project'], {
-      queryParams: {
-        // Pass the professor information and opportunity ID as query parameters
-        // to the apply-to-project page
-        profName: opportunity.professorName,
-        profEmail: opportunity.professorEmail,
-        oppId: opportunity._id,
-      }
-    });
+    this.router.navigate([
+      '/student/apply-to-project',
+      opportunity.professorEmail,
+      opportunity._id,
+    ]);
   }
 
   // Filter opportunities

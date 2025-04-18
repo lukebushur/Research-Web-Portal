@@ -83,14 +83,11 @@ export class StudentDashboard {
   // This function is called when the student clicks on the apply button
   applyToOpportunity(opportunity: any): void {
     // Navigate the student to the apply-to-project page
-    this.router.navigate(['/student/apply-to-project'], {
-      queryParams: {
-        // Pass the opportunity information to the apply-to-project page
-        profName: opportunity.professorName,
-        profEmail: opportunity.professorEmail,
-        oppId: opportunity._id,
-      }
-    });
+    this.router.navigate([
+      '/student/apply-to-project',
+      opportunity.professorEmail,
+      opportunity._id,
+    ]);
   }
 
   // Search opportunities
