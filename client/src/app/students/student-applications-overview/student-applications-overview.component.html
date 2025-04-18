@@ -120,14 +120,12 @@
               mat-icon-button
               color="black"
               [disabled]="application.status !== 'Pending'"
-              [routerLink]="
-                '/student/modify-application/' + application.applicationID
-              "
-              [queryParams]="{
-                profName: application.projectSponsor,
-                profEmail: application.professorEmail,
-                oppId: application.opportunityId,
-              }"
+              [routerLink]="[
+                '/student/modify-application',
+                application.professorEmail,
+                application.opportunityId,
+                application.applicationID,
+              ]"
               matTooltip="Modify Application"
               aria-label="Modify application"
             >

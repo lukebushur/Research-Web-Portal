@@ -77,13 +77,11 @@ export class StudentViewProjectComponent implements OnInit {
   // After clicking the apply button, navigate to the apply-to-project page
   // with the corresponding query parameters.
   apply() {
-    this.router.navigate(['/student/apply-to-project'], {
-      queryParams: {
-        profName: this.projectData$.getValue()!.professorName,
-        profEmail: this.professorEmail,
-        oppId: this.projectId
-      }
-    });
+    this.router.navigate([
+      '/student/apply-to-project',
+      this.professorEmail,
+      this.projectId,
+    ]);
   }
 
   // Send the user back

@@ -189,14 +189,10 @@ describe('StudentDashboard', () => {
     await button.click();
 
     // Make sure it navigates you to the right place
-    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
-      queryParams: {
-        // Pass the opportunity information to the apply-to-project page
-        profName: testProjectData.professorName,
-        profEmail: testProjectData.professorEmail,
-        oppId: testProjectData._id,
-      }
-    });
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith([
+      '/student/apply-to-project',
+      testProjectData.professorEmail,
+      testProjectData._id,
+    ]);
   });
-
 });

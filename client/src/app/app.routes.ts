@@ -71,10 +71,10 @@ const routeConfig: Routes = [
           { path: 'dashboard', component: StudentDashboard },
           // used to search the full list of all projects available for students
           { path: 'search-projects', component: StudentOpportunitesSearchPageComponent },
-          // 3 query parameters: professor name, professor email, and project ID
-          { path: 'apply-to-project', component: ApplyToPostComponent },
-          // 1 route parameter for the application ID of the application
-          { path: 'modify-application/:applicationId', component: ApplyToPostComponent },
+          // 2 route parameters: professor email and project ID
+          { path: 'apply-to-project/:professorEmail/:projectId', component: ApplyToPostComponent },
+          // 3 route parameters: professor email, project ID, application ID
+          { path: 'modify-application/:professorEmail/:projectId/:applicationId', component: ApplyToPostComponent },
           // 1 route parameters for the application ID of the application to view
           // This route is to view a student's application to a project
           { path: 'view-application/:applicationID', component: StudentViewApplicationComponent },

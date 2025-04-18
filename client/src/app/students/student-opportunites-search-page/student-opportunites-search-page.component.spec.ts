@@ -208,14 +208,11 @@ describe('StudentOpportunitesSearchPageComponent', () => {
     // Click the button
     buttonDebugElement.triggerEventHandler('click', null)
     // Check that the function was called with the correct parameters
-    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith(['/student/apply-to-project'], {
-      queryParams: {
-        // Pass the opportunity information to the apply-to-project page
-        profName: testProjectData.professorName,
-        profEmail: testProjectData.professorEmail,
-        oppId: testProjectData._id,
-      }
-    });
+    expect(router.navigate).withContext('navigate called').toHaveBeenCalledOnceWith([
+      '/student/apply-to-project',
+      testProjectData.professorEmail,
+      testProjectData._id,
+    ]);
   })
 
   it('should provide filter opportunities by some example searches', () => {

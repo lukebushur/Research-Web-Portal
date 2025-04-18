@@ -102,11 +102,10 @@ export class ApplyToPostComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.professorEmail = this.route.snapshot.paramMap.get('professorEmail')!;
+    this.projectId = this.route.snapshot.paramMap.get('projectId')!;
+
     this.applicationId = this.route.snapshot.paramMap.get('applicationId');
-
-    this.professorEmail = this.route.snapshot.queryParamMap.get('profEmail')!;
-    this.projectId = this.route.snapshot.queryParamMap.get('oppId')!;
-
     this.isCreate = !this.applicationId;
 
     this.applyInit();

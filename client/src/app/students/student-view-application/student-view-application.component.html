@@ -75,14 +75,12 @@
           <a
             mat-raised-button
             color="primary"
-            [routerLink]="
-              '/student/modify-application/' + application._id
-            "
-            [queryParams]="{
-              profName: project.projectName,
-              profEmail: application.professorEmail,
-              oppId: application.opportunityId,
-            }"
+            [routerLink]="[
+              '/student/modify-application',
+              application.professorEmail,
+              application.opportunityId,
+              application._id,
+            ]"
           >
             Modify Application
           </a>
