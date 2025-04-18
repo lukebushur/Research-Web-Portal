@@ -1,0 +1,82 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/$AWS_ECR_REPO_ID
+      - IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+
+  build:
+    commands:
+      - echo Building server image...
+      - docker build -t public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/server:$IMAGE_TAG -f server/Dockerfile ./server
+      - docker tag public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/server:$IMAGE_TAG public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/server:latest
+
+      - echo Building client image...
+      - docker build -t public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:$IMAGE_TAG -f client/Dockerfile ./client
+      - docker tag public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:$IMAGE_TAG public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:latest
+
+  post_build:
+    commands:
+      - echo Pushing images to ECR...
+      - docker push public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/server:$IMAGE_TAG
+      - docker push public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/server:latest
+      - docker push public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:$IMAGE_TAG
+      - docker push public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:latest
+
+      # Create or update ECS task definitions using templates (<CLIENT OR SERVER>-task-definition-template.json)
+      - echo Creating or updating the ECS task definition...
+      - |
+        sed -e "s|<SERVER_IMAGE_TAG>|public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/server:$IMAGE_TAG|g" \
+            -e "s|<REGION>|$AWS_REGION|g" \
+            -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
+            -e "s|<SECRET_ENV_PATH>|$AWS_SECRET_ENV_PATH|g" \
+            -e "s|<TASK_ROLE>|$AWS_TASK_ROLE|g" \
+            -e "s|<EXECUTION_ROLE>|$AWS_EXECUTION_ROLE|g" \
+            aws/dev/backend-dev-task-definition-template.json > aws/dev/backend-dev-final-task-definition.json
+      - |
+        sed -e "s|<CLIENT_IMAGE_TAG>|public.ecr.aws/$AWS_ECR_REPO_ID/rwp-dev/client:$IMAGE_TAG|g" \
+            -e "s|<REGION>|$AWS_REGION|g" \
+            -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
+            -e "s|<EXECUTION_ROLE>|$AWS_EXECUTION_ROLE|g" \
+            aws/dev/frontend-dev-task-definition-template.json > aws/dev/frontend-dev-final-task-definition.json
+
+      # Register the updated task definitions with ECS
+      - aws ecs register-task-definition --family back-end-dev --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
+      - aws ecs register-task-definition --family front-end-dev --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
+
+      # Update the ECS services to use the new task definitions
+      - echo Updating ECS service...
+      - ecs_backend_service_name="back-end-service"
+      - ecs_frontend_service_name="front-end-service"
+      - ecs_cluster_name="TestCluster"
+
+      # Create back-end service if it does not exist. If it does, update it
+      - echo Checking if ECS Back End service exists...
+      - if aws ecs describe-services --cluster $ecs_cluster_name --services $ecs_backend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
+          echo "Service exists. Updating service...";
+          backend_new_task_revision=$(aws ecs describe-task-definition --task-definition back-end-dev --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ecs_cluster_name --service $ecs_backend_service_name --task-definition back-end-dev:$backend_new_task_revision;
+        else
+          echo "Service does not exist. Creating new service...";
+          aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_backend_service_name --task-definition back-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+        fi
+
+      # Create front-end service if it does not exist. If it does, update it
+      - echo Checking if ECS Front End service exists...
+      - if aws ecs describe-services --cluster $ecs_cluster_name --services $ecs_frontend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
+          echo "Service exists. Updating service...";
+          frontend_new_task_revision=$(aws ecs describe-task-definition --task-definition front-end-dev --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ecs_cluster_name --service $ecs_frontend_service_name --task-definition front-end-dev:$frontend_new_task_revision;
+        else
+          echo "Service does not exist. Creating new service...";
+          aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_frontend_service_name --task-definition front-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+        fi
+
+artifacts:
+  files:
+    - aws/dev/backend-dev-task-definition-template.json
+    - aws/dev/backend-dev-final-task-definition.json
+    - aws/dev/frontend-dev-task-definition-template.json
+    - aws/dev/frontend-dev-final-task-definition.json
