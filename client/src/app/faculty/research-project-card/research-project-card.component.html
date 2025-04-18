@@ -1,0 +1,70 @@
+<mat-card
+  class="project-card"
+  [style.background-color]="selected ? '#ebd99f' : 'white'"
+>
+  <mat-card-title class="project-card-title">
+    <a
+      class="project-name"
+      routerLink="/faculty/view-project/{{ project.projectType }}/{{
+        project.id
+      }}"
+      [matTooltip]="project.projectName"
+    >
+      {{ project.projectName }}
+    </a>
+  </mat-card-title>
+  <mat-card-content>
+    @if (project.posted) {
+      <p>Posted: {{ project.posted | date: "short" }}</p>
+    } @else {
+      <p>Posted: TBD</p>
+    }
+    @if (project.deadline) {
+      <p>Deadline: {{ project.deadline | date: "short" }}</p>
+    } @else {
+      <p>Deadline: TBD</p>
+    }
+    <p>Number of Applicants: {{ project.numApp }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <div class="action-buttons">
+      @if (project.projectType === "active") {
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="buttonUpdateProject()"
+        >
+          Update
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="buttonArchiveProject()"
+        >
+          Archive
+        </button>
+      } @else if (project.projectType === "draft") {
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="buttonUpdateProject()"
+        >
+          Update
+        </button>
+        <button mat-raised-button color="accent">Publish</button>
+      } @else if (project.projectType === "archived") {
+        <button
+          class="unarchive-button"
+          mat-raised-button
+          color="primary"
+          (click)="buttonUnArchiveProject()"
+        >
+          Unarchive
+        </button>
+      }
+      <button mat-raised-button color="warn" (click)="buttonDeleteProject()">
+        Delete
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,66 @@
+.page-container {
+    margin: 0 15%;
+}
+
+.page-title {
+    margin: 20px 0;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 500;
+}
+
+.mat-expansion-panel {
+    background-color: #eee;
+}
+
+.align-headers .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-card {
+    margin-bottom: 12px;
+}
+
+h2.application-title {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: 8px;
+}
+
+.status-text {
+    border-radius: 8px;
+    padding: 8px;
+    color: white;
+}
+
+.accept {
+    background-color: green;
+}
+
+.pending {
+    background-color: goldenrod;
+}
+
+.reject {
+    background-color: red;
+}
+
+div.date {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 4px;
+    margin-top: 20px;
+}
+
+.buttons-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+}

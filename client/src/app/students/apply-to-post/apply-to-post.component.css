@@ -1,0 +1,61 @@
+main {
+    margin: 0px 15%;
+    height: max-content;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+
+h1,
+h2 {
+    font-weight: 500;
+}
+
+.stepper {
+    background-color: #eee;
+    box-shadow: var(--mdc-elevated-card-container-elevation);
+}
+
+.space-above {
+    margin-top: 20px;
+}
+
+.details-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: end;
+}
+
+.question-title {
+    font-size: 1.25em;
+}
+
+.question-card {
+    margin-bottom: 20px;
+}
+
+.red {
+    color: red;
+}
+
+.radio-group,
+.checkbox-group {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.text-response {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}

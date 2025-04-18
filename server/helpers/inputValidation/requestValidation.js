@@ -108,6 +108,11 @@ const facultyAccountModification = joi.object({
     "universityLocation": joi.string().min(2).max(86),
 });
 
+const industryAccountModification = joi.object({
+    name: joi.string().min(2).max(25),
+    universityLocation: joi.string().min(2).max(86),
+});
+
 const jobSchema = joi.object({
     employer: joi.string().required(),
     title: joi.string().required(),
@@ -146,6 +151,7 @@ export {
     adminMajors,
     studentAccountModification,
     facultyAccountModification,
+    industryAccountModification,
     jobSchema,
     resetPasswordSchema,
 };

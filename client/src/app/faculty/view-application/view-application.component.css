@@ -1,0 +1,66 @@
+.page-container {
+    margin: 0 15% 20px;
+}
+
+.page-heading {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 500;
+}
+
+.mat-expansion-panel {
+    background-color: #eee;
+}
+
+.align-headers .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-card {
+    margin-bottom: 12px;
+}
+
+article.applicant-info {
+    line-height: 2em;
+}
+
+article.applicant-info p {
+    line-height: 1.5em;
+}
+
+.applicant-title {
+    margin-bottom: 12px;
+}
+
+.applicant-icon-field {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 4px;
+}
+
+.space-after {
+    margin-bottom: 12px;
+}
+
+h3.larger {
+    font-size: 1.5em;
+}
+
+.application-status {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bottom-status {
+    margin: 0 auto;
+}

@@ -1,0 +1,39 @@
+.root-container {
+    display: flex;
+    justify-content: center;
+}
+
+.centerDivStyles {
+    margin: 70px auto 0;
+    padding: 20px;
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 20em;
+    max-width: 80%;
+    text-align: center;
+}
+
+.centerDivStyles h2 {
+    font-weight: 500;
+}
+
+.form-field {
+    margin: 0.3em auto;
+    width: 100%;
+}
+
+.submit-button {
+    margin-top: 0.3em;
+}
+
+.custom-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.custom-link:hover {
+    color: darkblue;
+}

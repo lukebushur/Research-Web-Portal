@@ -28,6 +28,8 @@ let projectID, //id of the first active project
     student_removeID, //id of the student user to be removed
     student_access_token; //access token of the token to be used to ensure the routes cannot be used by a student user
 
+let untrackedActiveProjectsId, finalDraftProjectsId;
+
 //randomly generated password, name, and email
 const randomPass = Math.random().toString(36).substring(0).repeat(2);
 const randomName = Math.random().toString(36).substring(2);
@@ -943,6 +945,8 @@ describe('BE-AAP-6 : PUT /api/projects/archiveProject', () => {
 //BE-AAP-7 : A second archive project request, this should create a second archived project in the existing archive project record
 describe('BE-AAP-7 : PUT /api/projects/archiveProject', () => {
     after(async () => { //grabs the project record ID and draft record ID
+        const user = await User.findOne({ email: randomEmail });
+        untrackedActiveProjectsId = user.userType.FacultyProjects.Active;
         await User.updateOne({ email: randomEmail }, {$unset: {"userType.FacultyProjects.Active": ""}});
     });
 
@@ -1577,10 +1581,14 @@ describe('BE-GSP-5 : POST /api/projects/getProject', () => {
                 expect(res.body.success).to.have.property('status').to.equal(200);
                 expect(res.body.success).to.have.property('message').to.equal('PROJECT_FOUND');
                 expect(res.body.success).to.have.property('project');
-                expect(res.body.success.project).to.have.property('projectName').to.equal("Bioinformatics Project");
+                expect(res.body.success.project).to.have.property('projectName').to.equal('Bioinformatics Project');
                 expect(res.body.success.project).to.have.property('questions');
-                expect(res.body.success.project).to.have.property('description').to.equal("We will be eating frogs!");
-                expect(res.body.success.project).to.have.property('deadline').to.equal("Thu Jan 18 2024");
+                expect(res.body.success.project).to.have.property('description').to.equal('We will be eating frogs!');
+                expect(res.body.success.project).to.have.property('deadline')
+                const deadline = new Date(res.body.success.project.deadline);
+                expect(deadline.getFullYear()).to.equal(2024);
+                expect(deadline.getMonth()).to.equal(0);
+                expect(deadline.getDate()).to.equal(18);
                 done();
             })
     });
@@ -1612,6 +1620,7 @@ describe('BE-DP-6.1 : POST /api/projects/createProject', () => {
         let user = await User.findOne({ email: randomEmail });
         let draftProjects = await Project.findOne({ _id: user.userType.FacultyProjects.Draft });
         draftID = draftProjects.projects[0].id;
+        finalDraftProjectsId = draftProjects._id;
     });
 
     it('should return a successful draft project creation response', (done) => {
@@ -1726,7 +1735,7 @@ describe('BE-UP-7 + BE-DP- GET /api/projects/getProjects', () => {
 });
 
 //BE-GSP-1 : Retrieve a singular archived project but with a student access token
-describe('BE-GSP-5 : POST /api/projects/getProject', () => {
+describe('BE-GSP-1 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
         request.execute(server)
             .post('/api/projects/getProject')
@@ -1784,7 +1793,7 @@ describe('BE-GSP-2.2 : POST /api/projects/getProject', () => {
 });
 
 //BE-GSP-3.1 : Retrieve a singular archived project but with invalid projectType
-describe('BE-GSP-2.1 : POST /api/projects/getProject', () => {
+describe('BE-GSP-3.1 : POST /api/projects/getProject', () => {
     it('Should return a failed project retrieval response due to a student access token', (done) => {
         request.execute(server)
             .post('/api/projects/getProject')
@@ -1832,6 +1841,8 @@ after(async () => {
             Project.deleteOne({ _id: projectRecordID }),
             Project.deleteOne({ _id: draftRecordID }),
             Project.deleteOne({ _id: archiveRecordID }),
+            Project.deleteOne({ _id: untrackedActiveProjectsId }),
+            Project.deleteOne({ _id: finalDraftProjectsId }),
             Majors.deleteOne({ location: "Test University" })
         ];
 
