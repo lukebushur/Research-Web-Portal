@@ -17,8 +17,7 @@ import accountManagment from './routes/accountManagementRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 
 import generateRes from './helpers/generateJSON.js';
-
-import { dbConnect } from './config/db-config.js';
+import dbConnect from './config/db-config.js';
 
 app.set('trust proxy', '127.0.0.1');
 app.use(cors());
@@ -50,9 +49,7 @@ const port = process.env.PORT || 5000;
 //This code determines if the server should access the unittest collection of the mongodb server/cluster for unit testing.
 //It is determined by the arguments, which the 3rd should equal 'unitTests/**/*.js' if npm test is ran. 
 
-const environment = process.env.NODE_ENV || 'production';
-
-dbConnect(environment).then(() => {
+await dbConnect().then(() => {
     app.listen(port, () => {
         console.log('Listening on port ' + port);
     });
