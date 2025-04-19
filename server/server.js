@@ -18,6 +18,8 @@ import searchRoutes from './routes/searchRoutes.js';
 
 import generateRes from './helpers/generateJSON.js';
 
+import { dbConnect } from './config/db-config.js';
+
 app.set('trust proxy', '127.0.0.1');
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -50,24 +52,13 @@ const port = process.env.PORT || 5000;
 
 const environment = process.env.NODE_ENV || 'production';
 
-//This code here sets up the database connection, if noTest is false it accesses the unit testing collection.
-async function dbConnect() { 
-    const db = environment === 'production'
-        ? process.env.DB_DEV_COLLECTION
-        : process.env.DB_UNIT_TEST_COLLECTION;
-    const dbUri = process.env.DB_URI + db;
-    await mongoose.connect(dbUri, {
-        autoIndex: true,
-    }).then(() => {
-        app.listen(port, () => {
-            console.log('Listening on port ' + port);
-        });
-    }).catch((err) => {
-        console.log(err);
+dbConnect(environment).then(() => {
+    app.listen(port, () => {
+        console.log('Listening on port ' + port);
     });
-}
-
-dbConnect();
+}).catch((err) => {
+    console.log('Error connecting to database', err);
+});;
 
 process.on('SIGINT', () => {
     mongoose.connection.close();
