@@ -20,7 +20,7 @@ let adminRecordID, //id of the admin account
 //Basic register request for the faculty, should return a success response
 describe('POST /api/login', () => {
     after(async () => { //grabs the project record ID and draft record ID
-        let user = await User.findOne({ email: process.env.UNITTESTEMAIL });
+        let user = await User.findOne({ email: process.env.TEST_ADMIN_EMAIL });
         majorsLocation = user.universityLocation;
     });
 
@@ -28,7 +28,7 @@ describe('POST /api/login', () => {
         request.execute(server)
             .post('/api/login')
             .send({
-                "email": process.env.UNITTESTEMAIL, "password": process.env.UNITTESTPASS,
+                "email": process.env.TEST_ADMIN_EMAIL, "password": process.env.TEST_ADMIN_PASS,
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
