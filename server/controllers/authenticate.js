@@ -305,7 +305,7 @@ const generateExpiredToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1s' })
+    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '0ms' })
 }
 //This function generates a refresh token 
 const generateRefreshToken = (id, email, uName) => {
@@ -323,7 +323,7 @@ const generateExpiredRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '1s' });
+    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '0ms' });
 }
 
 /*  This function handles the refresh token addition to the database. This function takes a user record and a refreshtoken and adds the refreshtoken to the 
