@@ -133,7 +133,7 @@ const register = async (req, res) => {
                 },
             });
             //send the confirmation to the user
-            await sendEmailConfirmation(user);
+            await sendEmailConfirmation(user, req.app.get('transport'));
             //indicate registeration was successful
             res.status(200).header().json(
                 generateRes(true, 200, "REGISTER_SUCCESS", {
@@ -274,15 +274,7 @@ const getAvailableMajors = async (req, res) => {
 //Helper methods
 
 //This helper method send the email confirmation link through the email
-const sendEmailConfirmation = async (user) => {
-    let transport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
-    
+const sendEmailConfirmation = async (user, transport) => {
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,

@@ -7,6 +7,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
+import getTransporter from './config/email-config.js';
+
 //These objects import the routes from their respective files
 import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectsRoutes.js';
@@ -23,6 +25,9 @@ app.set('trust proxy', '127.0.0.1');
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+const mailTransport = getTransporter();
+app.set('transport', mailTransport);
 
 //These statements map the routes to endpoints, each new endpoint needs to be unique, i.e. there should not be two 
 //app.use() statements with '/api', 
