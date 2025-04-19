@@ -49,10 +49,14 @@ const login = async (req, res) => {
                         return;
                     }
                 } else {
+                    console.log('here1');
+                    
                     res.status(403).json(generateRes(false, 403, "INVALID_PASSWORD", {}));
                     return;
                 }
             } else {
+                console.log('here2');
+
                 res.status(403).json(generateRes(false, 403, "INVALID_EMAIL", {}));
                 return;
             }
