@@ -4,7 +4,7 @@
 */
 
 import { expect, use } from 'chai';
-import { default as chaiHttp, request} from 'chai-http';
+import { default as chaiHttp, request } from 'chai-http';
 
 import server from '../server.js';
 import User from '../models/user.js';
@@ -18,6 +18,11 @@ let adminRecordID, //id of the admin account
     admin_access_token; //access token of admin
 
 //Basic register request for the faculty, should return a success response
+
+before(function (done) {
+    setTimeout(done, 3000);
+});
+
 describe('POST /api/login', () => {
     after(async () => { //grabs the project record ID and draft record ID
         let user = await User.findOne({ email: process.env.TEST_ADMIN_EMAIL });
