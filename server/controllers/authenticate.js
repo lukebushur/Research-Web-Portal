@@ -31,7 +31,8 @@ const login = async (req, res) => {
             if (user) {
                 //Check if the password is correct against the hashed password in the db, otherwise sends error response
                 const validatePassword = await bcrypt.compare(req.body.password, user.password);
-
+                console.log(req.body.password, user.password);
+                
                 if (validatePassword) {
                     //Generate Access and refresh tokens
                     const accessToken = generateAccessToken(user.id, user.email, user.name);
