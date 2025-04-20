@@ -28,8 +28,29 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - name: "Move to server dir, Create env file, Install dependencies, Run tests"
+        env:
+          PORT: ${{ secrets.PORT }}
+          DB_URI: ${{ secrets.DB_URI }}
+          DB_DEV_COLLECTION: ${{ secrets.DB_DEV_COLLECTION }}
+          DB_TEST_COLLECTION: ${{ secrets.DB_TEST_COLLECTION }}
+          SECRET_REFRESH_TOKEN: ${{ secrets.SECRET_REFRESH_TOKEN }}
+          REFRESH_TOKEN_EXPIRY: ${{ secrets.REFRESH_TOKEN_EXPIRY }}
+          SECRET_ACCESS_TOKEN: ${{ secrets.SECRET_ACCESS_TOKEN }}
+          ACCESS_TOKEN_EXPIRY: ${{ secrets.ACCESS_TOKEN_EXPIRY }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          FRONT_END_IP: ${{ secrets.FRONT_END_IP }}
+          ADMIN: ${{ secrets.ADMIN }}
+          STUDENT: ${{ secrets.STUDENT }}
+          FACULTY: ${{ secrets.FACULTY }}
+          INDUSTRY: ${{ secrets.INDUSTRY }}
+          TEST_ADMIN_EMAIL: ${{ secrets.TEST_ADMIN_EMAIL }}
+          TEST_ADMIN_PASS: ${{ secrets.TEST_ADMIN_PASS }}
+          TEST_ADMIN_PASS_HASHED: ${{ secrets.TEST_ADMIN_PASS_HASHED }}
+          TEST_EMAIL_NAME: ${{ secrets.TEST_EMAIL_NAME }}
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_EMAIL_PASS: ${{ secrets.TEST_EMAIL_PASS }}
         run: |
           cd server
-          echo "${{ secrets.ENV }}" > .env
           npm install
           npm test
