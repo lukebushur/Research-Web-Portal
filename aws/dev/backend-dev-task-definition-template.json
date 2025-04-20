@@ -33,8 +33,8 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
         },
         {
-          "name": "DB_UNIT_TEST_COLLECTION",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_UNIT_TEST_COLLECTION::"
+          "name": "DB_TEST_COLLECTION",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_TEST_COLLECTION::"
         },
         {
           "name": "DB_URI",
@@ -81,12 +81,28 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:STUDENT::"
         },
         {
-          "name": "UNITTESTEMAIL",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:UNITTESTEMAIL::"
+          "name": "TEST_ADMIN_EMAIL",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_ADMIN_EMAIL::"
         },
         {
-          "name": "UNITTESTPASS",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:UNITTESTPASS::"
+          "name": "TEST_ADMIN_PASS",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_ADMIN_PASS::"
+        },
+        {
+          "name": "TEST_ADMIN_PASS_HASHED",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_ADMIN_PASS_HASHED::"
+        },
+        {
+          "name": "TEST_EMAIL_NAME",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_EMAIL_NAME::"
+        },
+        {
+          "name": "TEST_EMAIL",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_EMAIL::"
+        },
+        {
+          "name": "TEST_EMAIL_PASS",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_EMAIL_PASS::"
         }
       ],
       "logConfiguration": {

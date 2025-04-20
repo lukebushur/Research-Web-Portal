@@ -133,7 +133,7 @@ const register = async (req, res) => {
                 },
             });
             //send the confirmation to the user
-            await sendEmailConfirmation(user);
+            await sendEmailConfirmation(user, req.app.get('transport'));
             //indicate registeration was successful
             res.status(200).header().json(
                 generateRes(true, 200, "REGISTER_SUCCESS", {
@@ -274,15 +274,7 @@ const getAvailableMajors = async (req, res) => {
 //Helper methods
 
 //This helper method send the email confirmation link through the email
-const sendEmailConfirmation = async (user) => {
-    let transport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
-    
+const sendEmailConfirmation = async (user, transport) => {
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
@@ -313,7 +305,7 @@ const generateExpiredToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '1s' })
+    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '0ms' })
 }
 //This function generates a refresh token 
 const generateRefreshToken = (id, email, uName) => {
@@ -331,7 +323,7 @@ const generateExpiredRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '1s' });
+    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '0ms' });
 }
 
 /*  This function handles the refresh token addition to the database. This function takes a user record and a refreshtoken and adds the refreshtoken to the 

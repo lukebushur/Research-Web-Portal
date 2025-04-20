@@ -167,7 +167,11 @@ const resetPassword = async (req, res) => {
         }
 
         //sends email to the users notifying them
-        await sendPasswordResetConfirmation({ email: req.body.email, passwordResetToken: passwordResetToken })
+        await sendPasswordResetConfirmation({
+            email: req.body.email,
+            passwordResetToken: passwordResetToken
+        }, req.app.get('transport'));
+
         res.status(200).json(generateRes(true, 200, "PWD_RESET_EMAIL_SENT", {}));
         return;
     } catch (error) {
@@ -316,7 +320,11 @@ const changeEmail = async (req, res) => {
                     },
                 });
 
-                await changeEmailConfirmation({ email: user.email, emailToken: changeEmailToken });
+                await changeEmailConfirmation({
+                    email: user.email,
+                    emailToken: changeEmailToken,
+                }, req.app.get('transport'));
+
                 res.status(200).json(generateRes(true, 200, "CHANGE_EMAIL_SENT", {}));
                 return;
             } else {
@@ -337,15 +345,7 @@ const changeEmail = async (req, res) => {
     account is set up to properly handle such a request (and maybe they have a valid access token)
 */
 
-const sendPasswordResetConfirmation = async (user) => {
-    let transport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
-
+const sendPasswordResetConfirmation = async (user, transport) => {
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
@@ -363,15 +363,7 @@ const sendPasswordResetConfirmation = async (user) => {
     });
 };
 
-const changeEmailConfirmation = async (user) => {
-    let transport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
-
+const changeEmailConfirmation = async (user, transport) => {
     let mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
