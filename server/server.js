@@ -60,7 +60,7 @@ await dbConnect().then(() => {
     });
 }).catch((err) => {
     console.log('Error connecting to database', err);
-});;
+});
 
 process.on('SIGINT', () => {
     mongoose.connection.close();

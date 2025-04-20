@@ -31,8 +31,6 @@ const login = async (req, res) => {
             if (user) {
                 //Check if the password is correct against the hashed password in the db, otherwise sends error response
                 const validatePassword = await bcrypt.compare(req.body.password, user.password);
-                console.log(req.body.password, user.password);
-                
                 if (validatePassword) {
                     //Generate Access and refresh tokens
                     const accessToken = generateAccessToken(user.id, user.email, user.name);
@@ -50,14 +48,10 @@ const login = async (req, res) => {
                         return;
                     }
                 } else {
-                    console.log('here1');
-                    
                     res.status(403).json(generateRes(false, 403, "INVALID_PASSWORD", {}));
                     return;
                 }
             } else {
-                console.log('here2');
-
                 res.status(403).json(generateRes(false, 403, "INVALID_EMAIL", {}));
                 return;
             }
