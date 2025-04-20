@@ -2,12 +2,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: 
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
+    branches:
+      - "*" # matches every branch that doesn't contain a '/'
+      - "*/*" # matches every branch containing a single '/'
+      - "**" # matches every branch
   pull_request:
-    branches:  "main"
+    branches: "main"
 
 jobs:
   build:
@@ -20,16 +20,16 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        cache-dependency-path: server/package-lock.json
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: 'Move to server dir, Create env file, Install dependencies, Run tests'
-      run: |
-        cd server
-        echo "${{ secrets.ENV }}" > .env
-        npm install
-        npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          cache-dependency-path: server/package-lock.json
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: "Move to server dir, Create env file, Install dependencies, Run tests"
+        run: |
+          cd server
+          echo "${{ secrets.ENV }}" > .env
+          npm install
+          npm test
