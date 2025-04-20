@@ -29,7 +29,7 @@ jobs:
           cache: "npm"
       - name: "Move to server dir, Create env file, Install dependencies, Run tests"
         env:
-          PORT: ${{ secrets.PORT }}
+          PORT: ${{ env.PORT }}
           DB_URI: ${{ secrets.DB_URI }}
           DB_DEV_COLLECTION: ${{ secrets.DB_DEV_COLLECTION }}
           DB_TEST_COLLECTION: ${{ secrets.DB_TEST_COLLECTION }}
@@ -40,10 +40,10 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           FRONT_END_IP: ${{ secrets.FRONT_END_IP }}
-          ADMIN: ${{ secrets.ADMIN }}
-          STUDENT: ${{ secrets.STUDENT }}
-          FACULTY: ${{ secrets.FACULTY }}
-          INDUSTRY: ${{ secrets.INDUSTRY }}
+          ADMIN: ${{ env.ADMIN }}
+          STUDENT: ${{ env.STUDENT }}
+          FACULTY: ${{ env.FACULTY }}
+          INDUSTRY: ${{ env.INDUSTRY }}
           TEST_ADMIN_EMAIL: ${{ secrets.TEST_ADMIN_EMAIL }}
           TEST_ADMIN_PASS: ${{ secrets.TEST_ADMIN_PASS }}
           TEST_ADMIN_PASS_HASHED: ${{ secrets.TEST_ADMIN_PASS_HASHED }}
