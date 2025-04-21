@@ -53,8 +53,8 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FACULTY::"
         },
         {
-          "name": "FRONT_END_IP",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FRONT_END_IP::"
+          "name": "FRONT_END_URI",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FRONT_END_URI::"
         },
         {
           "name": "INDUSTRY",

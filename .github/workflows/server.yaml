@@ -39,7 +39,7 @@ jobs:
           ACCESS_TOKEN_EXPIRY: ${{ secrets.ACCESS_TOKEN_EXPIRY }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          FRONT_END_IP: ${{ secrets.FRONT_END_IP }}
+          FRONT_END_URI: ${{ secrets.FRONT_END_URI }}
           ADMIN: ${{ vars.ADMIN }}
           STUDENT: ${{ vars.STUDENT }}
           FACULTY: ${{ vars.FACULTY }}
