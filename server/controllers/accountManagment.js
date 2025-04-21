@@ -352,7 +352,7 @@ const sendPasswordResetConfirmation = async (user, transport) => {
         subject: 'Reset your password',
         html: `
 <p>Click the link below to reset your password:</p>
-<a href="http://${process.env.FRONT_END_IP}/confirm-reset-password/${encodeURIComponent(user.email)}/${user.passwordResetToken}">
+<a href="${process.env.FRONT_END_URI}/confirm-reset-password/${encodeURIComponent(user.email)}/${user.passwordResetToken}">
     Reset Password</a>`
     };
 
@@ -368,7 +368,7 @@ const changeEmailConfirmation = async (user, transport) => {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: 'Reset your password',
-        text: `Click link to confirm your new email change: http://${process.env.FRONT_END_IP}/confirm-email-change/:${user.emailToken}`
+        text: `Click link to confirm your new email change: ${process.env.FRONT_END_URI}/confirm-email-change/:${user.emailToken}`
     };
 
     await transport.sendMail(mailOptions, function (error, info) {

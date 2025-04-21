@@ -280,7 +280,7 @@ const sendEmailConfirmation = async (user, transport) => {
         to: user.email,
         subject: 'Confirmation Email',
         text: 'Click the following link to confirm your email:\n' +
-            `http://${process.env.FRONT_END_IP}/confirm-email/${user._id}/${user.emailToken}`
+            `${process.env.FRONT_END_URI}/confirm-email/${user._id}/${user.emailToken}`
     };
 
     await transport.sendMail(mailOptions, function (error, info) {
