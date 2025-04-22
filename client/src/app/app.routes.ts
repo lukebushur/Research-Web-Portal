@@ -25,15 +25,19 @@ import { ViewApplicationComponent } from './faculty/view-application/view-applic
 import { ViewProjectComponent } from './faculty/view-project/view-project.component';
 import { StudentViewProjectComponent } from './students/student-view-project/student-view-project.component';
 import { NotifyConfirmEmailComponent } from './auth/notify-confirm-email/notify-confirm-email.component';
+import { LandingComponent } from './core/landing/landing.component';
 
 const routeConfig: Routes = [
   {
     path: '',
     component: ToolbarSidenavComponent,
     children: [
+      // NON-AUTHED ROUTES
+      // No authentication required
+      { path: '', component: LandingComponent, pathMatch: 'full' },
+
       // AUTHENTICATION ROUTES
       // Not specific to a user type
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'signup', component: SignupComponent },
       { path: 'login', component: LoginComponent },
       { path: 'notify-confirm-email', component: NotifyConfirmEmailComponent },
