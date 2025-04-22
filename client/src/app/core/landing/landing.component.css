@@ -1,0 +1,24 @@
+.page-container {
+    margin: 70px 5% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 20px;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+.actions {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 8px;
+    align-items: baseline;
+}
+
+.actions p {
+    text-align: end;
+}
