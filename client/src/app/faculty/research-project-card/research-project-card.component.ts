@@ -70,6 +70,20 @@ export class ResearchProjectCardComponent {
     });
   }
 
+  // send publish project request to server on "Publish" button click
+  publishProject(): void {
+    this.facultyService.publishDraft(this.project.id).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          this.projectUpdateEvent.emit(this.project.number);
+        }
+      },
+      error: (err) => {
+        console.error('Error publishing project', err);
+      }
+    });
+  }
+
   buttonUnArchiveProject(): void {
     this.facultyService.unarchiveProject(this.project.id).subscribe({
       next: (data: any) => {

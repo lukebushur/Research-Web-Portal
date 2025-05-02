@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../auth-service/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SignupBody } from '../models/request-bodies';
 import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 interface AccountType {
   value: number;
@@ -32,6 +33,8 @@ interface AccountType {
     MatSelectModule,
     MatOptionModule,
     MatProgressBarModule,
+    RouterLink,
+    MatCheckboxModule,
   ]
 })
 export class SignupComponent {
@@ -39,7 +42,6 @@ export class SignupComponent {
   // Set up the variables for the universityLocation dropdown
   universityLocations: string[] = [
     'Purdue University Fort Wayne',
-    'Purdue University',
   ];
 
   // University that the user previously selected
@@ -91,6 +93,7 @@ export class SignupComponent {
     Major: new FormControl('', [
       Validators.required,
     ]),
+    termsOfService: new FormControl(false, [Validators.requiredTrue])
   })
 
   // Whether the password should be hidden or shown
@@ -207,9 +210,13 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    const data: SignupBody = this.signupForm.value;
+    const data = {
+      ...this.signupForm.value
+    };
+    delete data.termsOfService;
+    const signupData: SignupBody = data;
 
-    this.authService.signup(data).subscribe({
+    this.authService.signup(signupData).subscribe({
       next: (data: any) => {
         if (data.success) {
           // Navigate to notify the user to confirm email

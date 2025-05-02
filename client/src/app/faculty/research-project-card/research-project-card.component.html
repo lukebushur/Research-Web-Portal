@@ -51,7 +51,7 @@
         >
           Update
         </button>
-        <button mat-raised-button color="accent">Publish</button>
+        <button mat-raised-button color="accent" (click)="publishProject()">Publish</button>
       } @else if (project.projectType === "archived") {
         <button
           class="unarchive-button"

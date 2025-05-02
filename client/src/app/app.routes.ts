@@ -26,6 +26,7 @@ import { ViewProjectComponent } from './faculty/view-project/view-project.compon
 import { StudentViewProjectComponent } from './students/student-view-project/student-view-project.component';
 import { NotifyConfirmEmailComponent } from './auth/notify-confirm-email/notify-confirm-email.component';
 import { LandingComponent } from './core/landing/landing.component';
+import { TermsOfServiceComponent } from './auth/terms-of-service/terms-of-service.component';
 
 const routeConfig: Routes = [
   {
@@ -35,6 +36,7 @@ const routeConfig: Routes = [
       // NON-AUTHED ROUTES
       // No authentication required
       { path: '', component: LandingComponent, pathMatch: 'full' },
+      { path: 'terms-of-service', component: TermsOfServiceComponent },
 
       // AUTHENTICATION ROUTES
       // Not specific to a user type

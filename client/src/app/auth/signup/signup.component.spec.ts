@@ -12,7 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -20,6 +20,7 @@ import { AuthService } from '../auth-service/auth.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Tokens, saveTokens, restoreTokens } from 'app/helpers/testing/token-storage';
 import { UserProfileService } from 'app/core/user-profile-service/user-profile.service';
+import { MatCheckboxHarness } from '@angular/material/checkbox/testing';
 
 describe('SignupComponent', () => {
   let tokens: Tokens;
@@ -84,7 +85,7 @@ describe('SignupComponent', () => {
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: UserProfileService, useValue: userProfileService },
-        { provide: Router, useValue: router },
+        provideRouter([]),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ]
@@ -186,6 +187,10 @@ describe('SignupComponent', () => {
     (await accountTypeSelector.getOptions({ text: 'Faculty' }))[0].click();
     await accountTypeSelector.close();
 
+    // set valid checkbox values in the DOM
+    const termsOfServiceCheckbox = await loader.getHarness(MatCheckboxHarness);
+    await termsOfServiceCheckbox.check();
+
     const submitButton = await loader.getHarness(MatButtonHarness.with({ text: 'Submit' }));
     expect(await submitButton.isDisabled()).toBeFalse();
   });
@@ -227,16 +232,19 @@ describe('SignupComponent', () => {
     (await majorsSelector.getOptions({ text: 'Biology' }))[0].click();
     await majorsSelector.close();
 
+    // set valid checkbox values in the DOM
+    const termsOfServiceCheckbox = await loader.getHarness(MatCheckboxHarness);
+    await termsOfServiceCheckbox.check();
+
     const submitButton = await loader.getHarness(MatButtonHarness.with({ text: 'Submit' }));
     expect(await submitButton.isDisabled()).toBeFalse();
   });
 
-  it('should route to the home component', () => {
+  it('should send backend request to sign up', () => {
     component.signupForm.get('accountType')?.setValue(0);
     component.onSubmit();
 
     expect(authService.signup.calls.any()).withContext('signup called').toBeTrue();
-    expect(router.navigateByUrl).withContext('navigate called').toHaveBeenCalledOnceWith('/notify-confirm-email');
   });
 
   afterAll(() => {

@@ -91,7 +91,7 @@ export class FacultyDashboardComponent implements OnInit {
     this.selectedProject$.next(project);
   }
 
-  // this is called whenever a project is archived and deleted
+  // this is called whenever a project is archived, published, or deleted
   // deselects the project if it is the same as the project being deleted and
   // fetches projects from the server again
   updateProjects(projectNumber: number): void {
