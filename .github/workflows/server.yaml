@@ -29,6 +29,7 @@ jobs:
           cache: "npm"
       - name: "Move to server dir, Create env file, Install dependencies, Run tests"
         env:
+          NODE_ENV: ${{ vars.NODE_ENV }}
           PORT: ${{ vars.PORT }}
           DB_URI: ${{ secrets.DB_URI }}
           DB_PROD_COLLECTION: ${{ secrets.DB_PROD_COLLECTION }}
