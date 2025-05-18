@@ -29,13 +29,14 @@ jobs:
           cache: "npm"
       - name: "Move to server dir, Create env file, Install dependencies, Run tests"
         env:
+          NODE_ENV: ${{ vars.NODE_ENV }}
           PORT: ${{ vars.PORT }}
           DB_URI: ${{ secrets.DB_URI }}
+          DB_PROD_COLLECTION: ${{ secrets.DB_PROD_COLLECTION }}
           DB_DEV_COLLECTION: ${{ secrets.DB_DEV_COLLECTION }}
-          DB_TEST_COLLECTION: ${{ secrets.DB_TEST_COLLECTION }}
-          SECRET_REFRESH_TOKEN: ${{ secrets.SECRET_REFRESH_TOKEN }}
+          REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
           REFRESH_TOKEN_EXPIRY: ${{ secrets.REFRESH_TOKEN_EXPIRY }}
-          SECRET_ACCESS_TOKEN: ${{ secrets.SECRET_ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           ACCESS_TOKEN_EXPIRY: ${{ secrets.ACCESS_TOKEN_EXPIRY }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}

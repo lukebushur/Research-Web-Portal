@@ -80,7 +80,7 @@ const searchProjects = async (req, res) => {
         let student;
         let searchResults;
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         const promises = [
             retrieveOrCacheUsers(req, decodeAccessToken.email),

@@ -27,7 +27,7 @@ const applicationValidation = async (req, res, next) => {
     try {
         //First grab the student information, it will be needed to verify the student's GPA, and potentially to get the applications in the getProject method
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         const student = await retrieveOrCacheUsers(req, decodeAccessToken.email); //Get student record
         if (student && student.userType.Type != process.env.STUDENT) { return res.status(401).json(generateRes(false, 401, "UNAUTHORIZED", {})); }
 
@@ -106,7 +106,7 @@ const projectValidation = (mode = "create") => {
         try {
             //Grab information about user account information
             const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-            const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+            const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
             const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
             if (userAccount.userType.Type !== parseInt(process.env.FACULTY)) {

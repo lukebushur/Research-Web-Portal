@@ -27,7 +27,7 @@ const addMajors = async (req, res) => {
 
         //decode the user's access token and then decodes it
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         //grab the adminstrator's account
         let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const majorsSet = new Set(req.body.majors);
@@ -77,7 +77,7 @@ const deleteMajors = async (req, res) => {
 
         //decode the user's access token and then decodes it
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         //grab the adminstrator's account
         let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         //check that the account type is an adminstrator account, other throw a authorized error response
@@ -120,7 +120,7 @@ const replaceMajors = async (req, res) => {
 
         //decode the user's access token and then decodes it
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         //grab the adminstrator's account
         let admin = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         const majorsSet = new Set(req.body.majors);

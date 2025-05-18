@@ -29,12 +29,12 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ADMIN::"
         },
         {
-          "name": "DB_DEV_COLLECTION",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
+          "name": "DB_PROD_COLLECTION",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_PROD_COLLECTION::"
         },
         {
-          "name": "DB_TEST_COLLECTION",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_TEST_COLLECTION::"
+          "name": "DB_DEV_COLLECTION",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
         },
         {
           "name": "DB_URI",
@@ -61,6 +61,10 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:INDUSTRY::"
         },
         {
+          "name": "NODE_ENV",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:NODE_ENV::"
+        },
+        {
           "name": "PORT",
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:PORT::"
         },
@@ -69,12 +73,12 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_EXPIRY::"
         },
         {
-          "name": "SECRET_ACCESS_TOKEN",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:SECRET_ACCESS_TOKEN::"
+          "name": "ACCESS_TOKEN_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ACCESS_TOKEN_SECRET::"
         },
         {
-          "name": "SECRET_REFRESH_TOKEN",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:SECRET_REFRESH_TOKEN::"
+          "name": "REFRESH_TOKEN_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_SECRET::"
         },
         {
           "name": "STUDENT",
