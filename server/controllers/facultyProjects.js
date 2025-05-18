@@ -28,7 +28,7 @@ import { retrieveOrCacheUsers, retrieveOrCacheApplications, retrieveOrCacheProje
 const createProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -109,7 +109,7 @@ const createProject = async (req, res) => {
 const deleteProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -173,7 +173,7 @@ const getProject = async (req, res) => {
     try {
         if (!req.body.projectType || !req.body.projectID) { return res.status(400).json(generateRes(false, 400, "INPUT_ERROR", {})); }
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -244,7 +244,7 @@ const getProject = async (req, res) => {
 const getProjects = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -321,7 +321,7 @@ const getProjects = async (req, res) => {
 const updateProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -389,7 +389,7 @@ const updateProject = async (req, res) => {
 const archiveProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -485,7 +485,7 @@ const archiveProject = async (req, res) => {
 const unarchiveProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -562,7 +562,7 @@ const applicationDecision = async (req, res) => {
         const decision = req.body.decision; //checks if the decision is valid otherwise ends the request
 
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const faculty = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -621,7 +621,7 @@ const applicationDecision = async (req, res) => {
 const fetchApplicant = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -696,7 +696,7 @@ const fetchApplicant = async (req, res) => {
 const fetchAllApplicants = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -738,7 +738,7 @@ const fetchAllApplicants = async (req, res) => {
 const fetchApplicantsFromProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -809,7 +809,7 @@ const fetchApplicantsFromProject = async (req, res) => {
 const publishProject = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);

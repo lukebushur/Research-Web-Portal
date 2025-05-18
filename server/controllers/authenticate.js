@@ -173,7 +173,7 @@ const token = async (req, res) => {
         const refreshToken = req.body.refreshToken;
 
         try { // Gets the email from the refresh token and validates the refreshtoken against the database
-            const decodeRefreshToken = jwt.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN);
+            const decodeRefreshToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
             const user = await retrieveOrCacheUsers(req, decodeRefreshToken.email);
             const existingTokens = user.security.tokens;
 
@@ -296,7 +296,7 @@ const generateAccessToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
+    return jwt.sign(items, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY })
 }
 //This function generates an expired access token for unit tests
 const generateExpiredToken = (id, email, uName) => {
@@ -305,7 +305,7 @@ const generateExpiredToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_ACCESS_TOKEN, { expiresIn: '0ms' })
+    return jwt.sign(items, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '0ms' })
 }
 //This function generates a refresh token 
 const generateRefreshToken = (id, email, uName) => {
@@ -314,7 +314,7 @@ const generateRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
+    return jwt.sign(items, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY })
 }
 //This function generates an expired refresh token for unit tests
 const generateExpiredRefreshToken = (id, email, uName) => {
@@ -323,7 +323,7 @@ const generateExpiredRefreshToken = (id, email, uName) => {
         email: email,
         name: uName,
     }
-    return jwt.sign(items, process.env.SECRET_REFRESH_TOKEN, { expiresIn: '0ms' });
+    return jwt.sign(items, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '0ms' });
 }
 
 /*  This function handles the refresh token addition to the database. This function takes a user record and a refreshtoken and adds the refreshtoken to the 
@@ -373,7 +373,7 @@ const addRefreshToken = async (user, refreshToken) => {
 }
 
 const unitTestVerify = async (accessToken, token) => {
-    const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+    const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
     //check if user exists
     const user = await User.findOne({email: decodeAccessToken.email})

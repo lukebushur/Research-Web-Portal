@@ -45,7 +45,7 @@ const accountModifyMajorValidation = async (req, res, next) => {
     try {
         //Grab information about user account information
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
         //Validate that the GPA is within normal bounds: 
         if (req.body.GPA) {
@@ -103,7 +103,7 @@ const accountModifyMajorValidation = async (req, res, next) => {
 const verifiedValidation = async (req, res, next) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1]; //Retrieve and decode access token
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         const userAccount = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
 
         if(userAccount.emailConfirmed === false) {

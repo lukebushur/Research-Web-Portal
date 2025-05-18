@@ -9,7 +9,7 @@ function auth(req, res, next) {
 
         if (token) { //If no token then deny request
             try {
-                req.user = jwt.verify(token, process.env.SECRET_ACCESS_TOKEN); 
+                req.user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); 
                 next();
             } catch (error) { //catch errors in verifing the token and send error response
                 return res.status(401).json({ error: { status: 401, message: "INVALID_ACCESS_TOKEN" } });

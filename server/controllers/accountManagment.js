@@ -22,7 +22,7 @@ import { addMinutes, subtractSeconds } from '../helpers/dateUtilities.js';
 const modifyAccount = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         //grab account info
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
 
@@ -109,7 +109,7 @@ const modifyAccount = async (req, res) => {
 const getAccountInfo = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
         let accountData = {};
@@ -242,7 +242,7 @@ const changeEmailConfirm = async (req, res) => {
     try {
         //Decode Access Token
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //get user from email in the access token
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -299,7 +299,7 @@ const changeEmail = async (req, res) => {
         if (!error) {
             //Decode Access Token
             const accessToken = req.header('Authorization').split(' ')[1];
-            const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+            const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
             //check if new Email Exists
             const emailExists = await User.findOne({ email: req.body.provisionalEmail });

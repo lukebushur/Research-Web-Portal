@@ -9,7 +9,7 @@ import { retrieveOrCacheUsers, retrieveOrCacheIndustry } from '../helpers/schema
 const getJobs = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
@@ -39,7 +39,7 @@ const getJobs = async (req, res) => {
 const getJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         const jobId = req.params.jobId;
         if (!jobId) {
@@ -74,7 +74,7 @@ const getJob = async (req, res) => {
 const createJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         // check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email);
@@ -148,7 +148,7 @@ const createJob = async (req, res) => {
 const editJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
@@ -187,7 +187,7 @@ const editJob = async (req, res) => {
 const deleteJob = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         if (!req.params.jobId) {
             return res.status(400).json(generateRes(false, 400, 'BAD_REQUEST', {}));
@@ -221,7 +221,7 @@ const deleteJob = async (req, res) => {
 const getAssessments = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
@@ -247,7 +247,7 @@ const getAssessments = async (req, res) => {
 const getAssessment = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         const assessmentId = req.params.assessmentId;
         if (!assessmentId) {
@@ -281,7 +281,7 @@ const getAssessment = async (req, res) => {
 const createAssessment = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
@@ -329,7 +329,7 @@ const createAssessment = async (req, res) => {
 const editAssessment = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         //check if user exists
         const user = await retrieveOrCacheUsers(req, decodeAccessToken.email); 
@@ -368,7 +368,7 @@ const editAssessment = async (req, res) => {
 const deleteAssessment = async (req, res) => {
     try {
         const accessToken = req.header('Authorization').split(' ')[1];
-        const decodeAccessToken = jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN);
+        const decodeAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
         const assessmentId = req.params.assessmentId;
         if (!assessmentId) {
