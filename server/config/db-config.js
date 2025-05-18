@@ -3,8 +3,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import User from '../models/user.js';
 
-// Set up the database connection; if environment is false, it accesses the unit
-// testing collection.
+// Set up the database connection
 async function dbConnect() {
     // Valid environments: "production", "development", and "test"
     const environment = process.env.NODE_ENV;
@@ -28,12 +27,15 @@ async function dbConnect() {
     });
 }
 
+// Set up the database for test environment
 async function createTestDatabase() {
+    // in-memory database -> fast operations
     const mongoTestServer = await MongoMemoryServer.create();
 
     await mongoose.connect(mongoTestServer.getUri(), { dbName: 'test' }).then(async () => {
         console.log('Connected to database test');
 
+        // create admin user required for integration tests
         const adminUser = {
             email: process.env.TEST_ADMIN_EMAIL,
             name: 'Test Name',
