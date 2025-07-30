@@ -14,11 +14,16 @@ Mappings:
             key: stack
             dev: dev
             prod: prod
+    cidrMap:
+      vpcCidrs:
+        vpcDev: 10.0.0.0/24
+      subnetCidrs:
+        subnetDevA: 10.0.0.0/25
 
 
 
 Resources:
-    ECRAccessRole:
+    EcrAccessRole:
         Type: AWS::IAM::Role
         Properties:
             AssumeRolePolicyDocument:
@@ -56,17 +61,71 @@ Resources:
                 - Key: !FindInMap [taggingMap, stackType, key]
                   Value: !FindInMap [taggingMap, stackType, dev]
 
-    DevVPC:
+    DevEcsFrontendSg:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Allow http from client to ECS containers and egress to VPC
+        VpcId: !Ref DevVpc
+        GroupName:  'ecs-frontend-sg-${AWS::StackName}'
+        SecurityGroupEgress:
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            CidrIp: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            CidrIp: 0.0.0.0/0
+        Tags:
+          - Key: !FindInMap [ taggingMap, stackType, key ]
+            Value: !FindInMap [ taggingMap, stackType, dev ]
+
+
+    DevEcsBackendSg:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Allow http from frontend-sg and egress to external db
+        VpcId: !Ref DevVpc
+        GroupName: 'ecs-backend-sg-${AWS::StackName}'
+        SecurityGroupEgress:
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            CidrIp: 0.0.0.0/0
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            SourceSecurityGroupId: !Ref DevEcsFrontendSg
+        Tags:
+          - Key: !FindInMap [ taggingMap, stackType, key ]
+            Value: !FindInMap [ taggingMap, stackType, dev ]
+
+    DevVpc:
         Type: AWS::EC2::VPC
         Properties:
-            CidrBlock: 10.0.0.0/22
+            CidrBlock: !FindInMap [ cidrMap, vpcCidrs, vpcDev]
             EnableDnsSupport: true
             EnableDnsHostnames: true
             Tags:
-                - Key: !FindInMap [taggingMap, stackType, key]
-                  Value: !FindInMap [taggingMap, stackType, dev]
+                - Key: !FindInMap [ taggingMap, stackType, key]
+                  Value: !FindInMap [ taggingMap, stackType, dev]
 
-    DevRepoECR:
+    DevSubnetA:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: !Select
+          - 0
+          - !GetAZs ''
+        CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
+        MapPublicIpOnLaunch: false
+        Tags:
+          - Key: !FindInMap [ taggingMap, stackType, key ]
+            Value: !FindInMap [ taggingMap, stackType, dev ]
+        VpcId: !Ref DevVpc
+
+    DevRepoEcr:
         Type: AWS::ECR::Repository
         Properties:
             EmptyOnDelete: false
@@ -84,7 +143,7 @@ Resources:
                       Effect: Allow
                       Principal:
                         AWS:
-                            - !GetAtt ECRAccessRole.Arn
+                            - !GetAtt EcrAccessRole.Arn
                       Action:
                         - "ecr:GetDownloadUrlForLayer"
                         - "ecr:BatchGetImage"
