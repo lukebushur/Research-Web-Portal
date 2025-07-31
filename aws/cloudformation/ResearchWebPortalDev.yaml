@@ -1,157 +1,281 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CloudFormation Stack for Research Web Portal dev environment
 
-#Parameters:
+
+Mappings:
+  #    IAM-Map:
+  #        IAM-Role-Names:
+  #            ECR-Access: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}"
+  taggingMap:
+    stackType:
+      key: stack
+      dev: dev
+      prod: prod
+  cidrMap:
+    vpcCidrs:
+      vpcDev: 10.0.0.0/24
+    subnetCidrs:
+      subnetDevA: 10.0.0.0/25
+
+Parameters:
+  ArtifactDevBucket:
+    Type: String
+    Default: rwpp-dev-codepipeline-artifact-bucket
+
 #    ContainerFrontendPort:
 #        Description:
 
-Mappings:
-#    IAM-Map:
-#        IAM-Role-Names:
-#            ECR-Access: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}"
-    taggingMap:
-        stackType:
-            key: stack
-            dev: dev
-            prod: prod
-    cidrMap:
-      vpcCidrs:
-        vpcDev: 10.0.0.0/24
-      subnetCidrs:
-        subnetDevA: 10.0.0.0/25
+
 
 
 
 Resources:
-    EcrAccessRole:
-        Type: AWS::IAM::Role
-        Properties:
-            AssumeRolePolicyDocument:
-                Version: "2012-10-17"
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - codebuild.amazonaws.com
-                              - codepipeline.amazonaws.com
-                      Action:
-                          - 'sts:AssumeRole'
-            Description: Allows services to call ECR.
-#            ManagedPolicyArns:
-#                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
-#            MaxSessionDuration: 36000
-            Path: /
-#            PermissionsBoundary:
-            Policies:
-                - PolicyName: root
-                  PolicyDocument:
-                    Version: "2012-10-17"
-                    Statement:
-                        - Sid: AllowAll
-                          Effect: Allow
-                          Action:
-                              - "ecr:*"
-                          Resource:
-                              - "*"
-                          Condition:
-                            StringEquals:
-                                "aws:ResourceTag/stack": "dev"
-            RoleName: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}" # Keep StackeName and Region in avoid IAM errors due to multiple roles with the same name
-            Tags:
-                - Key: !FindInMap [taggingMap, stackType, key]
-                  Value: !FindInMap [taggingMap, stackType, dev]
+  EcrAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+                - codepipeline.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Allows services to call ECR.
+      #            ManagedPolicyArns:
+      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #            PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
+                  - "ecr:*"
+                Resource:
+                  - "*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}" # Keep StackeName and Region in avoid IAM errors due to multiple roles with the same name
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
-    DevEcsFrontendSg:
-      Type: AWS::EC2::SecurityGroup
-      Properties:
-        GroupDescription: Allow http from client to ECS containers and egress to VPC
-        VpcId: !Ref DevVpc
-        GroupName:  'ecs-frontend-sg-${AWS::StackName}'
-        SecurityGroupEgress:
-          - IpProtocol: tcp
-            FromPort: 80
-            ToPort: 80
-            CidrIp: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
-        SecurityGroupIngress:
-          - IpProtocol: tcp
-            FromPort: 80
-            ToPort: 80
-            CidrIp: 0.0.0.0/0
-        Tags:
-          - Key: !FindInMap [ taggingMap, stackType, key ]
-            Value: !FindInMap [ taggingMap, stackType, dev ]
+  CodePipelineDevServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+                - codepipeline.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Allows services to call ECR.
+      #        ManagedPolicyArns:
+      #          - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #        PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "CodePipeline-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
+  DevEcsFrontendSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http from client to ECS containers and egress to VPC
+      VpcId: !Ref DevVpc
+      GroupName: !Sub 'ecs-frontend-sg-${AWS::StackName}'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
-    DevEcsBackendSg:
-      Type: AWS::EC2::SecurityGroup
-      Properties:
-        GroupDescription: Allow http from frontend-sg and egress to external db
-        VpcId: !Ref DevVpc
-        GroupName: 'ecs-backend-sg-${AWS::StackName}'
-        SecurityGroupEgress:
-          - IpProtocol: tcp
-            FromPort: 80
-            ToPort: 80
-            CidrIp: 0.0.0.0/0
-        SecurityGroupIngress:
-          - IpProtocol: tcp
-            FromPort: 80
-            ToPort: 80
-            SourceSecurityGroupId: !Ref DevEcsFrontendSg
-        Tags:
-          - Key: !FindInMap [ taggingMap, stackType, key ]
-            Value: !FindInMap [ taggingMap, stackType, dev ]
+  DevEcsBackendSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http from frontend-sg and egress to external db
+      VpcId: !Ref DevVpc
+      GroupName: !Sub 'ecs-backend-sg-${AWS::StackName}'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref DevEcsFrontendSg
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
-    DevVpc:
-        Type: AWS::EC2::VPC
-        Properties:
-            CidrBlock: !FindInMap [ cidrMap, vpcCidrs, vpcDev]
-            EnableDnsSupport: true
-            EnableDnsHostnames: true
-            Tags:
-                - Key: !FindInMap [ taggingMap, stackType, key]
-                  Value: !FindInMap [ taggingMap, stackType, dev]
+  DevVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
-    DevSubnetA:
-      Type: AWS::EC2::Subnet
-      Properties:
-        AvailabilityZone: !Select
-          - 0
-          - !GetAZs ''
-        CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
-        MapPublicIpOnLaunch: false
-        Tags:
-          - Key: !FindInMap [ taggingMap, stackType, key ]
-            Value: !FindInMap [ taggingMap, stackType, dev ]
-        VpcId: !Ref DevVpc
+  DevSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
+      CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+      VpcId: !Ref DevVpc
 
-    DevRepoEcr:
-        Type: AWS::ECR::Repository
-        Properties:
-            EmptyOnDelete: false
-#            EncryptionConfiguration:
-#                EncryptionType: KMS
-#            ImageScanningConfiguration:
-#                ScanOnPush: false
-            ImageTagMutability: MUTABLE
-#            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
-            RepositoryName: dev-repo
-            RepositoryPolicyText:
-                Version: "2012-10-17"
-                Statement:
-                    - Sid: AllowPushPull
-                      Effect: Allow
-                      Principal:
-                        AWS:
-                            - !GetAtt EcrAccessRole.Arn
-                      Action:
-                        - "ecr:GetDownloadUrlForLayer"
-                        - "ecr:BatchGetImage"
-                        - "ecr:BatchCheckLayerAvailability"
-                        - "ecr:PutImage"
-                        - "ecr:InitiateLayerUpload"
-                        - "ecr:UploadLayerPart"
-                        - "ecr:CompleteLayerUpload"
-            Tags:
-                - Key: !FindInMap [taggingMap, stackType, key]
-                  Value: !FindInMap [taggingMap, stackType, dev]
+  DevRepoEcr:
+    Type: AWS::ECR::Repository
+    Properties:
+      EmptyOnDelete: false
+      #            EncryptionConfiguration:
+      #                EncryptionType: KMS
+      #            ImageScanningConfiguration:
+      #                ScanOnPush: false
+      ImageTagMutability: MUTABLE
+      #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
+      RepositoryName: dev-repo
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt EcrAccessRole.Arn
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  #    DevCodePipeline:
+  #      Type: AWS::CodePipeline::Pipeline
+  #      Properties:
+  #        ArtifactStore:
+  #          ArtifactStore
+  #        ArtifactStores:
+  #          - ArtifactStoreMap
+  #        DisableInboundStageTransitions:
+  #          - StageTransition
+  #        ExecutionMode: String
+  #        Name: String
+  #        PipelineType: String
+  #        RestartExecutionOnUpdate: Boolean
+  #        RoleArn: String
+  #        Stages:
+  #          - StageDeclaration
+  #        Tags:
+  #          - Key: !FindInMap [ taggingMap, stackType, key ]
+  #            Value: !FindInMap [ taggingMap, stackType, dev ]
+  #        Triggers:
+  #          - PipelineTriggerDeclaration
+  #        Variables:
+  #          - VariableDeclaration
+
+  DevArtifactS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: 'KMS-KEY-ARN'
+            BucketKeyEnabled: true
+      BucketName: !Sub "${ArtifactDevBucket}"
+      #        LoggingConfiguration:
+      #          LoggingConfiguration
+      #        MetadataConfiguration:
+      #          MetadataConfiguration
+      #        MetricsConfigurations:
+      #          - MetricsConfiguration
+      #        NotificationConfiguration:
+      #          NotificationConfiguration
+      #        OwnershipControls:
+      #          OwnershipControls
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      #        ReplicationConfiguration:
+      #          ReplicationConfiguration
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+  #        VersioningConfiguration:
+  #          VersioningConfiguration
+
+  DevArtifactS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DevArtifactS3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketVersioning
+              - s3:PutObject
+            Effect: Allow
+            Resource:
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+            Principal:
+              AWS: !GetAtt CodePipelineDevServiceRole.Arn
