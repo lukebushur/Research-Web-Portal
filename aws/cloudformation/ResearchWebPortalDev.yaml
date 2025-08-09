@@ -22,13 +22,6 @@ Parameters:
     Type: String
     Default: rwpp-dev-codepipeline-artifact-bucket
 
-#    ContainerFrontendPort:
-#        Description:
-
-
-
-
-
 Resources:
   EcrAccessRole:
     Type: AWS::IAM::Role
@@ -204,29 +197,109 @@ Resources:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
 
-  #    DevCodePipeline:
-  #      Type: AWS::CodePipeline::Pipeline
-  #      Properties:
-  #        ArtifactStore:
-  #          ArtifactStore
-  #        ArtifactStores:
-  #          - ArtifactStoreMap
-  #        DisableInboundStageTransitions:
-  #          - StageTransition
-  #        ExecutionMode: String
-  #        Name: String
-  #        PipelineType: String
-  #        RestartExecutionOnUpdate: Boolean
-  #        RoleArn: String
-  #        Stages:
-  #          - StageDeclaration
-  #        Tags:
-  #          - Key: !FindInMap [ taggingMap, stackType, key ]
-  #            Value: !FindInMap [ taggingMap, stackType, dev ]
-  #        Triggers:
-  #          - PipelineTriggerDeclaration
-  #        Variables:
-  #          - VariableDeclaration
+  DevCodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "BuildProject-${AWS::StackName}"
+      ServiceRole: !GetAtt CodePipelineDevServiceRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_MEDIUM
+        Image: aws/codebuild/standard:6.0
+        Type: LINUX_CONTAINER
+        PrivilegedMode: true
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec.yml
+      TimeoutInMinutes: 15
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevCodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Type: S3
+        Location: !Ref DevArtifactS3Bucket
+      Name: !Sub "Pipeline_-${AWS::StackName}-${AWS::Region}"
+      PipelineType: V2
+      RestartExecutionOnUpdate: false
+      RoleArn: !GetAtt CodePipelineDevServiceRole.Arn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: 1
+                Provider: CodeStarSourceConnection
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                ConnectionArn: !Ref DevCodeStarConnection
+                FullRepositoryId: "lukebushur/Research-Web-Portal"
+                BranchName: "dev-deployment"
+              OnFailure:
+                Result: ROLLBACK
+        - Name: Build
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ProjectName: !Ref DevCodeBuildProject
+          OnFailure:
+            Result: ROLLBACK
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+      Triggers:
+        Triggers:
+          - ProviderType: CodeStarSourceConnection
+        GitConfiguration:
+          Push:
+            #                - Tags:
+            #                    Excludes:
+            #                      - beta-*
+            #                    Includes:
+            #                      - release-*
+            - Branches:
+                Includes:
+                  - dev-deployment
+              FilePaths:
+                Includes:
+                  - aws/*
+                  - client/*
+                  - server/*
+                  - docker-compose.yml
+                  - nginx.conf
+          #                    Excludes:
+          #                      - '**/README.md'
+          PullRequest:
+            - Branches:
+                Includes:
+                  - dev-deployment
+              FilePaths:
+                Includes:
+                  - aws/*
+                  - client/*
+                  - server/*
+                  - docker-compose.yml
+                  - nginx.conf
+                Excludes:
+                  - '**/README.md'
+              Events:
+                - CLOSED
 
   DevArtifactS3Bucket:
     Type: AWS::S3::Bucket
@@ -234,8 +307,8 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-              SSEAlgorithm: 'aws:kms'
-              KMSMasterKeyID: 'KMS-KEY-ARN'
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
             BucketKeyEnabled: true
       BucketName: !Sub "${ArtifactDevBucket}"
       #        LoggingConfiguration:
@@ -279,3 +352,12 @@ Resources:
               - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
             Principal:
               AWS: !GetAtt CodePipelineDevServiceRole.Arn
+
+  DevCodeStarConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: "GithubConnection"
+      ProviderType: GitHub
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
