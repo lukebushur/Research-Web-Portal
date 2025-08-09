@@ -230,7 +230,7 @@ Resources:
       Stages:
         - Name: Source
           Actions:
-            - Name: SourceAction
+            - Name: BingleBangle
               ActionTypeId:
                 Category: Source
                 Owner: AWS
@@ -242,8 +242,6 @@ Resources:
                 ConnectionArn: !Ref DevCodeStarConnection
                 FullRepositoryId: "lukebushur/Research-Web-Portal"
                 BranchName: "dev-deployment"
-              OnFailure:
-                Result: ROLLBACK
         - Name: Build
           Actions:
             - Name: BuildAction
@@ -258,48 +256,49 @@ Resources:
                 - Name: BuildOutput
               Configuration:
                 ProjectName: !Ref DevCodeBuildProject
-          OnFailure:
-            Result: ROLLBACK
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
       Triggers:
-        Triggers:
-          - ProviderType: CodeStarSourceConnection
-        GitConfiguration:
-          Push:
-            #                - Tags:
+        - ProviderType: CodeStarSourceConnection
+#          TriggerName: CodeStarSourceConnection
+#          TriggerTargetArn: !Ref DevCodeStarConnection
+#          TriggerType: Webhook
+          GitConfiguration:
+            Push:
+              #                - Tags:
+              #                    Excludes:
+              #                      - beta-*
+              #                    Includes:
+              #                      - release-*
+              - Branches:
+                  Includes:
+                    - dev-deployment
+                FilePaths:
+                  Includes:
+                    - aws/*
+                    - client/*
+                    - server/*
+                    - docker-compose.yml
+                    - nginx.conf
             #                    Excludes:
-            #                      - beta-*
-            #                    Includes:
-            #                      - release-*
-            - Branches:
-                Includes:
-                  - dev-deployment
-              FilePaths:
-                Includes:
-                  - aws/*
-                  - client/*
-                  - server/*
-                  - docker-compose.yml
-                  - nginx.conf
-          #                    Excludes:
-          #                      - '**/README.md'
-          PullRequest:
-            - Branches:
-                Includes:
-                  - dev-deployment
-              FilePaths:
-                Includes:
-                  - aws/*
-                  - client/*
-                  - server/*
-                  - docker-compose.yml
-                  - nginx.conf
-                Excludes:
-                  - '**/README.md'
-              Events:
-                - CLOSED
+            #                      - '**/README.md'
+            PullRequest:
+              - Branches:
+                  Includes:
+                    - dev-deployment
+                FilePaths:
+                  Includes:
+                    - aws/*
+                    - client/*
+                    - server/*
+                    - docker-compose.yml
+                    - nginx.conf
+                  Excludes:
+                    - '**/README.md'
+                Events:
+                  - CLOSED
+            SourceActionName: BingleBangle
 
   DevArtifactS3Bucket:
     Type: AWS::S3::Bucket
