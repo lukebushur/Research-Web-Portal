@@ -21,6 +21,9 @@ Parameters:
   ArtifactDevBucket:
     Type: String
     Default: rwpp-dev-codepipeline-artifact-bucket
+  ActionSourceCICD:
+    Type: String
+    Default: BingleBangle
 
 Resources:
   EcrAccessRole:
@@ -70,7 +73,6 @@ Resources:
           - Effect: Allow
             Principal:
               Service:
-                - codebuild.amazonaws.com
                 - codepipeline.amazonaws.com
             Action:
               - 'sts:AssumeRole'
@@ -85,7 +87,7 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Sid: AllowAll
+              - Sid: S3Access # No tag conditions because s3 objects don't inherit tags, and it condition applies to them!
                 Effect: Allow
                 Action:
                   - s3:GetObject
@@ -95,10 +97,84 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
                   - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+              - Sid: CodeStarCodeBuildAccess
+                Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                  - codestar-connections:GetConnection
+                  - codestar-connections:GetHost
+                  - codestar-connections:GetInstallationUrl
+                  - codestar-connections:ListConnections
+                  - codestar-connections:ListHosts
+                  - codestar-connections:PassConnection
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                Resource:
+                  - !Ref DevCodeStarConnection
+                  - !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/BuildProject-${AWS::StackName}"
                 Condition:
                   StringEquals:
                     "aws:ResourceTag/stack": "dev"
       RoleName: !Sub "CodePipeline-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  CodeBuildDevServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Allows services to call ECR.
+      #        ManagedPolicyArns:
+      #          - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #        PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: S3Access # No tag conditions because s3 objects don't inherit tags, and it condition applies to them!
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+              - Sid: CloudWatchLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/BuildProject-${AWS::StackName}"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*:log-stream:*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "CodeBuild-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevCodeBuildLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/codebuild/BuildProject-${AWS::StackName}"
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
@@ -201,7 +277,7 @@ Resources:
     Type: AWS::CodeBuild::Project
     Properties:
       Name: !Sub "BuildProject-${AWS::StackName}"
-      ServiceRole: !GetAtt CodePipelineDevServiceRole.Arn
+      ServiceRole: !GetAtt CodeBuildDevServiceRole.Arn
       Artifacts:
         Type: CODEPIPELINE
       Environment:
@@ -209,6 +285,10 @@ Resources:
         Image: aws/codebuild/standard:6.0
         Type: LINUX_CONTAINER
         PrivilegedMode: true
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Ref DevCodeBuildLogGroup
       Source:
         Type: CODEPIPELINE
         BuildSpec: buildspec.yml
@@ -230,7 +310,7 @@ Resources:
       Stages:
         - Name: Source
           Actions:
-            - Name: BingleBangle
+            - Name: !Sub "${ActionSourceCICD}"
               ActionTypeId:
                 Category: Source
                 Owner: AWS
@@ -298,7 +378,7 @@ Resources:
                     - '**/README.md'
                 Events:
                   - CLOSED
-            SourceActionName: BingleBangle
+            SourceActionName: !Sub "${ActionSourceCICD}"
 
   DevArtifactS3Bucket:
     Type: AWS::S3::Bucket
