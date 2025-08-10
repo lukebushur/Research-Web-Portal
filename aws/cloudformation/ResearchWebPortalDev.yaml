@@ -328,7 +328,7 @@ Resources:
       AvailabilityZone: !Select
         - 0
         - !GetAZs ''
-      CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
+      CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevB ]
       MapPublicIpOnLaunch: false
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
