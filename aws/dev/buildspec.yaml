@@ -60,7 +60,7 @@ phases:
           aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ecs_backend_service_name --task-definition back-end-dev:$backend_new_task_revision;
         else
           echo "Service does not exist. Creating new service...";
-          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_backend_service_name --task-definition back-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_backend_service_name --task-definition back-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$BACKEND_SG],assignPublicIp=ENABLED}";
         fi
 
       # Create front-end service if it does not exist. If it does, update it
@@ -71,7 +71,7 @@ phases:
           aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ecs_frontend_service_name --task-definition front-end-dev:$frontend_new_task_revision;
         else
           echo "Service does not exist. Creating new service...";
-          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_frontend_service_name --task-definition front-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_frontend_service_name --task-definition front-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$FRONTEND_SG],assignPublicIp=ENABLED}";
         fi
 
 artifacts:

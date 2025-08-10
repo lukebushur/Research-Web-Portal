@@ -16,6 +16,7 @@ Mappings:
       vpcDev: 10.0.0.0/24
     subnetCidrs:
       subnetDevA: 10.0.0.0/25
+      subnetDevB: 10.0.1.0/25
 
 Parameters:
   ArtifactDevBucket:
@@ -321,6 +322,60 @@ Resources:
           Value: !FindInMap [ taggingMap, stackType, dev ]
       VpcId: !Ref DevVpc
 
+  DevSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
+      CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+      VpcId: !Ref DevVpc
+
+  DevInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref DevVpc
+      InternetGatewayId: !Ref DevInternetGateway
+
+  DevPublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref DevVpc
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: DevVPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref DevPublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DevInternetGateway
+
+  DevSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DevSubnetA
+      RouteTableId: !Ref DevPublicRouteTable
+
+  DevSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DevSubnetB
+      RouteTableId: !Ref DevPublicRouteTable
+
   DevRepoServer:
     Type: AWS::ECR::Repository
     Properties:
@@ -428,6 +483,14 @@ Resources:
             Value: !Ref EcsExecutionRole
           - Name: ECS_CLUSTER_NAME
             Value: !Ref DevECSCluster
+          - Name: SUBNET_A
+            Value: !Ref DevSubnetA
+          - Name: SUBNET_B
+            Value: !Ref DevSubnetB
+          - Name: BACKEND_SG
+            Value: !Ref DevEcsBackendSg
+          - Name: FRONTEND_SG
+            Value: !Ref DevEcsFrontendSg
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
