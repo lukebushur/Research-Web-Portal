@@ -24,50 +24,88 @@ Parameters:
   ActionSourceCICD:
     Type: String
     Default: BingleBangle
+  ClientRepoName:
+    Type: String
+    Default: dev-repo-client
+  ServerRepoName:
+    Type: String
+    Default: dev-repo-server
+
 
 Resources:
-#  EcrAccessRole:
-#    Type: AWS::IAM::Role
-#    Properties:
-#      AssumeRolePolicyDocument:
-#        Version: "2012-10-17"
-#        Statement:
-#          - Effect: Allow
-#            Principal:
-#              Service:
-#                - codebuild.amazonaws.com
-#            Action:
-#              - 'sts:AssumeRole'
-#      Description: Allows services to call ECR.
-#      #            ManagedPolicyArns:
-#      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
-#      #            MaxSessionDuration: 36000
-#      Path: /
-#      #            PermissionsBoundary:
-#      Policies:
-#        - PolicyName: root
-#          PolicyDocument:
-#            Version: "2012-10-17"
-#            Statement:
-#              - Sid: AllowAll
-#                Effect: Allow
-#                Action:
-#                  - "ecr:GetDownloadUrlForLayer"
-#                  - "ecr:BatchGetImage"
-#                  - "ecr:BatchCheckLayerAvailability"
-#                  - "ecr:PutImage"
-#                  - "ecr:InitiateLayerUpload"
-#                  - "ecr:UploadLayerPart"
-#                  - "ecr:CompleteLayerUpload"
-#                Resource:
-#                  - "*"
-#                Condition:
-#                  StringEquals:
-#                    "aws:ResourceTag/stack": "dev"
-#      RoleName: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
-#      Tags:
-#        - Key: !FindInMap [ taggingMap, stackType, key ]
-#          Value: !FindInMap [ taggingMap, stackType, dev ]
+  EcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: ECS task role.
+      #            ManagedPolicyArns:
+      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #            PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
+                  - "ecr:GetDownloadUrlForLayer"
+                Resource:
+                  - "*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "ECS_Task_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  EcsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: ECS execution role.
+      #            ManagedPolicyArns:
+      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #            PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
+                  - "ecr:GetDownloadUrlForLayer"
+                Resource:
+                  - "*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "ECS_Execution_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   CodePipelineDevServiceRole:
     Type: AWS::IAM::Role
@@ -181,7 +219,30 @@ Resources:
                   - ecr:InitiateLayerUpload
                   - ecr:UploadLayerPart
                   - ecr:CompleteLayerUpload
+                Resource:
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}"
+              - Sid: ECRTokenAccess
+                Effect: Allow
+                Action:
                   - ecr:GetAuthorizationToken
+                Resource:
+                  - "*"
+              - Sid: ECSAccess
+                Effect: Allow
+                Action:
+                  - ecs:RegisterTaskDefinition
+                  - ecs:DescribeServices
+                  - ecs:UpdateService
+                  - ecs:CreateService
+                  - ecs:DescribeTaskDefinition
+                  - ecs:TagResource
+                Resource:
+                  - "*"
+              - Sid: IAMAccess
+                Effect: Allow
+                Action:
+                  - iam:PassRole
                 Resource:
                   - "*"
       RoleName: !Sub "CodeBuild-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
@@ -270,7 +331,7 @@ Resources:
       #                ScanOnPush: false
       ImageTagMutability: MUTABLE
       #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
-      RepositoryName: dev-repo-server
+      RepositoryName: !Sub "${ServerRepoName}"
       RepositoryPolicyText:
         Version: "2012-10-17"
         Statement:
@@ -302,7 +363,7 @@ Resources:
       #                ScanOnPush: false
       ImageTagMutability: MUTABLE
       #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
-      RepositoryName: dev-repo-client
+      RepositoryName: !Sub "${ClientRepoName}"
       RepositoryPolicyText:
         Version: "2012-10-17"
         Statement:
@@ -324,6 +385,22 @@ Resources:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
 
+  DevECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: DevCluster
+      CapacityProviders:
+        - FARGATE
+      DefaultCapacityProviderStrategy:
+        - CapacityProvider: FARGATE
+          Weight: 1
+      Configuration:
+        ExecuteCommandConfiguration:
+          Logging: DEFAULT
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
   DevCodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -338,17 +415,19 @@ Resources:
         PrivilegedMode: true
         EnvironmentVariables:
           - Name: AWS_ECR_REPO_SERVER_URI
-            Value: !GetAtt DevRepoEcr.RepositoryUri
+            Value: !GetAtt DevRepoServer.RepositoryUri
           - Name: AWS_ECR_REPO_CLIENT_URI
-            Value: !GetAtt DevRepoEcr.RepositoryUri
+            Value: !GetAtt DevRepoClient.RepositoryUri
           - Name: AWS_REGION
             Value: !Ref AWS::Region
           - Name: AWS_ACCOUNT_ID
             Value: !Ref AWS::AccountId
-#          - Name: AWS_TASK_ROLE
-#            Value:
-#          - Name: AWS_EXECUTION_ROLE
-#            Value:
+          - Name: AWS_TASK_ROLE
+            Value: !Ref EcsTaskRole
+          - Name: AWS_EXECUTION_ROLE
+            Value: !Ref EcsExecutionRole
+          - Name: ECS_CLUSTER_NAME
+            Value: !Ref DevECSCluster
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
