@@ -26,43 +26,48 @@ Parameters:
     Default: BingleBangle
 
 Resources:
-  EcrAccessRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - codebuild.amazonaws.com
-                - codepipeline.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Description: Allows services to call ECR.
-      #            ManagedPolicyArns:
-      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
-      #            MaxSessionDuration: 36000
-      Path: /
-      #            PermissionsBoundary:
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Sid: AllowAll
-                Effect: Allow
-                Action:
-                  - "ecr:*"
-                Resource:
-                  - "*"
-                Condition:
-                  StringEquals:
-                    "aws:ResourceTag/stack": "dev"
-      RoleName: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}" # Keep StackeName and Region in avoid IAM errors due to multiple roles with the same name
-      Tags:
-        - Key: !FindInMap [ taggingMap, stackType, key ]
-          Value: !FindInMap [ taggingMap, stackType, dev ]
+#  EcrAccessRole:
+#    Type: AWS::IAM::Role
+#    Properties:
+#      AssumeRolePolicyDocument:
+#        Version: "2012-10-17"
+#        Statement:
+#          - Effect: Allow
+#            Principal:
+#              Service:
+#                - codebuild.amazonaws.com
+#            Action:
+#              - 'sts:AssumeRole'
+#      Description: Allows services to call ECR.
+#      #            ManagedPolicyArns:
+#      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+#      #            MaxSessionDuration: 36000
+#      Path: /
+#      #            PermissionsBoundary:
+#      Policies:
+#        - PolicyName: root
+#          PolicyDocument:
+#            Version: "2012-10-17"
+#            Statement:
+#              - Sid: AllowAll
+#                Effect: Allow
+#                Action:
+#                  - "ecr:GetDownloadUrlForLayer"
+#                  - "ecr:BatchGetImage"
+#                  - "ecr:BatchCheckLayerAvailability"
+#                  - "ecr:PutImage"
+#                  - "ecr:InitiateLayerUpload"
+#                  - "ecr:UploadLayerPart"
+#                  - "ecr:CompleteLayerUpload"
+#                Resource:
+#                  - "*"
+#                Condition:
+#                  StringEquals:
+#                    "aws:ResourceTag/stack": "dev"
+#      RoleName: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
+#      Tags:
+#        - Key: !FindInMap [ taggingMap, stackType, key ]
+#          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   CodePipelineDevServiceRole:
     Type: AWS::IAM::Role
@@ -166,6 +171,19 @@ Resources:
                 Condition:
                   StringEquals:
                     "aws:ResourceTag/stack": "dev"
+              - Sid: ECRAccess
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                  - ecr:GetAuthorizationToken
+                Resource:
+                  - "*"
       RoleName: !Sub "CodeBuild-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
@@ -242,7 +260,7 @@ Resources:
           Value: !FindInMap [ taggingMap, stackType, dev ]
       VpcId: !Ref DevVpc
 
-  DevRepoEcr:
+  DevRepoServer:
     Type: AWS::ECR::Repository
     Properties:
       EmptyOnDelete: false
@@ -252,23 +270,56 @@ Resources:
       #                ScanOnPush: false
       ImageTagMutability: MUTABLE
       #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
-      RepositoryName: dev-repo
+      RepositoryName: dev-repo-server
       RepositoryPolicyText:
         Version: "2012-10-17"
         Statement:
           - Sid: AllowPushPull
             Effect: Allow
             Principal:
-              AWS:
-                - !GetAtt EcrAccessRole.Arn
+              Service:
+                - codebuild.amazonaws.com
             Action:
-              - "ecr:GetDownloadUrlForLayer"
-              - "ecr:BatchGetImage"
-              - "ecr:BatchCheckLayerAvailability"
-              - "ecr:PutImage"
-              - "ecr:InitiateLayerUpload"
-              - "ecr:UploadLayerPart"
-              - "ecr:CompleteLayerUpload"
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              - ecr:BatchCheckLayerAvailability
+              - ecr:PutImage
+              - ecr:InitiateLayerUpload
+              - ecr:UploadLayerPart
+              - ecr:CompleteLayerUpload
+              - ecr:GetAuthorizationToken
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevRepoClient:
+    Type: AWS::ECR::Repository
+    Properties:
+      EmptyOnDelete: false
+      #            EncryptionConfiguration:
+      #                EncryptionType: KMS
+      #            ImageScanningConfiguration:
+      #                ScanOnPush: false
+      ImageTagMutability: MUTABLE
+      #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
+      RepositoryName: dev-repo-client
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              - ecr:BatchCheckLayerAvailability
+              - ecr:PutImage
+              - ecr:InitiateLayerUpload
+              - ecr:UploadLayerPart
+              - ecr:CompleteLayerUpload
+              - ecr:GetAuthorizationToken
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
@@ -285,13 +336,26 @@ Resources:
         Image: aws/codebuild/standard:6.0
         Type: LINUX_CONTAINER
         PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: AWS_ECR_REPO_SERVER_URI
+            Value: !GetAtt DevRepoEcr.RepositoryUri
+          - Name: AWS_ECR_REPO_CLIENT_URI
+            Value: !GetAtt DevRepoEcr.RepositoryUri
+          - Name: AWS_REGION
+            Value: !Ref AWS::Region
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+#          - Name: AWS_TASK_ROLE
+#            Value:
+#          - Name: AWS_EXECUTION_ROLE
+#            Value:
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
           GroupName: !Ref DevCodeBuildLogGroup
       Source:
         Type: CODEPIPELINE
-        BuildSpec: buildspec.yml
+        BuildSpec: aws/dev/buildspec.yaml
       TimeoutInMinutes: 15
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
@@ -356,9 +420,9 @@ Resources:
                     - dev-deployment
                 FilePaths:
                   Includes:
-                    - aws/*
-                    - client/*
-                    - server/*
+                    - aws/**
+                    - client/**
+                    - server/**
                     - docker-compose.yml
                     - nginx.conf
             #                    Excludes:
@@ -369,9 +433,9 @@ Resources:
                     - dev-deployment
                 FilePaths:
                   Includes:
-                    - aws/*
-                    - client/*
-                    - server/*
+                    - aws/**
+                    - client/**
+                    - server/**
                     - docker-compose.yml
                     - nginx.conf
                   Excludes:
