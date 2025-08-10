@@ -13,10 +13,10 @@ Mappings:
       prod: prod
   cidrMap:
     vpcCidrs:
-      vpcDev: 10.0.0.0/24
+      vpcDev: 10.0.3.0/24
     subnetCidrs:
-      subnetDevA: 10.0.0.0/25
-      subnetDevB: 10.0.1.0/25
+      subnetDevA: 10.0.3.0/26
+      subnetDevB: 10.0.3.64/26
 
 Parameters:
   ArtifactDevBucket:
