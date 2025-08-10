@@ -10,25 +10,25 @@ phases:
   build:
     commands:
       - echo Building server image...
-      - docker build -t $AWS_ECR_REPO_URI/server:$IMAGE_TAG -f server/Dockerfile ./server
-      - docker tag $AWS_ECR_REPO_URI/server:$IMAGE_TAG $AWS_ECR_REPO_URI/server:latest
+      - docker build -t $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG -f server/Dockerfile ./server
+      - docker tag $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG $AWS_ECR_REPO_SERVER_URI:latest
 
       - echo Building client image...
-      - docker build -t $AWS_ECR_REPO_URI/client:$IMAGE_TAG -f client/Dockerfile ./client
-      - docker tag $AWS_ECR_REPO_URI/client:$IMAGE_TAG $AWS_ECR_REPO_URI/client:latest
+      - docker build -t $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG -f client/Dockerfile ./client
+      - docker tag $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG $AWS_ECR_REPO_CLIENT_URI:latest
 
   post_build:
     commands:
       - echo Pushing images to ECR...
-      - docker push $AWS_ECR_REPO_URI/server:$IMAGE_TAG
-      - docker push $AWS_ECR_REPO_URI/server:latest
-      - docker push $AWS_ECR_REPO_URI/client:$IMAGE_TAG
-      - docker push $AWS_ECR_REPO_URI/client:latest
+      - docker push $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG
+      - docker push $AWS_ECR_REPO_SERVER_URI:latest
+      - docker push $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG
+      - docker push $AWS_ECR_REPO_CLIENT_URI:latest
 
       # Create or update ECS task definitions using templates (<CLIENT OR SERVER>-task-definition-template.json)
       - echo Creating or updating the ECS task definition...
       - |
-        sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ECR_REPO_URI/server:$IMAGE_TAG|g" \
+        sed -e "s|<SERVER_IMAGE_TAG>|$AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG|g" \
             -e "s|<REGION>|$AWS_REGION|g" \
             -e "s|<ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
             -e "s|<SECRET_ENV_PATH>|$AWS_SECRET_ENV_PATH|g" \
@@ -55,23 +55,23 @@ phases:
       # Create back-end service if it does not exist. If it does, update it
       - echo Checking if ECS Back End service exists...
       - if aws ecs describe-services --cluster $ecs_cluster_name --services $ecs_backend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
-        echo "Service exists. Updating service...";
-        backend_new_task_revision=$(aws ecs describe-task-definition --task-definition back-end-dev --query "taskDefinition.revision" --output text);
-        aws ecs update-service --cluster $ecs_cluster_name --service $ecs_backend_service_name --task-definition back-end-dev:$backend_new_task_revision;
+          echo "Service exists. Updating service...";
+          backend_new_task_revision=$(aws ecs describe-task-definition --task-definition back-end-dev --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ecs_cluster_name --service $ecs_backend_service_name --task-definition back-end-dev:$backend_new_task_revision;
         else
-        echo "Service does not exist. Creating new service...";
-        aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_backend_service_name --task-definition back-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+          echo "Service does not exist. Creating new service...";
+          aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_backend_service_name --task-definition back-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
         fi
 
       # Create front-end service if it does not exist. If it does, update it
       - echo Checking if ECS Front End service exists...
       - if aws ecs describe-services --cluster $ecs_cluster_name --services $ecs_frontend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
-        echo "Service exists. Updating service...";
-        frontend_new_task_revision=$(aws ecs describe-task-definition --task-definition front-end-dev --query "taskDefinition.revision" --output text);
-        aws ecs update-service --cluster $ecs_cluster_name --service $ecs_frontend_service_name --task-definition front-end-dev:$frontend_new_task_revision;
+          echo "Service exists. Updating service...";
+          frontend_new_task_revision=$(aws ecs describe-task-definition --task-definition front-end-dev --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ecs_cluster_name --service $ecs_frontend_service_name --task-definition front-end-dev:$frontend_new_task_revision;
         else
-        echo "Service does not exist. Creating new service...";
-        aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_frontend_service_name --task-definition front-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
+          echo "Service does not exist. Creating new service...";
+          aws ecs create-service --cluster $ecs_cluster_name --service-name $ecs_frontend_service_name --task-definition front-end-dev --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-064c82f7ca1de5647,subnet-09a8ab73135908b88,subnet-0cff645bf52ddd0ab],securityGroups=[sg-0e41078d7d83aa934,sg-0a12f949b5aaab0e5],assignPublicIp=ENABLED}";
         fi
 
 artifacts:
