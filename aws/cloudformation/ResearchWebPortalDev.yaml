@@ -31,7 +31,9 @@ Parameters:
   ServerRepoName:
     Type: String
     Default: dev-repo-server
-
+  SSMorSecretsManagerARN:
+    Type: String
+    Default: uncreated
 
 Resources:
   EcsTaskRole:
@@ -43,6 +45,7 @@ Resources:
           - Effect: Allow
             Principal:
               Service:
+                - ecs-tasks.amazonaws.com
                 - ecs.amazonaws.com
             Action:
               - 'sts:AssumeRole'
@@ -81,6 +84,7 @@ Resources:
             Principal:
               Service:
                 - ecs.amazonaws.com
+                - ecs-tasks.amazonaws.com
             Action:
               - 'sts:AssumeRole'
       Description: ECS execution role.
@@ -97,7 +101,15 @@ Resources:
               - Sid: AllowAll
                 Effect: Allow
                 Action:
-                  - "ecr:GetDownloadUrlForLayer"
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:CreateLogGroup
+                  - secretsmanager:GetSecretValue
+                  - ssm:GetParameters
                 Resource:
                   - "*"
                 Condition:
@@ -245,7 +257,8 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource:
-                  - "*"
+                  - !GetAtt EcsTaskRole.Arn
+                  - !GetAtt EcsExecutionRole.Arn
       RoleName: !Sub "CodeBuild-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
