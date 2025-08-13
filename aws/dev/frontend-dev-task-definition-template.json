@@ -21,7 +21,7 @@
       "secrets": [
         {
           "name": "BACKEND_URI",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:BACKEND_URI::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:BACKEND_URI::"
         }],
       "ulimits": [],
       "logConfiguration": {

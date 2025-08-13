@@ -22,91 +22,91 @@
       "secrets": [
         {
           "name": "ACCESS_TOKEN_EXPIRY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:ACCESS_TOKEN_EXPIRY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ACCESS_TOKEN_EXPIRY::"
         },
         {
           "name": "ADMIN",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:ADMIN::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ADMIN::"
         },
         {
           "name": "DB_PROD_COLLECTION",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:DB_PROD_COLLECTION::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_PROD_COLLECTION::"
         },
         {
           "name": "DB_DEV_COLLECTION",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:DB_DEV_COLLECTION::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
         },
         {
           "name": "DB_URI",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:DB_URI::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_URI::"
         },
         {
           "name": "EMAIL_PASSWORD",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:EMAIL_PASSWORD::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:EMAIL_PASSWORD::"
         },
         {
           "name": "EMAIL_USER",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:EMAIL_USER::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:EMAIL_USER::"
         },
         {
           "name": "FACULTY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:FACULTY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FACULTY::"
         },
         {
           "name": "FRONT_END_URI",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:FRONT_END_URI::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FRONT_END_URI::"
         },
         {
           "name": "INDUSTRY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:INDUSTRY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:INDUSTRY::"
         },
         {
           "name": "NODE_ENV",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:NODE_ENV::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:NODE_ENV::"
         },
         {
           "name": "PORT",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:PORT::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:PORT::"
         },
         {
           "name": "REFRESH_TOKEN_EXPIRY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:REFRESH_TOKEN_EXPIRY::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_EXPIRY::"
         },
         {
           "name": "ACCESS_TOKEN_SECRET",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:ACCESS_TOKEN_SECRET::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:ACCESS_TOKEN_SECRET::"
         },
         {
           "name": "REFRESH_TOKEN_SECRET",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:REFRESH_TOKEN_SECRET::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:REFRESH_TOKEN_SECRET::"
         },
         {
           "name": "STUDENT",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:STUDENT::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:STUDENT::"
         },
         {
           "name": "TEST_ADMIN_EMAIL",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_ADMIN_EMAIL::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_ADMIN_EMAIL::"
         },
         {
           "name": "TEST_ADMIN_PASS",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_ADMIN_PASS::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_ADMIN_PASS::"
         },
         {
           "name": "TEST_ADMIN_PASS_HASHED",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_ADMIN_PASS_HASHED::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_ADMIN_PASS_HASHED::"
         },
         {
           "name": "TEST_EMAIL_NAME",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_EMAIL_NAME::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_EMAIL_NAME::"
         },
         {
           "name": "TEST_EMAIL",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_EMAIL::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_EMAIL::"
         },
         {
           "name": "TEST_EMAIL_PASS",
-          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_EMAIL_PASS::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:TEST_EMAIL_PASS::"
         }
       ],
       "logConfiguration": {
