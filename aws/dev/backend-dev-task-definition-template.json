@@ -22,91 +22,91 @@
       "secrets": [
         {
           "name": "ACCESS_TOKEN_EXPIRY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:ACCESS_TOKEN_EXPIRY::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:ACCESS_TOKEN_EXPIRY::"
         },
         {
           "name": "ADMIN",
-          "valueFrom": "<SECRETSMANAGER_ARN>:ADMIN::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:ADMIN::"
         },
         {
           "name": "DB_PROD_COLLECTION",
-          "valueFrom": "<SECRETSMANAGER_ARN>:DB_PROD_COLLECTION::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:DB_PROD_COLLECTION::"
         },
         {
           "name": "DB_DEV_COLLECTION",
-          "valueFrom": "<SECRETSMANAGER_ARN>:DB_DEV_COLLECTION::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:DB_DEV_COLLECTION::"
         },
         {
           "name": "DB_URI",
-          "valueFrom": "<SECRETSMANAGER_ARN>:DB_URI::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:DB_URI::"
         },
         {
           "name": "EMAIL_PASSWORD",
-          "valueFrom": "<SECRETSMANAGER_ARN>:EMAIL_PASSWORD::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:EMAIL_PASSWORD::"
         },
         {
           "name": "EMAIL_USER",
-          "valueFrom": "<SECRETSMANAGER_ARN>:EMAIL_USER::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:EMAIL_USER::"
         },
         {
           "name": "FACULTY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:FACULTY::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:FACULTY::"
         },
         {
           "name": "FRONT_END_URI",
-          "valueFrom": "<SECRETSMANAGER_ARN>:FRONT_END_URI::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:FRONT_END_URI::"
         },
         {
           "name": "INDUSTRY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:INDUSTRY::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:INDUSTRY::"
         },
         {
           "name": "NODE_ENV",
-          "valueFrom": "<SECRETSMANAGER_ARN>:NODE_ENV::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:NODE_ENV::"
         },
         {
           "name": "PORT",
-          "valueFrom": "<SECRETSMANAGER_ARN>:PORT::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:PORT::"
         },
         {
           "name": "REFRESH_TOKEN_EXPIRY",
-          "valueFrom": "<SECRETSMANAGER_ARN>:REFRESH_TOKEN_EXPIRY::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:REFRESH_TOKEN_EXPIRY::"
         },
         {
           "name": "ACCESS_TOKEN_SECRET",
-          "valueFrom": "<SECRETSMANAGER_ARN>:ACCESS_TOKEN_SECRET::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:ACCESS_TOKEN_SECRET::"
         },
         {
           "name": "REFRESH_TOKEN_SECRET",
-          "valueFrom": "<SECRETSMANAGER_ARN>:REFRESH_TOKEN_SECRET::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:REFRESH_TOKEN_SECRET::"
         },
         {
           "name": "STUDENT",
-          "valueFrom": "<SECRETSMANAGER_ARN>:STUDENT::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:STUDENT::"
         },
         {
           "name": "TEST_ADMIN_EMAIL",
-          "valueFrom": "<SECRETSMANAGER_ARN>:TEST_ADMIN_EMAIL::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_ADMIN_EMAIL::"
         },
         {
           "name": "TEST_ADMIN_PASS",
-          "valueFrom": "<SECRETSMANAGER_ARN>:TEST_ADMIN_PASS::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_ADMIN_PASS::"
         },
         {
           "name": "TEST_ADMIN_PASS_HASHED",
-          "valueFrom": "<SECRETSMANAGER_ARN>:TEST_ADMIN_PASS_HASHED::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_ADMIN_PASS_HASHED::"
         },
         {
           "name": "TEST_EMAIL_NAME",
-          "valueFrom": "<SECRETSMANAGER_ARN>:TEST_EMAIL_NAME::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_EMAIL_NAME::"
         },
         {
           "name": "TEST_EMAIL",
-          "valueFrom": "<SECRETSMANAGER_ARN>:TEST_EMAIL::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_EMAIL::"
         },
         {
           "name": "TEST_EMAIL_PASS",
-          "valueFrom": "<SECRETSMANAGER_ARN>:TEST_EMAIL_PASS::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:TEST_EMAIL_PASS::"
         }
       ],
       "logConfiguration": {

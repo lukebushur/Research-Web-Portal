@@ -21,7 +21,7 @@
       "secrets": [
         {
           "name": "BACKEND_URI",
-          "valueFrom": "<SECRETSMANAGER_ARN>:BACKEND_URI::"
+          "valueFrom": "<SECRETSMANAGER_ARN>:secretString:BACKEND_URI::"
         }],
       "ulimits": [],
       "logConfiguration": {
