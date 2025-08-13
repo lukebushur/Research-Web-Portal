@@ -31,9 +31,9 @@ Parameters:
   ServerRepoName:
     Type: String
     Default: dev-repo-server
-  SSMorSecretsManagerARN:
+  SecretsEnvPath:
     Type: String
-    Default: uncreated
+    Default: myapp/env-0Smc9P
 
 Resources:
   EcsTaskRole:
@@ -98,18 +98,23 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Sid: AllowAll
+              - Sid: AllowAllNonTagged
                 Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
                   - ecr:BatchCheckLayerAvailability
                   - ecr:GetDownloadUrlForLayer
                   - ecr:BatchGetImage
+                  - kms:Decrypt
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                   - logs:CreateLogGroup
+                Resource:
+                  - "*"
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
                   - secretsmanager:GetSecretValue
-                  - ssm:GetParameters
                 Resource:
                   - "*"
                 Condition:
@@ -280,13 +285,17 @@ Resources:
       GroupName: !Sub 'ecs-frontend-sg-${AWS::StackName}'
       SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 4200
+          ToPort: 4200
           CidrIp: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 4200
+          ToPort: 4200
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
@@ -300,8 +309,16 @@ Resources:
       GroupName: !Sub 'ecs-backend-sg-${AWS::StackName}'
       SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 27017
+          ToPort: 27017
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -329,7 +346,7 @@ Resources:
         - 0
         - !GetAZs ''
       CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
-      MapPublicIpOnLaunch: false
+      MapPublicIpOnLaunch: true
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
@@ -342,7 +359,7 @@ Resources:
         - 0
         - !GetAZs ''
       CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevB ]
-      MapPublicIpOnLaunch: false
+      MapPublicIpOnLaunch: true
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
@@ -408,6 +425,8 @@ Resources:
             Principal:
               Service:
                 - codebuild.amazonaws.com
+                - ecs-tasks.amazonaws.com
+                - ecs.amazonaws.com
             Action:
               - ecr:GetDownloadUrlForLayer
               - ecr:BatchGetImage
@@ -504,6 +523,8 @@ Resources:
             Value: !Ref DevEcsBackendSg
           - Name: FRONTEND_SG
             Value: !Ref DevEcsFrontendSg
+          - Name: SECRET_ENV_PATH
+            Value: !Sub "${SecretsEnvPath}"
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
