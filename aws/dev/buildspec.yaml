@@ -47,12 +47,6 @@ phases:
       - aws ecs register-task-definition --family back-end-dev --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
       - aws ecs register-task-definition --family front-end-dev --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
 
-      # Update the ECS services to use the new task definitions
-      - echo Updating ECS service...
-      - ecs_backend_service_name="back-end-service"
-      - ecs_frontend_service_name="front-end-service"
-      - ecs_cluster_name="TestCluster"
-
       # Create back-end service if it does not exist. If it does, update it
       - echo Checking if ECS Back End service exists...
       - if aws ecs describe-services --cluster $ECS_CLUSTER_NAME --services $ecs_backend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
