@@ -36,6 +36,9 @@ Parameters:
     Default: myapp/env-0Smc9P
 
 Resources:
+  #----------------------------------
+  #  IAM Roles & Policies
+  #----------------------------------
   EcsTaskRole:
     Type: AWS::IAM::Role
     Properties:
@@ -269,13 +272,28 @@ Resources:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
 
-  DevCodeBuildLogGroup:
-    Type: AWS::Logs::LogGroup
+  DevArtifactS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
     Properties:
-      LogGroupName: !Sub "/aws/codebuild/BuildProject-${AWS::StackName}"
-      Tags:
-        - Key: !FindInMap [ taggingMap, stackType, key ]
-          Value: !FindInMap [ taggingMap, stackType, dev ]
+      Bucket: !Ref DevArtifactS3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketVersioning
+              - s3:PutObject
+            Effect: Allow
+            Resource:
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+            Principal:
+              AWS: !GetAtt CodePipelineDevServiceRole.Arn
+
+  #----------------------------------
+  #  Security Groups
+  #----------------------------------
 
   DevEcsFrontendSg:
     Type: AWS::EC2::SecurityGroup
@@ -354,6 +372,10 @@ Resources:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
 
+  #----------------------------------
+  #  Networking: VPCs, Subnets, IGWs, Routing Tables
+  #----------------------------------
+
   DevVpc:
     Type: AWS::EC2::VPC
     Properties:
@@ -431,6 +453,10 @@ Resources:
       SubnetId: !Ref DevSubnetB
       RouteTableId: !Ref DevPublicRouteTable
 
+  #----------------------------------
+  #  ELB - ALB, Target Groups, and Rules
+  #----------------------------------
+
   DevAlb:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -485,6 +511,10 @@ Resources:
       TargetType: ip
       VpcId: !Ref DevVpc
       HealthCheckPath: /
+
+  #----------------------------------
+  #  Storage: ECR, S3
+  #----------------------------------
 
   DevRepoServer:
     Type: AWS::ECR::Repository
@@ -551,6 +581,43 @@ Resources:
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevArtifactS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+            BucketKeyEnabled: true
+      BucketName: !Sub "${ArtifactDevBucket}"
+      #        LoggingConfiguration:
+      #          LoggingConfiguration
+      #        MetadataConfiguration:
+      #          MetadataConfiguration
+      #        MetricsConfigurations:
+      #          - MetricsConfiguration
+      #        NotificationConfiguration:
+      #          NotificationConfiguration
+      #        OwnershipControls:
+      #          OwnershipControls
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      #        ReplicationConfiguration:
+      #          ReplicationConfiguration
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+  #        VersioningConfiguration:
+  #          VersioningConfiguration
+
+  #----------------------------------
+  #  Compute: ECS tasks & services
+  #----------------------------------
 
   DevECSCluster:
     Type: AWS::ECS::Cluster
@@ -645,6 +712,10 @@ Resources:
           Image: nginx:latest
           PortMappings:
             - ContainerPort: 4200
+
+  #----------------------------------
+  #  CICD: Build, Pipeline, Star
+  #----------------------------------
 
   DevCodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -786,63 +857,23 @@ Resources:
                   - CLOSED
             SourceActionName: !Sub "${ActionSourceCICD}"
 
-  DevArtifactS3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: aws:kms
-              KMSMasterKeyID: alias/aws/s3
-            BucketKeyEnabled: true
-      BucketName: !Sub "${ArtifactDevBucket}"
-      #        LoggingConfiguration:
-      #          LoggingConfiguration
-      #        MetadataConfiguration:
-      #          MetadataConfiguration
-      #        MetricsConfigurations:
-      #          - MetricsConfiguration
-      #        NotificationConfiguration:
-      #          NotificationConfiguration
-      #        OwnershipControls:
-      #          OwnershipControls
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      #        ReplicationConfiguration:
-      #          ReplicationConfiguration
-      Tags:
-        - Key: !FindInMap [ taggingMap, stackType, key ]
-          Value: !FindInMap [ taggingMap, stackType, dev ]
-  #        VersioningConfiguration:
-  #          VersioningConfiguration
-
-  DevArtifactS3BucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref DevArtifactS3Bucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - s3:GetObject
-              - s3:GetObjectVersion
-              - s3:GetBucketVersioning
-              - s3:PutObject
-            Effect: Allow
-            Resource:
-              - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
-              - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
-            Principal:
-              AWS: !GetAtt CodePipelineDevServiceRole.Arn
-
   DevCodeStarConnection:
     Type: AWS::CodeStarConnections::Connection
     Properties:
       ConnectionName: "GithubConnection"
       ProviderType: GitHub
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  #----------------------------------
+  #  Logging & Monitoring
+  #----------------------------------
+
+  DevCodeBuildLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/codebuild/BuildProject-${AWS::StackName}"
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
