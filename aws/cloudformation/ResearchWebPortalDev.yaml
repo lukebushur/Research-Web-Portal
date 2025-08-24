@@ -238,8 +238,8 @@ Resources:
                   - ecr:UploadLayerPart
                   - ecr:CompleteLayerUpload
                 Resource:
-                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}"
-                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}-${AWS::StackName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}-${AWS::StackName}"
               - Sid: ECRTokenAccess
                 Effect: Allow
                 Action:
@@ -309,8 +309,8 @@ Resources:
       GroupName: !Sub 'ecs-backend-sg-${AWS::StackName}'
       SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: 5000
-          ToPort: 5000
+          FromPort: 4200
+          ToPort: 4200
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 27017
@@ -322,9 +322,34 @@ Resources:
           CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
         - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+#          SourceSecurityGroupId: !Ref DevEcsFrontendSg
+          CidrIp: 0.0.0.0/0 # REMOVE AFTER TESTING!
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  AlbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to services and traffic from services
+      VpcId: !Ref DevVpc
+      GroupName: !Sub 'alb-sg-${AWS::StackName}'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          SourceSecurityGroupId: !Ref DevEcsFrontendSg
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
@@ -356,7 +381,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select
-        - 0
+        - 1
         - !GetAZs ''
       CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevB ]
       MapPublicIpOnLaunch: true
@@ -406,6 +431,61 @@ Resources:
       SubnetId: !Ref DevSubnetB
       RouteTableId: !Ref DevPublicRouteTable
 
+  DevAlb:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub alb-${AWS::StackName}
+      Scheme: internet-facing
+      Type: application
+      Subnets:
+        - !Ref DevSubnetA
+        - !Ref DevSubnetB
+      SecurityGroups:
+        - !Ref AlbSecurityGroup
+
+  DevAlbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref DevAlb
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DevEcsClientTargetGroup
+
+  DevAlbListenerRuleApi:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref DevAlbListener
+      Priority: 1
+      Conditions:
+        - Field: path-pattern
+          Values:
+            - /api/*
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DevEcsServerTargetGroup
+
+  DevEcsClientTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub tg-client-${AWS::StackName}
+      Port: 4200
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref DevVpc
+      HealthCheckPath: /health
+
+  DevEcsServerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub tg-server-${AWS::StackName}
+      Port: 8080
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref DevVpc
+      HealthCheckPath: /
+
   DevRepoServer:
     Type: AWS::ECR::Repository
     Properties:
@@ -450,7 +530,7 @@ Resources:
       #                ScanOnPush: false
       ImageTagMutability: MUTABLE
       #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
-      RepositoryName: !Sub "${ClientRepoName}"
+      RepositoryName: !Sub "${ClientRepoName}-${AWS::StackName}"
       RepositoryPolicyText:
         Version: "2012-10-17"
         Statement:
@@ -487,6 +567,84 @@ Resources:
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevClientService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - DevAlbListener
+      - DevAlbListenerRuleApi
+    Properties:
+      Cluster: !Ref DevECSCluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub ecs-frontend-service-${AWS::StackName}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref DevSubnetA
+            - !Ref DevSubnetB
+          SecurityGroups:
+            - !Ref DevEcsFrontendSg
+      TaskDefinition: !Ref FrontendTaskDefinition
+      LoadBalancers:
+        - TargetGroupArn: !Ref DevEcsClientTargetGroup
+          ContainerName: !Sub client-task-${AWS::StackName}
+          ContainerPort: 4200
+
+  DevServerService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - DevAlbListener
+      - DevAlbListenerRuleApi
+    Properties:
+      Cluster: !Ref DevECSCluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub ecs-backend-service-${AWS::StackName}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref DevSubnetA
+            - !Ref DevSubnetB
+          SecurityGroups:
+            - !Ref DevEcsBackendSg
+      TaskDefinition: !Ref ServerTaskDefinition
+      LoadBalancers:
+        - TargetGroupArn: !Ref DevEcsServerTargetGroup
+          ContainerName: !Sub server-task-${AWS::StackName}
+          ContainerPort: 8080
+
+  ServerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: back-end-dev
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub server-task-${AWS::StackName}
+          Image: nginx:latest
+          PortMappings:
+            - ContainerPort: 8080
+
+  FrontendTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: front-end-dev
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub client-task-${AWS::StackName}
+          Image: nginx:latest
+          PortMappings:
+            - ContainerPort: 4200
 
   DevCodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -525,6 +683,14 @@ Resources:
             Value: !Ref DevEcsFrontendSg
           - Name: SECRET_ENV_PATH
             Value: !Sub "${SecretsEnvPath}"
+          - Name: ecs_backend_service_name
+            Value: !Sub "ecs-backend-service-${AWS::StackName}"
+          - Name: ecs_frontend_service_name
+            Value: !Sub "ecs-frontend-service-${AWS::StackName}"
+          - Name: server-task-name
+            Value: !Sub client-task-${AWS::StackName}
+          - Name: client-task-name
+            Value: !Sub client-task-${AWS::StackName}
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
