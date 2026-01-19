@@ -44,9 +44,9 @@ phases:
             aws/dev/frontend-dev-task-definition-template.json > aws/dev/frontend-dev-final-task-definition.json
 
       # Register the updated task definitions with ECS
-      - echo $SERVER_TASK_NAME
-      - aws ecs register-task-definition --family $SERVER_TASK_NAME --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
-      - aws ecs register-task-definition --family $CLIENT_TASK_NAME --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
+      - echo "$SERVER_TASK_NAME"
+      - aws ecs register-task-definition --family "$SERVER_TASK_NAME" --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
+      - aws ecs register-task-definition --family "$CLIENT_TASK_NAME" --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
 
       # Create back-end service if it does not exist. If it does, update it
       - echo Checking if ECS Back End service exists...
