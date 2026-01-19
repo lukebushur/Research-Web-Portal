@@ -789,9 +789,9 @@ Resources:
             Value: !Sub "ecs-backend-service-${AWS::StackName}"
           - Name: ecs_frontend_service_name
             Value: !Sub "ecs-frontend-service-${AWS::StackName}"
-          - Name: server-task-name
+          - Name: SERVER_TASK_NAME
             Value: !Sub "server-task-${AWS::StackName}"
-          - Name: client-task-names
+          - Name: CLIENT_TASK_NAME
             Value: !Sub "client-task-${AWS::StackName}"
       LogsConfig:
         CloudWatchLogs:
@@ -889,7 +889,7 @@ Resources:
                   Excludes:
                     - '**/README.md'
                 Events:
-                  - CLOSED
+                  - OPENED
             SourceActionName: !Sub "${ActionSourceCICD}"
 
   DevCodeStarConnection:

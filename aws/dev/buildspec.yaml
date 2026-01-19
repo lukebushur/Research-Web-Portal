@@ -44,30 +44,30 @@ phases:
             aws/dev/frontend-dev-task-definition-template.json > aws/dev/frontend-dev-final-task-definition.json
 
       # Register the updated task definitions with ECS
-      - echo $server-task-name
-      - aws ecs register-task-definition --family $server-task-name --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
-      - aws ecs register-task-definition --family $client-task-name --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
+      - echo $SERVER_TASK_NAME
+      - aws ecs register-task-definition --family $SERVER_TASK_NAME --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
+      - aws ecs register-task-definition --family $CLIENT_TASK_NAME --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
 
       # Create back-end service if it does not exist. If it does, update it
       - echo Checking if ECS Back End service exists...
       - if aws ecs describe-services --cluster $ECS_CLUSTER_NAME --services $ecs_backend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
           echo "Service exists. Updating service...";
-          backend_new_task_revision=$(aws ecs describe-task-definition --task-definition "$server-task-name" --query "taskDefinition.revision" --output text);
-          aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ecs_backend_service_name --task-definition $server-task-name:$backend_new_task_revision;
+          backend_new_task_revision=$(aws ecs describe-task-definition --task-definition "$SERVER_TASK_NAME" --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ecs_backend_service_name --task-definition $SERVER_TASK_NAME:$backend_new_task_revision;
         else
           echo "Service does not exist. Creating new service...";
-          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_backend_service_name --task-definition $server-task-name --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$BACKEND_SG],assignPublicIp=ENABLED}";
+          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_backend_service_name --task-definition $SERVER_TASK_NAME --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$BACKEND_SG],assignPublicIp=ENABLED}";
         fi
 
       # Create front-end service if it does not exist. If it does, update it
       - echo Checking if ECS Front End service exists...
       - if aws ecs describe-services --cluster $ECS_CLUSTER_NAME --services $ecs_frontend_service_name --query "services[0].status" --output text | grep -q ACTIVE; then
           echo "Service exists. Updating service...";
-          frontend_new_task_revision=$(aws ecs describe-task-definition --task-definition "$client-task-name" --query "taskDefinition.revision" --output text);
-          aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ecs_frontend_service_name --task-definition $client-task-name:$frontend_new_task_revision;
+          frontend_new_task_revision=$(aws ecs describe-task-definition --task-definition "$CLIENT_TASK_NAME" --query "taskDefinition.revision" --output text);
+          aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ecs_frontend_service_name --task-definition $CLIENT_TASK_NAME:$frontend_new_task_revision;
         else
           echo "Service does not exist. Creating new service...";
-          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_frontend_service_name --task-definition $client-task-name --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$FRONTEND_SG],assignPublicIp=ENABLED}";
+          aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_frontend_service_name --task-definition $CLIENT_TASK_NAME --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$FRONTEND_SG],assignPublicIp=ENABLED}";
         fi
 
 artifacts:
