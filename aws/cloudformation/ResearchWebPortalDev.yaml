@@ -1,0 +1,925 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation Stack for Research Web Portal dev environment
+
+
+Mappings:
+  #    IAM-Map:
+  #        IAM-Role-Names:
+  #            ECR-Access: !Sub "ECR_Access_Role-${AWS::StackName}-${AWS::Region}"
+  taggingMap:
+    stackType:
+      key: stack
+      dev: dev
+      prod: prod
+  cidrMap:
+    vpcCidrs:
+      vpcDev: 10.0.3.0/24
+    subnetCidrs:
+      subnetDevA: 10.0.3.0/26
+      subnetDevB: 10.0.3.64/26
+
+Parameters:
+  ArtifactDevBucket:
+    Type: String
+    Default: rwpp-dev-codepipeline-artifact-bucket
+  ActionSourceCICD:
+    Type: String
+    Default: BingleBangle
+  ClientRepoName:
+    Type: String
+    Default: dev-repo-client
+  ServerRepoName:
+    Type: String
+    Default: dev-repo-server
+  SecretsEnvPath:
+    Type: String
+    Default: myapp/env-0Smc9P
+
+Resources:
+  #----------------------------------
+  #  IAM Roles & Policies
+  #----------------------------------
+  EcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - ecs.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: ECS task role.
+      #            ManagedPolicyArns:
+      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #            PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
+                  - "ecr:GetDownloadUrlForLayer"
+                Resource:
+                  - "*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "ECS_Task_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  EcsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+                - ecs-tasks.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: ECS execution role.
+      #            ManagedPolicyArns:
+      #                - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #            PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowAllNonTagged
+                Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - kms:Decrypt
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:CreateLogGroup
+                Resource:
+                  - "*"
+              - Sid: AllowAll
+                Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource:
+                  - "*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "ECS_Execution_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  CodePipelineDevServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Allows services to call ECR.
+      #        ManagedPolicyArns:
+      #          - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #        PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: S3Access # No tag conditions because s3 objects don't inherit tags, and it condition applies to them!
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+              - Sid: CodeStarCodeBuildAccess
+                Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                  - codestar-connections:GetConnection
+                  - codestar-connections:GetHost
+                  - codestar-connections:GetInstallationUrl
+                  - codestar-connections:ListConnections
+                  - codestar-connections:ListHosts
+                  - codestar-connections:PassConnection
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                Resource:
+                  - !Ref DevCodeStarConnection
+                  - !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/BuildProject-${AWS::StackName}"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+      RoleName: !Sub "CodePipeline-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  CodeBuildDevServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Allows services to call ECR.
+      #        ManagedPolicyArns:
+      #          - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      #            MaxSessionDuration: 36000
+      Path: /
+      #        PermissionsBoundary:
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: S3Access # No tag conditions because s3 objects don't inherit tags, and it condition applies to them!
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+              - Sid: CloudWatchLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/BuildProject-${AWS::StackName}"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*:log-stream:*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/stack": "dev"
+              - Sid: ECRAccess
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                Resource:
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}-${AWS::StackName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}-${AWS::StackName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}"
+              - Sid: ECRTokenAccess
+                Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource:
+                  - "*"
+              - Sid: ECSAccess
+                Effect: Allow
+                Action:
+                  - ecs:RegisterTaskDefinition
+                  - ecs:DescribeServices
+                  - ecs:UpdateService
+                  - ecs:CreateService
+                  - ecs:DescribeTaskDefinition
+                  - ecs:TagResource
+                Resource:
+                  - "*"
+              - Sid: IAMAccess
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - !GetAtt EcsTaskRole.Arn
+                  - !GetAtt EcsExecutionRole.Arn
+      RoleName: !Sub "CodeBuild-Dev-Service-Role-${AWS::StackName}-${AWS::Region}"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevArtifactS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DeletionPolicy: Retain
+    Properties:
+      Bucket: !Ref DevArtifactS3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketVersioning
+              - s3:PutObject
+            Effect: Allow
+            Resource:
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+            Principal:
+              AWS: !GetAtt CodePipelineDevServiceRole.Arn
+
+  #----------------------------------
+  #  Security Groups
+  #----------------------------------
+
+  DevEcsFrontendSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http from client to ECS containers and egress to VPC
+      VpcId: !Ref DevVpc
+      GroupName: !Sub 'ecs-frontend-sg-${AWS::StackName}'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 4200
+          ToPort: 4200
+          CidrIp: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 4200
+          ToPort: 4200
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevEcsBackendSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http from frontend-sg and egress to external db
+      VpcId: !Ref DevVpc
+      GroupName: !Sub 'ecs-backend-sg-${AWS::StackName}'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 4200
+          ToPort: 4200
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 27017
+          ToPort: 27017
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+#          SourceSecurityGroupId: !Ref DevEcsFrontendSg
+          CidrIp: 0.0.0.0/0 # REMOVE AFTER TESTING!
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  AlbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to services and traffic from services
+      VpcId: !Ref DevVpc
+      GroupName: !Sub 'alb-sg-${AWS::StackName}'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 4200
+          ToPort: 4200
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  #----------------------------------
+  #  Networking: VPCs, Subnets, IGWs, Routing Tables
+  #----------------------------------
+
+  DevVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
+      CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevA ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+      VpcId: !Ref DevVpc
+
+  DevSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 1
+        - !GetAZs ''
+      CidrBlock: !FindInMap [ cidrMap, subnetCidrs, subnetDevB ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+      VpcId: !Ref DevVpc
+
+  DevInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref DevVpc
+      InternetGatewayId: !Ref DevInternetGateway
+
+  DevPublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref DevVpc
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: DevVPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref DevPublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DevInternetGateway
+
+  DevSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DevSubnetA
+      RouteTableId: !Ref DevPublicRouteTable
+
+  DevSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DevSubnetB
+      RouteTableId: !Ref DevPublicRouteTable
+
+  #----------------------------------
+  #  ELB - ALB, Target Groups, and Rules
+  #----------------------------------
+
+  DevAlb:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub alb-${AWS::StackName}
+      Scheme: internet-facing
+      Type: application
+      Subnets:
+        - !Ref DevSubnetA
+        - !Ref DevSubnetB
+      SecurityGroups:
+        - !Ref AlbSecurityGroup
+
+  DevAlbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref DevAlb
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DevEcsClientTargetGroup
+
+  DevAlbListenerRuleApi:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref DevAlbListener
+      Priority: 1
+      Conditions:
+        - Field: path-pattern
+          Values:
+            - /api/*
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DevEcsServerTargetGroup
+
+  DevEcsClientTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub tg-client-${AWS::StackName}
+      Port: 4200
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref DevVpc
+      HealthCheckPath: /health
+
+  DevEcsServerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub tg-server-${AWS::StackName}
+      Port: 8080
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref DevVpc
+      HealthCheckPath: /
+
+  #----------------------------------
+  #  Storage: ECR, S3
+  #----------------------------------
+
+  DevRepoServer:
+    Type: AWS::ECR::Repository
+    Properties:
+      EmptyOnDelete: true
+      #            EncryptionConfiguration:
+      #                EncryptionType: KMS
+      #            ImageScanningConfiguration:
+      #                ScanOnPush: false
+      ImageTagMutability: MUTABLE
+      #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
+      RepositoryName: !Sub "${ServerRepoName}-${AWS::StackName}"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+                - ecs-tasks.amazonaws.com
+                - ecs.amazonaws.com
+            Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              - ecr:BatchCheckLayerAvailability
+              - ecr:PutImage
+              - ecr:InitiateLayerUpload
+              - ecr:UploadLayerPart
+              - ecr:CompleteLayerUpload
+              - ecr:GetAuthorizationToken
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevRepoClient:
+    Type: AWS::ECR::Repository
+    Properties:
+      EmptyOnDelete: true
+      #            EncryptionConfiguration:
+      #                EncryptionType: KMS
+      #            ImageScanningConfiguration:
+      #                ScanOnPush: false
+      ImageTagMutability: MUTABLE
+      #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
+      RepositoryName: !Sub "${ClientRepoName}-${AWS::StackName}"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              - ecr:BatchCheckLayerAvailability
+              - ecr:PutImage
+              - ecr:InitiateLayerUpload
+              - ecr:UploadLayerPart
+              - ecr:CompleteLayerUpload
+              - ecr:GetAuthorizationToken
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevArtifactS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+            BucketKeyEnabled: true
+      BucketName: !Sub "${ArtifactDevBucket}"
+      #        LoggingConfiguration:
+      #          LoggingConfiguration
+      #        MetadataConfiguration:
+      #          MetadataConfiguration
+      #        MetricsConfigurations:
+      #          - MetricsConfiguration
+      #        NotificationConfiguration:
+      #          NotificationConfiguration
+      #        OwnershipControls:
+      #          OwnershipControls
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      #        ReplicationConfiguration:
+      #          ReplicationConfiguration
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+  #        VersioningConfiguration:
+  #          VersioningConfiguration
+
+  #----------------------------------
+  #  Compute: ECS tasks & services
+  #----------------------------------
+
+  DevECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub DevCluster-${AWS::StackName}
+      CapacityProviders:
+        - FARGATE
+      DefaultCapacityProviderStrategy:
+        - CapacityProvider: FARGATE
+          Weight: 1
+      Configuration:
+        ExecuteCommandConfiguration:
+          Logging: DEFAULT
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevClientService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - DevAlbListener
+      - DevAlbListenerRuleApi
+      - DevECSCluster
+    Properties:
+      Cluster: !Ref DevECSCluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub ecs-frontend-service-${AWS::StackName}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref DevSubnetA
+            - !Ref DevSubnetB
+          SecurityGroups:
+            - !Ref DevEcsFrontendSg
+      TaskDefinition: !Ref FrontendTaskDefinition
+      LoadBalancers:
+        - TargetGroupArn: !Ref DevEcsClientTargetGroup
+          ContainerName: !Sub client-task-${AWS::StackName}
+          ContainerPort: 4200
+
+  DevServerService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - DevAlbListener
+      - DevAlbListenerRuleApi
+      - DevECSCluster
+    Properties:
+      Cluster: !Ref DevECSCluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub ecs-backend-service-${AWS::StackName}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref DevSubnetA
+            - !Ref DevSubnetB
+          SecurityGroups:
+            - !Ref DevEcsBackendSg
+      TaskDefinition: !Ref ServerTaskDefinition
+      LoadBalancers:
+        - TargetGroupArn: !Ref DevEcsServerTargetGroup
+          ContainerName: !Sub server-task-${AWS::StackName}
+          ContainerPort: 8080
+
+  ServerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+      - DevRepoServer
+    Properties:
+      Family: back-end-dev
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub server-task-${AWS::StackName}
+          Image: nginx:latest
+          Command:
+            - /bin/sh
+            - -c
+            - >
+              sed -i 's/listen[[:space:]]*80;/listen 8080;/g' /etc/nginx/conf.d/default.conf && 
+              sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
+              exec nginx -g 'daemon off;'
+          PortMappings:
+            - ContainerPort: 8080
+
+  FrontendTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+      - DevRepoClient
+    Properties:
+      Family: front-end-dev
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub client-task-${AWS::StackName}
+          Image: nginx:latest
+          Command:
+            - /bin/sh
+            - -c
+            - >
+              sed -i 's/listen[[:space:]]*80;/listen 4200;/g' /etc/nginx/conf.d/default.conf && 
+              sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
+              exec nginx -g 'daemon off;'
+          PortMappings:
+            - ContainerPort: 4200
+
+  #----------------------------------
+  #  CICD: Build, Pipeline, Star
+  #----------------------------------
+
+  DevCodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "BuildProject-${AWS::StackName}"
+      ServiceRole: !GetAtt CodeBuildDevServiceRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_MEDIUM
+        Image: aws/codebuild/standard:6.0
+        Type: LINUX_CONTAINER
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: AWS_ECR_REPO_SERVER_URI
+            Value: !GetAtt DevRepoServer.RepositoryUri
+          - Name: AWS_ECR_REPO_CLIENT_URI
+            Value: !GetAtt DevRepoClient.RepositoryUri
+          - Name: AWS_REGION
+            Value: !Ref AWS::Region
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: AWS_TASK_ROLE
+            Value: !Ref EcsTaskRole
+          - Name: AWS_EXECUTION_ROLE
+            Value: !Ref EcsExecutionRole
+          - Name: ECS_CLUSTER_NAME
+            Value: !Ref DevECSCluster
+          - Name: SUBNET_A
+            Value: !Ref DevSubnetA
+          - Name: SUBNET_B
+            Value: !Ref DevSubnetB
+          - Name: BACKEND_SG
+            Value: !Ref DevEcsBackendSg
+          - Name: FRONTEND_SG
+            Value: !Ref DevEcsFrontendSg
+          - Name: SECRET_ENV_PATH
+            Value: !Sub "${SecretsEnvPath}"
+          - Name: ecs_backend_service_name
+            Value: !Sub "ecs-backend-service-${AWS::StackName}"
+          - Name: ecs_frontend_service_name
+            Value: !Sub "ecs-frontend-service-${AWS::StackName}"
+          - Name: server-task-name
+            Value: !Sub "server-task-${AWS::StackName}"
+          - Name: client-task-names
+            Value: !Sub "client-task-${AWS::StackName}"
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Ref DevCodeBuildLogGroup
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: aws/dev/buildspec.yaml
+      TimeoutInMinutes: 15
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  DevCodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    DependsOn:
+      - ApprovalWaitCondition
+      - DevClientService
+      - DevServerService
+    Properties:
+      ArtifactStore:
+        Type: S3
+        Location: !Ref DevArtifactS3Bucket
+      Name: !Sub "Pipeline_-${AWS::StackName}-${AWS::Region}"
+      PipelineType: V2
+      RestartExecutionOnUpdate: false
+      RoleArn: !GetAtt CodePipelineDevServiceRole.Arn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: !Sub "${ActionSourceCICD}"
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: 1
+                Provider: CodeStarSourceConnection
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                ConnectionArn: !Ref DevCodeStarConnection
+                FullRepositoryId: "lukebushur/Research-Web-Portal"
+                BranchName: "dev-deployment"
+        - Name: Build
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ProjectName: !Ref DevCodeBuildProject
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+      Triggers:
+        - ProviderType: CodeStarSourceConnection
+#          TriggerName: CodeStarSourceConnection
+#          TriggerTargetArn: !Ref DevCodeStarConnection
+#          TriggerType: Webhook
+          GitConfiguration:
+            Push:
+              #                - Tags:
+              #                    Excludes:
+              #                      - beta-*
+              #                    Includes:
+              #                      - release-*
+              - Branches:
+                  Includes:
+                    - dev-deployment
+                FilePaths:
+                  Includes:
+                    - aws/**
+                    - client/**
+                    - server/**
+                    - docker-compose.yml
+                    - nginx.conf
+            #                    Excludes:
+            #                      - '**/README.md'
+            PullRequest:
+              - Branches:
+                  Includes:
+                    - dev-deployment
+                FilePaths:
+                  Includes:
+                    - aws/**
+                    - client/**
+                    - server/**
+                    - docker-compose.yml
+                    - nginx.conf
+                  Excludes:
+                    - '**/README.md'
+                Events:
+                  - CLOSED
+            SourceActionName: !Sub "${ActionSourceCICD}"
+
+  DevCodeStarConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: "GithubConnection"
+      ProviderType: GitHub
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  ApprovalWaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+
+  ApprovalWaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    DependsOn: DevCodeStarConnection
+    Properties:
+      Handle: !Ref ApprovalWaitHandle
+      Timeout: "3600"
+      Count: 1
+
+  #----------------------------------
+  #  Logging & Monitoring
+  #----------------------------------
+
+  DevCodeBuildLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/codebuild/BuildProject-${AWS::StackName}"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
