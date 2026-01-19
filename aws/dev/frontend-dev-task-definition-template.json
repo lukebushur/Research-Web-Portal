@@ -18,6 +18,11 @@
       "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
+      "secrets": [
+        {
+          "name": "BACKEND_URI",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:BACKEND_URI::"
+        }],
       "ulimits": [],
       "logConfiguration": {
         "logDriver": "awslogs",

@@ -5,7 +5,7 @@ FROM public.ecr.aws/docker/library/node:lts-alpine AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json to container
-COPY ./package*.json .
+COPY ./package*.json ./
 
 # Install dependencies
 RUN npm install
