@@ -44,6 +44,7 @@ phases:
             aws/dev/frontend-dev-task-definition-template.json > aws/dev/frontend-dev-final-task-definition.json
 
       # Register the updated task definitions with ECS
+      - echo $server-task-name
       - aws ecs register-task-definition --family $server-task-name --cli-input-json file://aws/dev/backend-dev-final-task-definition.json
       - aws ecs register-task-definition --family $client-task-name --cli-input-json file://aws/dev/frontend-dev-final-task-definition.json
 

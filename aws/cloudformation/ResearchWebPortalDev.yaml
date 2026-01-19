@@ -242,7 +242,9 @@ Resources:
                   - ecr:CompleteLayerUpload
                 Resource:
                   - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}-${AWS::StackName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ServerRepoName}"
                   - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}-${AWS::StackName}"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ClientRepoName}"
               - Sid: ECRTokenAccess
                 Effect: Allow
                 Action:
@@ -274,6 +276,7 @@ Resources:
 
   DevArtifactS3BucketPolicy:
     Type: AWS::S3::BucketPolicy
+    DeletionPolicy: Retain
     Properties:
       Bucket: !Ref DevArtifactS3Bucket
       PolicyDocument:
@@ -358,6 +361,14 @@ Resources:
         - IpProtocol: tcp
           FromPort: 443
           ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 4200
+          ToPort: 4200
           CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -519,14 +530,14 @@ Resources:
   DevRepoServer:
     Type: AWS::ECR::Repository
     Properties:
-      EmptyOnDelete: false
+      EmptyOnDelete: true
       #            EncryptionConfiguration:
       #                EncryptionType: KMS
       #            ImageScanningConfiguration:
       #                ScanOnPush: false
       ImageTagMutability: MUTABLE
       #            LifecyclePolicy: ReplaceMe if needed: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-ecr-repository-lifecyclepolicy.html
-      RepositoryName: !Sub "${ServerRepoName}"
+      RepositoryName: !Sub "${ServerRepoName}-${AWS::StackName}"
       RepositoryPolicyText:
         Version: "2012-10-17"
         Statement:
@@ -553,7 +564,7 @@ Resources:
   DevRepoClient:
     Type: AWS::ECR::Repository
     Properties:
-      EmptyOnDelete: false
+      EmptyOnDelete: true
       #            EncryptionConfiguration:
       #                EncryptionType: KMS
       #            ImageScanningConfiguration:
@@ -622,7 +633,7 @@ Resources:
   DevECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: DevCluster
+      ClusterName: !Sub DevCluster-${AWS::StackName}
       CapacityProviders:
         - FARGATE
       DefaultCapacityProviderStrategy:
@@ -640,6 +651,7 @@ Resources:
     DependsOn:
       - DevAlbListener
       - DevAlbListenerRuleApi
+      - DevECSCluster
     Properties:
       Cluster: !Ref DevECSCluster
       LaunchType: FARGATE
@@ -664,6 +676,7 @@ Resources:
     DependsOn:
       - DevAlbListener
       - DevAlbListenerRuleApi
+      - DevECSCluster
     Properties:
       Cluster: !Ref DevECSCluster
       LaunchType: FARGATE
@@ -685,6 +698,8 @@ Resources:
 
   ServerTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn:
+      - DevRepoServer
     Properties:
       Family: back-end-dev
       RequiresCompatibilities:
@@ -695,11 +710,20 @@ Resources:
       ContainerDefinitions:
         - Name: !Sub server-task-${AWS::StackName}
           Image: nginx:latest
+          Command:
+            - /bin/sh
+            - -c
+            - >
+              sed -i 's/listen[[:space:]]*80;/listen 8080;/g' /etc/nginx/conf.d/default.conf && 
+              sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
+              exec nginx -g 'daemon off;'
           PortMappings:
             - ContainerPort: 8080
 
   FrontendTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn:
+      - DevRepoClient
     Properties:
       Family: front-end-dev
       RequiresCompatibilities:
@@ -710,6 +734,13 @@ Resources:
       ContainerDefinitions:
         - Name: !Sub client-task-${AWS::StackName}
           Image: nginx:latest
+          Command:
+            - /bin/sh
+            - -c
+            - >
+              sed -i 's/listen[[:space:]]*80;/listen 4200;/g' /etc/nginx/conf.d/default.conf && 
+              sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
+              exec nginx -g 'daemon off;'
           PortMappings:
             - ContainerPort: 4200
 
@@ -759,9 +790,9 @@ Resources:
           - Name: ecs_frontend_service_name
             Value: !Sub "ecs-frontend-service-${AWS::StackName}"
           - Name: server-task-name
-            Value: !Sub client-task-${AWS::StackName}
-          - Name: client-task-name
-            Value: !Sub client-task-${AWS::StackName}
+            Value: !Sub "server-task-${AWS::StackName}"
+          - Name: client-task-names
+            Value: !Sub "client-task-${AWS::StackName}"
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
@@ -776,6 +807,10 @@ Resources:
 
   DevCodePipeline:
     Type: AWS::CodePipeline::Pipeline
+    DependsOn:
+      - ApprovalWaitCondition
+      - DevClientService
+      - DevServerService
     Properties:
       ArtifactStore:
         Type: S3
@@ -865,6 +900,17 @@ Resources:
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
+
+  ApprovalWaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+
+  ApprovalWaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    DependsOn: DevCodeStarConnection
+    Properties:
+      Handle: !Ref ApprovalWaitHandle
+      Timeout: "3600"
+      Count: 1
 
   #----------------------------------
   #  Logging & Monitoring
