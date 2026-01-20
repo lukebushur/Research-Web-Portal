@@ -159,8 +159,8 @@ Resources:
                   - s3:GetBucketVersioning
                   - s3:PutObject
                 Resource:
-                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
-                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}-${AWS::StackName}"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}-${AWS::StackName}/*"
               - Sid: CodeStarCodeBuildAccess
                 Effect: Allow
                 Action:
@@ -215,8 +215,8 @@ Resources:
                   - s3:GetBucketVersioning
                   - s3:PutObject
                 Resource:
-                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
-                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}-${AWS::StackName}"
+                  - !Sub "arn:aws:s3:::${ArtifactDevBucket}-${AWS::StackName}/*"
               - Sid: CloudWatchLogs
                 Effect: Allow
                 Action:
@@ -289,8 +289,8 @@ Resources:
               - s3:PutObject
             Effect: Allow
             Resource:
-              - !Sub "arn:aws:s3:::${ArtifactDevBucket}"
-              - !Sub "arn:aws:s3:::${ArtifactDevBucket}/*"
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}-${AWS::StackName}"
+              - !Sub "arn:aws:s3:::${ArtifactDevBucket}-${AWS::StackName}/*"
             Principal:
               AWS: !GetAtt CodePipelineDevServiceRole.Arn
 
@@ -602,7 +602,7 @@ Resources:
               SSEAlgorithm: aws:kms
               KMSMasterKeyID: alias/aws/s3
             BucketKeyEnabled: true
-      BucketName: !Sub "${ArtifactDevBucket}"
+      BucketName: !Sub "${ArtifactDevBucket}-${AWS::StackName}"
       #        LoggingConfiguration:
       #          LoggingConfiguration
       #        MetadataConfiguration:
@@ -668,7 +668,7 @@ Resources:
       TaskDefinition: !Ref FrontendTaskDefinition
       LoadBalancers:
         - TargetGroupArn: !Ref DevEcsClientTargetGroup
-          ContainerName: !Sub client-task-${AWS::StackName}
+          ContainerName: !Sub client-task
           ContainerPort: 4200
 
   DevServerService:
@@ -693,7 +693,7 @@ Resources:
       TaskDefinition: !Ref ServerTaskDefinition
       LoadBalancers:
         - TargetGroupArn: !Ref DevEcsServerTargetGroup
-          ContainerName: !Sub server-task-${AWS::StackName}
+          ContainerName: !Sub server-task
           ContainerPort: 8080
 
   ServerTaskDefinition:
@@ -701,14 +701,14 @@ Resources:
     DependsOn:
       - DevRepoServer
     Properties:
-      Family: back-end-dev
+      Family: !Sub "server-task"
       RequiresCompatibilities:
         - FARGATE
       Cpu: 256
       Memory: 512
       NetworkMode: awsvpc
       ContainerDefinitions:
-        - Name: !Sub server-task-${AWS::StackName}
+        - Name: !Sub server
           Image: nginx:latest
           Command:
             - /bin/sh
@@ -725,14 +725,14 @@ Resources:
     DependsOn:
       - DevRepoClient
     Properties:
-      Family: front-end-dev
+      Family: !Sub "client-task"
       RequiresCompatibilities:
         - FARGATE
       Cpu: 256
       Memory: 512
       NetworkMode: awsvpc
       ContainerDefinitions:
-        - Name: !Sub client-task-${AWS::StackName}
+        - Name: !Sub client
           Image: nginx:latest
           Command:
             - /bin/sh
@@ -790,9 +790,9 @@ Resources:
           - Name: ecs_frontend_service_name
             Value: !Sub "ecs-frontend-service-${AWS::StackName}"
           - Name: SERVER_TASK_NAME
-            Value: !Sub "server-task-${AWS::StackName}"
+            Value: !Sub "server-task"
           - Name: CLIENT_TASK_NAME
-            Value: !Sub "client-task-${AWS::StackName}"
+            Value: !Sub "client-task"
       LogsConfig:
         CloudWatchLogs:
           Status: ENABLED
@@ -889,7 +889,7 @@ Resources:
                   Excludes:
                     - '**/README.md'
                 Events:
-                  - OPENED
+                  - OPEN
             SourceActionName: !Sub "${ActionSourceCICD}"
 
   DevCodeStarConnection:
@@ -906,7 +906,6 @@ Resources:
 
   ApprovalWaitCondition:
     Type: AWS::CloudFormation::WaitCondition
-    DependsOn: DevCodeStarConnection
     Properties:
       Handle: !Ref ApprovalWaitHandle
       Timeout: "3600"
