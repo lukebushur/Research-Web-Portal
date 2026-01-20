@@ -12,7 +12,7 @@ phases:
       - echo Building server image...
       - docker build -t $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG -f server/Dockerfile ./server
       - docker tag $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG $AWS_ECR_REPO_SERVER_URI:latest
-api/health
+
       - echo Building client image...
       - docker build -t $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG -f client/Dockerfile ./client
       - docker tag $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG $AWS_ECR_REPO_CLIENT_URI:latest
