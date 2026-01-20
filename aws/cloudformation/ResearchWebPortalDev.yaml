@@ -668,7 +668,7 @@ Resources:
       TaskDefinition: !Ref FrontendTaskDefinition
       LoadBalancers:
         - TargetGroupArn: !Ref DevEcsClientTargetGroup
-          ContainerName: !Sub client-task
+          ContainerName: !Sub client
           ContainerPort: 4200
 
   DevServerService:
@@ -693,7 +693,7 @@ Resources:
       TaskDefinition: !Ref ServerTaskDefinition
       LoadBalancers:
         - TargetGroupArn: !Ref DevEcsServerTargetGroup
-          ContainerName: !Sub server-task
+          ContainerName: !Sub server
           ContainerPort: 8080
 
   ServerTaskDefinition:
@@ -701,7 +701,7 @@ Resources:
     DependsOn:
       - DevRepoServer
     Properties:
-      Family: !Sub "server-task"
+      Family: server-task
       RequiresCompatibilities:
         - FARGATE
       Cpu: 256
@@ -725,7 +725,7 @@ Resources:
     DependsOn:
       - DevRepoClient
     Properties:
-      Family: !Sub "client-task"
+      Family: client-task
       RequiresCompatibilities:
         - FARGATE
       Cpu: 256
