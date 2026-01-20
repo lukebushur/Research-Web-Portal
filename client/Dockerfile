@@ -26,4 +26,4 @@ COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # front-end server listens on port 80
-EXPOSE 80
+EXPOSE 4200
