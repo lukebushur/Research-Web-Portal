@@ -12,13 +12,16 @@ phases:
       - echo Building server image...
       - docker build -t $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG -f server/Dockerfile ./server
       - docker tag $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG $AWS_ECR_REPO_SERVER_URI:latest
-
+api/health
       - echo Building client image...
       - docker build -t $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG -f client/Dockerfile ./client
       - docker tag $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG $AWS_ECR_REPO_CLIENT_URI:latest
 
   post_build:
     commands:
+      - echo Writing image definitions file...
+      - printf '[{"name":"client","imageUri":"%s"},{"name":"server","imageUri":"%s"}]' $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG > imagedefinitions.json
+
       - echo Pushing images to ECR...
       - docker push $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG
       - docker push $AWS_ECR_REPO_SERVER_URI:latest
@@ -70,9 +73,12 @@ phases:
           aws ecs create-service --cluster $ECS_CLUSTER_NAME --service-name $ecs_frontend_service_name --task-definition $CLIENT_TASK_NAME --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_A,$SUBNET_B],securityGroups=[$FRONTEND_SG],assignPublicIp=ENABLED}";
         fi
 
+      - printf '[{"name":"client","imageUri":"%s"},{"name":"server","imageUri":"%s"}]' $AWS_ECR_REPO_CLIENT_URI:$IMAGE_TAG $AWS_ECR_REPO_SERVER_URI:$IMAGE_TAG > imagedefinitions.json
+
 artifacts:
   files:
     - aws/dev/backend-dev-task-definition-template.json
     - aws/dev/backend-dev-final-task-definition.json
     - aws/dev/frontend-dev-task-definition-template.json
     - aws/dev/frontend-dev-final-task-definition.json
+    - imagedefinitions.json
