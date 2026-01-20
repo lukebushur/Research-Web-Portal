@@ -511,7 +511,7 @@ Resources:
       Protocol: HTTP
       TargetType: ip
       VpcId: !Ref DevVpc
-      HealthCheckPath: /health
+      HealthCheckPath: /login
 
   DevEcsServerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -739,7 +739,7 @@ Resources:
             - -c
             - >
               sed -i 's/listen[[:space:]]*80;/listen 4200;/g' /etc/nginx/conf.d/default.conf && 
-              sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
+              sed -i '/location \/ {/i \    location /login { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
               exec nginx -g 'daemon off;'
           PortMappings:
             - ContainerPort: 4200
