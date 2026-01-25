@@ -22,7 +22,20 @@
         {
           "name": "BACKEND_URI",
           "valueFrom": "arn:aws:ssm:<REGION>:<ACCOUNT_ID>:parameter/myapp/dev/ELB_DNS"
-        }],
+        },
+        {
+          "name": "STUDENT",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:STUDENT::"
+        },
+        {
+          "name": "FACULTY",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:FACULTY::"
+        },
+        {
+          "name": "INDUSTRY",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:INDUSTRY::"
+        }
+      ],
       "ulimits": [],
       "logConfiguration": {
         "logDriver": "awslogs",
