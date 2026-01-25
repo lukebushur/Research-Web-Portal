@@ -19,7 +19,8 @@ async function dbConnect() {
         // Any other environment -> throw error (invalid)
         throw new Error('Invalid NODE_ENV: ' + process.env.NODE_ENV);
     }
-    const dbUri = 'mongodb+srv://' + process.env.DB_URL + db;
+    const dbUri = 'mongodb://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@' + process.env.DB_URL + ':27017' + db;
+    console.log(dbUri)
     const dbName = /^\/(.+)\?/.exec(db)[1];
 
     return await mongoose.connect(dbUri, { autoIndex: true }).then(() => {
