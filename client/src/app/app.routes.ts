@@ -36,6 +36,7 @@ const routeConfig: Routes = [
       // NON-AUTHED ROUTES
       // No authentication required
       { path: '', component: LandingComponent, pathMatch: 'full' },
+      { path: 'health', component: LandingComponent, pathMatch: 'full'},
       { path: 'terms-of-service', component: TermsOfServiceComponent },
 
       // AUTHENTICATION ROUTES

@@ -37,8 +37,15 @@
           "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_DEV_COLLECTION::"
         },
         {
-          "name": "DB_URI",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:DB_URI::"
+          "name": "DB_URL",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:host::"
+        },
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<DB_SECRET_ENV_PATH>:username::"
+        },        {
+          "name": "DB_PASS",
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<DB_SECRET_ENV_PATH>:password::"
         },
         {
           "name": "EMAIL_PASSWORD",
