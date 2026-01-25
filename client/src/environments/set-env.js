@@ -5,7 +5,7 @@ const { join } = require("node:path");
 // This file is only to be used when dynamically creating ALBs for testing AWS deployments,
 // long term deployments would typically use a permanent DNS name from Route 53 instead
 
-const albDns = process.env.ALB_DNS || 'localhost:8080';
+const albDns = process.env.BACKEND_URI || 'localhost:8080';
 const studentType = process.env.STUDENT || 0;
 const facultyType = process.env.FACULTY || 1;
 const industryType = process.env.INDUSTRY || 2;
