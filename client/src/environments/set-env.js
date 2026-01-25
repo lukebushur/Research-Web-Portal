@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { join } = require("node:path");
 
 // This file dynamically grabs the envs from a container and writes them to the environment.ts file.
 // This file is only to be used when dynamically creating ALBs for testing AWS deployments,
@@ -8,7 +9,7 @@ const albDns = process.env.ALB_DNS || 'localhost:8080';
 const studentType = process.env.STUDENT || 0;
 const facultyType = process.env.FACULTY || 1;
 const industryType = process.env.INDUSTRY || 2;
-const targetPath = path.join(__dirname, 'environment.ts');
+const targetPath = join(__dirname, 'environment.ts');
 
 const envConfigFile = `
 export const environment = {
