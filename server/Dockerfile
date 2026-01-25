@@ -13,8 +13,11 @@ RUN npm install
 # Copy server files to container
 COPY . .
 
+# Get TLS certs for accessing documentDB database
+RUN wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -O /app/global-bundle.pem
+
 # Run back-end server, which listens on port 5000
-EXPOSE 5000
+EXPOSE 8080
 
 # Start the server
 CMD npm start

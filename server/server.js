@@ -55,7 +55,7 @@ app.use('*', function (req, res) {
     res.status(404).json(generateRes(false, 404, "ROUTE_NOT_FOUND", {}));
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 // Connect to the database 
 await dbConnect().then(() => {
