@@ -531,7 +531,7 @@ Resources:
       Conditions:
         - Field: path-pattern
           Values:
-            - /api/*
+            - /api*
       Actions:
         - Type: forward
           TargetGroupArn: !Ref DevEcsServerTargetGroup
@@ -544,7 +544,7 @@ Resources:
       Protocol: HTTP
       TargetType: ip
       VpcId: !Ref DevVpc
-      HealthCheckPath: /heath
+      HealthCheckPath: /health
 
   DevEcsServerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -554,7 +554,7 @@ Resources:
       Protocol: HTTP
       TargetType: ip
       VpcId: !Ref DevVpc
-      HealthCheckPath: /heath
+      HealthCheckPath: /api/health
 
   #----------------------------------
   #  Storage: ECR, S3
@@ -748,7 +748,7 @@ Resources:
             - -c
             - >
               sed -i 's/listen[[:space:]]*80;/listen 8080;/g' /etc/nginx/conf.d/default.conf && 
-              sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
+              sed -i '/location \/ {/i \    location /api/health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf && 
               exec nginx -g 'daemon off;'
           PortMappings:
             - ContainerPort: 8080
@@ -769,8 +769,8 @@ Resources:
           Image: nginx:latest
           Command:
             - /bin/sh
-              - -c
-              - >
+            - -c
+            - >
               sed -i 's/listen[[:space:]]*80;/listen 4200;/g' /etc/nginx/conf.d/default.conf &&
               sed -i '/location \/ {/i \    location /health { return 200 "OK"; }' /etc/nginx/conf.d/default.conf &&
               exec nginx -g 'daemon off;'
@@ -964,6 +964,9 @@ Resources:
       DBSubnetGroupName: !Ref DocDBSubnetGroup
       StorageEncrypted: true
       DeletionProtection: false
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   DocDBInstance:
     Type: AWS::DocDB::DBInstance
@@ -971,6 +974,9 @@ Resources:
       DBClusterIdentifier: !Ref DocDBCluster
       DBInstanceClass: db.t3.medium
       DBInstanceIdentifier: !Sub "${AWS::StackName}-instance"
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   DocDBSubnetGroup:
     Type: AWS::DocDB::DBSubnetGroup
@@ -979,6 +985,9 @@ Resources:
       SubnetIds:
         - !Ref DevSubnetC
         - !Ref DevSubnetD
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   DocDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -990,6 +999,9 @@ Resources:
           FromPort: 27017
           ToPort: 27017
           SourceSecurityGroupId: !Ref DevEcsBackendSg
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   DocumentDBSecrets:
     Type: 'AWS::SecretsManager::Secret'
@@ -1001,6 +1013,9 @@ Resources:
         GenerateStringKey: "password"
         PasswordLength: 32
         ExcludeCharacters: '"@/'
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   DocDBSecretAttachment:
     Type: 'AWS::SecretsManager::SecretTargetAttachment'
@@ -1008,6 +1023,9 @@ Resources:
       SecretId: !Ref DocumentDBSecrets
       TargetId: !Ref DocDBCluster
       TargetType: 'AWS::DocDB::DBCluster'
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   #----------------------------------
   #  Logging & Monitoring

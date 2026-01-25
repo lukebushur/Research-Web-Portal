@@ -45,7 +45,7 @@ app.get('/', function (req, res) {
     res.status(200).json(generateRes(true, 200, "HEALTH_CHECK_PASSED", {}));
 });
 
-app.get('/health', function (req, res) {
+app.get('/api/health', function (req, res) {
     res.status(200).json(generateRes(true, 200, "HEALTH_CHECK_PASSED", {}));
 });
 
