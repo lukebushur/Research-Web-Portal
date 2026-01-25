@@ -21,6 +21,7 @@ async function dbConnect() {
     }
     const dbUri = 'mongodb+srv://' + process.env.host + db;
     console.log(dbUri);
+    console.log(process.env);
     const dbName = /^\/(.+)\?/.exec(db)[1];
 
     return await mongoose.connect(dbUri, { autoIndex: true }).then(() => {
