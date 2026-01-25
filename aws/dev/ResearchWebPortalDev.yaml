@@ -569,7 +569,6 @@ Resources:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
 
-
   DevEcsServerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -582,7 +581,6 @@ Resources:
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]
-
 
   #----------------------------------
   #  Storage: ECR, S3

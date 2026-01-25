@@ -5,10 +5,10 @@ const fs = require('fs');
 // long term deployments would typically use a permanent DNS name from Route 53 instead
 
 const albDns = process.env.ALB_DNS || 'localhost:8080';
-const studentType = process.env.STUDENT || 'localhost:8080';
-const facultyType = process.env.FACULTY || 'localhost:8080';
-const industryType = process.env.INDUSTRY || 'localhost:8080';
-const targetPath = './src/environments/environment.ts';
+const studentType = process.env.STUDENT || 0;
+const facultyType = process.env.FACULTY || 1;
+const industryType = process.env.INDUSTRY || 2;
+const targetPath = path.join(__dirname, 'environment.ts');
 
 const envConfigFile = `
 export const environment = {

@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "node src/environments/set-env.js && ng serve",
-    "build": "ng build",
+    "build": "node src/environments/set-env.js && ng build",
     "build:stats": "ng build --stats-json",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "node src/environments/set-env.js && ng test"
   },
   "license": "UNLICENSED",
   "private": true,
