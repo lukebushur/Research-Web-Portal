@@ -1023,9 +1023,6 @@ Resources:
       SecretId: !Ref DocumentDBSecrets
       TargetId: !Ref DocDBCluster
       TargetType: 'AWS::DocDB::DBCluster'
-      Tags:
-        - Key: !FindInMap [ taggingMap, stackType, key ]
-          Value: !FindInMap [ taggingMap, stackType, dev ]
 
   #----------------------------------
   #  Logging & Monitoring

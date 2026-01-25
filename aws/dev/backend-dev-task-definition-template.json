@@ -38,7 +38,7 @@
         },
         {
           "name": "DB_URL",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:host::"
+          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<DB_SECRET_ENV_PATH>:host::"
         },
         {
           "name": "DB_USER",
