@@ -19,7 +19,12 @@ async function dbConnect() {
         // Any other environment -> throw error (invalid)
         throw new Error('Invalid NODE_ENV: ' + process.env.NODE_ENV);
     }
-    const dbUri = 'mongodb://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@' + process.env.DB_URL + ':27017' + db;
+
+    const username = process.env.DB_USER;
+    const password = encodeURIComponent(process.env.DB_PASS); // Fixes the error
+    const host = process.env.DB_HOST;
+
+    const uri = `mongodb://${username}:${password}@${host}:27017${db}`;
     console.log(dbUri)
     const dbName = /^\/(.+)\?/.exec(db)[1];
 
