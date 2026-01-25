@@ -22,7 +22,7 @@ async function dbConnect() {
 
     const username = process.env.DB_USER;
     const password = encodeURIComponent(process.env.DB_PASS); // Fixes the error
-    const host = process.env.DB_HOST;
+    const host = process.env.DB_URL;
 
     const dbUri = `mongodb://${username}:${password}@${host}:27017${db}`;
     console.log(dbUri)
