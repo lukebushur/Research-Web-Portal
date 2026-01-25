@@ -21,7 +21,7 @@
       "secrets": [
         {
           "name": "BACKEND_URI",
-          "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:<SECRET_ENV_PATH>:BACKEND_URI::"
+          "valueFrom": "arn:aws:ssm:<REGION>:<ACCOUNT_ID>:parameter/myapp/dev/ELB_DNS"
         }],
       "ulimits": [],
       "logConfiguration": {

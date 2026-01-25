@@ -121,7 +121,7 @@ Resources:
                   - logs:CreateLogGroup
                 Resource:
                   - "*"
-              - Sid: AllowAll
+              - Sid: AllowSecretsManageRetrieval
                 Effect: Allow
                 Action:
                   - secretsmanager:GetSecretValue
@@ -130,6 +130,13 @@ Resources:
                 Condition:
                   StringEquals:
                     "aws:ResourceTag/stack": "dev"
+              - Sid: SSMAccess
+                Effect: Allow
+                Action:
+                  - ssm:GetParameters
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/myapp/dev/*"
       RoleName: !Sub "ECS_Execution_Role-${AWS::StackName}-${AWS::Region}" # Keep Stack Name and Region in avoid IAM errors due to multiple roles with the same name
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
@@ -512,6 +519,19 @@ Resources:
         - !Ref DevSubnetB
       SecurityGroups:
         - !Ref AlbSecurityGroup
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
+
+  AlbDnsParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /myapp/dev/ELB_DNS
+      Type: String
+      Value: !GetAtt DevAlb.DNSName
+      Tags:
+        stack: dev # cannot user findInMap for parameter tags, for some reason, I guess
 
   DevAlbListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -545,6 +565,10 @@ Resources:
       TargetType: ip
       VpcId: !Ref DevVpc
       HealthCheckPath: /health
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
 
   DevEcsServerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -555,6 +579,10 @@ Resources:
       TargetType: ip
       VpcId: !Ref DevVpc
       HealthCheckPath: /api/health
+      Tags:
+        - Key: !FindInMap [ taggingMap, stackType, key ]
+          Value: !FindInMap [ taggingMap, stackType, dev ]
+
 
   #----------------------------------
   #  Storage: ECR, S3
