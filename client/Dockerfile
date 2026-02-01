@@ -10,8 +10,6 @@ RUN npm cache clean --force
 # Copy Angular project filels
 COPY . .
 
-RUN node src/environments/set-env.js
-
 RUN printenv
 
 # Install dependencies
@@ -31,3 +29,5 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # front-end server listens on port 4200
 EXPOSE 4200
+
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
