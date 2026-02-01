@@ -58,6 +58,7 @@
       "value": "RWP Task Definition - Front End Dev"
     }
   ],
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<TASK_ROLE>",
   "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION_ROLE>",
   "networkMode": "awsvpc",
   "volumes": [],
