@@ -25,7 +25,6 @@ async function dbConnect() {
     const host = process.env.DB_URL;
 
     const dbUri = `mongodb://${username}:${password}@${host}:27017${db}&tls=true&tlsCAFile=global-bundle.pem&replicaSet=rs0&readPreference=primary&authMechanism=SCRAM-SHA-1`;
-    console.log(dbUri)
     const dbName = /^\/(.+)\?/.exec(db)[1];
 
     return await mongoose.connect(dbUri, { autoIndex: true }).then(() => {

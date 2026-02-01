@@ -1024,7 +1024,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 27017
           ToPort: 27017
-          SourceSecurityGroupId: !Ref DevEcsBackendSg
+          CidrIp: !FindInMap [ cidrMap, vpcCidrs, vpcDev ]
       Tags:
         - Key: !FindInMap [ taggingMap, stackType, key ]
           Value: !FindInMap [ taggingMap, stackType, dev ]

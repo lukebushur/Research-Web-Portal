@@ -10,6 +10,8 @@ RUN npm cache clean --force
 # Copy Angular project filels
 COPY . .
 
+RUN node src/environments/set-env.js
+
 # Install dependencies
 RUN npm install
 
