@@ -27,6 +27,9 @@ COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html
 # # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # front-end server listens on port 4200
 EXPOSE 4200
 
