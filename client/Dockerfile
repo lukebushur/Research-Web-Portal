@@ -12,6 +12,8 @@ COPY . .
 
 RUN node src/environments/set-env.js
 
+RUN printenv
+
 # Install dependencies
 RUN npm install
 

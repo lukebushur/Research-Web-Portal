@@ -980,6 +980,7 @@ Resources:
 
   DocDBCluster:
     Type: AWS::DocDB::DBCluster
+    DeletionPolicy: Delete
     DependsOn: DocDBSubnetGroup
     Properties:
       DBClusterIdentifier: !Sub "${AWS::StackName}-docdb-cluster"
