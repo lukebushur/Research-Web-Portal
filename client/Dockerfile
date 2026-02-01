@@ -27,6 +27,8 @@ COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html
 # # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
+RUN echo $BACKEND_URI
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
