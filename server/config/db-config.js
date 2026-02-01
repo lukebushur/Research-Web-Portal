@@ -24,6 +24,8 @@ async function dbConnect() {
     const password = encodeURIComponent(process.env.DB_PASS); // Fixes the error
     const host = process.env.DB_URL;
 
+    console.log(process.env.BACKEND_URI)
+
     const dbUri = `mongodb://${username}:${password}@${host}:27017${db}&tls=true&tlsCAFile=global-bundle.pem&replicaSet=rs0&readPreference=primary&authMechanism=SCRAM-SHA-1`;
     const dbName = /^\/(.+)\?/.exec(db)[1];
 
