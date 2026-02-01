@@ -21,7 +21,7 @@
       "secrets": [
         {
           "name": "BACKEND_URI",
-          "valueFrom": "arn:aws:ssm:<REGION>:<ACCOUNT_ID>:parameter/myapp/dev/ELB_DNS"
+          "valueFrom": "arn:aws:ssm:<REGION>:<ACCOUNT_ID>:parameter/myapp/dev/ELB_DNS::"
         },
         {
           "name": "STUDENT",
