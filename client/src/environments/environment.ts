@@ -2,7 +2,7 @@
 export const environment = {
 
   get apiUrl() {
-    return (window as any)["env"]?.["apiUrl"] || 'http://localhost:3000/api';
+    return (window as any)["env"]?.["apiUrl"] + "/api" || 'http://localhost:3000/api';
   },
   studentType: 0,
   facultyType: 1,
