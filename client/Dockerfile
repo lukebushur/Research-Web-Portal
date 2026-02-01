@@ -24,15 +24,13 @@ FROM public.ecr.aws/nginx/nginx:latest
 # Copy Angular build files to nginx serving directory
 COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html
 
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
+
 # # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
-
-RUN echo $BACKEND_URI
-
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 # front-end server listens on port 4200
 EXPOSE 4200
 
-ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
+CMD ["/bin/sh", "/run.sh"]
