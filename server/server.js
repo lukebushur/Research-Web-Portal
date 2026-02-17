@@ -45,13 +45,17 @@ app.get('/', function (req, res) {
     res.status(200).json(generateRes(true, 200, "HEALTH_CHECK_PASSED", {}));
 });
 
+app.get('/api/health', function (req, res) {
+    res.status(200).json(generateRes(true, 200, "HEALTH_CHECK_PASSED", {}));
+});
+
 // This is the 404 Route. This should remain last as it will catch all types of
 // requests and all routes.
 app.use('*', function (req, res) {
     res.status(404).json(generateRes(false, 404, "ROUTE_NOT_FOUND", {}));
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 // Connect to the database 
 await dbConnect().then(() => {

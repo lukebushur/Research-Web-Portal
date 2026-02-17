@@ -27,7 +27,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/environments/env.template.js"
             ],
             "styles": [
               "src/styles/rwp-theme.scss",

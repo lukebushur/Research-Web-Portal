@@ -10,6 +10,8 @@ RUN npm cache clean --force
 # Copy Angular project filels
 COPY . .
 
+RUN printenv
+
 # Install dependencies
 RUN npm install
 
@@ -22,8 +24,13 @@ FROM public.ecr.aws/nginx/nginx:latest
 # Copy Angular build files to nginx serving directory
 COPY --from=build /dist/src/app/dist/client /usr/share/nginx/html
 
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
+
 # # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
-# front-end server listens on port 80
-EXPOSE 80
+# front-end server listens on port 4200
+EXPOSE 4200
+
+CMD ["/bin/sh", "/run.sh"]
